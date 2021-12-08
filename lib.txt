@@ -1,0 +1,17 @@
+C:\Users\Eleve\Desktop\spot-sdk-js>python -m pip install --upgrade bosdyn-client bosdyn-mission
+Requirement already up-to-date: bosdyn-client in c:\users\eleve\appdata\local\programs\python\python37\lib\site-packages (2.0.2)
+Requirement already up-to-date: bosdyn-mission in c:\users\eleve\appdata\local\programs\python\python37\lib\site-packages (2.0.2)
+Requirement already satisfied, skipping upgrade: pyjwt in c:\users\eleve\appdata\local\programs\python\python37\lib\site-packages (from bosdyn-client) (1.7.1)
+Requirement already satisfied, skipping upgrade: bosdyn-core==2.0.2 in c:\users\eleve\appdata\local\programs\python\python37\lib\site-packages (from bosdyn-client) (2.0.2)
+Requirement already satisfied, skipping upgrade: bosdyn-api==2.0.2 in c:\users\eleve\appdata\local\programs\python\python37\lib\site-packages (from bosdyn-client) (2.0.2)
+Requirement already satisfied, skipping upgrade: grpcio in c:\users\eleve\appdata\local\programs\python\python37\lib\site-packages (from bosdyn-client) (1.33.2)
+Requirement already satisfied, skipping upgrade: numpy in c:\users\eleve\appdata\local\programs\python\python37\lib\site-packages (from bosdyn-client) (1.19.3)
+Requirement already satisfied, skipping upgrade: six in c:\users\eleve\appdata\roaming\python\python37\site-packages (from bosdyn-mission) (1.15.0)
+Requirement already satisfied, skipping upgrade: protobuf>=3.3.0 in c:\users\eleve\appdata\local\programs\python\python37\lib\site-packages (from bosdyn-api==2.0.2->bosdyn-client) (3.13.0)
+Requirement already satisfied, skipping upgrade: setuptools in c:\users\eleve\appdata\local\programs\python\python37\lib\site-packages (from protobuf>=3.3.0->bosdyn-api==2.0.2->bosdyn-client) (47.1.0)
+
+https://ednsquare.com/story/working-with-protocol-buffers-in-javascript------MaDIJH
+https://grpc.io/docs/languages/node/quickstart/
+jsonwebtoken
+https://js.tensorflow.org/api/latest/
+https://github.com/nicolaspanel/numjs

@@ -23,7 +23,7 @@
     "url": "https://github.com/TheoPierne/spot-sdk-js/issues"
   },
   "author": "Théo Pierné",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "SEE LICENSE IN LICENSE FILE",
   "dependencies": {
     "@grpc/grpc-js": "^1.4.4",
     "@grpc/proto-loader": "^0.6.7",
