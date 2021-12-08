@@ -2,3 +2,6 @@
 node_modules/
 
 bosdyn.old/
+
+generate_js_file_with_proto_file.txt
+lib.txt
