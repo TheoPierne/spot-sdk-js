@@ -1,0 +1,54 @@
+{
+  "name": "spot-sdk-js",
+  "version": "1.0.0",
+  "description": "Develop applications and payloads for Spot using the unofficial Boston Dynamics Spot Node.js SDK.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "spot",
+    "boston dynamics",
+    "boston",
+    "dynamics",
+    "robot",
+    "node",
+    "client"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheoPierne/spot-sdk-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TheoPierne/spot-sdk-js/issues"
+  },
+  "author": "Théo Pierné",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.4.4",
+    "@grpc/proto-loader": "^0.6.7",
+    "@tensorflow/tfjs": "^3.11.0",
+    "argparse": "^2.0.1",
+    "expandenv": "^1.0.0",
+    "glob": "^7.2.0",
+    "google-protobuf": "^3.19.1",
+    "grpc-promise": "^1.4.0",
+    "ip": "^1.1.5",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "node-fetch": "^3.1.0",
+    "numjs": "github:TheoPierne/numjs",
+    "prompt": "^1.2.0",
+    "quaternion": "^1.2.1",
+    "semver": "^7.3.5",
+    "sharp": "^0.29.3",
+    "tmp": "^0.2.1",
+    "underscore": "^1.13.1",
+    "which": "^2.0.2"
+  },
+  "engines": {
+    "node": ">=16.6.0",
+    "npm": ">=7.0.0"
+  }
+}
