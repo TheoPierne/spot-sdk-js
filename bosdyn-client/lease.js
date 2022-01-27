@@ -110,23 +110,23 @@ class LeaseNotOwnedByWallet extends Error {
 };
 
 const _ACQUIRE_LEASE_STATUS_TO_ERROR = {
-	STATUS_OK: [null, null],
-	STATUS_RESOURCE_ALREADY_CLAIMED: [ResourceAlreadyClaimedError, 'Use TakeLease method to forcefully grab the already claimed lease.'],
-	STATUS_INVALID_RESOURCE: [InvalidResourceError, 'Resource is not known to the LeaseService.'],
-	STATUS_NOT_AUTHORITATIVE_SERVICE: [NotAuthoritativeServiceError, 'LeaseService is not authoritative so Acquire should not work.']
+	[lease_pb.AcquireLeaseResponse.Status.STATUS_OK]: [null, null],
+	[lease_pb.AcquireLeaseResponse.Status.STATUS_RESOURCE_ALREADY_CLAIMED]: [ResourceAlreadyClaimedError, 'Use TakeLease method to forcefully grab the already claimed lease.'],
+	[lease_pb.AcquireLeaseResponse.Status.STATUS_INVALID_RESOURCE]: [InvalidResourceError, 'Resource is not known to the LeaseService.'],
+	[lease_pb.AcquireLeaseResponse.Status.STATUS_NOT_AUTHORITATIVE_SERVICE]: [NotAuthoritativeServiceError, 'LeaseService is not authoritative so Acquire should not work.']
 }
 
 const _TAKE_LEASE_STATUS_TO_ERROR = {
-	STATUS_OK: [null, null],
-	STATUS_INVALID_RESOURCE: [InvalidResourceError, 'Resource is not known to the LeaseService.'],
-	STATUS_NOT_AUTHORITATIVE_SERVICE: [NotAuthoritativeServiceError, 'LeaseService is not authoritative so Acquire should not work.']
+	[lease_pb.TakeLeaseResponse.Status.STATUS_OK]: [null, null],
+	[lease_pb.TakeLeaseResponse.Status.STATUS_INVALID_RESOURCE]: [InvalidResourceError, 'Resource is not known to the LeaseService.'],
+	[lease_pb.TakeLeaseResponse.Status.STATUS_NOT_AUTHORITATIVE_SERVICE]: [NotAuthoritativeServiceError, 'LeaseService is not authoritative so Acquire should not work.']
 }
 
 const _RETURN_LEASE_STATUS_TO_ERROR = {
-	STATUS_OK: [null, null],
-	STATUS_INVALID_RESOURCE: [InvalidResourceError, 'Resource is not known to the LeaseService.'],
-	STATUS_NOT_ACTIVE_LEASE: [NotActiveLeaseError, 'Lease is not the active lease.'],
-	STATUS_NOT_AUTHORITATIVE_SERVICE: [NotAuthoritativeServiceError, 'LeaseService is not authoritative so Acquire should not work.']
+	[lease_pb.ReturnLeaseResponse.Status.STATUS_OK]: [null, null],
+	[lease_pb.ReturnLeaseResponse.Status.STATUS_INVALID_RESOURCE]: [InvalidResourceError, 'Resource is not known to the LeaseService.'],
+	[lease_pb.ReturnLeaseResponse.Status.STATUS_NOT_ACTIVE_LEASE]: [NotActiveLeaseError, 'Lease is not the active lease.'],
+	[lease_pb.ReturnLeaseResponse.Status.STATUS_NOT_AUTHORITATIVE_SERVICE]: [NotAuthoritativeServiceError, 'LeaseService is not authoritative so Acquire should not work.']
 }
 
 class Lease {
@@ -141,8 +141,8 @@ class Lease {
 		DIFFERENT_EPOCHS: 7
 	}
 
-	constructor(lease_proto){
-		if(!this.is_valid_proto(lease_proto)) throw new ValueError(`invalid lease_proto: ${lease_proto}`);
+	constructor(lease_proto, ignore_is_valid_check = false){
+		if(!ignore_is_valid_check && !Lease.is_valid_proto(lease_proto)) throw new ValueError(`invalid lease_proto: ${JSON.stringify(lease_proto.toObject())}`);
 		this.lease_proto = lease_proto;
 	}
 
@@ -173,22 +173,45 @@ class Lease {
 	}
 
 	create_newer(){
-		let incr_lease_proto = new lease_pb.Lease();
-		incr_lease_proto = cloneDeep(this.lease_proto);
-		incr_lease_proto.setSequenceList(incr_lease_proto.getSequenceList()[incr_lease_proto.getSequenceList().length - 1] = this.lease_proto.sequence[this.lease_proto.sequence.length - 1] + 1);
+		const incr_lease_proto = cloneDeep(this.lease_proto);
+		const list = incr_lease_proto.getSequenceList();
+		list[list.length - 1] = this.lease_proto.getSequenceList()[this.lease_proto.getSequenceList().length - 1] + 1;
+		incr_lease_proto.setSequenceList(list);
 		return new Lease(incr_lease_proto);
 	}
 
-	create_sublease(){
+	create_sublease(client_name = null){
 		let sub_lease_proto = new lease_pb.Lease();
 		sub_lease_proto = cloneDeep(this.lease_proto);
 		sub_lease_proto.addSequence(0);
+		if(client_name != null) sub_lease_proto.addClientNames(client_name);
 		return new Lease(sub_lease_proto);
 	}
 
 	static is_valid_proto(lease_proto){
-		return lease_proto && lease_proto.getResource() && lease_proto.getSequenceList();
+		return lease_proto && lease_proto.getResource().length > 0 && lease_proto.getSequenceList().length > 0;
 	}
+
+	is_valid_lease(self){
+        return Lease.is_valid_proto(this.lease_proto);
+	}
+
+	static compare_result_to_lease_use_result_status(compare_result, allow_super_leases){
+        if(compare_result == Lease.CompareResult.DIFFERENT_EPOCHS){
+            return LeaseUseResult.STATUS_WRONG_EPOCH;
+        }else if(compare_result == Lease.CompareResult.DIFFERENT_RESOURCES){
+            return LeaseUseResult.STATUS_UNMANAGED;
+        }else if(compare_result == Lease.CompareResult.SUPER_LEASE){
+            if(allow_super_leases) return LeaseUseResult.STATUS_OK;
+            return LeaseUseResult.STATUS_OLDER;
+        }else if(compare_result == Lease.CompareResult.OLDER){
+            return LeaseUseResult.STATUS_OLDER;
+        }else if(compare_result == Lease.CompareResult.SAME || compare_result == Lease.CompareResult.SUB_LEASE || compare_result == Lease.CompareResult.NEWER){
+            return LeaseUseResult.STATUS_OK;
+        }else{
+            throw new Error("The comparison result of the leases is unknown/unaccounted for.");
+        }
+    }
 
 };
 
@@ -210,7 +233,7 @@ class LeaseState {
 		if(lease_current){
 			this.lease_current = lease_current;
 		}else if(lease){
-			this.lease_current = this.lease_original.create_sublease();
+			this.lease_current = this.lease_original.create_sublease(this.client_name);
 		}else{
 			this.lease_current = null;
 		}
@@ -252,26 +275,26 @@ class LeaseWallet {
 
 	constructor(){
 		this._lease_state_map = {};
-        // this._lock = threading.Lock();
         this.client_name = null;
     }
 
     add(lease){
-    	this._lease_state_map[lease.getLease().getResource()] = new LeaseState(LeaseState.Status.STATUS_SELF_OWNER, null, lease, this.client_name);
+    	const resource = lease.lease_proto.getResource();
+    	this._lease_state_map[resource] = new LeaseState(LeaseState.Status.STATUS_SELF_OWNER, null, lease, null, this.client_name);
     }
 
     remove(lease){
-    	delete this._lease_state_map[lease.getLease().getResource()];
+    	delete this._lease_state_map[lease.lease_proto.getResource()];
     }
 
-    advance(resource=_RESOURCE_BODY){
+    advance(resource = _RESOURCE_BODY){
     	const lease_state = this._get_owned_lease_state_locked(resource);
     	const new_lease = lease_state.create_newer();
     	this._lease_state_map[resource] = new_lease;
     	return new_lease.lease_current;
     }
 
-    get_lease(resource=_RESOURCE_BODY){
+    get_lease(resource = _RESOURCE_BODY){
     	return this._get_owned_lease_state_locked(resource).lease_current;
     }
 
@@ -318,22 +341,22 @@ class LeaseClient extends BaseClient {
 
 	async acquire(resource=_RESOURCE_BODY, args){
 		const req = LeaseClient._make_acquire_request(resource);
-		return await this.call(this._stub.acquireLease, req, this._handle_acquire_success, this._handle_acquire_errors, args);
+		return await this.call(this._stub.acquireLease, req, this._handle_acquire_success.bind(this), this._handle_acquire_errors, args);
 	}
 
 	acquire_async(resource=_RESOURCE_BODY, args){
 		const req = LeaseClient._make_acquire_request(resource);
-		return this.call_async(this._stub.acquireLease, req, this._handle_acquire_success, this._handle_acquire_errors, args);
+		return this.call_async(this._stub.acquireLease, req, this._handle_acquire_success.bind(this), this._handle_acquire_errors, args);
 	}
 
 	async take(resource=_RESOURCE_BODY, args){
 		const req = LeaseClient._make_take_request(resource);
-		return await this.call(this._stub.takeLease, req, this._handle_acquire_success, this._handle_take_errors, args);
+		return await this.call(this._stub.takeLease, req, this._handle_acquire_success.bind(this), this._handle_take_errors, args);
 	}
 
 	take_async(resource=_RESOURCE_BODY, args){
 		const req = LeaseClient._make_take_request(resource);
-		return this.call_async(this._stub.takeLease, req, this._handle_acquire_success, this._handle_take_errors, args);
+		return this.call_async(this._stub.takeLease, req, this._handle_acquire_success.bind(this), this._handle_take_errors, args);
 	}
 
 	async return_lease(lease, args){
@@ -368,6 +391,16 @@ class LeaseClient extends BaseClient {
 		return this.call_async(this._stub.listLeases, req, this._list_leases_success, common_header_errors, args);
 	}
 
+	async list_leases_full(include_full_lease_info = false, args){
+        const req = LeaseClient._make_list_leases_request(include_full_lease_info)
+        return await this.call(this._stub.listLeases, req, null, common_header_errors, args);
+    }
+
+    list_leases_full_async(include_full_lease_info = false, args){
+        const req = LeaseClient._make_list_leases_request(include_full_lease_info)
+        return this.call_async(this._stub.listLeases, req, null, common_header_errors, args);
+    }
+
 	static _make_acquire_request(resource){
 		return new lease_pb.AcquireLeaseRequest().setResource(resource);
 	}
@@ -379,7 +412,7 @@ class LeaseClient extends BaseClient {
 	}
 
 	_handle_acquire_errors(response){
-		return error_factory(response, response.status, Object.keys(lease_pb.AcquireLeaseResponse.Status), _ACQUIRE_LEASE_STATUS_TO_ERROR);
+		return error_factory(response, response.getStatus(), Object.keys(lease_pb.AcquireLeaseResponse.Status), _ACQUIRE_LEASE_STATUS_TO_ERROR);
 	}
 
 	static _make_take_request(resource){
@@ -387,15 +420,15 @@ class LeaseClient extends BaseClient {
 	}
 
 	_handle_take_errors(response){
-		return error_factory(response, response.status, Object.keys(lease_pb.TakeLeaseResponse.Status), _TAKE_LEASE_STATUS_TO_ERROR);
+		return error_factory(response, response.getStatus(), Object.keys(lease_pb.TakeLeaseResponse.Status), _TAKE_LEASE_STATUS_TO_ERROR);
 	}
 
 	static _make_return_request(lease){
-		return new lease_pb.ReturnLeaseRequest().setLease(lease.getLease());
+		return new lease_pb.ReturnLeaseRequest().setLease(lease.lease_proto);
 	}
 
 	_handle_return_errors(response){
-		return error_factory(response, response.status, Object.keys(lease_pb.ReturnLeaseResponse.Status), _RETURN_LEASE_STATUS_TO_ERROR);
+		return error_factory(response, response.getStatus(), Object.keys(lease_pb.ReturnLeaseResponse.Status), _RETURN_LEASE_STATUS_TO_ERROR);
 	}
 
 	static _make_retain_request(lease){
@@ -421,7 +454,7 @@ class LeaseWalletRequestProcessor {
 	}
 
 	mutate(request){
-		const [multiple_leases, skip_mutation] = this.get_lease_state(request);
+		const [multiple_leases, skip_mutation] = LeaseWalletRequestProcessor.get_lease_state(request);
 
 		if(skip_mutation) return;
 
@@ -438,7 +471,7 @@ class LeaseWalletRequestProcessor {
 			}
 		}else{
 			const lease = this.lease_wallet.advance(this.resource_list[0]);
-			request.lease = lease.getLease();
+			request.setLease(lease.lease_proto);
 		}
 	}
 
@@ -465,7 +498,7 @@ class LeaseWalletRequestProcessor {
 
 		if(!isCatchFirst) multiple_leases = false;
 
-		return [multiple_leases, skip_mutation]
+		return [multiple_leases, skip_mutation];
 	}
 
 };
@@ -589,6 +622,43 @@ class LeaseKeepAlive {
     }
 };
 
+function test_active_lease(incoming_lease_proto, active_lease, sublease_name = null, allow_super_leases = false){
+    const lease_use_result = new lease_pb.LeaseUseResult();
+    lease_use_result.setAttemptedLease(incoming_lease_proto.clone());
+
+    let incoming_lease;
+
+    try{
+        incoming_lease = new Lease(incoming_lease_proto);
+        if(sublease_name != null){
+            incoming_lease = incoming_lease.create_sublease(sublease_name);
+        }
+    }catch(e){
+        lease_use_result.setStatus(lease_pb.LeaseUseResult.Status.STATUS_INVALID_LEASE);
+        return [lease_use_result, null];
+    }
+
+    if(active_lease == null){
+        lease_use_result.setLatestKnownLease(incoming_lease.lease_proto.clone());
+        lease_use_result.setStatus(lease_pb.LeaseUseResult.Status.STATUS_OK);
+        return [lease_use_result, incoming_lease];
+    }
+
+    if(!active_lease.is_valid_lease()){
+        throw new Error("The active lease object is invalid.");
+    }
+
+    lease_use_result.setPreviousLease(active_lease.lease_proto.clone());
+    lease_use_result.setLatestKnownLease(active_lease.lease_proto.clone());
+
+    const compare_result = incoming_lease.compare(active_lease);
+    lease_use_result.setStatus(Lease.compare_result_to_lease_use_result_status(compare_result, allow_super_leases));
+    if(lease_use_result.getStatus() == lease_pb.LeaseUseResult.Status.STATUS_OK && compare_result != Lease.CompareResult.SUPER_LEASE){
+        lease_use_result.setLatestKnownLease(incoming_lease.lease_proto.clone());
+    }
+    return [lease_use_result, incoming_lease];
+}
+
 module.exports = {
 	LeaseResponseError,
 	InvalidLeaseError,
@@ -609,5 +679,6 @@ module.exports = {
 	LeaseWalletRequestProcessor,
 	LeaseWalletResponseProcessor,
 	add_lease_wallet_processors,
-	LeaseKeepAlive
+	LeaseKeepAlive,
+	test_active_lease
 };

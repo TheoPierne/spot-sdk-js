@@ -43,16 +43,16 @@ class UnsupportedImageFormatRequestedError extends ImageResponseError {
 };
 
 const _STATUS_TO_ERROR = {
-	STATUS_OK: [null, null],
-    STATUS_UNKNOWN_CAMERA: error_pair(UnknownImageSourceError),
-    STATUS_SOURCE_DATA_ERROR: error_pair(SourceDataError),
-    STATUS_IMAGE_DATA_ERROR: error_pair(ImageDataError),
-    STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED: error_pair(UnsupportedImageFormatRequestedError),
-    STATUS_UNKNOWN: error_pair(UnsetStatusError)
+	[image_pb.ImageResponse.Status.STATUS_OK]: [null, null],
+    [image_pb.ImageResponse.Status.STATUS_UNKNOWN_CAMERA]: [UnknownImageSourceError, 'System cannot find the requested image source name.'],
+    [image_pb.ImageResponse.Status.STATUS_SOURCE_DATA_ERROR]: [SourceDataError, 'System cannot generate the ImageSource at this time.'],
+    [image_pb.ImageResponse.Status.STATUS_IMAGE_DATA_ERROR]: [ImageDataError, 'System cannot generate image data for the ImageCapture at this time.'],
+    [image_pb.ImageResponse.Status.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED]: [UnsupportedImageFormatRequestedError, 'The image service cannot return data in the requested format.'],
+    [image_pb.ImageResponse.Status.STATUS_UNKNOWN]: [UnsetStatusError, 'Response\'s status field (in either message or common header) was UNKNOWN value.']
 }
 
 function _error_from_response(response){
-	for(const image_response in response.getImageResponses()){
+	for(const image_response of response.getImageResponsesList()){
 		if(image_response.getStatus() == image_pb.ImageResponse.Status.STATUS_UNKNOWN){
 			return new UnsetStatusError(response);
 		}
@@ -83,11 +83,11 @@ class ImageClient extends BaseClient {
 	}
 
 	async get_image_from_sources(image_sources, args){
-		return await this.get_image([image_sources.map(x => build_image_request(x))], args);
+		return await this.get_image(image_sources.map(x => build_image_request(x)), args);
 	}
 
 	get_image_from_sources_async(image_sources, args){
-		return this.get_image_async([image_sources.map(x => build_image_request(x))], args);
+		return this.get_image_async(image_sources.map(x => build_image_request(x)), args);
 	}
 
 	async get_image(image_requests, args){
@@ -119,7 +119,7 @@ function build_image_request(image_source_name, quality_percent = 75, image_form
 }
 
 function _list_image_sources_value(response){
-    return response.getImageSources();
+    return response.getImageSourcesList();
 }
 
 

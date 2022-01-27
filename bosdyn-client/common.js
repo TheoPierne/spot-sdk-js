@@ -1,11 +1,15 @@
-const license_pb = require('../bosdyn/api/license_pb');
-const header_pb = require('../bosdyn/api/header_pb');
-const grpc = require('@grpc/grpc-js');
 const {cloneDeep} = require('lodash');
-const net = require('net');
-const grpcPromise = require('grpc-promise');
 
+const header_pb = require('../bosdyn/api/header_pb');
+const data_chunk_pb = require('../bosdyn/api/data_chunk_pb');
 const {translate_exception} = require('./channel');
+const {
+	InternalServerError, 
+	InvalidRequestError, 
+	LicenseError, 
+	LeaseUseError, 
+	UnsetStatusError
+} = require('./exceptions');
 
 const DEFAULT_RPC_TIMEOUT = 30000;  // seconds
 
@@ -22,13 +26,13 @@ function popObject(obj, key, defaultVal) {
 
 function common_header_errors(response){
 	if(response?.getHeader()?.getError()?.getCode() == header_pb.CommonError.Code.CODE_UNSPECIFIED){
-		return UnsetStatusError(response);
+		return new UnsetStatusError(response);
 	}
 	if(response?.getHeader()?.getError()?.getCode() == header_pb.CommonError.Code.CODE_INTERNAL_SERVER_ERROR){
-		return InternalServerError(response);
+		return new InternalServerError(response);
 	}
 	if(response?.getHeader()?.getError()?.getCode() == header_pb.CommonError.Code.CODE_INVALID_REQUEST){
-		return InvalidRequestError(response);
+		return new InvalidRequestError(response);
 	}
 	return null;
 }
@@ -48,12 +52,12 @@ function common_lease_errors(response){
 	}else if(response.hasOwnProperty('lease_use_results')){
 		lease_use_results = response.lease_use_results;
 	}else{
-		return InternalServerError(response, 'No LeaseUseResult field found!');
+		return new InternalServerError(response, 'No LeaseUseResult field found!');
 	}
 
 	for(const result in lease_use_results){
 		if(result.getStatus() != result.Status.STATUS_OK){
-			return LeaseUseError(response);
+			return new LeaseUseError(response);
 		}
 	}
 
@@ -181,24 +185,26 @@ class BaseClient {
 
 	constructor(stub_creation_func, name = null){
 		this._service_type_short = this.constructor.service_type.split(BaseClient._SPLIT_SERVICE).slice(-1);
-		console.log(this._service_type_short)
+
 		this._channel = null;
 		this._logger = null;
 		this._name = name;
 		this._stub = null;
 		this._stub_creation_func = stub_creation_func;
+
 		this.logger = console;
 		this.request_processors = [];
 		this.response_processors = [];
 		this.lease_wallet = null;
+		this.client_name = null;
 	}
 
 	static request_trim_for_log(req){
-		return `\n${JSON.stringify(req.toObject())}\n`;
+		return `\n${JSON.stringify(req.toObject()).substring(0, 9000)}\n`;
 	}
 
 	static response_trim_for_log(resp){
-		return `\n${JSON.stringify(resp.toObject())}\n`;
+		return `\n${JSON.stringify(resp.toObject()).substring(0, 9000)}\n`;
 	}
 
 	get channel(){
@@ -225,7 +231,7 @@ class BaseClient {
     _apply_request_processors(request){
     	if(request == null) return;
     	for(const proc of this.request_processors){
-    		proc.mutate(request)
+    		proc.mutate(request);
     	}
     	return request;
     }
@@ -233,8 +239,7 @@ class BaseClient {
     _apply_response_processors(response){
     	if(response == null) return;
     	for(const proc of this.response_processors){
-    		console.log(proc)
-    		proc.mutate(response)
+    		proc.mutate(response);
     	}
     	return response;
     }
@@ -244,7 +249,7 @@ class BaseClient {
     }
 
     update_request_iterator(request_iterator, logger, rpc_method, is_blocking){
-    	let a = [];
+    	const a = [];
     	for(let request of request_iterator){
     		request = this._apply_request_processors(cloneDeep(request));
     		if(is_blocking){
@@ -260,8 +265,8 @@ class BaseClient {
 
     update_response_iterator(response_iterator, logger, rpc_method, is_blocking){
     	try{
-    		let a = [];
-    		for(let response in response_iterator){
+    		const a = [];
+    		for(let response of response_iterator){
     			response = this._apply_response_processors(cloneDeep(response));
     			if(is_blocking){
     				logger.debug(`[COMMON] blocking response: ${rpc_method._method} ${BaseClient.request_trim_for_log(response)}`);
@@ -375,6 +380,20 @@ class BaseClient {
 
     	response_future.add_done_callback(on_finish);
     	return new FutureWrapper(response_future, value_from_response, error_from_response);
+    }
+
+    static * chunk_message(message, data_chunk_byte_size){
+        const serialized = message.serializeBinary();
+        const total_bytes_size = serialized.length;
+        const num_chunks = Math.ceil(total_bytes_size / data_chunk_byte_size);
+        for(let i of [...Array(num_chunks).keys()]){
+            const start_index = i * data_chunk_byte_size;
+            const end_index = Math.min(total_bytes_size, (i + 1) * data_chunk_byte_size);
+            const chunk = new data_chunk_pb.DataChunk()
+            .setTotalSize(total_bytes_size)
+            .setData(serialized.slice(start_index, end_index));
+            yield chunk;
+        }
     }
 };
 

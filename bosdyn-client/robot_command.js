@@ -1,4 +1,8 @@
 const jspb = require('google-protobuf');
+const any_pb = require('google-protobuf/google/protobuf/any_pb');
+const wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb');
+
+const { setTimeout: sleep } = require('node:timers/promises');
 
 const geometry_pb = require('../bosdyn/api/geometry_pb');
 const arm_command_pb = require('../bosdyn/api/arm_command_pb');
@@ -14,8 +18,6 @@ const trajectory_pb = require('../bosdyn/api/trajectory_pb');
 const {seconds_to_duration} = require('../bosdyn-core/util');
 
 const geometry = require('../bosdyn-core/geometry');
-const any_pb = require('google-protobuf/google/protobuf/any_pb');
-const wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb');
 
 const _CLAW_GRIPPER_OPEN_ANGLE = -1.5708;
 const _CLAW_GRIPPER_CLOSED_ANGLE = 0;
@@ -35,15 +37,15 @@ const {SE2Pose} = require('./math_helpers');
 const {add_lease_wallet_processors} = require('./lease');
 
 class RobotCommandResponseError extends ResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'RobotCommandResponseError';
 	}
 };
 
 class NoTimeSyncError extends RobotCommandResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'NoTimeSyncError';
 	}
 };
@@ -235,7 +237,7 @@ const EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME = {
 
 function _edit_proto(proto, edit_tree, edit_fn){
 	proto = proto.toObject();
-	for(const [key, subtree] in Object.entries(proto)){
+	for(let [key, subtree] of Object.entries(edit_tree)){
 		if(key.startsWith('@')){
 			console.log('[ROBOT COMMAND] Warning test feature en cours de dev', key, subtree);
 			const which_oneof = proto.WhichOneof(key);
@@ -261,19 +263,19 @@ class RobotCommandClient extends BaseClient {
 		this._timesync_endpoint = null;
 	}
 
-	update_from(other){
+	async update_from(other){
 		super.update_from(other);
 		if(this.lease_wallet) add_lease_wallet_processors(this, this.lease_wallet);
 
 		try{
-			this._timesync_endpoint = other.time_sync.endpoint;
+			this._timesync_endpoint = (await other.time_sync).endpoint;
 		}catch(e){
 
 		}
 	}
 
 	get timesync_endpoint(){
-		if(!this._timesync_endpoint) throw new NoTimeSyncError("No timesync endpoint was passed to robot command client.");
+		if(!this._timesync_endpoint) throw new NoTimeSyncError(null, "No timesync endpoint was passed to robot command client.");
 		return this._timesync_endpoint;
 	}
 
@@ -296,6 +298,7 @@ class RobotCommandClient extends BaseClient {
 
 	robot_command_feedback_async(robot_command_id, args){
 		const req = this._get_robot_command_feedback_request(robot_command_id);
+		console.log(req.toObject())
 		return this.call_async(this._stub.robotCommandFeedback, req, null, _robot_command_feedback_error, args);
 	}
 
@@ -310,25 +313,22 @@ class RobotCommandClient extends BaseClient {
 	}
 
 	_get_robot_command_request(lease, command){
-		const req = new robot_command_pb.RobotCommandRequest()
+		return new robot_command_pb.RobotCommandRequest()
 		.setLease(lease)
 		.setCommand(command)
 		.setClockIdentifier(this.timesync_endpoint.clock_identifier);
-		return req;
 	}
 
 	_update_command_timestamps(command, end_time_secs, timesync_endpoint){
 		const converter = new _TimeConverter(this, timesync_endpoint);
 
 		function _set_end_time(key, proto){
-			proto = proto.toObject();
 			if(!(key in proto)) return;
 			let end_time = proto[key];
 			end_time = converter.robot_timestamp_from_local_secs(end_time_secs);
 		}
 
 		function _to_robot_time(key, proto){
-			proto = proto.toObject();
 			if(!(key in proto)) return;
 			let timestamp = proto[key];
 			converter.convert_timestamp_from_local_to_robot(timestamp);
@@ -339,15 +339,12 @@ class RobotCommandClient extends BaseClient {
 		_edit_proto(command, EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME, _to_robot_time);
 	}
 
-	static _get_robot_command_feedback_request(robot_command_id){		
+	_get_robot_command_feedback_request(robot_command_id){		
 		return new robot_command_pb.RobotCommandFeedbackRequest().setRobotCommandId(robot_command_id);
 	}
 
-	static _get_clear_behavior_fault_request(lease, behavior_fault_id){
-		const req = new robot_command_pb.ClearBehaviorFaultRequest()
-		.setLease(lease)
-		.setBehaviorFaultId(behavior_fault_id);
-		return req;
+	_get_clear_behavior_fault_request(lease, behavior_fault_id){
+		return new robot_command_pb.ClearBehaviorFaultRequest().setLease(lease).setBehaviorFaultId(behavior_fault_id);
 	}
 };
 
@@ -356,15 +353,15 @@ function _robot_command_value(response){
 }
 
 const _ROBOT_COMMAND_STATUS_TO_ERROR = {
-	STATUS_OK: [null, null],
-	STATUS_INVALID_REQUEST: error_pair(InvalidRequestError),
-	STATUS_UNSUPPORTED: error_pair(UnsupportedError),
-	STATUS_NO_TIMESYNC: error_pair(NoTimeSyncError),
-	STATUS_EXPIRED: error_pair(ExpiredError),
-	STATUS_TOO_DISTANT: error_pair(TooDistantError),
-	STATUS_NOT_POWERED_ON: error_pair(NotPoweredOnError),
-	STATUS_BEHAVIOR_FAULT: error_pair(BehaviorFaultError),
-	STATUS_UNKNOWN_FRAME: error_pair(UnknownFrameError),
+	[robot_command_pb.RobotCommandResponse.Status.STATUS_OK]: [null, null],
+	[robot_command_pb.RobotCommandResponse.Status.STATUS_INVALID_REQUEST]: error_pair(InvalidRequestError),
+	[robot_command_pb.RobotCommandResponse.Status.STATUS_UNSUPPORTED]: error_pair(UnsupportedError),
+	[robot_command_pb.RobotCommandResponse.Status.STATUS_NO_TIMESYNC]: error_pair(NoTimeSyncError),
+	[robot_command_pb.RobotCommandResponse.Status.STATUS_EXPIRED]: error_pair(ExpiredError),
+	[robot_command_pb.RobotCommandResponse.Status.STATUS_TOO_DISTANT]: error_pair(TooDistantError),
+	[robot_command_pb.RobotCommandResponse.Status.STATUS_NOT_POWERED_ON]: error_pair(NotPoweredOnError),
+	[robot_command_pb.RobotCommandResponse.Status.STATUS_BEHAVIOR_FAULT]: error_pair(BehaviorFaultError),
+	[robot_command_pb.RobotCommandResponse.Status.STATUS_UNKNOWN_FRAME]: error_pair(UnknownFrameError),
 };
 
 function _robot_command_error(response){
@@ -388,8 +385,8 @@ function _clear_behavior_fault_value(response){
 }
 
 const _CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR = {
-	STATUS_CLEARED: [null, null],
-	STATUS_NOT_CLEARED: [NotClearedError,  'Behavior fault could not be cleared.']
+	[robot_command_pb.ClearBehaviorFaultResponse.Status.STATUS_CLEARED]: [null, null],
+	[robot_command_pb.ClearBehaviorFaultResponse.Status.STATUS_NOT_CLEARED]: [NotClearedError, 'Behavior fault could not be cleared.']
 }
 
 function _clear_behavior_fault_error(response){
@@ -532,9 +529,9 @@ class RobotCommandBuilder {
     	return robot_command;
     }
 
-    static synchro_stand_command(params = null, body_height=0.0, footprint_R_body = new geometry.EulerZXY(), build_on_command = null){
+    static synchro_stand_command(params = null, body_height = 0.0, footprint_R_body = new geometry.EulerZXY(), build_on_command = null){
     	if(!params) params = RobotCommandBuilder.mobility_params(body_height, footprint_R_body);
-    	const any_params = RobotCommandBuilder._to_any(params);s
+    	const any_params = RobotCommandBuilder._to_any(params);
     	const mobility_command = new mobility_command_pb.MobilityCommand.Request().setStandRequest(new basic_command_pb.StandCommand.Request()).setParams(any_params);
     	const synchronized_command = new synchronized_command_pb.SynchronizedCommand.Request().setMobilityCommand(mobility_command);
     	const robot_command = new robot_command_pb.RobotCommand().setSynchronizedCommand(synchronized_command);
@@ -674,9 +671,8 @@ class RobotCommandBuilder {
     	const gripper_command = new gripper_command_pb.GripperCommand.Request().setClawGripperCommand(claw_gripper_command);
     	const synchronized_command = new synchronized_command_pb.SynchronizedCommand.Request().setGripperCommand(gripper_command);
     	const command = new robot_command_pb.RobotCommand().setSynchronizedCommand(synchronized_command);
-        // console.log(command.getSynchronizedCommand().getGripperCommand().getClawGripperCommand().getTrajectory().getPointsList()[0].getPoint());
-        if(build_on_command) return RobotCommandBuilder.build_synchro_command(build_on_command, command);
-        return command;
+    	if(build_on_command) return RobotCommandBuilder.build_synchro_command(build_on_command, command);
+    	return command;
     }
 
     static claw_gripper_open_fraction_command(open_fraction, build_on_command = null){
@@ -782,22 +778,23 @@ class RobotCommandBuilder {
     * Helper functions *
     *******************/
 
-    static _to_any(params){
+    static _to_any(params, typeName = "bosdyn.api.spot.MobilityParams"){
     	const any_params = new any_pb.Any();
-    	any_params.pack(params);
+    	any_params.pack(params.serializeBinary(), typeName);
+    	// bosdyn.api.spot.MobilityParams
     	return any_params;
     }
 
-    static build_synchro_command(args){
+    static build_synchro_command(...args){
     	let mobility_request = null;
     	let arm_request = null;
     	let gripper_request = null;
 
-    	for(const command in args){
+    	for(const command of args){
     		if(command.hasFullBodyCommand()){
     			throw new Error('[ROBOT COMMAND] this function only takes RobotCommands containing mobility or synchro cmds');
     		}else if(command.hasMobilityCommand()){
-    			mobility_request = command.mobility_command;
+    			mobility_request = command.getMobilityCommand();
     		}else if(command.hasSynchronizedCommand()){
     			if(command.getSynchronizedCommand().hasMobilityCommand()) mobility_request = command.getSynchronizedCommand().getMobilityCommand();
     			if(command.getSynchronizedCommand().hasArmCommand()) arm_request = command.getSynchronizedCommand().getArmCommand();
@@ -817,21 +814,13 @@ class RobotCommandBuilder {
 
 };
 
-function sleep(period) {
-	return new Promise(resolve => {
-		setTimeout(() => {
-			resolve();
-		}, period);
-	});
-}
-
 async function blocking_stand(command_client, timeout_sec = 10_000, update_frequency = 1.0){
 	const start_time = Date.now();
 	const end_time = start_time + timeout_sec;
 	const update_time = 1.0 / update_frequency;
 
-	const stand_command = RobotCommandBuilder.stand_command();
-	const command_id = await command_client.robot_command(stand_command, timeout_sec);
+	const stand_command = RobotCommandBuilder.synchro_stand_command();
+	const command_id = await command_client.robot_command(stand_command, null, null, null, {timeout: timeout_sec});
 
 	let now = Date.now();
 	while(now < end_time){
@@ -845,16 +834,17 @@ async function blocking_stand(command_client, timeout_sec = 10_000, update_frequ
 		try{
 			response = await command_client.robot_command_feedback(command_id, rpc_timeout);
 		}catch(e){
+			console.log(e)
 			isCatch = true;
 		}
 
-		const mob_feedback = response.getFeedback().getSynchronizedFeedback().getMobilityCommandFeedback();
-		const mob_status = mob_feedback.getStatus();
-		const stand_status = mob_feedback.getStandFeedback().getStatus();
-
 		if(!isCatch){
+			const mob_feedback = response.getFeedback().getSynchronizedFeedback().getMobilityCommandFeedback();
+			const mob_status = mob_feedback.getStatus();
+			const stand_status = mob_feedback.getStandFeedback().getStatus();
+
 			if(mob_status != basic_command_pb.RobotCommandFeedbackStatus.Status.STATUS_PROCESSING){
-				throw new CommandFailedError(`Stand (ID ${command_id}) no longer processing (now ${response.Status[response.getStatus()]})`);
+				throw new CommandFailedError(`Stand (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[response.getStatus()]})`);
 			}
 			if(stand_status == basic_command_pb.StandCommand.Feedback.Status.STATUS_IS_STANDING){
 				return;

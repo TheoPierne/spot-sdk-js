@@ -10,6 +10,8 @@ const image_service_grpc_pb = require('../bosdyn/api/image_service_grpc_pb');
 
 const {cloneDeep} = require('lodash');
 
+const CLEAR_FAULT_RPC_TIMEOUT_MSECS = 100;
+
 class CameraInterface {
 
 	blocking_capture(){
@@ -41,6 +43,8 @@ class VisualImageSource {
 		const decode_data_fault_id = new service_fault_pb.ServiceFaultId().setFaultName(`Decoding Image ${this.image_source_name} Failure`);
 		this.decode_data_fault = new service_fault_pb.ServiceFault().setFaultId(decode_data_fault_id).setSeverity(service_fault_pb.ServiceFault.Severity.SEVERITY_WARN);
 
+		this.active_fault_id_names = new Set();
+
 		this.logger = logger || console;
 		this.last_error_message = null;
 	}
@@ -49,31 +53,58 @@ class VisualImageSource {
 		if(logger) this.logger = logger;
 	}
 
-	create_capture_thread(capture_period = 0){
-		this.capture_thread = new ImageCaptureThread(this.image_source_name, this.capture_function, capture_period);
+	create_capture_thread(){
+		this.capture_thread = new ImageCaptureThread(this.image_source_name, this.capture_function);
 		this.capture_thread.start_capturing();
 	}
 
-	initialize_faults(fault_client, image_service){
+	async initialize_faults(fault_client, image_service){
 		this.fault_client = fault_client;
 		this.camera_capture_fault.getFaultId().setServiceName(image_service);
 		this.decode_data_fault.getFaultId().setServiceName(image_service);
 
-		if(this.fault_client == null){
-			this.fault_client.clear_service_fault_async(new service_fault_pb.ServiceFaultId().setServiceName(image_service), true);
+		if(this.fault_client != null){
+			try{
+				await this.fault_client.clear_service_fault(new service_fault_pb.ServiceFaultId().setServiceName(image_service), true);
+			}catch(e){
+				if(e instanceof ServiceFaultDoesNotExistError){
+					this.active_fault_id_names.clear();
+				}else{
+					this.logger.error("RPC error in initialize_faults: ", e);
+				}
+			}
 		}
 	}
 
-	trigger_fault(error_message, fault){
+	async trigger_fault(error_message, fault){
 		if(this.fault_client && fault){
 			fault.setErrorMessage(error_message);
 			this.fault_client.trigger_service_fault_async(fault);
+			try{
+				await this.fault_client.trigger_service_fault(fault);
+				this.active_fault_id_names.add(fault.getFaultId().getFaultName());
+			}catch(e){
+				if(!(e instanceof ServiceFaultAlreadyExistsError)){
+					this.logger.error("RPC error in trigger_fault: ", e);
+				}
+			}
 		}
 	}
 
-	clear_fault(fault){
+	async clear_fault(fault){
 		if(this.fault_client && fault){
-			this.fault_client.clear_service_fault_async(fault.getFaultId());
+			try{
+				if(this.active_fault_id_names.has(fault.getFaultId().getFaultName())){
+					await this.fault_client.clear_service_fault(fault.getFaultId(), false, false, {timeout: CLEAR_FAULT_RPC_TIMEOUT_SECS});
+					this.active_fault_id_names.delete(fault.getFaultId().getFaultName());
+				}
+			}catch(e){
+				if(e instanceof ServiceFaultDoesNotExistError){
+					this.logger.warn("No service fault found to clear.");
+				}else{
+					this.logger.error("RPC error in clear_fault: ", e);
+				}
+			}
 		}
 	}
 
@@ -181,11 +212,11 @@ function sleep(period) {
 
 class ImageCaptureThread {
 
-	constructor(image_source_name, capture_func, capture_period_secs = 0){
+	constructor(image_source_name, capture_func, capture_period_msecs = 50){
 		this.image_source_name = image_source_name;
 		this.last_captured_image = null;
 		this.last_captured_time = null;
-		this.capture_period_secs = capture_period_secs;
+		this.capture_period_msecs = capture_period_msecs;
 		this.capture_function = capture_func;
 		this.loopStop = false;
 	}
@@ -204,12 +235,12 @@ class ImageCaptureThread {
 		return [this.last_captured_image, this.last_captured_time]
 	}
 
-	_do_image_capture(){
+	async _do_image_capture(){
 		while (!this.loopStop){
 			const start_time = Date.now();
 			const [capture, capture_time] = this.capture_function();
 			this.set_last_captured_image(capture, capture_time);
-			const wait_time = this.capture_period_secs - (Date.now() - start_time);
+			const wait_time = this.capture_period_msecs - (Date.now() - start_time);
 			if(await sleep(wait_time)) break;
 		}
 	}
@@ -225,22 +256,22 @@ class CameraBaseImageServicer extends image_service_grpc_pb.ImageServiceService 
 	constructor(bosdyn_sdk_robot, service_name, image_sources, logger = null, use_background_capture_thread = true){
 		super();
 		if(logger == null){
-            this.logger = console;
-        }else{
-            this.logger = logger
-        }
+			this.logger = console;
+		}else{
+			this.logger = logger
+		}
 
-        this.bosdyn_sdk_robot = bosdyn_sdk_robot;
-        this.service_name = service_name;
-        this.#init();
-        this.bosdyn_sdk_robot.time_sync.wait_for_sync();
-        this.image_sources_mapped = {};
-        for(const source of image_sources){
-            source.set_logger(this.logger)
-            source.initialize_faults(this.fault_client, this.service_name)
-            if(use_background_capture_thread) source.create_capture_thread();
-            this.image_sources_mapped[source.getImageSourceName()] = source;
-        }
+		this.bosdyn_sdk_robot = bosdyn_sdk_robot;
+		this.service_name = service_name;
+		this.#init();
+		this.bosdyn_sdk_robot.time_sync.wait_for_sync();
+		this.image_sources_mapped = {};
+		for(const source of image_sources){
+			source.set_logger(this.logger)
+			source.initialize_faults(this.fault_client, this.service_name)
+			if(use_background_capture_thread) source.create_capture_thread();
+			this.image_sources_mapped[source.getImageSourceName()] = source;
+		}
 	}
 
 	async #init(){
@@ -248,56 +279,56 @@ class CameraBaseImageServicer extends image_service_grpc_pb.ImageServiceService 
 	}
 
 	ListImageSources(request, context){
-        const response = new image_pb.ListImageSourcesResponse();
-        for(const source of Object.values(this.image_sources_mapped)){
-            response.addImageSources(cloneDeep(source.getImageSourcesList()));
-        }
-        populate_response_header(response, request);
-        return response;
-    }
+		const response = new image_pb.ListImageSourcesResponse();
+		for(const source of Object.values(this.image_sources_mapped)){
+			response.addImageSources(cloneDeep(source.getImageSourcesList()));
+		}
+		populate_response_header(response, request);
+		return response;
+	}
 
-    _set_format_and_decode(image_data, img_proto, img_format, quality_percent, image_source_name){
-        return this.image_sources_mapped[image_source_name].image_decode_with_error_checking(image_data, img_proto, img_format, quality_percent);
-    }
+	_set_format_and_decode(image_data, img_proto, img_format, quality_percent, image_source_name){
+		return this.image_sources_mapped[image_source_name].image_decode_with_error_checking(image_data, img_proto, img_format, quality_percent);
+	}
 
-    GetImage(request, context){
-        const response = new image_pb.GetImageResponse();
-        for(const img_req of request.getImageRequestsList()){
-            const img_resp = response.setSource(this.image_sources_mapped[src_name].image_source_proto);
-            const src_name = img_req.getImageSourceName();
-            if(!this.image_sources_mapped[src_name]){
-                img_resp.setStatus(image_pb.ImageResponse.Status.STATUS_UNKNOWN_CAMERA);
-                this.logger.warn(`[IMAGE SERVICE HELPER] Camera source '${src_name}' is unknown.`);
-                continue;
-            }
+	GetImage(request, context){
+		const response = new image_pb.GetImageResponse();
+		for(const img_req of request.getImageRequestsList()){
+			const img_resp = response.setSource(this.image_sources_mapped[src_name].image_source_proto);
+			const src_name = img_req.getImageSourceName();
+			if(!this.image_sources_mapped[src_name]){
+				img_resp.setStatus(image_pb.ImageResponse.Status.STATUS_UNKNOWN_CAMERA);
+				this.logger.warn(`[IMAGE SERVICE HELPER] Camera source '${src_name}' is unknown.`);
+				continue;
+			}
 
-            img_resp.setShot(new image_pb.ImageCapture());
+			img_resp.setShot(new image_pb.ImageCapture());
 
-            img_resp.getShot().setCaptureParams(cloneDeep(this.image_sources_mapped[src_name].get_image_capture_params()));
+			img_resp.getShot().setCaptureParams(cloneDeep(this.image_sources_mapped[src_name].get_image_capture_params()));
 
-            const [captured_image, img_time_seconds] = this.image_sources_mapped[src_name].get_image_and_timestamp();
-            if(captured_image == null || img_time_seconds == null){
-                img_resp.setStatus(image_pb.ImageResponse.Status.STATUS_IMAGE_DATA_ERROR);
-                const error_message = `[IMAGE SERVICE HELPER] Failed to capture an image from ${src_name} on the server.`;
-                response.setHeader(new header_pb.ResponseHeader().setError(new header_pb.CommonError().setMessage(error_message)));
-                this.logger.warn(error_message);
-                continue;
-            }
+			const [captured_image, img_time_seconds] = this.image_sources_mapped[src_name].get_image_and_timestamp();
+			if(captured_image == null || img_time_seconds == null){
+				img_resp.setStatus(image_pb.ImageResponse.Status.STATUS_IMAGE_DATA_ERROR);
+				const error_message = `[IMAGE SERVICE HELPER] Failed to capture an image from ${src_name} on the server.`;
+				response.setHeader(new header_pb.ResponseHeader().setError(new header_pb.CommonError().setMessage(error_message)));
+				this.logger.warn(error_message);
+				continue;
+			}
 
-            img_resp.getShot().setAcquisitionTime(cloneDeep(this.bosdyn_sdk_robot.time_sync.robot_timestamp_from_local_secs(sec_to_nsec(img_time_seconds))));
+			img_resp.getShot().setAcquisitionTime(cloneDeep(this.bosdyn_sdk_robot.time_sync.robot_timestamp_from_local_secs(sec_to_nsec(img_time_seconds))));
 
-            img_resp.getShot().setImage(new image_pb.Image());
-            img_resp.getShot().getImage().setRows(img_resp.getSource().getRows());
-            img_resp.getShot().getImage().setCols(img_resp.getSource().getCols());
+			img_resp.getShot().setImage(new image_pb.Image());
+			img_resp.getShot().getImage().setRows(img_resp.getSource().getRows());
+			img_resp.getShot().getImage().setCols(img_resp.getSource().getCols());
 
-            img_resp.getShot().getImage().setFormat(img_req.getImageFormat());
-            const success = this._set_format_and_decode(captured_image, img_resp.getShot().getImage(), img_req.getImageFormat(), img_req.getQualityPercent(), src_name);
-            if(!success) img_resp.setStatus(image_pb.ImageResponse.Status.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED);
+			img_resp.getShot().getImage().setFormat(img_req.getImageFormat());
+			const success = this._set_format_and_decode(captured_image, img_resp.getShot().getImage(), img_req.getImageFormat(), img_req.getQualityPercent(), src_name);
+			if(!success) img_resp.setStatus(image_pb.ImageResponse.Status.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED);
 
-            if(img_resp.getStatus() == image_pb.ImageResponse.Status.STATUS_UNKNOWN) img_resp.setStatus(image_pb.ImageResponse.Status.STATUS_OK);
-        }
+			if(img_resp.getStatus() == image_pb.ImageResponse.Status.STATUS_UNKNOWN) img_resp.setStatus(image_pb.ImageResponse.Status.STATUS_OK);
+		}
 
-        populate_response_header(response, request);
-        return response;
-    }
+		populate_response_header(response, request);
+		return response;
+	}
 };

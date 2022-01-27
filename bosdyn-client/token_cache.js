@@ -181,5 +181,9 @@ class TokenCacheFilesystem {
 
 module.exports = {
 	TokenCache, 
-	TokenCacheFilesystem
+	TokenCacheFilesystem,
+	TokenCacheError,
+	ClearFailedError,
+	NotInCacheError,
+	WriteFailedError
 };

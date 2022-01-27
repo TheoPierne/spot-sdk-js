@@ -1,6 +1,6 @@
 const {BaseClient, common_header_errors} = require('./common.js');
 const robot_state_pb = require('../bosdyn/api/robot_state_pb.js');
-const directory_service_grpc_pb = require('../bosdyn/api/directory_service_grpc_pb.js');
+const robot_state_service_grpc_pb = require('../bosdyn/api/robot_state_service_grpc_pb');
 
 /**
 * Client for the RobotState service.
@@ -17,7 +17,7 @@ class RobotStateClient extends BaseClient {
     * @param {string} [name=null]
     */
     constructor(name=null){
-    	super(directory_service_grpc_pb.DirectoryServiceClient, name);
+    	super(robot_state_service_grpc_pb.RobotStateServiceClient, name);
     }
 
 	/**
@@ -27,7 +27,7 @@ class RobotStateClient extends BaseClient {
     * @throws {RpcError} Problem communicating with the robot.
     */
     async get_robot_state(args){
-    	const req = this._get_robot_state_request();
+    	const req = RobotStateClient._get_robot_state_request();
     	return await this.call(this._stub.getRobotState, req, _get_robot_state_value, common_header_errors, args);
     }
 
@@ -38,7 +38,7 @@ class RobotStateClient extends BaseClient {
     * @throws {RpcError} Problem communicating with the robot.
     */
     get_robot_state_async(args){
-    	const req = this._get_robot_state_request();
+    	const req = RobotStateClient._get_robot_state_request();
     	return this.call_async(this._stub.getRobotState, req, _get_robot_state_value, common_header_errors, args);
     }
 
@@ -49,7 +49,7 @@ class RobotStateClient extends BaseClient {
     * @throws {RpcError} Problem communicating with the robot.
     */
     async get_robot_metrics(args){
-    	const req = this._get_robot_metrics_request();
+    	const req = RobotStateClient._get_robot_metrics_request();
     	return await this.call(this._stub.getRobotMetrics, req, _get_robot_metrics_value, common_header_errors, args);
     }
 
@@ -60,7 +60,7 @@ class RobotStateClient extends BaseClient {
     * @throws {RpcError} Problem communicating with the robot.
     */
     get_robot_metrics_async(args){
-    	var req = this._get_robot_metrics_request();
+    	const req = RobotStateClient._get_robot_metrics_request();
     	return this.call_async(this._stub.getRobotMetrics, req, _get_robot_metrics_value, common_header_errors, args);
     }
 
@@ -71,7 +71,7 @@ class RobotStateClient extends BaseClient {
     * @throws {RpcError} Problem communicating with the robot.
     */
     async get_robot_hardware_configuration(args){
-    	const req = this._get_robot_hardware_configuration_request();
+    	const req = RobotStateClient._get_robot_hardware_configuration_request();
     	return await this.call(this._stub.getRobotHardwareConfiguration, req, _get_robot_hardware_configuration_value, common_header_errors, args);
     }
 
@@ -82,7 +82,7 @@ class RobotStateClient extends BaseClient {
     * @throws {RpcError} Problem communicating with the robot.
     */
     get_robot_hardware_configuration_async(args){
-    	var req = this._get_robot_hardware_configuration_request();
+    	const req = RobotStateClient._get_robot_hardware_configuration_request();
     	return this.call_async(this._stub.getRobotHardwareConfiguration, req, _get_robot_hardware_configuration_value, common_header_errors, args);
     }
 
@@ -94,7 +94,7 @@ class RobotStateClient extends BaseClient {
     * @throws {RpcError} Problem communicating with the robot.
     */
     async get_robot_link_model(link_name, args){
-    	const req = this._get_robot_link_model_request(link_name);
+    	const req = RobotStateClient._get_robot_link_model_request(link_name);
     	return await this.call(this._stub.getRobotLinkModel, req, _get_robot_link_model_value, common_header_errors, args);
     }
 
@@ -106,7 +106,7 @@ class RobotStateClient extends BaseClient {
     * @throws {RpcError} Problem communicating with the robot.
     */
     get_robot_link_model_async(link_name, args){
-    	var req = this._get_robot_link_model_request(link_name);
+    	const req = RobotStateClient._get_robot_link_model_request(link_name);
     	return this.call_async(this._stub.getRobotLinkModel, req, _get_robot_link_model_value, common_header_errors, args);
     }
 

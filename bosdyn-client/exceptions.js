@@ -6,11 +6,11 @@ class ValueError extends Error {
 };
 
 class ResponseError extends Error {
-	constructor(response, error_message = null){
+	constructor(response = null, error_message = null){
 		if(error_message != null){
 			super(error_message);
 		}else if(response != null){
-			super(response.header.error.message);
+			super(response.getHeader().getError().getMessage());
 		}else{
 			super();
 		}
@@ -29,43 +29,43 @@ class ResponseError extends Error {
 };
 
 class InvalidRequestError extends ResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(response, msg){
+		super(response, msg);
 		this.name = 'InvalidRequestError';
 	}
 };
 
 class LeaseUseError extends ResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(response, msg){
+		super(response, msg);
 		this.name = 'LeaseUseError';
 	}
 };
 
 class LicenseError extends ResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(response, msg){
+		super(response, msg);
 		this.name = 'LicenseError';
 	}
 };
 
 class ServerError extends ResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(response, msg){
+		super(response, msg);
 		this.name = 'ServerError';
 	}
 };
 
 class InternalServerError extends ServerError {
-	constructor(msg){
-		super(msg);
+	constructor(response, msg){
+		super(response, msg);
 		this.name = 'InternalServerError';
 	}
 };
 
 class UnsetStatusError extends ServerError {
-	constructor(msg){
-		super(msg);
+	constructor(response, msg){
+		super(response, msg);
 		this.name = 'UnsetStatusError';
 	}
 };

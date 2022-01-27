@@ -17,6 +17,8 @@ const {TokenCache} = require('./token_cache');
 
 const {timestamp_to_sec} = require('../bosdyn-core/util');
 
+const { setTimeout: sleep } = require('node:timers/promises');
+
 const _DEFAULT_SECURE_CHANNEL_PORT = 443;
 
 class RobotError extends Error {
@@ -57,14 +59,6 @@ class UnregisteredServiceTypeError extends UnregisteredServiceError {
 	}
 };
 
-function sleep(period) {
-	return new Promise(resolve => {
-		setTimeout(() => {
-			resolve();
-		}, period);
-	});
-}
-
 class Robot {
 
 	constructor(name = null){
@@ -93,6 +87,7 @@ class Robot {
 		this.lease_wallet = new LeaseWallet();
 		this._time_sync_thread = null;
 
+		//Set default max message length for sending and receiving. These values are used when creating channels.
 		this.max_send_message_length = channel.DEFAULT_MAX_MESSAGE_LENGTH;
 		this.max_receive_message_length = channel.DEFAULT_MAX_MESSAGE_LENGTH;
 
@@ -103,14 +98,24 @@ class Robot {
 			[PayloadRegistrationClient.default_service_name]: 'payload-registration.spot.robot',
 			[RobotIdClient.default_service_name]: 'id.spot.robot',
 		};
+
+		process.on('exit', this.#exitHandler.bind(this, {cleanup:true}));
+		process.on('SIGINT', this.#exitHandler.bind(this, {exit:true}));
+	}
+
+	#exitHandler(options) {
+		if (options.cleanup) this._shutdown();
+		if (options.exit) process.exit();
 	}
 
 	_shutdown(){
 		if(this._time_sync_thread){
+			console.log('oui time sync')
 			this._time_sync_thread.stop();
 			this._time_sync_thread = null;
 		}
 		if(this._token_manager){
+			console.log('oui token')
 			this._token_manager.stop();
 			this._token_manager = null;
 		}
@@ -322,8 +327,9 @@ class Robot {
 		directory_service_authority = this._bootstrap_service_authorities[DirectoryClient.default_service_name]){
 		const remote_services = await this.list_services(directory_service_name, directory_service_authority);
 		for(const service of remote_services){
-			this.authorities_by_name[service.name] = service.authority;
-			this.service_type_by_name[service.name] = service.type;
+			console.log(service.getName())
+			this.authorities_by_name[service.getName()] = service.getAuthority();
+			this.service_type_by_name[service.getName()] = service.getType();
 		}
 		return this.service_type_by_name;
 	}
@@ -339,7 +345,8 @@ class Robot {
 	}
 
 	async start_time_sync(time_sync_interval_sec = null){
-		if(!this._time_sync_thread) this._time_sync_thread = TimeSyncThread(await this.ensure_client(TimeSyncClient.default_service_name));
+		const client = await this.ensure_client(TimeSyncClient.default_service_name);
+		if(!this._time_sync_thread) this._time_sync_thread = new TimeSyncThread(client);
 		if(time_sync_interval_sec) this._time_sync_thread.time_sync_interval_sec = time_sync_interval_sec;
 		if(this._time_sync_thread.stopped) this._time_sync_thread.start();
 	}
@@ -349,8 +356,11 @@ class Robot {
 	}
 
 	get time_sync(){
-		this.start_time_sync()
-		return this._time_sync_thread;
+		return new Promise((resolve, reject) => {
+			this.start_time_sync().then(() => {
+				resolve(this._time_sync_thread);
+			});
+		});
 	}
 
 	time_sec(){
@@ -374,8 +384,7 @@ class Robot {
 	}
 
 	async power_on(timeout_sec = 20_000, update_frequency = 1.0, timeout = null){
-		const service_name = PowerClient.default_service_name;
-		const client = await this.ensure_client(service_name);
+		const client = await this.ensure_client(PowerClient.default_service_name);
 		power_on(client, timeout_sec, update_frequency, {timeout});
 	}
 

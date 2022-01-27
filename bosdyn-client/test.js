@@ -1,14 +1,17 @@
-class BaseClient {
-	constructor(){
-		console.log(this, this.constructor.a, this.prototype, this.__proto__)
-	}
-}
+/*const { Worker, isMainThread, workerData } = require('node:worker_threads');
 
-class RobotId extends BaseClient {
-	static a = 'oui';
-	constructor(){
-		super();
-	}
-}
+if (isMainThread) {
+  // This re-loads the current file inside a Worker instance.
+  new Worker(__filename, {workerData: {a: 1}});
+  console.log('Outside Worker !', isMainThread);
+} else {
+  console.log('Inside Worker !', isMainThread, workerData);
+}*/
 
-new RobotId();
+const {TokenManager} = require('./token_manager');
+
+const a = new TokenManager({address: '127.0.0.1'});
+
+a.stop().then(() => {
+	console.log('Thread stop !');
+});

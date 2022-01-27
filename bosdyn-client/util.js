@@ -129,7 +129,6 @@ class GrpcServiceRunner {
 		this.port = this.server.bindAsync(port, new grpc.ServerCredentials().createInsecure());
 		this.server.start()
 		this.logger.info(`Started the "${this.server_type_name}" server.`);
-
 	}
 
 	async stop(){
@@ -147,7 +146,7 @@ class GrpcServiceRunner {
 };
 
 function populate_response_header(response, request, error_code = header_pb.CommonError.Code.CODE_OK, error_msg = null){
-	const header = new header_pb.ResponseHeader()
+	const header = new header_pb.ResponseHeader();
 	header.setRequestHeader(request.getHeader());
 	header.setRequestReceivedTimestamp(now_timestamp());
 	const error = new header_pb.CommonError();

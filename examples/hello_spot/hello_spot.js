@@ -1,7 +1,8 @@
 const client = require('../../index');
-const {RobotCommandBuilder, RobotCommandClient, blocking_stand} = client.robot_command;
-const {ImageClient} = client.image;
-const {LeaseClient} = client.lease;
+console.log(client)
+const {RobotCommandBuilder, RobotCommandClient, blocking_stand} = require('../../bosdyn-client/robot_command');
+const {ImageClient} = require('../../bosdyn-client/image');
+const {LeaseClient, LeaseKeepAlive} = require('../../bosdyn-client/lease');
 
 const {sleep} = require('../../bosdyn-core/util');
 const geometry = require('../../bosdyn-core/geometry');
@@ -15,18 +16,21 @@ const argparse = require('argparse');
 async function hello_spot(config){
 	// client.util.setup_logging(config.verbose)
 
-	const sdk = client.create_standard_sdk('HelloSpotClient');
+	const sdk = client.sdk.create_standard_sdk('HelloSpotClient');
 	const robot = sdk.create_robot(config.hostname);
 
 	await robot.authenticate(config.username, config.password);
+	
 	// robot.time_sync.wait_for_sync();
 
-	console.assert(!robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, such as the estop SDK example, to configure E-Stop.");
+	const is_estopped = await robot.is_estopped();
+
+	console.assert(!is_estopped, "Robot is estopped. Please use an external E-Stop client, such as the estop SDK example, to configure E-Stop.");
 
 	const lease_client = await robot.ensure_client(LeaseClient.default_service_name);
 	const lease = await lease_client.acquire();
 	try{
-		with (bosdyn.client.lease.LeaseKeepAlive(lease_client)){
+		with (new LeaseKeepAlive(lease_client)){
 			robot.logger.info("Powering on robot... This may take several seconds.");
 			await robot.power_on(20_000);
 			console.assert(await robot.is_powered_on(), "Robot power on failed.");
@@ -66,6 +70,8 @@ async function hello_spot(config){
 			console.assert(!await robot.is_powered_on(), "Robot power off failed.");
 			robot.logger.info("Robot safely powered off.");
 		}
+	}catch(e){
+		console.log(e);
 	}finally{
 		lease_client.return_lease(lease);
 	}
@@ -106,7 +112,7 @@ async function main(args = null){
 
     add_common_arguments(parser);
 
-    parser.add_argument(['-s', '--save'], {action: 'store_true', help:
+    parser.add_argument('-s', '--save', {action: 'store_true', help:
         'Save the image captured by Spot to the working directory. To chose the save location, use --save_path instead.'});
     parser.add_argument('--save-path', {default: null, nargs: '?', help:
         'Save the image captured by Spot to the provided directory. Invalid path saves to working directory.'});
@@ -117,7 +123,7 @@ async function main(args = null){
         await hello_spot(options);
         return true;
     }catch(e){
-        console.error("Hello, Spot! threw an exception: ", exc)
+        console.error("Hello, Spot! threw an exception: ", e);
         return false;
     }
 }

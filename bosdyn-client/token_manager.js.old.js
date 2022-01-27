@@ -39,7 +39,7 @@ class TokenManager {
      * Refresh the user token as needed.
      */
      async update() {
-        const USER_TOKEN_REFRESH_TIME_DELTA = 3_600_000;
+        const USER_TOKEN_REFRESH_TIME_DELTA = 3_600;
         const USER_TOKEN_RETRY_INTERVAL_START = 1_000;
 
         let retry_interval = USER_TOKEN_RETRY_INTERVAL_START;

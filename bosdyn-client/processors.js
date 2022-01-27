@@ -1,6 +1,5 @@
 const header_pb = require('../bosdyn/api/header_pb');
 const {now_timestamp} = require('../bosdyn-core/util');
-const time = require('google-protobuf/google/protobuf/timestamp_pb');
 
 /**
 * Sets header fields common to all bosdyn.api requests. 
@@ -17,9 +16,9 @@ class AddRequestHeader {
 	}
 
 	_create_header(){
-		const time = now_timestamp();
+		const nowTimestamp = now_timestamp();
 		const header = new header_pb.RequestHeader()
-		.setRequestTimestamp(time)
+		.setRequestTimestamp(nowTimestamp)
 		.setClientName(this.get_client_name());
 		return header;
 	}

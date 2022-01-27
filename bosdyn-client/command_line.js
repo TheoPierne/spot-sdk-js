@@ -1,7 +1,9 @@
 const nj = require('numjs');
 const argparse = require('argparse');
-const path = require('path');
+const path = require('node:path');
 const {writeFileSync, readFileSync, mkdirSync} = require('fs');
+
+const { setTimeout: sleep } = require('node:timers/promises');
 
 const {InvalidLoginError} = require('./auth');
 const {get_self_ip} = require('./common');
@@ -371,7 +373,7 @@ class FaultWatchCommand extends Command {
         super(subparsers, command_dict, 'watch');
     }
 
-    _run(robot, options){
+    async _run(robot, options){
         print('Press Ctrl-C or send SIGINT to exit\n\n')
         while(true){
             _show_service_faults(robot);

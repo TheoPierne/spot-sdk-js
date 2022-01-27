@@ -9,16 +9,18 @@ const NSEC_PER_SEC = BILLION;
 
 const TIME_FORMAT_DESC = `
 Time values have one of these formats:
- - yyyymmdd_hhmmss  (e.g., 20200120_120000)
- - yyyymmdd         (e.g., 20200120)
- -  {n}d    {n} days ago     (e.g., 2d)
- -  {n}h    {n} hours ago
- -  {n}m    {n} minutes ago
- -  {n}s    {n} seconds ago
- - nnnnnnnnnn[.nn]       (e.g., 1581869515.256)  Seconds since epoch
- - nnnnnnnnnnnnnnnnnnnn  Nanoseconds since epoch`;
+- yyyymmdd_hhmmss  (e.g., 20200120_120000)
+- yyyymmdd         (e.g., 20200120)
+-  {n}d    {n} days ago     (e.g., 2d)
+-  {n}h    {n} hours ago
+-  {n}m    {n} minutes ago
+-  {n}s    {n} seconds ago
+- nnnnnnnnnn[.nn]       (e.g., 1581869515.256)  Seconds since epoch
+- nnnnnnnnnnnnnnnnnnnn  Nanoseconds since epoch`;
 
 function sleep(period) {
+	process.emitWarning('[Deprecrated] Use builtin sleep function !');
+	console.trace();
 	return new Promise(resolve => {
 		setTimeout(() => {
 			resolve();
@@ -63,18 +65,18 @@ function duration_str(duration){
 }
 
 function duration_to_seconds(duration){
-	return duration.seconds + duration.nanos / NSEC_PER_SEC;
+	return duration.getSeconds() + duration.getNanos() / NSEC_PER_SEC;
 }
 
 function seconds_to_duration(seconds){
-	var duration_seconds = parseInt(seconds);
-	var duration_nanos = parseInt((seconds - duration_seconds) * NSEC_PER_SEC);
+	const duration_seconds = parseInt(seconds);
+	const duration_nanos = parseInt((seconds - duration_seconds) * NSEC_PER_SEC);
 	return new duration.Duration([duration_seconds, duration_nanos]);
 }
 
 function seconds_to_timestamp(seconds){
-	var timestamp_seconds = parseInt(seconds);
-	var timestamp_nanos = parseInt((seconds - timestamp_seconds) * NSEC_PER_SEC);
+	const timestamp_seconds = parseInt(seconds);
+	const timestamp_nanos = parseInt((seconds - timestamp_seconds) * NSEC_PER_SEC);
 	return new time.Timestamp([timestamp_seconds, timestamp_nanos]);
 }
 
@@ -100,24 +102,24 @@ function set_timestamp_from_nsec(timestamp_proto, time_nsec){
 }
 
 function now_timestamp(){
-	var now = now_nsec();
-	var timestamp_proto = new time.Timestamp();
+	const now = now_nsec();
+	const timestamp_proto = new time.Timestamp();
 	set_timestamp_from_nsec(timestamp_proto, now);
 	return timestamp_proto;
 }
 
 function nsec_to_timestamp(time_nsec){
-	var timestamp_proto = new time.Timestamp();
+	const timestamp_proto = new time.Timestamp();
 	set_timestamp_from_nsec(timestamp_proto, time_nsec);
 	return timestamp_proto;
 }
 
 function set_timestamp_from_datetime(timestamp_proto, date_time){
-    set_timestamp_from_nsec(timestamp_proto, parseInt(date_time.getTime()))
- }
+	set_timestamp_from_nsec(timestamp_proto, parseInt(date_time.getTime()))
+}
 
 function getNanoSecTime() {
-	var hrTime = process.hrtime();
+	const hrTime = process.hrtime();
 	return hrTime[0] * 1000000000 + hrTime[1];
 }
 
@@ -152,6 +154,7 @@ function distance_str(meters){
 
 
 class RobotTimeConverter {
+
 	constructor(robot_clock_skew_nsec){
 		this._clock_skew_nsec = robot_clock_skew_nsec;
 	}
@@ -164,10 +167,18 @@ class RobotTimeConverter {
 		return this.robot_timestamp_from_local_nsecs(sec_to_nsec(local_time_secs));
 	}
 
-	convert_timestamp_from_local_to_robot(timestamp_proto){
-		const local_nsecs = timestamp_to_nsec(timestamp_proto);
-		timestamp_proto = this.robot_timestamp_from_local_nsecs(local_nsecs);
+	robot_timestamp_from_local(local_timestamp_proto){
+		const local_nsecs = timestamp_to_nsec(local_timestamp_proto);
+		return this.robot_timestamp_from_local_nsecs(local_nsecs);
 	}
+
+	convert_timestamp_from_local_to_robot(timestamp_proto){
+        timestamp_proto = this.robot_timestamp_from_local(timestamp_proto);
+	}
+
+	robot_seconds_from_local_seconds(local_time_secs){
+        return local_time_secs + nsec_to_sec(this._clock_skew_nsec);
+    }
 };
 
 class slice {

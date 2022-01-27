@@ -12,13 +12,7 @@ const {add_lease_wallet_processors} = require('./lease');
 const docking_pb = require('../bosdyn/api/docking/docking_pb');
 const docking_service_grpc_pb = require('../bosdyn/api/docking/docking_service_grpc_pb');
 
-function sleep(period) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
-        }, period);
-    });
-}
+const { setTimeout: sleep } = require('node:timers/promises');
 
 class DockingClient extends BaseClient {
 
@@ -107,7 +101,7 @@ class DockingClient extends BaseClient {
 };
 
 const _DOCKING_COMMAND_STATUS_TO_ERROR = {
-	STATUS_OK: [null, null]
+	[docking_pb.DockingCommandResponse.StatusSTATUS_OK]: [null, null]
 };
 
 function _docking_command_error_from_response(response){
@@ -126,8 +120,9 @@ function _docking_get_state_error_from_response(response){
     return null;
 }
 
-async function blocking_dock_robot(robot, dock_id, num_retries=4){
+async function blocking_dock_robot(robot, dock_id, num_retries = 4){
     const docking_client = await robot.ensure_client(DockingClient.default_service_name);
+
     let attempt_number = 0;
     let docking_success = false;
 
@@ -140,17 +135,19 @@ async function blocking_dock_robot(robot, dock_id, num_retries=4){
 
         const cmd_id = await docking_client.docking_command(dock_id, robot.time_sync.endpoint.clock_identifier, robot.time_sync.robot_timestamp_from_local_secs(cmd_end_time), prep_pose);
 
+        const statusDocking = docking_pb.DockingCommandFeedbackResponse.Status;
+
         while(Date.now() < cmd_timeout){
             const status = await docking_client.docking_command_feedback(cmd_id);
-            if(status == docking_pb.DockingCommandFeedbackResponse.Status.STATUS_IN_PROGRESS){
+            if(status == statusDocking.STATUS_IN_PROGRESS){
                 await sleep(1000);
-            }else if(status == docking_pb.DockingCommandFeedbackResponse.Status.STATUS_DOCKED){
+            }else if(status == statusDocking.STATUS_DOCKED){
                 docking_success = true;
                 break;
-            }else if(status in [docking_pb.DockingCommandFeedbackResponse.Status.STATUS_MISALIGNED, docking_pb.DockingCommandFeedbackResponse.Status.STATUS_ERROR_COMMAND_TIMED_OUT]){
+            }else if(status in [statusDocking.STATUS_MISALIGNED, statusDocking.STATUS_ERROR_COMMAND_TIMED_OUT]){
                 break;
             }else{
-                throw new CommandFailedError(`Docking Failed, status: '${docking_pb.DockingCommandFeedbackResponse.Status[status]}'`);
+                throw new CommandFailedError(`Docking Failed, status: '${statusDocking[status]}'`);
             }
         }
     }
@@ -162,6 +159,7 @@ async function blocking_dock_robot(robot, dock_id, num_retries=4){
     }catch(e){
 
     }
+    
     throw new CommandFailedError("Docking Failed, too many attempts");
 }
 

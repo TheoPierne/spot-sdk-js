@@ -1,11 +1,5 @@
-const {
-	BaseClient, 
-	error_factory, 
-	handle_unset_status_error, 
-	handle_common_header_errors, 
-	handle_lease_use_result_errors
-} = require('./common');
-const {ResponseError, InternalServerError, LicenseError} = require('./exceptions');
+const {BaseClient, error_factory, handle_unset_status_error, handle_common_header_errors, handle_lease_use_result_errors} = require('./common');
+const {ResponseError, InternalServerError, LicenseError, TimedOutError} = require('./exceptions');
 const {add_lease_wallet_processors} = require('./lease');
 
 const power_pb = require('../bosdyn/api/power_pb');
@@ -16,9 +10,11 @@ const license_pb = require('../bosdyn/api/license_pb');
 const robot_command_pb = require('../bosdyn/api/robot_command_pb');
 const robot_state_pb = require('../bosdyn/api/robot_state_pb');
 
+const { setTimeout: sleep } = require('node:timers/promises');
+
 class PowerResponseError extends ResponseError {
 	constructor(msg){
-		super(msg);
+		super(null, msg);
 		this.name = 'PowerResponseError';
 	}
 };
@@ -115,15 +111,12 @@ class PowerClient extends BaseClient {
 	}
 
 	static _power_command_request(lease, request){
-		const req = new power_pb.PowerCommandRequest()
-		.setLease(lease)
-		.setRequest(request);
+		const req = new power_pb.PowerCommandRequest().setLease(lease).setRequest(request);
 		return req;
 	}
 
 	static _power_command_feedback_request(power_command_id){
-		const req = new power_pb.PowerCommandFeedbackRequest()
-		.setPowerCommandId(power_command_id);
+		const req = new power_pb.PowerCommandFeedbackRequest().setPowerCommandId(power_command_id);
 		return req;
 	}
 
@@ -150,31 +143,27 @@ function _common_license_errors(response){
 }
 
 const _STATUS_TO_ERROR = {
-	STATUS_SUCCESS: [null, null],
-	STATUS_IN_PROGRESS: [null, null],
-	STATUS_SHORE_POWER_CONNECTED: [ShorePowerConnectedError, 'Robot cannot be powered on while on wall power.'],
-	STATUS_BATTERY_MISSING: [BatteryMissingError, 'Battery not inserted into robot.'],
-	STATUS_COMMAND_IN_PROGRESS: [CommandInProgressError, 'Power command cannot be overwritten.'],
-	STATUS_ESTOPPED: [EstoppedError, 'Cannot power on while estopped. Inspect EStopState for more info.'],
-	STATUS_FAULTED: [FaultedError, 'Cannot power on due to a fault. Inspect FaultState for more info.'],
-	STATUS_INTERNAL_ERROR: [InternalServerError, 'Service experienced an unexpected error state.'],
-	STATUS_LICENSE_ERROR: [LicenseError, 'Request was rejected due to using an invalid license.']
+	[power_pb.PowerCommandStatus.STATUS_SUCCESS]: [null, null],
+	[power_pb.PowerCommandStatus.STATUS_IN_PROGRESS]: [null, null],
+	[power_pb.PowerCommandStatus.STATUS_SHORE_POWER_CONNECTED]: [ShorePowerConnectedError, 'Robot cannot be powered on while on wall power.'],
+	[power_pb.PowerCommandStatus.STATUS_BATTERY_MISSING]: [BatteryMissingError, 'Battery not inserted into robot.'],
+	[power_pb.PowerCommandStatus.STATUS_COMMAND_IN_PROGRESS]: [CommandInProgressError, 'Power command cannot be overwritten.'],
+	[power_pb.PowerCommandStatus.STATUS_ESTOPPED]: [EstoppedError, 'Cannot power on while estopped. Inspect EStopState for more info.'],
+	[power_pb.PowerCommandStatus.STATUS_FAULTED]: [FaultedError, 'Cannot power on due to a fault. Inspect FaultState for more info.'],
+	[power_pb.PowerCommandStatus.STATUS_INTERNAL_ERROR]: [InternalServerError, 'Service experienced an unexpected error state.'],
+	[power_pb.PowerCommandStatus.STATUS_LICENSE_ERROR]: [LicenseError, 'Request was rejected due to using an invalid license.']
 }
 
 function _power_command_error_from_response(response){
-	return error_factory(response, response.status, power_pb.PowerCommandStatus.keys(), _STATUS_TO_ERROR);
+	return error_factory(response, response.getStatus(), Object.keys(power_pb.PowerCommandStatus), _STATUS_TO_ERROR);
+}
+
+function _power_feedback_error_from_response(response){
+	return null;
 }
 
 function _power_status_from_response(response){
 	return response.getStatus();
-}
-
-function sleep(period) {
-	return new Promise(resolve => {
-		setTimeout(() => {
-			resolve();
-		}, period);
-	});
 }
 
 /**
@@ -379,14 +368,12 @@ function power_on_wifi_radio(power_client, timeout_sec = 30_000, update_frequenc
 * @throws {RpcError} Problem communicating with the robot
 */
 async function _power_command(power_client, request, timeout_sec = 30_000, update_frequency = 1.0, expect_grpc_timeout = false, args){
-	const start_time = Date.now();
-	const end_time = start_time + timeout_sec;
-	const update_time = 1.0 / update_frequency;
-
 	let responseId;
+
 	try{
-		responseId = await power_client.power_command(request, args);
+		responseId = await power_client.power_command(request, null, args);
 	}catch(e){
+		console.log(e)
 		if(e instanceof TimedOutError){
 			if(expect_grpc_timeout){
 				return;
@@ -396,36 +383,45 @@ async function _power_command(power_client, request, timeout_sec = 30_000, updat
 		}
 	}
 
-	if(responseId.status == power_pb.Status.STATUS_SUCCESS) return;
+	if(responseId.getStatus() == power_pb.PowerCommandStatus.STATUS_SUCCESS) return;
+
+	const start_time = Date.now();
+	const end_time = start_time + timeout_sec;
+	const update_time = 1.0 / update_frequency;
 
 	const power_command_id = responseId.getPowerCommandId();
+
 	while(Date.now() < end_time){
 		const time_until_timeout = end_time - Date.now();
 		const start_call_time = Date.now();
 		try{
 			const response = await power_client.power_command_feedback(power_command_id, Object.assign({}, args, {timeout: time_until_timeout}));
-			if(response == power_pb.PowerCommandStatus.Status.STATUS_SUCCESS) return;
-			if(response != power_pb.PowerCommandStatus.Status.STATUS_IN_PROGRESS){
+			if(response == power_pb.PowerCommandStatus.STATUS_SUCCESS) return;
+			if(response != power_pb.PowerCommandStatus.STATUS_IN_PROGRESS){
 				const error_type = _STATUS_TO_ERROR[response][0];
 				const message = _STATUS_TO_ERROR[response][1];
-				const exc = new error_type(message);
-				throw exc;
+				throw new error_type(message);
 			}
 		}catch(e){
+			const errorClass = Object.values(_STATUS_TO_ERROR).map(x => x[0]).filter(x => x != null);
 			if(e instanceof TimedOutError){
 				if(expect_grpc_timeout){
 					return;
 				}else{
 					throw e;
 				}
+			}else if(!errorClass.some(classError => e instanceof classError)){
+				throw new CommandTimedOutError(e);
 			}else{
-				throw new CommandTimedOutError();
+				throw e;
 			}
 		}
 		const call_time = Date.now() - start_call_time;
 		const sleep_time = Math.max(0.0, update_time - call_time);
+		console.log(update_time - call_time)
 		await sleep(sleep_time);
 	}
+
 	throw new CommandTimedOutError();
 }
 

@@ -441,11 +441,11 @@ class EstopKeepAlive {
     _periodic_check_in(){
     	this.logger.info('[ESTOP] Starting estop check-in');
     	while (true){
-    		var exec_start = Date.now();
+    		const exec_start = Date.now();
 
     		if(!this._keep_running()) break;
 
-    		var is_error = false;
+    		let is_error = false;
 
     		try{
     			this._check_in();
@@ -458,13 +458,13 @@ class EstopKeepAlive {
     			}else if(e instanceof EndpointUnknownError){
     				this._error(e.toString(), e, true);
     			}else{
-    				this.logger.warn(`[ESTOP] Generic exception during check-in: \n${e}\n (resuming check-in)`)
+    				this.logger.warn(`[ESTOP] Generic exception during check-in: \n${e}\n (resuming check-in)`);
     			}
     		}
 
     		if(!is_error) this._ok();
 
-    		var exec_sec = Date.now() - exec_start;
+    		const exec_sec = Date.now() - exec_start;
 
     		if(this._end_check_in_signal.wait(this._check_in_period - exec_sec)) break;
     	}
@@ -481,9 +481,9 @@ class EstopKeepAlive {
 
 };
 
-function is_estopped(estop_client, args){
-    var response = estop_client.get_status(args);
-    return response.stop_level != StopLevel.ESTOP_LEVEL_NONE;
+async function is_estopped(estop_client, args){
+    const response = await estop_client.get_status(args);
+    return response.getStopLevel() != StopLevel.ESTOP_LEVEL_NONE;
 }
 
 function response_from_challenge(challenge){

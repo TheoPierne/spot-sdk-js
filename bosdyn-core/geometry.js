@@ -1,4 +1,4 @@
-const Quaternion = require('quaternion');
+const geometry_pb = require('../bosdyn/api/geometry_pb');
 
 class EulerZXY {
 	constructor(yaw = 0.0, roll = 0.0, pitch = 0.0){
@@ -20,26 +20,26 @@ class EulerZXY {
 		const y = cp * sr * sy + cr * cy * sp;
 		const z = cp * cr * sy + sp * cy * sr;
 
-		return Quaternion(w, x, y, z);
+		return new geometry_pb.Quaternion().setX(x).setY(y).setZ(z).setW(w);
 	}
 }
 
 function _matrix_from_quaternion(q){
 	const rot_matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-	rot_matrix[0][0] = 1.0 - 2.0 * q.y * q.y - 2.0 * q.z * q.z;
-	rot_matrix[0][1] = 2.0 * q.x * q.y - 2.0 * q.z * q.w;
-	rot_matrix[0][2] = 2.0 * q.x * q.z + 2.0 * q.y * q.w;
-	rot_matrix[1][0] = 2.0 * q.x * q.y + 2.0 * q.z * q.w;
-	rot_matrix[1][1] = 1.0 - 2.0 * q.x * q.x - 2.0 * q.z * q.z;
-	rot_matrix[1][2] = 2.0 * q.y * q.z - 2.0 * q.x * q.w;
-	rot_matrix[2][0] = 2.0 * q.x * q.z - 2.0 * q.y * q.w;
-	rot_matrix[2][1] = 2.0 * q.y * q.z + 2.0 * q.x * q.w;
-	rot_matrix[2][2] = 1.0 - 2.0 * q.x * q.x - 2.0 * q.y * q.y;
+	rot_matrix[0][0] = 1.0 - 2.0 * q.getY() * q.getY() - 2.0 * q.getZ() * q.getZ();
+	rot_matrix[0][1] = 2.0 * q.getX() * q.getY() - 2.0 * q.getZ() * q.getW();
+	rot_matrix[0][2] = 2.0 * q.getX() * q.getZ() + 2.0 * q.getY() * q.getW();
+	rot_matrix[1][0] = 2.0 * q.getX() * q.getY() + 2.0 * q.getZ() * q.getW();
+	rot_matrix[1][1] = 1.0 - 2.0 * q.getX() * q.getX() - 2.0 * q.getZ() * q.getZ();
+	rot_matrix[1][2] = 2.0 * q.getY() * q.getZ() - 2.0 * q.getX() * q.getW();
+	rot_matrix[2][0] = 2.0 * q.getX() * q.getZ() - 2.0 * q.getY() * q.getW();
+	rot_matrix[2][1] = 2.0 * q.getY() * q.getZ() + 2.0 * q.getX() * q.getW();
+	rot_matrix[2][2] = 1.0 - 2.0 * q.getX() * q.getX() - 2.0 * q.getY() * q.getY();
 	return rot_matrix
 }
 
 function to_euler_zxy(d){
-	if (!d instanceof Quaternion) throw Error('Must input object of type Quaternion');
+	if (!d instanceof geometry_pb.Quaternion) throw Error('Must input object of type Quaternion');
 
 	const m = _matrix_from_quaternion(d);
 	const euler_angle = new EulerZXY();
@@ -58,7 +58,7 @@ function to_euler_zxy(d){
 	return euler_angle;
 }
 
-Quaternion.to_euler_zxy = to_euler_zxy;
+geometry_pb.Quaternion.to_euler_zxy = to_euler_zxy;
 
 module.exports = {
 	EulerZXY
