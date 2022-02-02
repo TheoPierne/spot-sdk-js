@@ -838,6 +838,8 @@ async function blocking_stand(command_client, timeout_sec = 10_000, update_frequ
 			isCatch = true;
 		}
 
+		console.log(response.toObject())
+
 		if(!isCatch){
 			const mob_feedback = response.getFeedback().getSynchronizedFeedback().getMobilityCommandFeedback();
 			const mob_status = mob_feedback.getStatus();

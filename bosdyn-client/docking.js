@@ -101,7 +101,7 @@ class DockingClient extends BaseClient {
 };
 
 const _DOCKING_COMMAND_STATUS_TO_ERROR = {
-	[docking_pb.DockingCommandResponse.StatusSTATUS_OK]: [null, null]
+	[docking_pb.DockingCommandResponse.Status.STATUS_OK]: [null, null]
 };
 
 function _docking_command_error_from_response(response){
@@ -128,8 +128,8 @@ async function blocking_dock_robot(robot, dock_id, num_retries = 4){
 
     while(attempt_number < num_retries && !docking_success){
         attempt_number += 1;
-        const cmd_end_time = Date.now() + 30000;
-        const cmd_timeout = cmd_end_time + 10000;
+        const cmd_end_time = Date.now() + 30_000;
+        const cmd_timeout = cmd_end_time + 10_000;
 
         const prep_pose = attempt_number % 2 ? docking_pb.PrepPoseBehavior.PREP_POSE_USE_POSE : docking_pb.PrepPoseBehavior.PREP_POSE_SKIP_POSE;
 
@@ -163,18 +163,18 @@ async function blocking_dock_robot(robot, dock_id, num_retries = 4){
     throw new CommandFailedError("Docking Failed, too many attempts");
 }
 
-async function blocking_go_to_prep_pose(robot, dock_id, timeout = 20000){
+async function blocking_go_to_prep_pose(robot, dock_id, timeout = 20_000){
     const docking_client = await robot.ensure_client(DockingClient.default_service_name);
 
     const cmd_end_time = Date.now() + timeout;
-    const cmd_timeout = cmd_end_time + 10000;
+    const cmd_timeout = cmd_end_time + 10_000;
 
     const cmd_id = await docking_client.docking_command(dock_id, robot.time_sync.endpoint.clock_identifier, robot.time_sync.robot_timestamp_from_local_secs(cmd_end_time), docking_pb.PrepPoseBehavior.PREP_POSE_ONLY_POSE);
 
     while(Date.now() < cmd_timeout){
         const status = await docking_client.docking_command_feedback(cmd_id);
         if(status == docking_pb.DockingCommandFeedbackResponse.Status.STATUS_IN_PROGRESS){
-            await sleep(1000);
+            await sleep(1_000);
         }else if(status == docking_pb.DockingCommandFeedbackResponse.Status.STATUS_AT_PREP_POSE){
             return;
         }else{
@@ -184,7 +184,7 @@ async function blocking_go_to_prep_pose(robot, dock_id, timeout = 20000){
     throw new CommandFailedError("Error going to the prep pose, timeout exceeded.");
 }
 
-async function blocking_undock(robot, timeout = 20000){
+async function blocking_undock(robot, timeout = 20_000){
     const docking_client = await robot.ensure_client(DockingClient.default_service_name);
 
     const cmd_end_time = Date.now() + timeout;
@@ -195,7 +195,7 @@ async function blocking_undock(robot, timeout = 20000){
     while(Date.now() < cmd_timeout){
         const status = await docking_client.docking_command_feedback(cmd_id);
         if(status == docking_pb.DockingCommandFeedbackResponse.Status.STATUS_IN_PROGRESS){
-            await sleep(1000);
+            await sleep(1_000);
         }else if(status == docking_pb.DockingCommandFeedbackResponse.Status.STATUS_AT_PREP_POSE){
             return;
         }else{
