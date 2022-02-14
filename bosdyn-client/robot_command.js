@@ -1,3 +1,5 @@
+'use strict';
+
 const jspb = require('google-protobuf');
 const any_pb = require('google-protobuf/google/protobuf/any_pb');
 const wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb');
@@ -236,19 +238,19 @@ const EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME = {
 
 
 function _edit_proto(proto, edit_tree, edit_fn){
-	proto = proto.toObject();
+	const protoObject = proto.toObject();
 	for(let [key, subtree] of Object.entries(edit_tree)){
 		if(key.startsWith('@')){
 			console.log('[ROBOT COMMAND] Warning test feature en cours de dev', key, subtree);
-			const which_oneof = proto.WhichOneof(key);
-			if(!which_oneof || !subtree.includes(which_oneof)) return;
-			_edit_proto(proto[which_oneof], subtree[which_oneof], edit_fn);
+			const which_oneof = proto.getCommandCase();
+			if(which_oneof === 0 || !subtree.includes(which_oneof)) return;
+			_edit_proto(protoObject[which_oneof], subtree[which_oneof], edit_fn);
 		}else if(subtree){
-			if(proto.hasOwnProperty(key)){
-				_edit_proto(proto[key], subtree, edit_fn);
+			if(protoObject.hasOwnProperty(key)){
+				_edit_proto(protoObject[key], subtree, edit_fn);
 			}
 		}else{
-			edit_fn(key, proto);
+			edit_fn(key, protoObject);
 		}
 	}
 }
@@ -781,7 +783,6 @@ class RobotCommandBuilder {
     static _to_any(params, typeName = "bosdyn.api.spot.MobilityParams"){
     	const any_params = new any_pb.Any();
     	any_params.pack(params.serializeBinary(), typeName);
-    	// bosdyn.api.spot.MobilityParams
     	return any_params;
     }
 
@@ -837,8 +838,6 @@ async function blocking_stand(command_client, timeout_sec = 10_000, update_frequ
 			console.log(e)
 			isCatch = true;
 		}
-
-		console.log(response.toObject())
 
 		if(!isCatch){
 			const mob_feedback = response.getFeedback().getSynchronizedFeedback().getMobilityCommandFeedback();

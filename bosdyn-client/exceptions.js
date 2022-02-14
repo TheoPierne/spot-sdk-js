@@ -15,7 +15,7 @@ class ResponseError extends Error {
 			super();
 		}
 		this.name = 'ResponseError';
-		this.response = response;
+		this.response = response.toObject();
 	}
 
 	toString(){

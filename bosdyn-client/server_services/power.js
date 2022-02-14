@@ -1,3 +1,5 @@
+'use strict';
+
 const power_pb = require('../../bosdyn/api/power_pb');
 const power_service_grpc_pb = require('../../bosdyn/api/power_service_grpc_pb');
 
@@ -44,7 +46,7 @@ function powerCommandFeedback(call, callback){
 	populate_response_header(reply, call.request);
 
 	reply
-	.setStatus(2)
+	.setStatus(power_pb.PowerCommandStatus.STATUS_SUCCESS)
 	.setBlockingFaultsList([]);
 
 	callback(null, reply);

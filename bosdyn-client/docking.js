@@ -1,3 +1,5 @@
+'use strict';
+
 const {
 	BaseClient, 
 	error_factory, 
@@ -29,22 +31,22 @@ class DockingClient extends BaseClient {
     }
 
     async docking_command(station_id, clock_identifier, end_time, prep_pose_behavior = null, lease = null, args){
-        const req = DockingClient._docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior)
+        const req = this._docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior)
         return await this.call(this._stub.dockingCommand, req, this._docking_id_from_response, _docking_command_error_from_response, args);
     }
 
     docking_command_async(station_id, clock_identifier, end_time, prep_pose_behavior = null, lease = null, args){
-        const req = DockingClient._docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior)
+        const req = this._docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior)
         return this.call_async(this._stub.dockingCommand, req, this._docking_id_from_response, _docking_command_error_from_response, args);
     }
 
     async docking_command_feedback(command_id, args){
-        const req = DockingClient._docking_command_feedback_request(command_id);
+        const req = this._docking_command_feedback_request(command_id);
         return await this.call(this._stub.dockingCommandFeedback, req, this._docking_status_from_response, _docking_feedback_error_from_response, args);
     }
 
     docking_command_feedback_async(command_id, args){
-        const req = DockingClient._docking_command_feedback_request(command_id);
+        const req = this._docking_command_feedback_request(command_id);
         return this.call_async(this._stub.dockingCommandFeedback, req, this._docking_status_from_response, _docking_feedback_error_from_response, args);
     }
 
@@ -68,17 +70,16 @@ class DockingClient extends BaseClient {
         return this.call_async(this._stub.getDockingState, req, this._docking_state_from_response, _docking_get_state_error_from_response, args);
     }
 
-    static _docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior){
-    	const req = new docking_pb.DockingCommandRequest()
+    _docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior){
+    	return new docking_pb.DockingCommandRequest()
     	.setLease(lease)
     	.setDockingStationId(station_id)
     	.setClockIdentifier(clock_identifier)
     	.setEndTime(end_time)
-    	.setPrepPoseBehavior(prep_pose_behavior)
-        return req;
+    	.setPrepPoseBehavior(prep_pose_behavior);
     }
 
-    static _docking_command_feedback_request(command_id){
+    _docking_command_feedback_request(command_id){
     	return new docking_pb.DockingCommandFeedbackRequest().setDockingCommandId(command_id);
     }
 
@@ -133,14 +134,16 @@ async function blocking_dock_robot(robot, dock_id, num_retries = 4){
 
         const prep_pose = attempt_number % 2 ? docking_pb.PrepPoseBehavior.PREP_POSE_USE_POSE : docking_pb.PrepPoseBehavior.PREP_POSE_SKIP_POSE;
 
-        const cmd_id = await docking_client.docking_command(dock_id, robot.time_sync.endpoint.clock_identifier, robot.time_sync.robot_timestamp_from_local_secs(cmd_end_time), prep_pose);
+        const time_sync = await robot.time_sync;
+
+        const cmd_id = await docking_client.docking_command(dock_id, time_sync.endpoint.clock_identifier, await time_sync.robot_timestamp_from_local_secs(cmd_end_time), prep_pose);
 
         const statusDocking = docking_pb.DockingCommandFeedbackResponse.Status;
 
         while(Date.now() < cmd_timeout){
             const status = await docking_client.docking_command_feedback(cmd_id);
             if(status == statusDocking.STATUS_IN_PROGRESS){
-                await sleep(1000);
+                await sleep(1_000);
             }else if(status == statusDocking.STATUS_DOCKED){
                 docking_success = true;
                 break;
@@ -169,7 +172,9 @@ async function blocking_go_to_prep_pose(robot, dock_id, timeout = 20_000){
     const cmd_end_time = Date.now() + timeout;
     const cmd_timeout = cmd_end_time + 10_000;
 
-    const cmd_id = await docking_client.docking_command(dock_id, robot.time_sync.endpoint.clock_identifier, robot.time_sync.robot_timestamp_from_local_secs(cmd_end_time), docking_pb.PrepPoseBehavior.PREP_POSE_ONLY_POSE);
+    const time_sync = await robot.time_sync;
+
+    const cmd_id = await docking_client.docking_command(dock_id, time_sync.endpoint.clock_identifier, await time_sync.robot_timestamp_from_local_secs(cmd_end_time), docking_pb.PrepPoseBehavior.PREP_POSE_ONLY_POSE);
 
     while(Date.now() < cmd_timeout){
         const status = await docking_client.docking_command_feedback(cmd_id);
@@ -190,7 +195,9 @@ async function blocking_undock(robot, timeout = 20_000){
     const cmd_end_time = Date.now() + timeout;
     const cmd_timeout = cmd_end_time + 10;
 
-    const cmd_id = await docking_client.docking_command(0, robot.time_sync.endpoint.clock_identifier, robot.time_sync.robot_timestamp_from_local_secs(cmd_end_time), docking_pb.PrepPoseBehavior.PREP_POSE_UNDOCK);
+    const time_sync = await robot.time_sync;
+
+    const cmd_id = await docking_client.docking_command(0, time_sync.endpoint.clock_identifier, await time_sync.robot_timestamp_from_local_secs(cmd_end_time), docking_pb.PrepPoseBehavior.PREP_POSE_UNDOCK);
 
     while(Date.now() < cmd_timeout){
         const status = await docking_client.docking_command_feedback(cmd_id);

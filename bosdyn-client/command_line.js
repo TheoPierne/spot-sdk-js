@@ -1,7 +1,9 @@
+'use strict';
+
 const nj = require('numjs');
 const argparse = require('argparse');
 const path = require('node:path');
-const {writeFileSync, readFileSync, mkdirSync} = require('fs');
+const {writeFileSync, readFileSync, mkdirSync} = require('node:fs');
 
 const { setTimeout: sleep } = require('node:timers/promises');
 

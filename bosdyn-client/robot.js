@@ -1,3 +1,5 @@
+'use strict';
+
 const {AuthClient} = require('./auth');
 const channel = require('./channel');
 const {DataBufferClient} = require('./data_buffer');

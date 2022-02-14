@@ -1,3 +1,5 @@
+'use strict';
+
 const {BaseClient, error_factory, handle_unset_status_error, handle_common_header_errors, handle_lease_use_result_errors} = require('./common');
 const {ResponseError, InternalServerError, LicenseError, TimedOutError} = require('./exceptions');
 const {add_lease_wallet_processors} = require('./lease');
@@ -111,13 +113,11 @@ class PowerClient extends BaseClient {
 	}
 
 	static _power_command_request(lease, request){
-		const req = new power_pb.PowerCommandRequest().setLease(lease).setRequest(request);
-		return req;
+		return new power_pb.PowerCommandRequest().setLease(lease).setRequest(request);
 	}
 
 	static _power_command_feedback_request(power_command_id){
-		const req = new power_pb.PowerCommandFeedbackRequest().setPowerCommandId(power_command_id);
-		return req;
+		return new power_pb.PowerCommandFeedbackRequest().setPowerCommandId(power_command_id);
 	}
 
 };

@@ -6,43 +6,43 @@ const {ResponseError} = require('./exceptions');
 const {BaseClient, error_factory} = require('./common');
 
 class AuthResponseError extends ResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'AuthResponseError';
 	}
 };
 
 class InvalidLoginError extends AuthResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'InvalidLoginError';
 	}
 };
 
 class InvalidTokenError extends AuthResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'InvalidTokenError';
 	}
 };
 
 class TemporarilyLockedOutError extends AuthResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'TemporarilyLockedOutError';
 	}
 };
 
 class ExpiredApplicationTokenError extends AuthResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'ExpiredApplicationTokenError';
 	}
 };
 
 class InvalidApplicationTokenError extends AuthResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'InvalidApplicationTokenError';
 	}
 };

@@ -1,6 +1,6 @@
 {
   "name": "spot-sdk-js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Develop applications and payloads for Spot using the unofficial Boston Dynamics Spot Node.js SDK.",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "author": "Théo Pierné",
   "license": "SEE LICENSE IN LICENSE FILE",
   "dependencies": {
-    "@grpc/grpc-js": "^1.5.4",
+    "@grpc/grpc-js": "^1.5.5",
     "@grpc/proto-loader": "^0.6.9",
     "@tensorflow/tfjs": "^0.13.5",
     "argparse": "^2.0.1",
@@ -40,6 +40,7 @@
     "numjs": "github:TheoPierne/numjs",
     "object-sizeof": "^1.6.1",
     "prompt": "^1.2.1",
+    "protobufjs": "^6.11.2",
     "semver": "^7.3.5",
     "sharp": "^0.29.3",
     "tmp": "^0.2.1",

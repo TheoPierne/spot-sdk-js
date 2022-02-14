@@ -1,3 +1,5 @@
+'use strict';
+
 const {BaseClient, common_header_errors} = require('./common');
 const ir_enable_disable_pb = require('../bosdyn/api/ir_enable_disable_pb');
 const ir_enable_disable_service_grpc_pb = require('../bosdyn/api/ir_enable_disable_service_grpc_pb');

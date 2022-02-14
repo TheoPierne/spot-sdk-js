@@ -1,17 +1,6 @@
-const argparse = require('argparse');
+'use strict';
 
-/*['log', 'warn', 'error', 'debug'].forEach(function(method) {
-   var old = console[method];
-   console[method] = function() {
-      var stack = (new Error()).stack.split(/\n/);
-    // Chrome includes a single "Error" line, FF doesn't.
-    if (stack[0].indexOf('Error') === 0) {
-       stack = stack.slice(1);
-    }
-    var args = [].slice.apply(arguments).concat([stack[1].trim(), '\n']);
-    return old.apply(console, args);
- };
-});*/
+const argparse = require('argparse');
 
 const util = require('../../bosdyn-client/util');
 const client = require('../../index');
@@ -32,16 +21,10 @@ async function run_docking(config){
     const command_client = await robot.ensure_client(RobotCommandClient.default_service_name);
     try{
         const leaseKeepAlive = new LeaseKeepAlive(lease_client);
-        with(leaseKeepAlive){
-            console.log(1)
-            await robot.power_on();
-            console.log(2)
-            await blocking_stand(command_client);
-            console.log(3)
-            await blocking_dock_robot(robot, config.dock_id);
-            console.log(4)
-            console.log("[DOCK MY ROBOT] Docking Success !");
-        }
+        await robot.power_on();
+        await blocking_stand(command_client);
+        await blocking_dock_robot(robot, config.dock_id);
+        console.log("[DOCK MY ROBOT] Docking Success !");
     }catch(e){
     	console.error(e);
     }finally{

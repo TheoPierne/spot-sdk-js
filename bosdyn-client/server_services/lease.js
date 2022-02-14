@@ -1,3 +1,5 @@
+'use strict';
+
 const lease_pb = require('../../bosdyn/api/lease_pb');
 const lease_service_grpc_pb = require('../../bosdyn/api/lease_service_grpc_pb');
 

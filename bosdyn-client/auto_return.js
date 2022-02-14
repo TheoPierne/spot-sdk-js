@@ -1,18 +1,20 @@
+'use strict';
+
 const {BaseClient, handle_common_header_errors, error_factory } = require('./common');
 const {ResponseError} = require('./exceptions');
 const auto_return_pb = require('../bosdyn/api/auto_return/auto_return_pb');
 const auto_return_service_grpc_pb = require('../bosdyn/api/auto_return/auto_return_service_grpc_pb');
 
 class AutoReturnResponseError extends ResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'AutoReturnResponseError';
 	}
 };
 
 class InvalidParameterError extends AutoReturnResponseError {
-	constructor(msg){
-		super(msg);
+	constructor(res, msg){
+		super(res, msg);
 		this.name = 'InvalidParameterError';
 	}
 };
@@ -60,7 +62,7 @@ class AutoReturnClient extends BaseClient {
     _configure_request(params, leases){
         const request = new auto_return_pb.ConfigureRequest().setParams(params);
         for(const lease of leases){
-            request.addLeases(lease);
+            request.addLeases(lease.lease_proto);
         }
         return request;
     }
@@ -68,12 +70,12 @@ class AutoReturnClient extends BaseClient {
 };
 
 const _CONFIGURE_STATUS_TO_ERROR = {
+    [auto_return_pb.ConfigureResponse.Status.STATUS_OK]: [null, null],
 	[auto_return_pb.ConfigureResponse.Status.STATUS_INVALID_PARAMS]: [InvalidParameterError, 'One or more parameters were invalid.']
 };
 
 function configure_error(response){
-    return (handle_common_header_errors(response) || 
-    error_factory(response, response.getStatus(), Object.keys(auto_return_pb.ConfigureResponse.Status), _CONFIGURE_STATUS_TO_ERROR));
+    return error_factory(response, response.getStatus(), Object.keys(auto_return_pb.ConfigureResponse.Status), _CONFIGURE_STATUS_TO_ERROR);
 }
 
 module.exports = {

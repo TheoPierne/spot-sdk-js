@@ -1,3 +1,5 @@
+'use strict';
+
 const time_sync_pb = require('../../bosdyn/api/time_sync_pb');
 const time_sync_service_grpc_pb = require('../../bosdyn/api/time_sync_service_grpc_pb');
 

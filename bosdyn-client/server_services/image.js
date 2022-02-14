@@ -1,3 +1,5 @@
+'use strict';
+
 const image_service_grpc_pb = require('../../bosdyn/api/image_service_grpc_pb');
 const image_pb = require('../../bosdyn/api/image_pb');
 
@@ -5,7 +7,7 @@ const {populate_response_header} = require('../util');
 
 const sharp = require('sharp');
 const num = require('numjs');
-const path = require('path');
+const path = require('node:path');
 
 function listImageSources(call, callback){
 	console.log('Nouvelle requete [IMAGE] /listImageSources !');

@@ -1,3 +1,5 @@
+'use strict';
+
 const robot_state_service_grpc_pb = require('../../bosdyn/api/robot_state_service_grpc_pb');
 const robot_state_pb = require('../../bosdyn/api/robot_state_pb');
 const geometry_pb = require('../../bosdyn/api/geometry_pb');

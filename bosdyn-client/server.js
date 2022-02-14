@@ -1,3 +1,5 @@
+'use strict';
+
 const grpc = require('@grpc/grpc-js');
 const fs = require('node:fs');
 

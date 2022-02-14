@@ -1,3 +1,5 @@
+'use strict';
+
 const {cloneDeep} = require('lodash');
 
 const header_pb = require('../bosdyn/api/header_pb');
@@ -11,10 +13,10 @@ const {
 	UnsetStatusError
 } = require('./exceptions');
 
-const DEFAULT_RPC_TIMEOUT = 30000;  // seconds
+const DEFAULT_RPC_TIMEOUT = 30_000;  // seconds
 
 function popObject(obj, key, defaultVal) {
-	var ret = obj[key];
+	let ret = obj[key];
 	if(ret == undefined){
 		ret = defaultVal;
 	}else{
@@ -80,8 +82,9 @@ function error_pair(error_message){
 }
 
 function error_factory(response, status, status_to_string, status_to_error){
-	const error_type = status_to_error[status][0]; 
-	let message = status_to_error[status][1];
+	if(!(status in status_to_error)) return null;
+
+	let [error_type, message] = status_to_error[status];
 
 	if(error_type == null) return null;
 
@@ -99,12 +102,12 @@ function error_factory(response, status, status_to_string, status_to_error){
 
 	if(Array.isArray(response)){
 		for(const resp of response){
-			const err = new error_type({response: resp, error_message: message});
+			const err = new error_type(resp, message);
 			if(err != null) return err;
 		}
 		return null;
 	}else{
-		return new error_type({response: response, error_message: message});
+		return new error_type(response, message);
 	}
 
 }

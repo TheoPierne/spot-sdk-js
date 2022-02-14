@@ -1,3 +1,5 @@
+'use strict';
+
 const argparse = require('argparse');
 const sharp = require('sharp');
 

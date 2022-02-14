@@ -1,3 +1,5 @@
+'use strict';
+
 const {BaseClient, common_lease_errors, common_header_errors, error_factory} = require('./common');
 const {ResponseError, ValueError} = require('./exceptions');
 
@@ -339,22 +341,22 @@ class LeaseClient extends BaseClient {
 		this.lease_wallet = lease_wallet;
 	}
 
-	async acquire(resource=_RESOURCE_BODY, args){
+	async acquire(resource = _RESOURCE_BODY, args){
 		const req = LeaseClient._make_acquire_request(resource);
 		return await this.call(this._stub.acquireLease, req, this._handle_acquire_success.bind(this), this._handle_acquire_errors, args);
 	}
 
-	acquire_async(resource=_RESOURCE_BODY, args){
+	acquire_async(resource = _RESOURCE_BODY, args){
 		const req = LeaseClient._make_acquire_request(resource);
 		return this.call_async(this._stub.acquireLease, req, this._handle_acquire_success.bind(this), this._handle_acquire_errors, args);
 	}
 
-	async take(resource=_RESOURCE_BODY, args){
+	async take(resource = _RESOURCE_BODY, args){
 		const req = LeaseClient._make_take_request(resource);
 		return await this.call(this._stub.takeLease, req, this._handle_acquire_success.bind(this), this._handle_take_errors, args);
 	}
 
-	take_async(resource=_RESOURCE_BODY, args){
+	take_async(resource = _RESOURCE_BODY, args){
 		const req = LeaseClient._make_take_request(resource);
 		return this.call_async(this._stub.takeLease, req, this._handle_acquire_success.bind(this), this._handle_take_errors, args);
 	}

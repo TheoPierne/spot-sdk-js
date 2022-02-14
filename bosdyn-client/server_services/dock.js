@@ -1,3 +1,5 @@
+'use strict';
+
 const docking_pb = require('../../bosdyn/api/docking/docking_pb');
 const docking_service_grpc_pb = require('../../bosdyn/api/docking/docking_service_grpc_pb');
 
@@ -9,8 +11,6 @@ function dockingCommand(call, callback){
 	console.log(`Nouvelle requete [DOCK] /dockingCommand !`);
 	let reply = new docking_pb.DockingCommandResponse();
 	populate_response_header(reply, call.request);
-
-	console.log(call.request.toObject());
 
 	const lease = new lease_pb.Lease()
 	.setResource('body')

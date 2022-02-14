@@ -1,3 +1,5 @@
+'use strict';
+
 const estop_pb = require('../../bosdyn/api/estop_pb');
 const estop_service_grpc_pb = require('../../bosdyn/api/estop_service_grpc_pb');
 
