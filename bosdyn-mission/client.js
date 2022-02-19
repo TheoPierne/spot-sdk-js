@@ -337,7 +337,7 @@ function _stop_mission_error_from_response(response){
 }
 
 function _restart_mission_error_from_response(response){
-    return error_factory(response, response.status, Object.keys(mission_pb.RestartMissionResponse.Status), _RESTART_MISSION_STATUS_TO_ERROR);
+    return error_factory(response, response.getStatus(), Object.keys(mission_pb.RestartMissionResponse.Status), _RESTART_MISSION_STATUS_TO_ERROR);
 }
 
 module.exports = {

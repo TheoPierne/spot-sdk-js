@@ -31,7 +31,7 @@ class InvalidConversion extends Error {
 	}
 };
 
-const _python_identifier_regex = /[A-Za-z_]\w*$/;
+const _js_identifier_regex = /[A-Za-z_]\w*$/;
 
 function tree_to_string(root, start_level = 0, include_status = false){
 	let string = '';
@@ -72,17 +72,53 @@ function proto_from_object(obj){
 			if(typeof paramValue.getValue() === 'string' && paramValue.getValue()[0] == '$'){
 				parameterValue.setValue(new util_pb.Value().setParameter(new util_pb.VariableDeclaration().setName(paramValue.getValue().slice(1))));
 			}else{
-				parameterValue.setValue(new util_pb.Value().setConstant(python_var_to_value(paramValue.getValue())));
+				parameterValue.setValue(new util_pb.Value().setConstant(js_var_to_value(paramValue.getValue())));
 			}
+			node.addParameterValues(parameterValue);
+		}
+
+		for(const overrides of name_or_dict.getOverridesList()){
+			const override = new util_pb.KeyValue().setKey(overrides.getKey());
+			override.setValue(new util_pb.Value().setParameter(new util_pb.VariableDeclaration().setName(paramValue.getValue())));
+			node.addOverrides(override);
 		}
 
 	}else{
 		node.setName(name_or_dict);
 	}
 
+	if(node.nodeReference) return node;
+
+	const num_children = children.length;
+	const inner_type = inner_proto.constructor.name;
+
+	if('children' in inner_proto){
+		if(num_children == 0) throw new Error(`Proto "${node.name}" of type "${inner_type}" has no children!`);
+
+		for(const child_obj of children){
+			const child_node = proto_from_object(child_obj);
+			inner_proto.addChildren(child_node);
+		}
+	}else if('child' in inner_proto){
+		if((inner_proto instanceof nodes_pb.ForDuration) && num_children == 2){
+			inner_proto.setChild(proto_from_object(children[0]));
+			inner_proto.setTimeoutChild(proto_from_object(children[1]));
+		}else if(num_children == 1){
+			inner_proto.setChild(proto_from_object(children[0]));
+		}else{
+			throw new Error(`Proto "${node.name}" of type "${inner_type}" has ${num_children} children!`);			
+		}
+	}else if(num_children != 0){
+		throw new Error(`Proto "${node.name}" of type "${inner_type}" was given ${num_children} children, but I do not know how to add them!`);
+	}
+
+	node.setImpl(new any_pb.Any().pack(inner_proto));
+
+	return node;
+
 }
 
-function python_var_to_value(val){
+function js_var_to_value(val){
 	const value = new util_pb.ConstantValue();
 
 	if(typeof val === 'boolean'){
@@ -103,7 +139,7 @@ function python_var_to_value(val){
 	return value;
 }
 
-function python_type_to_pb_type(val){
+function js_type_to_pb_type(val){
 	if(typeof val === 'boolean'){
 		return util_pb.VariableDeclaration.Type.TYPE_BOOL;
 	}else if(Number.isInteger(val)){
@@ -121,7 +157,7 @@ function python_type_to_pb_type(val){
 
 function is_string_identifier(string){
 	if(string.hasOwnProperty('isidentifier')) return string.isidentifier();
-	return _python_identifier_regex.test(string);
+	return _js_identifier_regex.test(string);
 }
 
 function field_desc_to_pb_type(field_desc){
@@ -284,8 +320,9 @@ module.exports = {
 	DUMMY_MESSAGE,
 	InvalidConversion,
 	tree_to_string,
-	python_var_to_value,
-	python_type_to_pb_type,
+	proto_from_object,
+	js_var_to_value,
+	js_type_to_pb_type,
 	is_string_identifier,
 	field_desc_to_pb_type,
 	safe_pb_type_to_string,

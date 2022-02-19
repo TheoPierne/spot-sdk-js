@@ -1,6 +1,6 @@
 {
   "name": "spot-sdk-js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Develop applications and payloads for Spot using the unofficial Boston Dynamics Spot Node.js SDK.",
   "main": "index.js",
   "scripts": {
@@ -48,7 +48,6 @@
     "which": "^2.0.2"
   },
   "engines": {
-    "node": ">=16.6.0",
-    "npm": ">=7.0.0"
+    "node": ">=16.13.0"
   }
 }

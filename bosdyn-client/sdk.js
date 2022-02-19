@@ -148,11 +148,12 @@ function create_standard_sdk(client_name_prefix, service_clients = null, cert_re
     let all_service_clients = _DEFAULT_SERVICE_CLIENTS;
     if (service_clients != null){
         if(Array.isArray(service_clients)){
-            all_service_clients.concat(service_clients);
+            all_service_clients = all_service_clients.concat(service_clients);
         }else{
             all_service_clients.push(service_clients);
         }
     }
+
     for (const client in all_service_clients){
         sdk.register_service_client(all_service_clients[client]);
     }

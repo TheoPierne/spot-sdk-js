@@ -88,6 +88,12 @@ function listServiceEntries(call, callback){
 	.setAuthority('api.spot.robot')
 	.setUserTokenRequired(true);
 
+	const serviceMission = new directory_pb.ServiceEntry()
+	.setName('robot-mission')
+	.setType('bosdyn.api.mission.MissionService')
+	.setAuthority('api.spot.robot')
+	.setUserTokenRequired(true);
+
 	reply.setServiceEntriesList([
 		serviceAuth,
 		serviceId,
@@ -101,7 +107,8 @@ function listServiceEntries(call, callback){
 		servicePower,
 		serviceDock,
 		serviceIR,
-		serviceAutoReturn
+		serviceAutoReturn,
+		serviceMission
 		]);
 
 	callback(null, reply);

@@ -16,9 +16,9 @@ async function main(args = null){
     const robot = sdk.create_robot(options.hostname);
 
     await robot.authenticate(options.username, options.password);
-    const client = await robot.ensure_client(MissionClient.default_service_name);
+    const clientMission = await robot.ensure_client(MissionClient.default_service_name);
 
-    const state = await client.get_state();
+    const state = await clientMission.get_state();
     console.log(`Got mission state: ${state}`);
 
     return true;
