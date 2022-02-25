@@ -3311,7 +3311,9 @@ proto.bosdyn.api.EventsCommentsSpec.toObject = function(includeInstance, msg) {
     timeRange: (f = msg.getTimeRange()) && bosdyn_api_time_range_pb.TimeRange.toObject(includeInstance, f),
     eventsList: jspb.Message.toObjectList(msg.getEventsList(),
     proto.bosdyn.api.EventSpec.toObject, includeInstance),
-    comments: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
+    comments: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+    maxEvents: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    maxComments: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -3362,6 +3364,14 @@ proto.bosdyn.api.EventsCommentsSpec.deserializeBinaryFromReader = function(msg, 
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setComments(value);
       break;
+    case 4:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setMaxEvents(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setMaxComments(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3411,6 +3421,20 @@ proto.bosdyn.api.EventsCommentsSpec.serializeBinaryToWriter = function(message, 
   if (f) {
     writer.writeBool(
       3,
+      f
+    );
+  }
+  f = message.getMaxEvents();
+  if (f !== 0) {
+    writer.writeUint32(
+      4,
+      f
+    );
+  }
+  f = message.getMaxComments();
+  if (f !== 0) {
+    writer.writeUint32(
+      5,
       f
     );
   }
@@ -3510,6 +3534,42 @@ proto.bosdyn.api.EventsCommentsSpec.prototype.setComments = function(value) {
 };
 
 
+/**
+ * optional uint32 max_events = 4;
+ * @return {number}
+ */
+proto.bosdyn.api.EventsCommentsSpec.prototype.getMaxEvents = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.EventsCommentsSpec} returns this
+ */
+proto.bosdyn.api.EventsCommentsSpec.prototype.setMaxEvents = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * optional uint32 max_comments = 5;
+ * @return {number}
+ */
+proto.bosdyn.api.EventsCommentsSpec.prototype.getMaxComments = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.EventsCommentsSpec} returns this
+ */
+proto.bosdyn.api.EventsCommentsSpec.prototype.setMaxComments = function(value) {
+  return jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
 
 /**
  * List of repeated fields within this message type.
@@ -3553,7 +3613,9 @@ proto.bosdyn.api.EventsComments.toObject = function(includeInstance, msg) {
     eventsList: jspb.Message.toObjectList(msg.getEventsList(),
     bosdyn_api_data_buffer_pb.Event.toObject, includeInstance),
     operatorCommentsList: jspb.Message.toObjectList(msg.getOperatorCommentsList(),
-    bosdyn_api_data_buffer_pb.OperatorComment.toObject, includeInstance)
+    bosdyn_api_data_buffer_pb.OperatorComment.toObject, includeInstance),
+    eventsLimited: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+    operatorCommentsLimited: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -3604,6 +3666,14 @@ proto.bosdyn.api.EventsComments.deserializeBinaryFromReader = function(msg, read
       var value = new bosdyn_api_data_buffer_pb.OperatorComment;
       reader.readMessage(value,bosdyn_api_data_buffer_pb.OperatorComment.deserializeBinaryFromReader);
       msg.addOperatorComments(value);
+      break;
+    case 4:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setEventsLimited(value);
+      break;
+    case 5:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setOperatorCommentsLimited(value);
       break;
     default:
       reader.skipField();
@@ -3656,6 +3726,20 @@ proto.bosdyn.api.EventsComments.serializeBinaryToWriter = function(message, writ
       3,
       f,
       bosdyn_api_data_buffer_pb.OperatorComment.serializeBinaryToWriter
+    );
+  }
+  f = message.getEventsLimited();
+  if (f) {
+    writer.writeBool(
+      4,
+      f
+    );
+  }
+  f = message.getOperatorCommentsLimited();
+  if (f) {
+    writer.writeBool(
+      5,
+      f
     );
   }
 };
@@ -3771,6 +3855,42 @@ proto.bosdyn.api.EventsComments.prototype.addOperatorComments = function(opt_val
  */
 proto.bosdyn.api.EventsComments.prototype.clearOperatorCommentsList = function() {
   return this.setOperatorCommentsList([]);
+};
+
+
+/**
+ * optional bool events_limited = 4;
+ * @return {boolean}
+ */
+proto.bosdyn.api.EventsComments.prototype.getEventsLimited = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 4, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.EventsComments} returns this
+ */
+proto.bosdyn.api.EventsComments.prototype.setEventsLimited = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 4, value);
+};
+
+
+/**
+ * optional bool operator_comments_limited = 5;
+ * @return {boolean}
+ */
+proto.bosdyn.api.EventsComments.prototype.getOperatorCommentsLimited = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 5, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.EventsComments} returns this
+ */
+proto.bosdyn.api.EventsComments.prototype.setOperatorCommentsLimited = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 5, value);
 };
 
 

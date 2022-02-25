@@ -2635,7 +2635,8 @@ proto.bosdyn.api.DockProperties.toObject = function(includeInstance, msg) {
     dockId: jspb.Message.getFieldWithDefault(msg, 1, 0),
     type: jspb.Message.getFieldWithDefault(msg, 2, 0),
     frameNameDock: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    unavailable: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+    unavailable: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+    fromPrior: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -2687,6 +2688,10 @@ proto.bosdyn.api.DockProperties.deserializeBinaryFromReader = function(msg, read
     case 4:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setUnavailable(value);
+      break;
+    case 5:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setFromPrior(value);
       break;
     default:
       reader.skipField();
@@ -2742,6 +2747,13 @@ proto.bosdyn.api.DockProperties.serializeBinaryToWriter = function(message, writ
   if (f) {
     writer.writeBool(
       4,
+      f
+    );
+  }
+  f = message.getFromPrior();
+  if (f) {
+    writer.writeBool(
+      5,
       f
     );
   }
@@ -2817,6 +2829,24 @@ proto.bosdyn.api.DockProperties.prototype.getUnavailable = function() {
  */
 proto.bosdyn.api.DockProperties.prototype.setUnavailable = function(value) {
   return jspb.Message.setProto3BooleanField(this, 4, value);
+};
+
+
+/**
+ * optional bool from_prior = 5;
+ * @return {boolean}
+ */
+proto.bosdyn.api.DockProperties.prototype.getFromPrior = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 5, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.DockProperties} returns this
+ */
+proto.bosdyn.api.DockProperties.prototype.setFromPrior = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 5, value);
 };
 
 

@@ -1,3 +1,5 @@
+'use strict';
+
 const grpc = require('@grpc/grpc-js');
 
 const {

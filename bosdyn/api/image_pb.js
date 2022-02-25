@@ -114,7 +114,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.bosdyn.api.ImageSource = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.bosdyn.api.ImageSource.oneofGroups_);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.bosdyn.api.ImageSource.repeatedFields_, proto.bosdyn.api.ImageSource.oneofGroups_);
 };
 goog.inherits(proto.bosdyn.api.ImageSource, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -1105,6 +1105,13 @@ proto.bosdyn.api.ImageCapture.prototype.hasCaptureParams = function() {
 
 
 /**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.bosdyn.api.ImageSource.repeatedFields_ = [10,11];
+
+/**
  * Oneof group definitions for this message. Each group defines the field
  * numbers belonging to that group. When of these fields' value is set, all
  * other fields in the group are cleared. During deserialization, if multiple
@@ -1165,7 +1172,9 @@ proto.bosdyn.api.ImageSource.toObject = function(includeInstance, msg) {
     rows: jspb.Message.getFieldWithDefault(msg, 5, 0),
     depthScale: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
     pinhole: (f = msg.getPinhole()) && proto.bosdyn.api.ImageSource.PinholeModel.toObject(includeInstance, f),
-    imageType: jspb.Message.getFieldWithDefault(msg, 9, 0)
+    imageType: jspb.Message.getFieldWithDefault(msg, 9, 0),
+    pixelFormatsList: (f = jspb.Message.getRepeatedField(msg, 10)) == null ? undefined : f,
+    imageFormatsList: (f = jspb.Message.getRepeatedField(msg, 11)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -1226,6 +1235,18 @@ proto.bosdyn.api.ImageSource.deserializeBinaryFromReader = function(msg, reader)
     case 9:
       var value = /** @type {!proto.bosdyn.api.ImageSource.ImageType} */ (reader.readEnum());
       msg.setImageType(value);
+      break;
+    case 10:
+      var values = /** @type {!Array<!proto.bosdyn.api.Image.PixelFormat>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
+      for (var i = 0; i < values.length; i++) {
+        msg.addPixelFormats(values[i]);
+      }
+      break;
+    case 11:
+      var values = /** @type {!Array<!proto.bosdyn.api.Image.Format>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
+      for (var i = 0; i < values.length; i++) {
+        msg.addImageFormats(values[i]);
+      }
       break;
     default:
       reader.skipField();
@@ -1296,6 +1317,20 @@ proto.bosdyn.api.ImageSource.serializeBinaryToWriter = function(message, writer)
   if (f !== 0.0) {
     writer.writeEnum(
       9,
+      f
+    );
+  }
+  f = message.getPixelFormatsList();
+  if (f.length > 0) {
+    writer.writePackedEnum(
+      10,
+      f
+    );
+  }
+  f = message.getImageFormatsList();
+  if (f.length > 0) {
+    writer.writePackedEnum(
+      11,
       f
     );
   }
@@ -1842,6 +1877,80 @@ proto.bosdyn.api.ImageSource.prototype.setImageType = function(value) {
 };
 
 
+/**
+ * repeated Image.PixelFormat pixel_formats = 10;
+ * @return {!Array<!proto.bosdyn.api.Image.PixelFormat>}
+ */
+proto.bosdyn.api.ImageSource.prototype.getPixelFormatsList = function() {
+  return /** @type {!Array<!proto.bosdyn.api.Image.PixelFormat>} */ (jspb.Message.getRepeatedField(this, 10));
+};
+
+
+/**
+ * @param {!Array<!proto.bosdyn.api.Image.PixelFormat>} value
+ * @return {!proto.bosdyn.api.ImageSource} returns this
+ */
+proto.bosdyn.api.ImageSource.prototype.setPixelFormatsList = function(value) {
+  return jspb.Message.setField(this, 10, value || []);
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.Image.PixelFormat} value
+ * @param {number=} opt_index
+ * @return {!proto.bosdyn.api.ImageSource} returns this
+ */
+proto.bosdyn.api.ImageSource.prototype.addPixelFormats = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 10, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.bosdyn.api.ImageSource} returns this
+ */
+proto.bosdyn.api.ImageSource.prototype.clearPixelFormatsList = function() {
+  return this.setPixelFormatsList([]);
+};
+
+
+/**
+ * repeated Image.Format image_formats = 11;
+ * @return {!Array<!proto.bosdyn.api.Image.Format>}
+ */
+proto.bosdyn.api.ImageSource.prototype.getImageFormatsList = function() {
+  return /** @type {!Array<!proto.bosdyn.api.Image.Format>} */ (jspb.Message.getRepeatedField(this, 11));
+};
+
+
+/**
+ * @param {!Array<!proto.bosdyn.api.Image.Format>} value
+ * @return {!proto.bosdyn.api.ImageSource} returns this
+ */
+proto.bosdyn.api.ImageSource.prototype.setImageFormatsList = function(value) {
+  return jspb.Message.setField(this, 11, value || []);
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.Image.Format} value
+ * @param {number=} opt_index
+ * @return {!proto.bosdyn.api.ImageSource} returns this
+ */
+proto.bosdyn.api.ImageSource.prototype.addImageFormats = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 11, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.bosdyn.api.ImageSource} returns this
+ */
+proto.bosdyn.api.ImageSource.prototype.clearImageFormatsList = function() {
+  return this.setImageFormatsList([]);
+};
+
+
 
 
 
@@ -2238,7 +2347,9 @@ proto.bosdyn.api.ImageRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     imageSourceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
     qualityPercent: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    imageFormat: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    imageFormat: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    resizeRatio: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+    pixelFormat: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -2287,6 +2398,14 @@ proto.bosdyn.api.ImageRequest.deserializeBinaryFromReader = function(msg, reader
       var value = /** @type {!proto.bosdyn.api.Image.Format} */ (reader.readEnum());
       msg.setImageFormat(value);
       break;
+    case 4:
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setResizeRatio(value);
+      break;
+    case 5:
+      var value = /** @type {!proto.bosdyn.api.Image.PixelFormat} */ (reader.readEnum());
+      msg.setPixelFormat(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2334,6 +2453,20 @@ proto.bosdyn.api.ImageRequest.serializeBinaryToWriter = function(message, writer
   if (f !== 0.0) {
     writer.writeEnum(
       3,
+      f
+    );
+  }
+  f = message.getResizeRatio();
+  if (f !== 0.0) {
+    writer.writeDouble(
+      4,
+      f
+    );
+  }
+  f = message.getPixelFormat();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      5,
       f
     );
   }
@@ -2391,6 +2524,42 @@ proto.bosdyn.api.ImageRequest.prototype.getImageFormat = function() {
  */
 proto.bosdyn.api.ImageRequest.prototype.setImageFormat = function(value) {
   return jspb.Message.setProto3EnumField(this, 3, value);
+};
+
+
+/**
+ * optional double resize_ratio = 4;
+ * @return {number}
+ */
+proto.bosdyn.api.ImageRequest.prototype.getResizeRatio = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 4, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.ImageRequest} returns this
+ */
+proto.bosdyn.api.ImageRequest.prototype.setResizeRatio = function(value) {
+  return jspb.Message.setProto3FloatField(this, 4, value);
+};
+
+
+/**
+ * optional Image.PixelFormat pixel_format = 5;
+ * @return {!proto.bosdyn.api.Image.PixelFormat}
+ */
+proto.bosdyn.api.ImageRequest.prototype.getPixelFormat = function() {
+  return /** @type {!proto.bosdyn.api.Image.PixelFormat} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.Image.PixelFormat} value
+ * @return {!proto.bosdyn.api.ImageRequest} returns this
+ */
+proto.bosdyn.api.ImageRequest.prototype.setPixelFormat = function(value) {
+  return jspb.Message.setProto3EnumField(this, 5, value);
 };
 
 
@@ -2754,7 +2923,9 @@ proto.bosdyn.api.ImageResponse.Status = {
   STATUS_UNKNOWN_CAMERA: 2,
   STATUS_SOURCE_DATA_ERROR: 3,
   STATUS_IMAGE_DATA_ERROR: 4,
-  STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED: 5
+  STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED: 5,
+  STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED: 6,
+  STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED: 7
 };
 
 /**

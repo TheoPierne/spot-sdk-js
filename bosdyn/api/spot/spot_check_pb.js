@@ -1299,7 +1299,9 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.State = {
   STATE_REVERTING_CAL: 8,
   STATE_ERROR: 9,
   STATE_WAITING_FOR_COMMAND: 10,
-  STATE_HIP_RANGE_OF_MOTION_CHECK: 11
+  STATE_HIP_RANGE_OF_MOTION_CHECK: 11,
+  STATE_GRIPPER_CAL: 12,
+  STATE_SIT_DOWN_AFTER_RUN: 13
 };
 
 /**
@@ -1319,7 +1321,8 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.Error = {
   ERROR_GROUND_CHECK: 10,
   ERROR_POWER_OFF_FAILURE: 11,
   ERROR_REVERT_FAILURE: 12,
-  ERROR_FGKC_FAILURE: 13
+  ERROR_FGKC_FAILURE: 13,
+  ERROR_GRIPPER_CAL_TIMEOUT: 14
 };
 
 /**
@@ -2329,7 +2332,8 @@ proto.bosdyn.api.spot.JointKinematicCheckResult.serializeBinaryToWriter = functi
 proto.bosdyn.api.spot.JointKinematicCheckResult.Error = {
   ERROR_UNKNOWN: 0,
   ERROR_NONE: 1,
-  ERROR_CLUTCH_SLIP: 2
+  ERROR_CLUTCH_SLIP: 2,
+  ERROR_INVALID_RANGE_OF_MOTION: 3
 };
 
 /**

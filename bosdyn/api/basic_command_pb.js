@@ -58,8 +58,10 @@ goog.exportSymbol('proto.bosdyn.api.SafePowerOffCommand', null, global);
 goog.exportSymbol('proto.bosdyn.api.SafePowerOffCommand.Feedback', null, global);
 goog.exportSymbol('proto.bosdyn.api.SafePowerOffCommand.Feedback.Status', null, global);
 goog.exportSymbol('proto.bosdyn.api.SafePowerOffCommand.Request', null, global);
+goog.exportSymbol('proto.bosdyn.api.SafePowerOffCommand.Request.UnsafeAction', null, global);
 goog.exportSymbol('proto.bosdyn.api.SelfRightCommand', null, global);
 goog.exportSymbol('proto.bosdyn.api.SelfRightCommand.Feedback', null, global);
+goog.exportSymbol('proto.bosdyn.api.SelfRightCommand.Feedback.Status', null, global);
 goog.exportSymbol('proto.bosdyn.api.SelfRightCommand.Request', null, global);
 goog.exportSymbol('proto.bosdyn.api.SitCommand', null, global);
 goog.exportSymbol('proto.bosdyn.api.SitCommand.Feedback', null, global);
@@ -72,6 +74,7 @@ goog.exportSymbol('proto.bosdyn.api.StanceCommand.Feedback.Status', null, global
 goog.exportSymbol('proto.bosdyn.api.StanceCommand.Request', null, global);
 goog.exportSymbol('proto.bosdyn.api.StandCommand', null, global);
 goog.exportSymbol('proto.bosdyn.api.StandCommand.Feedback', null, global);
+goog.exportSymbol('proto.bosdyn.api.StandCommand.Feedback.StandingState', null, global);
 goog.exportSymbol('proto.bosdyn.api.StandCommand.Feedback.Status', null, global);
 goog.exportSymbol('proto.bosdyn.api.StandCommand.Request', null, global);
 goog.exportSymbol('proto.bosdyn.api.StopCommand', null, global);
@@ -1665,7 +1668,7 @@ proto.bosdyn.api.SelfRightCommand.Feedback.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.SelfRightCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    status: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -1702,6 +1705,10 @@ proto.bosdyn.api.SelfRightCommand.Feedback.deserializeBinaryFromReader = functio
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = /** @type {!proto.bosdyn.api.SelfRightCommand.Feedback.Status} */ (reader.readEnum());
+      msg.setStatus(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1731,6 +1738,40 @@ proto.bosdyn.api.SelfRightCommand.Feedback.prototype.serializeBinary = function(
  */
 proto.bosdyn.api.SelfRightCommand.Feedback.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getStatus();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * @enum {number}
+ */
+proto.bosdyn.api.SelfRightCommand.Feedback.Status = {
+  STATUS_UNKNOWN: 0,
+  STATUS_COMPLETED: 1,
+  STATUS_IN_PROGRESS: 2
+};
+
+/**
+ * optional Status status = 1;
+ * @return {!proto.bosdyn.api.SelfRightCommand.Feedback.Status}
+ */
+proto.bosdyn.api.SelfRightCommand.Feedback.prototype.getStatus = function() {
+  return /** @type {!proto.bosdyn.api.SelfRightCommand.Feedback.Status} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.SelfRightCommand.Feedback.Status} value
+ * @return {!proto.bosdyn.api.SelfRightCommand.Feedback} returns this
+ */
+proto.bosdyn.api.SelfRightCommand.Feedback.prototype.setStatus = function(value) {
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -2473,7 +2514,7 @@ proto.bosdyn.api.SafePowerOffCommand.Request.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.SafePowerOffCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    unsafeAction: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -2510,6 +2551,10 @@ proto.bosdyn.api.SafePowerOffCommand.Request.deserializeBinaryFromReader = funct
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = /** @type {!proto.bosdyn.api.SafePowerOffCommand.Request.UnsafeAction} */ (reader.readEnum());
+      msg.setUnsafeAction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2539,6 +2584,40 @@ proto.bosdyn.api.SafePowerOffCommand.Request.prototype.serializeBinary = functio
  */
 proto.bosdyn.api.SafePowerOffCommand.Request.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getUnsafeAction();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * @enum {number}
+ */
+proto.bosdyn.api.SafePowerOffCommand.Request.UnsafeAction = {
+  UNSAFE_UNKNOWN: 0,
+  UNSAFE_MOVE_TO_SAFE_POSITION: 1,
+  UNSAFE_FORCE_COMMAND: 2
+};
+
+/**
+ * optional UnsafeAction unsafe_action = 1;
+ * @return {!proto.bosdyn.api.SafePowerOffCommand.Request.UnsafeAction}
+ */
+proto.bosdyn.api.SafePowerOffCommand.Request.prototype.getUnsafeAction = function() {
+  return /** @type {!proto.bosdyn.api.SafePowerOffCommand.Request.UnsafeAction} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.SafePowerOffCommand.Request.UnsafeAction} value
+ * @return {!proto.bosdyn.api.SafePowerOffCommand.Request} returns this
+ */
+proto.bosdyn.api.SafePowerOffCommand.Request.prototype.setUnsafeAction = function(value) {
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -4253,7 +4332,8 @@ proto.bosdyn.api.StandCommand.Feedback.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.StandCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    standingState: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -4294,6 +4374,10 @@ proto.bosdyn.api.StandCommand.Feedback.deserializeBinaryFromReader = function(ms
       var value = /** @type {!proto.bosdyn.api.StandCommand.Feedback.Status} */ (reader.readEnum());
       msg.setStatus(value);
       break;
+    case 2:
+      var value = /** @type {!proto.bosdyn.api.StandCommand.Feedback.StandingState} */ (reader.readEnum());
+      msg.setStandingState(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -4330,6 +4414,13 @@ proto.bosdyn.api.StandCommand.Feedback.serializeBinaryToWriter = function(messag
       f
     );
   }
+  f = message.getStandingState();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -4340,6 +4431,15 @@ proto.bosdyn.api.StandCommand.Feedback.Status = {
   STATUS_UNKNOWN: 0,
   STATUS_IS_STANDING: 1,
   STATUS_IN_PROGRESS: 2
+};
+
+/**
+ * @enum {number}
+ */
+proto.bosdyn.api.StandCommand.Feedback.StandingState = {
+  STANDING_UNKNOWN: 0,
+  STANDING_CONTROLLED: 1,
+  STANDING_FROZEN: 2
 };
 
 /**
@@ -4357,6 +4457,24 @@ proto.bosdyn.api.StandCommand.Feedback.prototype.getStatus = function() {
  */
 proto.bosdyn.api.StandCommand.Feedback.prototype.setStatus = function(value) {
   return jspb.Message.setProto3EnumField(this, 1, value);
+};
+
+
+/**
+ * optional StandingState standing_state = 2;
+ * @return {!proto.bosdyn.api.StandCommand.Feedback.StandingState}
+ */
+proto.bosdyn.api.StandCommand.Feedback.prototype.getStandingState = function() {
+  return /** @type {!proto.bosdyn.api.StandCommand.Feedback.StandingState} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.StandCommand.Feedback.StandingState} value
+ * @return {!proto.bosdyn.api.StandCommand.Feedback} returns this
+ */
+proto.bosdyn.api.StandCommand.Feedback.prototype.setStandingState = function(value) {
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -5887,7 +6005,8 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.toObject = function(incl
     forceLimit: (f = msg.getForceLimit()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     torqueLimit: (f = msg.getTorqueLimit()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     taskType: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+    enableRobotLocomotion: (f = msg.getEnableRobotLocomotion()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5959,6 +6078,11 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.deserializeBinaryFromRea
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setEndTime(value);
+      break;
+    case 9:
+      var value = new google_protobuf_wrappers_pb.BoolValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.BoolValue.deserializeBinaryFromReader);
+      msg.setEnableRobotLocomotion(value);
       break;
     default:
       reader.skipField();
@@ -6047,6 +6171,14 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.serializeBinaryToWriter 
       8,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
+    );
+  }
+  f = message.getEnableRobotLocomotion();
+  if (f != null) {
+    writer.writeMessage(
+      9,
+      f,
+      google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
     );
   }
 };
@@ -6318,6 +6450,43 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.clearEndTime =
  */
 proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.hasEndTime = function() {
   return jspb.Message.getField(this, 8) != null;
+};
+
+
+/**
+ * optional google.protobuf.BoolValue enable_robot_locomotion = 9;
+ * @return {?proto.google.protobuf.BoolValue}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.getEnableRobotLocomotion = function() {
+  return /** @type{?proto.google.protobuf.BoolValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.BoolValue, 9));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+*/
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.setEnableRobotLocomotion = function(value) {
+  return jspb.Message.setWrapperField(this, 9, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.clearEnableRobotLocomotion = function() {
+  return this.setEnableRobotLocomotion(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.hasEnableRobotLocomotion = function() {
+  return jspb.Message.getField(this, 9) != null;
 };
 
 

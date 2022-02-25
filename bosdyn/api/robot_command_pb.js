@@ -1226,6 +1226,7 @@ proto.bosdyn.api.RobotCommandResponse.Status = {
   STATUS_TOO_DISTANT: 6,
   STATUS_NOT_POWERED_ON: 7,
   STATUS_BEHAVIOR_FAULT: 9,
+  STATUS_DOCKED: 10,
   STATUS_UNKNOWN_FRAME: 8
 };
 

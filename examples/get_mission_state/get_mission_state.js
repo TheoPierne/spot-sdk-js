@@ -19,6 +19,7 @@ async function main(args = null){
     const clientMission = await robot.ensure_client(MissionClient.default_service_name);
 
     const state = await clientMission.get_state();
+    console.log(state.toObject())
     console.log(`Got mission state: ${state}`);
 
     return true;

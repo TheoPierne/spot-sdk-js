@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 // Original file comments:
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -31,6 +31,28 @@ function serialize_bosdyn_api_ListCaptureActionsResponse(arg) {
 
 function deserialize_bosdyn_api_ListCaptureActionsResponse(buffer_arg) {
   return bosdyn_api_data_acquisition_store_pb.ListCaptureActionsResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_ListStoredAlertDataRequest(arg) {
+  if (!(arg instanceof bosdyn_api_data_acquisition_store_pb.ListStoredAlertDataRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.ListStoredAlertDataRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_ListStoredAlertDataRequest(buffer_arg) {
+  return bosdyn_api_data_acquisition_store_pb.ListStoredAlertDataRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_ListStoredAlertDataResponse(arg) {
+  if (!(arg instanceof bosdyn_api_data_acquisition_store_pb.ListStoredAlertDataResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.ListStoredAlertDataResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_ListStoredAlertDataResponse(buffer_arg) {
+  return bosdyn_api_data_acquisition_store_pb.ListStoredAlertDataResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_bosdyn_api_ListStoredDataRequest(arg) {
@@ -97,6 +119,28 @@ function serialize_bosdyn_api_ListStoredMetadataResponse(arg) {
 
 function deserialize_bosdyn_api_ListStoredMetadataResponse(buffer_arg) {
   return bosdyn_api_data_acquisition_store_pb.ListStoredMetadataResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_StoreAlertDataRequest(arg) {
+  if (!(arg instanceof bosdyn_api_data_acquisition_store_pb.StoreAlertDataRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.StoreAlertDataRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_StoreAlertDataRequest(buffer_arg) {
+  return bosdyn_api_data_acquisition_store_pb.StoreAlertDataRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_StoreAlertDataResponse(arg) {
+  if (!(arg instanceof bosdyn_api_data_acquisition_store_pb.StoreAlertDataResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.StoreAlertDataResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_StoreAlertDataResponse(buffer_arg) {
+  return bosdyn_api_data_acquisition_store_pb.StoreAlertDataResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_bosdyn_api_StoreDataRequest(arg) {
@@ -259,6 +303,31 @@ storeMetadata: {
     requestDeserialize: deserialize_bosdyn_api_StoreMetadataRequest,
     responseSerialize: serialize_bosdyn_api_StoreMetadataResponse,
     responseDeserialize: deserialize_bosdyn_api_StoreMetadataResponse,
+  },
+  // List data identifiers (which identify specific AlertData from
+// an action) for stored AlertData that satisfy the query parameters in the request.
+listStoredAlertData: {
+    path: '/bosdyn.api.DataAcquisitionStoreService/ListStoredAlertData',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_data_acquisition_store_pb.ListStoredAlertDataRequest,
+    responseType: bosdyn_api_data_acquisition_store_pb.ListStoredAlertDataResponse,
+    requestSerialize: serialize_bosdyn_api_ListStoredAlertDataRequest,
+    requestDeserialize: deserialize_bosdyn_api_ListStoredAlertDataRequest,
+    responseSerialize: serialize_bosdyn_api_ListStoredAlertDataResponse,
+    responseDeserialize: deserialize_bosdyn_api_ListStoredAlertDataResponse,
+  },
+  // Store AlertData associated with a DataIdentifier.
+storeAlertData: {
+    path: '/bosdyn.api.DataAcquisitionStoreService/StoreAlertData',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_data_acquisition_store_pb.StoreAlertDataRequest,
+    responseType: bosdyn_api_data_acquisition_store_pb.StoreAlertDataResponse,
+    requestSerialize: serialize_bosdyn_api_StoreAlertDataRequest,
+    requestDeserialize: deserialize_bosdyn_api_StoreAlertDataRequest,
+    responseSerialize: serialize_bosdyn_api_StoreAlertDataResponse,
+    responseDeserialize: deserialize_bosdyn_api_StoreAlertDataResponse,
   },
 };
 

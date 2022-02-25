@@ -17,6 +17,8 @@ var global = Function('return this')();
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
+goog.object.extend(proto, google_protobuf_timestamp_pb);
 goog.exportSymbol('proto.bosdyn.api.AcquireLeaseRequest', null, global);
 goog.exportSymbol('proto.bosdyn.api.AcquireLeaseResponse', null, global);
 goog.exportSymbol('proto.bosdyn.api.AcquireLeaseResponse.Status', null, global);
@@ -2933,7 +2935,8 @@ proto.bosdyn.api.LeaseResource.toObject = function(includeInstance, msg) {
   var f, obj = {
     resource: jspb.Message.getFieldWithDefault(msg, 1, ""),
     lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
-    leaseOwner: (f = msg.getLeaseOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f)
+    leaseOwner: (f = msg.getLeaseOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f),
+    staleTime: (f = msg.getStaleTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2983,6 +2986,11 @@ proto.bosdyn.api.LeaseResource.deserializeBinaryFromReader = function(msg, reade
       var value = new proto.bosdyn.api.LeaseOwner;
       reader.readMessage(value,proto.bosdyn.api.LeaseOwner.deserializeBinaryFromReader);
       msg.setLeaseOwner(value);
+      break;
+    case 4:
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
+      msg.setStaleTime(value);
       break;
     default:
       reader.skipField();
@@ -3034,6 +3042,14 @@ proto.bosdyn.api.LeaseResource.serializeBinaryToWriter = function(message, write
       3,
       f,
       proto.bosdyn.api.LeaseOwner.serializeBinaryToWriter
+    );
+  }
+  f = message.getStaleTime();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
 };
@@ -3128,6 +3144,43 @@ proto.bosdyn.api.LeaseResource.prototype.clearLeaseOwner = function() {
  */
 proto.bosdyn.api.LeaseResource.prototype.hasLeaseOwner = function() {
   return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional google.protobuf.Timestamp stale_time = 4;
+ * @return {?proto.google.protobuf.Timestamp}
+ */
+proto.bosdyn.api.LeaseResource.prototype.getStaleTime = function() {
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 4));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.bosdyn.api.LeaseResource} returns this
+*/
+proto.bosdyn.api.LeaseResource.prototype.setStaleTime = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.LeaseResource} returns this
+ */
+proto.bosdyn.api.LeaseResource.prototype.clearStaleTime = function() {
+  return this.setStaleTime(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.LeaseResource.prototype.hasStaleTime = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 

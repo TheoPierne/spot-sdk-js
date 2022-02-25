@@ -1332,7 +1332,9 @@ proto.bosdyn.api.spot.DoorCommand.HingeSide = {
 proto.bosdyn.api.spot.DoorCommand.SwingDirection = {
   SWING_DIRECTION_UNKNOWN: 0,
   SWING_DIRECTION_INSWING: 1,
-  SWING_DIRECTION_OUTSWING: 2
+  SWING_DIRECTION_PULL: 1,
+  SWING_DIRECTION_OUTSWING: 2,
+  SWING_DIRECTION_PUSH: 2
 };
 
 /**
