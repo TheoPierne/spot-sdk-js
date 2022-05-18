@@ -43,10 +43,6 @@ class LogAnnotationClient extends BaseClient {
     return this._do_add_text_messages(this.call, text_messages, args);
   }
 
-  add_text_messages_async(text_messages, args) {
-    return this._do_add_text_messages(this.call_async, text_messages, args);
-  }
-
   _do_add_text_messages(func, text_messages, args) {
     const request = new log_annotation_protos.AddLogAnnotationRequest();
     for (const in_text_msg of text_messages) {
@@ -58,10 +54,6 @@ class LogAnnotationClient extends BaseClient {
 
   add_operator_comment(msg, robot_timestamp = null, args) {
     return this._do_add_operator_comment(this.call, msg, robot_timestamp, args);
-  }
-
-  add_operator_comment_async(msg, robot_timestamp = null, args) {
-    return this._do_add_operator_comment(this.call_async, msg, robot_timestamp, args);
   }
 
   _do_add_operator_comment(func, msg, robot_timestamp = null, args) {
@@ -76,10 +68,6 @@ class LogAnnotationClient extends BaseClient {
 
   add_log_blob(data, type_id, channel = null, robot_timestamp = null, args) {
     return this._do_add_log_blob(this.call, data, type_id, channel, robot_timestamp, args);
-  }
-
-  add_log_blob_async(data, type_id, channel = null, robot_timestamp = null, args) {
-    return this._do_add_log_blob(this.call_async, data, type_id, channel, robot_timestamp, args);
   }
 
   _do_add_log_blob(func, data, type_id, channel, robot_timestamp, args) {
@@ -98,10 +86,6 @@ class LogAnnotationClient extends BaseClient {
 
   add_log_protobuf(proto, robot_timestamp = null) {
     return this._do_add_log_protobuf(this.add_log_blob, proto, robot_timestamp);
-  }
-
-  add_log_protobuf_async(proto, robot_timestamp = null) {
-    return this._do_add_log_protobuf(this.add_log_blob_async, proto, robot_timestamp);
   }
 
   _do_add_log_protobuf(func, proto, robot_timestamp) {

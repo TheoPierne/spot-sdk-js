@@ -34,31 +34,9 @@ class DockingClient extends BaseClient {
     );
   }
 
-  docking_command_async(station_id, clock_identifier, end_time, prep_pose_behavior = null, lease = null, args) {
-    const req = this._docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior);
-    return this.call_async(
-      this._stub.dockingCommand,
-      req,
-      this._docking_id_from_response,
-      _docking_command_error_from_response,
-      args,
-    );
-  }
-
   docking_command_feedback(command_id, args) {
     const req = this._docking_command_feedback_request(command_id);
     return this.call(
-      this._stub.dockingCommandFeedback,
-      req,
-      this._docking_status_from_response,
-      _docking_feedback_error_from_response,
-      args,
-    );
-  }
-
-  docking_command_feedback_async(command_id, args) {
-    const req = this._docking_command_feedback_request(command_id);
-    return this.call_async(
       this._stub.dockingCommandFeedback,
       req,
       this._docking_status_from_response,
@@ -78,31 +56,9 @@ class DockingClient extends BaseClient {
     );
   }
 
-  get_docking_config_async(args) {
-    const req = new docking_pb.GetDockingConfigRequest();
-    return this.call_async(
-      this._stub.getDockingConfig,
-      req,
-      this._docking_config_from_response,
-      _docking_get_config_error_from_response,
-      args,
-    );
-  }
-
   get_docking_state(args) {
     const req = new docking_pb.GetDockingStateRequest();
     return this.call(
-      this._stub.getDockingState,
-      req,
-      this._docking_state_from_response,
-      _docking_get_state_error_from_response,
-      args,
-    );
-  }
-
-  get_docking_state_async(args) {
-    const req = new docking_pb.GetDockingStateRequest();
-    return this.call_async(
       this._stub.getDockingState,
       req,
       this._docking_state_from_response,

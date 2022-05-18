@@ -34,16 +34,6 @@ class RobotIdClient extends BaseClient {
     const req = new robot_id_pb.RobotIdRequest();
     return this.call(this._stub.getRobotId, req, _get_entry_value, common_header_errors, args);
   }
-
-  /**
-   * Get the robot's robot/id.proto asynchronously.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {string|number} User token from the server as a string.
-   */
-  get_id_async(args) {
-    const req = new robot_id_pb.RobotIdRequest();
-    return this.call_async(this._stub.getRobotId, req, _get_entry_value, common_header_errors, args);
-  }
 }
 
 function create_strict_version(robot_id) {

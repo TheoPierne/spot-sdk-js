@@ -26,19 +26,9 @@ class GraphNavRecordingServiceClient extends BaseClient {
     return this.call(this._stub.startRecording, request, _get_status, _start_recording_error, args);
   }
 
-  start_recording_async(lease = null, recording_environment = null, args) {
-    const request = this._build_start_recording_request(lease, recording_environment);
-    return this.call_async(this._stub.startRecording, request, _get_status, _start_recording_error, args);
-  }
-
   stop_recording(lease = null, args) {
     const request = this._build_stop_recording_request(lease);
     return this.call(this._stub.stopRecording, request, _get_status, _stop_recording_error, args);
-  }
-
-  stop_recording_async(lease = null, args) {
-    const request = this._build_stop_recording_request(lease);
-    return this.call_async(this._stub.stopRecording, request, _get_status, _stop_recording_error, args);
   }
 
   get_record_status(args) {
@@ -46,19 +36,9 @@ class GraphNavRecordingServiceClient extends BaseClient {
     return this.call(this._stub.getRecordStatus, request, _get_response, common_header_errors, args);
   }
 
-  get_record_status_async(args) {
-    const request = this._build_get_record_status_request();
-    return this.call_async(this._stub.getRecordStatus, request, _get_response, common_header_errors, args);
-  }
-
   set_recording_environment(lease = null, recording_environment = null, args) {
     const request = this._build_set_recording_environment_request(lease, recording_environment);
     return this.call(this._stub.SetRecordingEnvironment, request, null, common_header_errors, args);
-  }
-
-  set_recording_environment_async(lease = null, recording_environment = null, args) {
-    const request = this._build_set_recording_environment_request(lease, recording_environment);
-    return this.call_async(this._stub.setRecordingEnvironment, request, null, common_header_errors, args);
   }
 
   create_waypoint(lease = null, waypoint_name = null, recording_environment = null, args) {
@@ -66,19 +46,9 @@ class GraphNavRecordingServiceClient extends BaseClient {
     return this.call(this._stub.createWaypoint, request, _get_response, _create_waypoint_error, args);
   }
 
-  create_waypoint_async(lease = null, waypoint_name = null, recording_environment = null, args) {
-    const request = this._build_create_waypoint_request(waypoint_name, recording_environment, lease);
-    return this.call_async(this._stub.createWaypoint, request, _get_response, _create_waypoint_error, args);
-  }
-
   create_edge(lease = null, edge = null, args) {
     const request = this._build_create_edge_request(edge, lease);
     return this.call(this._stub.createEdge, request, _get_status, _create_edge_error, args);
-  }
-
-  create_edge_async(lease = null, edge = null, args) {
-    let request = this._build_create_edge_request(edge, lease);
-    return this.call_async(this._stub.createEdge, request, _get_status, _create_edge_error, args);
   }
 
   static _build_start_recording_request(lease, recording_env) {

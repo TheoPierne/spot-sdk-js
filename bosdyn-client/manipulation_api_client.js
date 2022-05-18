@@ -44,18 +44,6 @@ class ManipulationApiClient extends BaseClient {
   }
 
   /**
-   * Issue a manipulation api command to the robot asynchronously.
-   * @param {manipulation_api_pb.ManipulationApiRequest} manipulation_api_request The command request for a
-   * manipulation task.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<manipulation_api_pb.ManipulationApiResponse>} The full ManipulationApiResponse message,
-   * which includes a command id for feedback.
-   */
-  manipulation_api_command_async(manipulation_api_request, args) {
-    return this.call_async(this._stub.manipulationApi, manipulation_api_request, null, null, args);
-  }
-
-  /**
    * Issue a manipulation api feedback request to the robot.
    * @param {manipulation_api_pb.ManipulationApiFeedbackRequest} manipulation_api_feedback_request The request for
    * feedback for a specific manipulation command.
@@ -65,18 +53,6 @@ class ManipulationApiClient extends BaseClient {
    */
   manipulation_api_feedback_command(manipulation_api_feedback_request, args) {
     return this.call(this._stub.manipulationApiFeedback, manipulation_api_feedback_request, null, null, args);
-  }
-
-  /**
-   * Issue a manipulation api feedback request to the robot asynchronously.
-   * @param {manipulation_api_pb.ManipulationApiFeedbackRequest} manipulation_api_feedback_request The request for
-   * feedback for a specific manipulation command.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<manipulation_api_pb.ManipulationApiFeedbackResponse>} The full ManipulationApiFeedbackResponse
-   * message.
-   */
-  manipulation_api_feedback_command_async(manipulation_api_feedback_request, args) {
-    return this.call_async(this._stub.manipulationApiFeedback, manipulation_api_feedback_request, null, null, args);
   }
 }
 

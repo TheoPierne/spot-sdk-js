@@ -74,28 +74,6 @@ class WorldObjectClient extends BaseClient {
   }
 
   /**
-   * Async version of list_world_objects().
-   * @param {?Array<world_object_pb.WorldObjectType>} object_type Specific types to include in the response,
-   * all other types will be filtered out.
-   * @param {?number} time_start_point A client timestamp to filter objects in the response. All objects
-   * will have a timestamp after this time.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise<world_object_pb.ListWorldObjectResponse>} The response message,
-   * which includes the filtered list of all world objects.
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {NoTimeSyncError} Couldn't convert the timestamp into robot time.
-   */
-  list_world_objects_async(object_type = null, time_start_point = null, args) {
-    if (time_start_point !== null) {
-      time_start_point = this._update_time_filter(time_start_point, this.timesync_endpoint);
-    }
-    const req = new world_object_pb.ListWorldObjectRequest()
-      .setObjectTypeList(object_type)
-      .setTimestampFilter(time_start_point);
-    return this.call_async(this._stub.listWorldObjects, req, _get_world_object_value, common_header_errors, args);
-  }
-
-  /**
    * Mutate (add, change, delete) world objects.
    * @param {world_object_pb.MutateWorldObjectRequest} mutation_req The request including the object
    * to be mutated and the type of mutation.
@@ -114,26 +92,6 @@ class WorldObjectClient extends BaseClient {
         .setAcquisitionTime(this._update_timestamp_filter(client_timestamp, this.timesync_endpoint));
     }
     return this.call(this._stub.mutateWorldObjects, mutation_req, _get_status, common_header_errors, args);
-  }
-
-  /**
-   * Async version of mutate_world_objects().
-   * @param {world_object_pb.MutateWorldObjectRequest} mutation_req The request including the object
-   * to be mutated and the type of mutation.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {*} The response message, which includes the filtered list of all world objects.
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {NoTimeSyncError} Couldn't convert the timestamp into robot time.
-   */
-  mutate_world_objects_async(mutation_req, args) {
-    if (mutation_req.getMutation().getObject().hasAcquisitionTime()) {
-      const client_timestamp = mutation_req.getMutation().getObject().getAcquisitionTime();
-      mutation_req
-        .getMutation()
-        .getObject()
-        .setAcquisitionTime(this._update_timestamp_filter(client_timestamp, this.timesync_endpoint));
-    }
-    return this.call_async(this._stub.mutateWorldObjects, mutation_req, _get_status, common_header_errors, args);
   }
 
   /**

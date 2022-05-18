@@ -73,17 +73,6 @@ class DirectoryClient extends BaseClient {
   }
 
   /**
-   * List all services present on the robot asynchronously.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Array} A list of the proto message definitions of all registered services
-   * @throws {RpcError} Problem communicating with the robot.
-   */
-  list_async(args) {
-    const req = new directory_pb.ListServiceEntriesRequest();
-    return this.call_async(this._stub.listServiceEntries, req, _list_value, common_header_errors, args);
-  }
-
-  /**
    * Get the service entry for one particular service specified by name.
    * @param {string} service_name The name of the service to retrieve.
    * @param {Object} args Extra arguments for controlling RPC details.
@@ -95,20 +84,6 @@ class DirectoryClient extends BaseClient {
   get_entry(service_name, args) {
     const req = new directory_pb.GetServiceEntryRequest().setServiceName(service_name);
     return this.call(this._stub.getServiceEntry, req, _get_entry_value, _error_from_response, args);
-  }
-
-  /**
-   * Get the service entry for one particular service specified by name asynchronously.
-   * @param {string} service_name The name of the service to retrieve.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {directory_pb.GetServiceEntryResponse} The proto message definition of the service entry
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {NonexistentServiceError} The service was not found.
-   * @throws {DirectoryResponseError} Something went wrong during the directory access.
-   */
-  get_entry_async(service_name, args) {
-    const req = new directory_pb.GetServiceEntryRequest().setServiceName(service_name);
-    return this.call_async(this._stub.getServiceEntry, req, _get_entry_value, _error_from_response, args);
   }
 }
 

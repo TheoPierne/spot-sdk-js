@@ -64,25 +64,6 @@ class NetworkComputeBridgeClient extends BaseClient {
   }
 
   /**
-   * Async version of list_available_models()
-   * @param {string} service_name The service to query for models.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<network_compute_bridge_pb.ListAvailableModelsResponse>} The full ListAvailableModelsResponse,
-   * which contains any models the service or worker service advertise.
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {ExternalServiceNotFoundError} The network compute bridge worker service was not found
-   * in the robot's directory.
-   * @throws {ExternalServerError} Either the service or worker service threw an error when responding with
-   * the set of all models.
-   */
-  list_available_models_async(service_name, args) {
-    const req = new network_compute_bridge_pb.ListAvailableModelsRequest().setServerConfig(
-      new network_compute_bridge_pb.NetworkComputeServerConfiguration().setServiceName(service_name),
-    );
-    return this.list_available_models_command_async(req, args);
-  }
-
-  /**
    * List all available models that the service knows.
    * @param {network_compute_bridge_pb.ListAvailableModelsRequest} list_request The request to list all models.
    * @param {Object} args Extra arguments for controlling RPC details.
@@ -96,22 +77,6 @@ class NetworkComputeBridgeClient extends BaseClient {
    */
   list_available_models_command(list_request, args) {
     return this.call(this._stub.listAvailableModels, list_request, null, _list_available_models_error, args);
-  }
-
-  /**
-   * Async version of list_available_models_command().
-   * @param {network_compute_bridge_pb.ListAvailableModelsRequest} list_request The request to list all models.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {network_compute_bridge_pb.ListAvailableModelsResponse} The full ListAvailableModelsResponse,
-   * which contains any models the service or worker service advertise.
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {ExternalServiceNotFoundError} The network compute bridge worker service was not found
-   * in the robot's directory.
-   * @throws {ExternalServerError} Either the service or worker service threw an error when responding with
-   * the set of all models.
-   */
-  list_available_models_command_async(list_request, args) {
-    return this.call_async(this._stub.listAvailableModels, list_request, null, _list_available_models_error, args);
   }
 
   /**
@@ -131,25 +96,6 @@ class NetworkComputeBridgeClient extends BaseClient {
    */
   network_compute_bridge_command(network_compute_request, args) {
     return this.call(this._stub.networkCompute, network_compute_request, null, _network_compute_error, args);
-  }
-
-  /**
-   * Async version of network_compute_bridge_command().
-   * @param {network_compute_bridge_pb.NetworkComputeRequest} network_compute_request The request which contains what
-   * type of data should be processed, and which model the server should run.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<network_compute_bridge_pb.NetworkComputeResponse>} The full NetworkComputeResponse,
-   * which contains the processed data.
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {ExternalServiceNotFoundError} The network compute bridge worker service was not found
-   * in the robot's directory.
-   * @throws {ExternalServerError} Either the service or worker service threw an error when responding with
-   * the set of all models.
-   * @throws {NetworkComputeRotationError} For processed image data, the robot was unable to rotate the
-   * image as requested.
-   */
-  network_compute_bridge_command_async(network_compute_request, args) {
-    return this.call_async(this._stub.networkCompute, network_compute_request, null, _network_compute_error, args);
   }
 }
 

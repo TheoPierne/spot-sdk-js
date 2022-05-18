@@ -60,21 +60,6 @@ class FaultClient extends BaseClient {
   }
 
   /**
-   * Broadcast a new service fault through the robot asynchronously.
-   * @param {service_fault_pb.ServiceFault} service_fault Populated fault message to broadcast.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {service_fault_pb.TriggerServiceFaultResponse} An instance of
-   * bosdyn.api.TriggerServiceFaultResponse
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {ServiceFaultAlreadyExistsError} The service fault already exists.
-   * @throws {FaultResponseError} Something went wrong during the fault trigger.
-   */
-  trigger_service_fault_async(service_fault, args) {
-    const req = new service_fault_pb.TriggerServiceFaultRequest().setFault(service_fault);
-    return this.call_async(this._stub.triggerServiceFault, req, null, _trigger_service_fault_error, args);
-  }
-
-  /**
    * Clear a service fault from the robot state.
    * @param {service_fault_pb.ServiceFaultId} service_fault_id ServiceFault to clear.
    * @param {boolean} [clear_all_service_faults=false] Clear all faults associated with the service name.
@@ -91,30 +76,6 @@ class FaultClient extends BaseClient {
       .setClearAllServiceFaults(clear_all_service_faults)
       .setClearAllPayloadFaults(clear_all_payload_faults);
     return this.call(this._stub.clearServiceFault, req, null, _clear_service_fault_error, args);
-  }
-
-  /**
-   * Clear a service fault from the robot state asynchronously.
-   * @param {service_fault_pb.ServiceFaultId} service_fault_id ServiceFault to clear.
-   * @param {boolean} [clear_all_service_faults=false] Clear all faults associated with the service name.
-   * @param {boolean} [clear_all_payload_faults=false] Clear all faults associated with the payload guid.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {service_fault_pb.ClearServiceFaultResponse} An instance of bosdyn.api.ClearServiceFaultResponse
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {ServiceFaultDoesNotExistError} The service fault does not exist in active service faults.
-   * @throws {FaultResponseError} Something went wrong during the fault clear.
-   */
-  clear_service_fault_async(
-    service_fault_id,
-    clear_all_service_faults = false,
-    clear_all_payload_faults = false,
-    args,
-  ) {
-    let req = new service_fault_pb.ClearServiceFaultRequest()
-      .setFaultId(service_fault_id)
-      .setClearAllServiceFaults(clear_all_service_faults)
-      .setClearAllPayloadFaults(clear_all_payload_faults);
-    return this.call_async(this._stub.clearServiceFault, req, null, _clear_service_fault_error, args);
   }
 }
 

@@ -95,25 +95,9 @@ class PowerClient extends BaseClient {
     return this.call(this._stub.powerCommand, req, null, _power_command_error_from_response, args);
   }
 
-  power_command_async(request, lease = null, args) {
-    const req = PowerClient._power_command_request(lease, request);
-    return this.call_async(this._stub.powerCommand, req, null, _power_command_error_from_response, args);
-  }
-
   power_command_feedback(power_command_id, args) {
     const req = PowerClient._power_command_feedback_request(power_command_id);
     return this.call(
-      this._stub.powerCommandFeedback,
-      req,
-      _power_status_from_response,
-      _power_feedback_error_from_response,
-      args,
-    );
-  }
-
-  power_command_feedback_async(power_command_id, args) {
-    const req = PowerClient._power_command_feedback_request(power_command_id);
-    return this.call_async(
       this._stub.powerCommandFeedback,
       req,
       _power_status_from_response,

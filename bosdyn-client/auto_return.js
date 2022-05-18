@@ -33,29 +33,14 @@ class AutoReturnClient extends BaseClient {
     return this.call(this._stub.configure, request, null, configure_error, args);
   }
 
-  configure_async(params, leases, args) {
-    const request = this._configure_request(params, leases);
-    return this.call_async(this._stub.configure, request, null, configure_error, args);
-  }
-
   get_configuration(args) {
     const request = new auto_return_pb.GetConfigurationRequest();
     return this.call(this._stub.getConfiguration, request, null, null, args);
   }
 
-  get_configuration_async(args) {
-    const request = new auto_return_pb.GetConfigurationRequest();
-    return this.call_async(this._stub.getConfiguration, request, null, null, args);
-  }
-
   start(args) {
     const request = new auto_return_pb.StartRequest();
     return this.call(this._stub.start, request, null, null, args);
-  }
-
-  start_async(args) {
-    const request = new auto_return_pb.StartRequest();
-    return this.call_async(this._stub.start, request, null, null, args);
   }
 
   _configure_request(params, leases) {

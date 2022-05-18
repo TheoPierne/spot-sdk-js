@@ -33,17 +33,6 @@ class RobotStateClient extends BaseClient {
   }
 
   /**
-   * Obtain current state of the robot asynchronously.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<robot_state_pb.RobotStateResponse>} The current robot state.
-   * @throws {RpcError} Problem communicating with the robot.
-   */
-  get_robot_state_async(args) {
-    const req = RobotStateClient._get_robot_state_request();
-    return this.call_async(this._stub.getRobotState, req, _get_robot_state_value, common_header_errors, args);
-  }
-
-  /**
    * Obtain robot metrics, such as distance traveled or time powered on.
    * @param {Object} args Extra arguments for controlling RPC details.
    * @returns {Promise<robot_state_pb.RobotMetricsResponse>} All of the current robot metrics.
@@ -52,17 +41,6 @@ class RobotStateClient extends BaseClient {
   get_robot_metrics(args) {
     const req = RobotStateClient._get_robot_metrics_request();
     return this.call(this._stub.getRobotMetrics, req, _get_robot_metrics_value, common_header_errors, args);
-  }
-
-  /**
-   * Async version of get_robot_metrics()
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<robot_state_pb.RobotMetricsResponse>} All of the current robot metrics.
-   * @throws {RpcError} Problem communicating with the robot.
-   */
-  get_robot_metrics_async(args) {
-    const req = RobotStateClient._get_robot_metrics_request();
-    return this.call_async(this._stub.getRobotMetrics, req, _get_robot_metrics_value, common_header_errors, args);
   }
 
   /**
@@ -84,24 +62,6 @@ class RobotStateClient extends BaseClient {
   }
 
   /**
-   * Async version of get_robot_hardware_configuration()
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<robot_state_pb.RobotHardwareConfigurationResponse>} The hardware configuration,
-   * which includes the link names.
-   * @throws {RpcError} Problem communicating with the robot.
-   */
-  get_robot_hardware_configuration_async(args) {
-    const req = RobotStateClient._get_robot_hardware_configuration_request();
-    return this.call_async(
-      this._stub.getRobotHardwareConfiguration,
-      req,
-      _get_robot_hardware_configuration_value,
-      common_header_errors,
-      args,
-    );
-  }
-
-  /**
    * Obtain link model OBJ for a specific link.
    * @param {string} link_name Name of the link to get the model.
    * @param {Object} args Extra arguments for controlling RPC details.
@@ -112,19 +72,6 @@ class RobotStateClient extends BaseClient {
   get_robot_link_model(link_name, args) {
     const req = RobotStateClient._get_robot_link_model_request(link_name);
     return this.call(this._stub.getRobotLinkModel, req, _get_robot_link_model_value, common_header_errors, args);
-  }
-
-  /**
-   * Async version of get_robot_joint_model_async()
-   * @param {string} link_name Name of the link to get the model.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<robot_state_pb.Skeleton.Link.ObjModel>} The bosdyn.api.Skeleton.Link.ObjModel for
-   * the specified link.
-   * @throws {RpcError} Problem communicating with the robot.
-   */
-  get_robot_link_model_async(link_name, args) {
-    const req = RobotStateClient._get_robot_link_model_request(link_name);
-    return this.call_async(this._stub.getRobotLinkModel, req, _get_robot_link_model_value, common_header_errors, args);
   }
 
   /**

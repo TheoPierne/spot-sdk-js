@@ -129,20 +129,6 @@ class AuthClient extends BaseClient {
   }
 
   /**
-   * Asynchronously authenticate to the robot with a username/password combo.
-   * @param {string} username Username on the robot.
-   * @param {string} password Password for the username on the robot.
-   * @param {?string} app_token Deprecated. Only include for robots with old software.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {string} User token from the server as a string.
-   * @throws {InvalidLoginError} If username and/or password are not valid.
-   */
-  auth_async(username, password, app_token = null, args) {
-    const req = _build_auth_request(username, password, app_token);
-    return this.call_async(this._stub.getAuthToken, req, _token_from_response, _error_from_response, args);
-  }
-
-  /**
     * Authenticate to the robot using a previously created user token.
     * @param {string} token A user token previously issued by the robot.
     * @param {?string} app_token Deprecated. Only include for robots with old software.
@@ -155,21 +141,6 @@ class AuthClient extends BaseClient {
   auth_with_token(token, app_token = null, args) {
     const req = _build_auth_token_request(token, app_token);
     return this.call(this._stub.getAuthToken, req, _token_from_response, _error_from_response, args);
-  }
-
-  /**
-    * Asynchronously authenticate to the robot using a previously created user token.
-    * @param {string} token A user token previously issued by the robot.
-    * @param {?string} app_token Deprecated. Only include for robots with old software.
-    * @param {Object} [args] Extra arguments for controlling RPC details.
-    * @returns {string} A new user token from the server. The new token will generally be valid further in
-            the future than the passed in token. A client can use auth_with_token to regularly
-            re-authenticate without needing to ask for username/password credentials.
-    * @throws {InvalidTokenError} If the token was incorrectly formed, for the wrong robot, or expired.
-    */
-  auth_with_token_async(token, app_token = null, args) {
-    const req = _build_auth_token_request(token, app_token);
-    return this.call_async(this._stub.getAuthToken, req, _token_from_response, _error_from_response, args);
   }
 }
 

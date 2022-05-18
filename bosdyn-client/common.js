@@ -328,41 +328,6 @@ class BaseClient {
     return value_from_response(response.map());
   }
 
-  call_async(rpc_method, request, value_from_response = null, error_from_response = null, args) {
-    request = this._apply_request_processors(cloneDeep(request));
-    const logger = this.logger;
-    logger.debug(`[COMMON] async request: ${rpc_method._method} ${BaseClient.request_trim_for_log(request)}`);
-    const response_future = rpc_method.future(request, args);
-
-    const $this = this;
-    function on_finish(fut) {
-      let isCatch = false,
-        result;
-      try {
-        result = fut.result();
-      } catch (e) {
-        isCatch = true;
-        logger.debug(`[COMMON] async exception: ${rpc_method._method}\n${e}\n`);
-      }
-      if (!isCatch) {
-        let isCatch2 = false;
-        try {
-          $this._apply_response_processors(result);
-        } catch (e) {
-          isCatch2 = true;
-          logger.warn('[COMMON] Error applying response processors.');
-        }
-
-        if (!isCatch2) {
-          logger.debug(`[COMMON] async response: ${rpc_method._method} ${BaseClient.response_trim_for_log(result)}`);
-        }
-      }
-    }
-
-    response_future.add_done_callback(on_finish);
-    return new FutureWrapper(response_future, value_from_response, error_from_response);
-  }
-
   _apply_request_processors(request) {
     if (request === null) return null;
     for (const proc of this.request_processors) {
@@ -404,61 +369,6 @@ class BaseClient {
   }
 }
 
-class FutureWrapper {
-  constructor(future, value_from_response, error_from_response) {
-    this.original_future = future;
-    this._error_from_response = error_from_response;
-    this._value_from_response = value_from_response;
-  }
-
-  toString() {
-    return this.original_future.toString();
-  }
-
-  cancel() {
-    return this.original_future.cancel();
-  }
-
-  cancelled() {
-    return this.original_future.cancelled();
-  }
-
-  running() {
-    return this.original_future.running();
-  }
-
-  done() {
-    return this.original_future.done();
-  }
-
-  traceback(args) {
-    return this.original_future.traceback(args);
-  }
-
-  add_done_callback(cb) {
-    this.original_future.add_done_callback(cb(this));
-  }
-
-  result(args) {
-    const error = this.exception();
-    if (error !== null) throw error;
-
-    const base_result = this.original_future.result(args);
-    if (this._value_from_response === null) return base_result;
-
-    return this._value_from_response(base_result);
-  }
-
-  exception(args) {
-    const error = this.original_future.exception(args);
-    if (error === null) {
-      if (this._error_from_response === null) return null;
-      return this._error_from_response(this.original_future.result());
-    }
-    return translate_exception(error);
-  }
-}
-
 function get_self_ip() {
   const { address } = require('ip');
   return address();
@@ -466,7 +376,6 @@ function get_self_ip() {
 
 module.exports = {
   BaseClient,
-  FutureWrapper,
   common_header_errors,
   streaming_common_header_errors,
   common_lease_errors,

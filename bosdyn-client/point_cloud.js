@@ -91,24 +91,6 @@ class PointCloudClient extends BaseClient {
   }
 
   /**
-   * Async version of list_point_cloud_sources()
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise<Array<point_cloud_protos.PointCloudSource>>} A list of the different point cloud
-   * sources as strings.
-   * @throws {RpcError} Problem communicating with the robot.
-   */
-  list_point_cloud_sources_async(args) {
-    const req = PointCloudClient._get_list_point_cloud_source_request();
-    return this.call_async(
-      this._stub.listPointCloudSources,
-      req,
-      _list_point_cloud_sources_value,
-      common_header_errors,
-      args,
-    );
-  }
-
-  /**
    * Obtain point clouds from sources using default parameters.
    * @param {Array<string>} point_cloud_sources The source names to request point clouds from.
    * @param {Object} [args] Extra arguments for controlling RPC details.
@@ -121,24 +103,6 @@ class PointCloudClient extends BaseClient {
    */
   get_point_cloud_from_sources(point_cloud_sources, args) {
     return this.get_point_cloud(
-      point_cloud_sources.map(src => build_pc_request(src)),
-      args,
-    );
-  }
-
-  /**
-   * Async version of get_point_cloud_from_sources().
-   * @param {Array<string>} point_cloud_sources The source names to request point clouds from.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Array} A list of point cloud responses for each of the requested sources.
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {UnknownPointCloudSourceError} Provided point cloud source was invalid or not found.
-   * @throws {point_cloud.SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
-   * @throws {UnsetStatusError} An internal PointCloudService issue has happened.
-   * @throws {PointCloudDataError} Problem with the point cloud data. Only PointCloudSource is filled.
-   */
-  get_point_cloud_from_sources_async(point_cloud_sources, args) {
-    return this.get_point_cloud_async(
       point_cloud_sources.map(src => build_pc_request(src)),
       args,
     );
@@ -160,24 +124,6 @@ class PointCloudClient extends BaseClient {
   get_point_cloud(point_cloud_requests, args) {
     const req = PointCloudClient._get_point_cloud_request(point_cloud_requests);
     return this.call(this._stub.getPointCloud, req, _get_point_cloud_value, _error_from_response, args);
-  }
-
-  /**
-   * Async version of get_point_cloud().
-   * @param {Array<point_cloud_protos.PointCloudRequest>} point_cloud_requests A list of PointCloudRequest protobuf
-   * messages which specify which point clouds to collect
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise<Array<point_cloud_protos.PointCloudResponse>>} A list of point cloud responses
-   * for each of the requested sources.
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {UnknownPointCloudSourceError} Provided point cloud source was invalid or not found.
-   * @throws {point_cloud.SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
-   * @throws {UnsetStatusError} An internal PointCloudService issue has happened.
-   * @throws {PointCloudDataError} Problem with the point cloud data. Only PointCloudSource is filled.
-   */
-  get_point_cloud_asyncs(point_cloud_requests, args) {
-    const req = PointCloudClient._get_point_cloud_request(point_cloud_requests);
-    return this.call_async(this._stub.getPointCloud, req, _get_point_cloud_value, _error_from_response, args);
   }
 
   static _get_point_cloud_request(point_cloud_requests) {

@@ -59,11 +59,6 @@ class TimeSyncClient extends BaseClient {
     return this.call(this._stub.timeSyncUpdate, req, null, common_header_errors, args);
   }
 
-  get_time_sync_update_async(previous_round_trip, clock_identifier, args) {
-    let req = this.#get_time_sync_update_request(previous_round_trip, clock_identifier);
-    return this.call_async(this._stub.timeSyncUpdate, req, null, common_header_errors, args);
-  }
-
   #get_time_sync_update_request(previous_round_trip, clock_identifier) {
     const req = new time_sync_pb.TimeSyncUpdateRequest()
       .setPreviousRoundTrip(previous_round_trip)

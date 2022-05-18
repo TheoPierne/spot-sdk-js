@@ -82,17 +82,6 @@ class ArmSurfaceContactClient extends BaseClient {
     this._update_command_timestamps(request);
     return this.call(this._stub.armSurfaceContact, request, null, null, args);
   }
-
-  /**
-   * Issue an arm surface contact command to the robot asynchronously.
-   * @param {arm_surface_contact_pb.ArmSurfaceContactRequest} request The command request.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {arm_surface_contact_pb.ArmSurfaceContactResponse} The full arm surface contact response message.
-   */
-  arm_surface_contact_command_async(request, args) {
-    this._update_command_timestamps(request);
-    return this.call_async(this._stub.armSurfaceContact, request, null, null, args);
-  }
 }
 
 module.exports = {

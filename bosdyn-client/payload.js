@@ -35,17 +35,6 @@ class PayloadClient extends BaseClient {
     const req = new payload_pb.ListPayloadsRequest();
     return this.call(this._stub.listPayloads, req, _get_entry_value, common_header_errors, args);
   }
-
-  /**
-   * List all payloads registered on the robot asynchronously.
-   * @param {Object} args Extra arguments to pass to grpc call invocation.
-   * @returns {Array} A list of the proto message definitions of all registered payloads
-   * @throws {RpcError} Problem communicating with the robot.
-   */
-  list_payloads_async(args) {
-    let request = new payload_pb.ListPayloadsRequest();
-    return this.call_async(this._stub.listPayloads, request, _get_entry_value, common_header_errors, args);
-  }
 }
 
 module.exports = {

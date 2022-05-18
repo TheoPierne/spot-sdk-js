@@ -62,27 +62,12 @@ class PayloadRegistrationClient extends BaseClient {
     return this.call(this._stub.registerPayload, req, null, _payload_registration_error, args);
   }
 
-  register_payload_async(payload, secret, args) {
-    let req = new payload_registration_protos.RegisterPayloadRequest();
-    req.setPayload(payload);
-    if (secret) req.setPayloadSecret(secret);
-    return this.call_async(this._stub.registerPayload, req, null, _payload_registration_error, args);
-  }
-
   update_payload_version(guid, secret, updated_version, args) {
     const req = new payload_registration_protos.UpdatePayloadVersionRequest()
       .setPayloadGuid(guid)
       .setPayloadSecret(secret)
       .setUpdatedVersion(updated_version);
     return this.call(this._stub.updatePayloadVersion, req, null, _update_payload_version_error, args);
-  }
-
-  update_payload_version_async(guid, secret, updated_version, args) {
-    let req = new payload_registration_protos.UpdatePayloadVersionRequest();
-    req.setPayloadGuid(guid);
-    req.setPayloadSecret(secret);
-    req.setUpdatedVersion(updated_version);
-    return this.call_async(this._stub.updatePayloadVersion, req, null, _update_payload_version_error, args);
   }
 
   get_payload_auth_token(guid, secret, args) {

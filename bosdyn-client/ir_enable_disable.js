@@ -20,13 +20,6 @@ class IREnableDisableServiceClient extends BaseClient {
 
     return this.call(this._stub.iREnableDisable, request, null, common_header_errors, args);
   }
-
-  set_ir_enabled_async(enable, args) {
-    const req = enable ? REQUEST_ON : REQUEST_OFF;
-    const request = new ir_enable_disable_pb.IREnableDisableRequest().setRequest(req);
-
-    return this.call_async(this._stub.iREnableDisable, request, null, common_header_errors, args);
-  }
 }
 
 module.exports = {

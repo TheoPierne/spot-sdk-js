@@ -98,20 +98,8 @@ class ImageClient extends BaseClient {
     return this.call(this._stub.listImageSources, req, _list_image_sources_value, common_header_errors, args);
   }
 
-  list_image_sources_async(args) {
-    const req = ImageClient._get_list_image_source_request();
-    return this.call_async(this._stub.listImageSources, req, _list_image_sources_value, common_header_errors, args);
-  }
-
   get_image_from_sources(image_sources, args) {
     return this.get_image(
-      image_sources.map(x => build_image_request(x)),
-      args,
-    );
-  }
-
-  get_image_from_sources_async(image_sources, args) {
-    return this.get_image_async(
       image_sources.map(x => build_image_request(x)),
       args,
     );
@@ -120,11 +108,6 @@ class ImageClient extends BaseClient {
   get_image(image_requests, args) {
     const req = ImageClient._get_image_request(image_requests);
     return this.call(this._stub.getImage, req, _get_image_value, _error_from_response, args);
-  }
-
-  get_image_async(image_requests, args) {
-    const req = ImageClient._get_image_request(image_requests);
-    return this.call_async(this._stub.getImage, req, _get_image_value, _error_from_response, args);
   }
 
   static _get_image_request(image_requests) {

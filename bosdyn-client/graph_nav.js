@@ -62,30 +62,6 @@ class GraphNavClient extends BaseClient {
     return this.call(this._stub.setLocalization, req, _localization_from_response, _set_localization_error, args);
   }
 
-  set_localization_async(
-    initial_guess_localization,
-    ko_tform_body = null,
-    max_distance = null,
-    max_yaw = null,
-    fiducial_init = graph_nav_pb.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST,
-    use_fiducial_id = null,
-    refine_fiducial_result_with_icp = false,
-    do_ambiguity_check = false,
-    args,
-  ) {
-    const req = GraphNavClient._build_set_localization_request(
-      initial_guess_localization,
-      ko_tform_body,
-      max_distance,
-      max_yaw,
-      fiducial_init,
-      use_fiducial_id,
-      refine_fiducial_result_with_icp,
-      do_ambiguity_check,
-    );
-    return this.call_async(this._stub.setLocalization, req, _localization_from_response, _set_localization_error, args);
-  }
-
   get_localization_state(
     request_live_point_cloud = false,
     request_live_images = false,
@@ -104,24 +80,6 @@ class GraphNavClient extends BaseClient {
     return this.call(this._stub.getLocalizationState, req, null, common_header_errors, args);
   }
 
-  get_localization_state_async(
-    request_live_point_cloud = false,
-    request_live_images = false,
-    request_live_terrain_maps = false,
-    request_live_world_objects = false,
-    request_live_robot_state = false,
-    args,
-  ) {
-    const req = GraphNavClient._build_get_localization_state_request(
-      request_live_point_cloud,
-      request_live_images,
-      request_live_terrain_maps,
-      request_live_world_objects,
-      request_live_robot_state,
-    );
-    return this.call_async(this._stub.getLocalizationState, req, null, common_header_errors, args);
-  }
-
   navigate_route(route, cmd_duration, travel_params = null, leases = null, timesync_endpoint = null, args) {
     const used_endpoint = timesync_endpoint || this._timesync_endpoint;
     if (!used_endpoint) throw new GraphNavServiceResponseError(null, 'No timesync endpoint!');
@@ -133,25 +91,6 @@ class GraphNavClient extends BaseClient {
       used_endpoint,
     );
     return this.call(
-      this._stub.navigateRoute,
-      request,
-      _command_id_from_navigate_route_response,
-      _navigate_route_error,
-      args,
-    );
-  }
-
-  navigate_route_async(route, cmd_duration, travel_params = null, leases = null, timesync_endpoint = null, args) {
-    const used_endpoint = timesync_endpoint || this._timesync_endpoint;
-    if (!used_endpoint) throw new GraphNavServiceResponseError(null, 'No timesync endpoint!');
-    const request = GraphNavClient._build_navigate_route_request(
-      route,
-      travel_params,
-      cmd_duration,
-      leases,
-      used_endpoint,
-    );
-    return this.call_async(
       this._stub.navigateRoute,
       request,
       _command_id_from_navigate_route_response,
@@ -188,42 +127,9 @@ class GraphNavClient extends BaseClient {
     );
   }
 
-  navigate_to_async(
-    destination_waypoint_id,
-    cmd_duration,
-    route_params = null,
-    travel_params = null,
-    leases = null,
-    timesync_endpoint = null,
-    args,
-  ) {
-    const used_endpoint = timesync_endpoint || this._timesync_endpoint;
-    if (!used_endpoint) throw new GraphNavServiceResponseError(null, 'No timesync endpoint!');
-    const request = GraphNavClient._build_navigate_to_request(
-      destination_waypoint_id,
-      travel_params,
-      route_params,
-      cmd_duration,
-      leases,
-      used_endpoint,
-    );
-    return this.call_async(
-      this._stub.navigateTo,
-      request,
-      _command_id_from_navigate_route_response,
-      _navigate_to_error,
-      args,
-    );
-  }
-
   navigation_feedback(command_id = 0, args) {
     const request = GraphNavClient._build_navigate_feedback_request(command_id);
     return this.call(this._stub.navigationFeedback, request, _get_response, _navigate_feedback_error, args);
-  }
-
-  navigation_feedback_async(command_id = 0, args) {
-    const request = GraphNavClient._build_navigate_feedback_request(command_id);
-    return this.call_async(this._stub.navigationFeedback, request, _get_response, _navigate_feedback_error, args);
   }
 
   clear_graph(lease = null, args) {
@@ -231,31 +137,9 @@ class GraphNavClient extends BaseClient {
     return this.call(this._stub.clearGraph, request, null, handle_common_header_errors(common_lease_errors), args);
   }
 
-  clear_graph_async(lease = null, args) {
-    const request = GraphNavClient._build_clear_graph_request(lease);
-    return this.call_async(
-      this._stub.clearGraph,
-      request,
-      null,
-      handle_common_header_errors(common_lease_errors),
-      args,
-    );
-  }
-
   upload_graph(lease = null, graph = null, args) {
     const request = GraphNavClient._build_upload_graph_request(lease, graph);
     return this.call(
-      this._stub.uploadGraph,
-      request,
-      _get_response,
-      handle_common_header_errors(common_lease_errors),
-      args,
-    );
-  }
-
-  upload_graph_async(lease = null, graph = null, args) {
-    const request = GraphNavClient._build_upload_graph_request(lease, graph);
-    return this.call_async(
       this._stub.uploadGraph,
       request,
       _get_response,
@@ -295,11 +179,6 @@ class GraphNavClient extends BaseClient {
   download_graph(args) {
     const request = GraphNavClient._build_download_graph_request();
     return this.call(this._stub.downloadGraph, request, _get_graph, common_header_errors, args);
-  }
-
-  download_graph_async(args) {
-    const request = GraphNavClient._build_download_graph_request();
-    return this.call_async(this._stub.downloadGraph, request, _get_graph, common_header_errors, args);
   }
 
   download_waypoint_snapshot(waypoint_snapshot_id, download_images = false, args) {

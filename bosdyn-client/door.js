@@ -45,19 +45,6 @@ class DoorClient extends BaseClient {
   }
 
   /**
-   * Issue a open door command to the robot asynchronously.
-   * @param {door_pb.OpenDoorCommandRequest} request The door command.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {door_pb.OpenDoorCommandResponse} The full OpenDoorCommandResponse message,
-   * which includes a command id for feedback.
-   * @throws {RpcError} Problem communicating with the robot.
-   * @throws {LeaseUseError} The lease for the request failed.
-   */
-  open_door_async(request, args) {
-    return this.call_async(this._stub.openDoor, request, null, _open_door_error_handler, args);
-  }
-
-  /**
    * Get feedback from the robot on a specific door command.
    * @param {door_pb.OpenDoorFeedbackRequest} request The request for feedback of the door command.
    * @param {Object} args Extra arguments for controlling RPC details.
@@ -66,17 +53,6 @@ class DoorClient extends BaseClient {
    */
   open_door_feedback(request, args) {
     return this.call(this._stub.openDoorFeedback, request, null, _open_door_feedback_error_handler, args);
-  }
-
-  /**
-   * Get feedback from the robot on a specific door command asynchronously.
-   * @param {door_pb.OpenDoorFeedbackRequest} request The request for feedback of the door command.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {door_pb.OpenDoorFeedbackResponse} The full OpenDoorFeedbackResponse message.
-   * @throws {RpcError} Problem communicating with the robot.
-   */
-  open_door_feedback_async(request, args) {
-    return this.call_async(this._stub.openDoorFeedback, request, null, _open_door_feedback_error_handler, args);
   }
 }
 

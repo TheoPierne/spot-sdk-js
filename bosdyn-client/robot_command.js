@@ -307,12 +307,6 @@ class RobotCommandClient extends BaseClient {
     return this.call(this._stub.robotCommand, req, _robot_command_value, _robot_command_error, args);
   }
 
-  robot_command_async(command, end_time_secs = null, timesync_endpoint = null, lease = null, args) {
-    const req = this._get_robot_command_request(lease, command);
-    this._update_command_timestamps(req.getCommand(), end_time_secs, timesync_endpoint);
-    return this.call_async(this._stub.robotCommand, req, _robot_command_value, _robot_command_error, args);
-  }
-
   /**
    * Get feedback from a previously issued command.
    * @param  {string} robot_command_id ID of the robot command to get feedback on.
@@ -325,11 +319,6 @@ class RobotCommandClient extends BaseClient {
     return this.call(this._stub.robotCommandFeedback, req, null, _robot_command_feedback_error, args);
   }
 
-  robot_command_feedback_async(robot_command_id, args) {
-    const req = this._get_robot_command_feedback_request(robot_command_id);
-    return this.call_async(this._stub.robotCommandFeedback, req, null, _robot_command_feedback_error, args);
-  }
-
   /**
    * Clear a behavior fault on the robot.
    * @param  {string} behavior_fault_id ID of the behavior fault.
@@ -340,17 +329,6 @@ class RobotCommandClient extends BaseClient {
   clear_behavior_fault(behavior_fault_id, lease = null, args) {
     const req = this._get_clear_behavior_fault_request(lease, behavior_fault_id);
     return this.call(
-      this._stub.clearBehaviorFault,
-      req,
-      _clear_behavior_fault_value,
-      _clear_behavior_fault_error,
-      args,
-    );
-  }
-
-  clear_behavior_fault_async(behavior_fault_id, lease = null, args) {
-    const req = this._get_clear_behavior_fault_request(lease, behavior_fault_id);
-    return this.call_async(
       this._stub.clearBehaviorFault,
       req,
       _clear_behavior_fault_value,

@@ -159,16 +159,8 @@ class SpotCheckClient extends BaseClient {
     return this.call(this._stub.spotCheckCommand, request, null, _spotcheck_command_error_from_response, args);
   }
 
-  spot_check_command_async(request, args) {
-    return this.call_async(this._stub.spotCheckCommand, request, null, _spotcheck_command_error_from_response, args);
-  }
-
   spot_check_feedback(request, args) {
     return this.call(this._stub.spotCheckFeedback, request, null, _spotcheck_feedback_error_from_response, args);
-  }
-
-  spot_check_feedback_async(request, args) {
-    return this.call_async(this._stub.spotCheckFeedback, request, null, _spotcheck_feedback_error_from_response, args);
   }
 
   camera_calibration_command(request, args) {
@@ -181,28 +173,8 @@ class SpotCheckClient extends BaseClient {
     );
   }
 
-  camera_calibration_command_async(request, args) {
-    return this.call_async(
-      this._stub.cameraCalibrationCommand,
-      request,
-      null,
-      _calibration_command_error_from_response,
-      args,
-    );
-  }
-
   camera_calibration_feedback(request, args) {
     return this.call(
-      this._stub.cameraCalibrationFeedback,
-      request,
-      null,
-      _calibration_feedback_error_from_response,
-      args,
-    );
-  }
-
-  camera_calibration_feedback_async(request, args) {
-    return this.call_async(
       this._stub.cameraCalibrationFeedback,
       request,
       null,
