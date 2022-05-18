@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Sdk</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AddRequestHeader.html">AddRequestHeader</a></li><li><a href="ArmSurfaceContactClient.html">ArmSurfaceContactClient</a></li><li><a href="AsyncGRPCTask.html">AsyncGRPCTask</a></li><li><a href="AsyncPeriodicGRPCTask.html">AsyncPeriodicGRPCTask</a></li><li><a href="AsyncPeriodicQuery.html">AsyncPeriodicQuery</a></li><li><a href="AsyncTasks.html">AsyncTasks</a></li><li><a href="AuthClient.html">AuthClient</a></li><li><a href="DataAcquisitionClient.html">DataAcquisitionClient</a></li><li><a href="DataAcquisitionStoreClient.html">DataAcquisitionStoreClient</a></li><li><a href="DataServiceClient.html">DataServiceClient</a></li><li><a href="DirectoryClient.html">DirectoryClient</a></li><li><a href="DoorClient.html">DoorClient</a></li><li><a href="FaultClient.html">FaultClient</a></li><li><a href="LicenseClient.html">LicenseClient</a></li><li><a href="LocalGridClient.html">LocalGridClient</a></li><li><a href="LogAnnotationClient.html">LogAnnotationClient</a></li><li><a href="LogAnnotationHandler.html">LogAnnotationHandler</a></li><li><a href="ManipulationApiClient.html">ManipulationApiClient</a></li><li><a href="NetworkComputeBridgeClient.html">NetworkComputeBridgeClient</a></li><li><a href="PayloadClient.html">PayloadClient</a></li><li><a href="PointCloudClient.html">PointCloudClient</a></li><li><a href="PowerClient.html">PowerClient</a></li><li><a href="RobotCommandClient.html">RobotCommandClient</a></li><li><a href="RobotIdClient.html">RobotIdClient</a></li><li><a href="RobotStateClient.html">RobotStateClient</a></li><li><a href="Sdk.html">Sdk</a></li><li><a href="TokenCache.html">TokenCache</a></li><li><a href="TokenCacheFilesystem.html">TokenCacheFilesystem</a></li><li><a href="TokenManager.html">TokenManager</a></li><li><a href="WorldObjectClient.html">WorldObjectClient</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_power_command">_power_command</a></li><li><a href="global.html#add_edge_to_tree">add_edge_to_tree</a></li><li><a href="global.html#block_for_trajectory_cmd">block_for_trajectory_cmd</a></li><li><a href="global.html#block_until_arm_arrives">block_until_arm_arrives</a></li><li><a href="global.html#blocking_selfright">blocking_selfright</a></li><li><a href="global.html#blocking_sit">blocking_sit</a></li><li><a href="global.html#blocking_stand">blocking_stand</a></li><li><a href="global.html#build_pc_request">build_pc_request</a></li><li><a href="global.html#create_insecure_channel">create_insecure_channel</a></li><li><a href="global.html#create_secure_channel">create_secure_channel</a></li><li><a href="global.html#create_secure_channel_creds">create_secure_channel_creds</a></li><li><a href="global.html#create_standard_sdk">create_standard_sdk</a></li><li><a href="global.html#decode_token">decode_token</a></li><li><a href="global.html#DEFAULT_MAX_MESSAGE_LENGTH">DEFAULT_MAX_MESSAGE_LENGTH</a></li><li><a href="global.html#express_se2_velocity_in_new_frame">express_se2_velocity_in_new_frame</a></li><li><a href="global.html#express_se3_velocity_in_new_frame">express_se3_velocity_in_new_frame</a></li><li><a href="global.html#generate_channel_options">generate_channel_options</a></li><li><a href="global.html#get_a_tform_b">get_a_tform_b</a></li><li><a href="global.html#get_frame_names">get_frame_names</a></li><li><a href="global.html#get_odom_tform_body">get_odom_tform_body</a></li><li><a href="global.html#get_se2_a_tform_b">get_se2_a_tform_b</a></li><li><a href="global.html#get_vision_tform_body">get_vision_tform_body</a></li><li><a href="global.html#has_arm">has_arm</a></li><li><a href="global.html#is_gravity_aligned_frame_name">is_gravity_aligned_frame_name</a></li><li><a href="global.html#is_powered_on">is_powered_on</a></li><li><a href="global.html#log_token_time_remaining">log_token_time_remaining</a></li><li><a href="global.html#make_add_world_object_req">make_add_world_object_req</a></li><li><a href="global.html#make_change_world_object_req">make_change_world_object_req</a></li><li><a href="global.html#make_delete_world_object_req">make_delete_world_object_req</a></li><li><a href="global.html#power_cycle_robot">power_cycle_robot</a></li><li><a href="global.html#power_off_motors">power_off_motors</a></li><li><a href="global.html#power_off_payload_ports">power_off_payload_ports</a></li><li><a href="global.html#power_off_robot">power_off_robot</a></li><li><a href="global.html#power_off_wifi_radio">power_off_wifi_radio</a></li><li><a href="global.html#power_on_motors">power_on_motors</a></li><li><a href="global.html#power_on_payload_ports">power_on_payload_ports</a></li><li><a href="global.html#power_on_wifi_radio">power_on_wifi_radio</a></li><li><a href="global.html#RefreshingAccessTokenAuthMetadataPlugin">RefreshingAccessTokenAuthMetadataPlugin</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#ResponseContext">ResponseContext</a></li><li><a href="global.html#safe_power_off">safe_power_off</a></li><li><a href="global.html#save">save</a></li><li><a href="global.html#shift_pan_angle">shift_pan_angle</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#translate_exception">translate_exception</a></li><li><a href="global.html#validate_frame_tree_snapshot">validate_frame_tree_snapshot</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Class</p>
+                    <h1>Sdk</h1>
+                </header>
+                
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>Sdk<span class="signature">(name<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Repository for settings typically common to a single developer and/or robot fleet. See also Robot for robot-specific settings.</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        <div class=name>
+                            <span class="tag">Constructor</span>
+                        </div>
+                        
+
+
+    
+    <h4 class="name" id="Sdk">
+        <a class="href-link" href="#Sdk">#</a>
+        
+        <span class="code-name">
+            
+                new Sdk<span class="signature">(name<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Create an Sdk.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>name</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+          null
+      
+      </td>
+  
+
+  <td class="description last">Name to identify the client when communicating with the robot.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="bosdyn-client_sdk.js.html" class="button">View Source</a>
+            <span>
+                <a href="bosdyn-client_sdk.js.html">bosdyn-client/sdk.js</a>, <a href="bosdyn-client_sdk.js.html#line168">line 168</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="clear_robots">
+        <a class="href-link" href="#clear_robots">#</a>
+        
+        <span class="code-name">
+            
+                clear_robots<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Remove all cached Robot instances.Subsequent calls to create_robot() will return newly created Robots.Existing robot instances will continue to work, but their time sync and token refreshthreads will be stopped.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="bosdyn-client_sdk.js.html" class="button">View Source</a>
+            <span>
+                <a href="bosdyn-client_sdk.js.html">bosdyn-client/sdk.js</a>, <a href="bosdyn-client_sdk.js.html#line270">line 270</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="create_robot">
+        <a class="href-link" href="#create_robot">#</a>
+        
+        <span class="code-name">
+            
+                create_robot<span class="signature">(address, name<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Robot}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Get a Robot initialized with this Sdk, creating it if it does not yet exist.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>address</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">Network-resolvable address of the robot, e.g. '192.168.80.3'</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>name</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+          null
+      
+      </td>
+  
+
+  <td class="description last">A unique identifier for the robot, e.g. 'My First Robot'. Default null to use the address as the name.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="bosdyn-client_sdk.js.html" class="button">View Source</a>
+            <span>
+                <a href="bosdyn-client_sdk.js.html">bosdyn-client/sdk.js</a>, <a href="bosdyn-client_sdk.js.html#line193">line 193</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>robot A Robot initialized with the current Sdk settings.</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Robot</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="load_app_token">
+        <a class="href-link" href="#load_app_token">#</a>
+        
+        <span class="code-name">
+            
+                load_app_token<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        App tokens are no longer in use. Authorization is now handled via licenses.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>since v2.0.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="bosdyn-client_sdk.js.html" class="button">View Source</a>
+            <span>
+                <a href="bosdyn-client_sdk.js.html">bosdyn-client/sdk.js</a>, <a href="bosdyn-client_sdk.js.html#line281">line 281</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="load_robot_cert">
+        <a class="href-link" href="#load_robot_cert">#</a>
+        
+        <span class="code-name">
+            
+                load_robot_cert<span class="signature">(resource_path_glob<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {void}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Load the SSL certificate for the robot.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>resource_path_glob</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+          null
+      
+      </td>
+  
+
+  <td class="description last">Optional path to certificate resource(s).
+    If null, will load the certificate in the 'resources' package.
+    Otherwise, should be a glob expression to match certificates.
+    Defaults to null.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="bosdyn-client_sdk.js.html" class="button">View Source</a>
+            <span>
+                <a href="bosdyn-client_sdk.js.html">bosdyn-client/sdk.js</a>, <a href="bosdyn-client_sdk.js.html#line241">line 241</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">void</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="register_service_client">
+        <a class="href-link" href="#register_service_client">#</a>
+        
+        <span class="code-name">
+            
+                register_service_client<span class="signature">(creation_func, service_type<span class="signature-attributes">opt</span>, service_name<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {void}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Tell the Sdk how to create a specific type of service client.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>creation_func</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">object</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">Callable that returns a client. Typically just the class.</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>service_type</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+          null
+      
+      </td>
+  
+
+  <td class="description last">Type of the service. If null (default), will try to get the name from creation_func.</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>service_name</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+          null
+      
+      </td>
+  
+
+  <td class="description last">Name of the service. If null (default), will try to get the name from creation_func.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="bosdyn-client_sdk.js.html" class="button">View Source</a>
+            <span>
+                <a href="bosdyn-client_sdk.js.html">bosdyn-client/sdk.js</a>, <a href="bosdyn-client_sdk.js.html#line223">line 223</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">void</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="set_max_message_length">
+        <a class="href-link" href="#set_max_message_length">#</a>
+        
+        <span class="code-name">
+            
+                set_max_message_length<span class="signature">(max_message_length)</span><span class="type-signature"> &rarr; {void}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Updates the send and receive max message length values in all the clients/channels created from this point on.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>max_message_length</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">number</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">Max message length value to use for sending and receiving messages.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="bosdyn-client_sdk.js.html" class="button">View Source</a>
+            <span>
+                <a href="bosdyn-client_sdk.js.html">bosdyn-client/sdk.js</a>, <a href="bosdyn-client_sdk.js.html#line211">line 211</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">void</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+
+</body>
+</html>

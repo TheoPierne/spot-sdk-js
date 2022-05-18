@@ -1,0 +1,20 @@
+{
+  "source": {
+    "include": ["./bosdyn-client", "./bosdyn-core"],
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules/|docs|bosdyn-client/server_services/)"
+  },
+  "opts": {
+    "encoding": "utf8",
+    "destination": "docs/",
+    "readme": "README.md",
+    "recurse": true,
+    "verbose": true,
+    "template": "./node_modules/better-docs"
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "search": true
+  }
+}

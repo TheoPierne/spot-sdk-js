@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> bosdyn-client/data_acquisition.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AddRequestHeader.html">AddRequestHeader</a></li><li><a href="ArmSurfaceContactClient.html">ArmSurfaceContactClient</a></li><li><a href="AsyncGRPCTask.html">AsyncGRPCTask</a></li><li><a href="AsyncPeriodicGRPCTask.html">AsyncPeriodicGRPCTask</a></li><li><a href="AsyncPeriodicQuery.html">AsyncPeriodicQuery</a></li><li><a href="AsyncTasks.html">AsyncTasks</a></li><li><a href="AuthClient.html">AuthClient</a></li><li><a href="DataAcquisitionClient.html">DataAcquisitionClient</a></li><li><a href="DataAcquisitionStoreClient.html">DataAcquisitionStoreClient</a></li><li><a href="DataServiceClient.html">DataServiceClient</a></li><li><a href="DirectoryClient.html">DirectoryClient</a></li><li><a href="DoorClient.html">DoorClient</a></li><li><a href="FaultClient.html">FaultClient</a></li><li><a href="LicenseClient.html">LicenseClient</a></li><li><a href="LocalGridClient.html">LocalGridClient</a></li><li><a href="LogAnnotationClient.html">LogAnnotationClient</a></li><li><a href="LogAnnotationHandler.html">LogAnnotationHandler</a></li><li><a href="ManipulationApiClient.html">ManipulationApiClient</a></li><li><a href="NetworkComputeBridgeClient.html">NetworkComputeBridgeClient</a></li><li><a href="PayloadClient.html">PayloadClient</a></li><li><a href="PointCloudClient.html">PointCloudClient</a></li><li><a href="PowerClient.html">PowerClient</a></li><li><a href="RobotCommandClient.html">RobotCommandClient</a></li><li><a href="RobotIdClient.html">RobotIdClient</a></li><li><a href="RobotStateClient.html">RobotStateClient</a></li><li><a href="Sdk.html">Sdk</a></li><li><a href="TokenCache.html">TokenCache</a></li><li><a href="TokenCacheFilesystem.html">TokenCacheFilesystem</a></li><li><a href="TokenManager.html">TokenManager</a></li><li><a href="WorldObjectClient.html">WorldObjectClient</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_power_command">_power_command</a></li><li><a href="global.html#add_edge_to_tree">add_edge_to_tree</a></li><li><a href="global.html#block_for_trajectory_cmd">block_for_trajectory_cmd</a></li><li><a href="global.html#block_until_arm_arrives">block_until_arm_arrives</a></li><li><a href="global.html#blocking_selfright">blocking_selfright</a></li><li><a href="global.html#blocking_sit">blocking_sit</a></li><li><a href="global.html#blocking_stand">blocking_stand</a></li><li><a href="global.html#build_pc_request">build_pc_request</a></li><li><a href="global.html#create_insecure_channel">create_insecure_channel</a></li><li><a href="global.html#create_secure_channel">create_secure_channel</a></li><li><a href="global.html#create_secure_channel_creds">create_secure_channel_creds</a></li><li><a href="global.html#create_standard_sdk">create_standard_sdk</a></li><li><a href="global.html#decode_token">decode_token</a></li><li><a href="global.html#DEFAULT_MAX_MESSAGE_LENGTH">DEFAULT_MAX_MESSAGE_LENGTH</a></li><li><a href="global.html#express_se2_velocity_in_new_frame">express_se2_velocity_in_new_frame</a></li><li><a href="global.html#express_se3_velocity_in_new_frame">express_se3_velocity_in_new_frame</a></li><li><a href="global.html#generate_channel_options">generate_channel_options</a></li><li><a href="global.html#get_a_tform_b">get_a_tform_b</a></li><li><a href="global.html#get_frame_names">get_frame_names</a></li><li><a href="global.html#get_odom_tform_body">get_odom_tform_body</a></li><li><a href="global.html#get_se2_a_tform_b">get_se2_a_tform_b</a></li><li><a href="global.html#get_vision_tform_body">get_vision_tform_body</a></li><li><a href="global.html#has_arm">has_arm</a></li><li><a href="global.html#is_gravity_aligned_frame_name">is_gravity_aligned_frame_name</a></li><li><a href="global.html#is_powered_on">is_powered_on</a></li><li><a href="global.html#log_token_time_remaining">log_token_time_remaining</a></li><li><a href="global.html#make_add_world_object_req">make_add_world_object_req</a></li><li><a href="global.html#make_change_world_object_req">make_change_world_object_req</a></li><li><a href="global.html#make_delete_world_object_req">make_delete_world_object_req</a></li><li><a href="global.html#power_cycle_robot">power_cycle_robot</a></li><li><a href="global.html#power_off_motors">power_off_motors</a></li><li><a href="global.html#power_off_payload_ports">power_off_payload_ports</a></li><li><a href="global.html#power_off_robot">power_off_robot</a></li><li><a href="global.html#power_off_wifi_radio">power_off_wifi_radio</a></li><li><a href="global.html#power_on_motors">power_on_motors</a></li><li><a href="global.html#power_on_payload_ports">power_on_payload_ports</a></li><li><a href="global.html#power_on_wifi_radio">power_on_wifi_radio</a></li><li><a href="global.html#RefreshingAccessTokenAuthMetadataPlugin">RefreshingAccessTokenAuthMetadataPlugin</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#ResponseContext">ResponseContext</a></li><li><a href="global.html#safe_power_off">safe_power_off</a></li><li><a href="global.html#save">save</a></li><li><a href="global.html#shift_pan_angle">shift_pan_angle</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#translate_exception">translate_exception</a></li><li><a href="global.html#validate_frame_tree_snapshot">validate_frame_tree_snapshot</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>bosdyn-client/data_acquisition.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const {ResponseError} = require('./exceptions');
+const {
+	common_header_errors, 
+	error_factory, 
+	handle_common_header_errors, 
+	handle_unset_status_error, 
+	error_pair,
+	BaseClient
+} = require('./common');
+const data_acquisition = require('../bosdyn/api/data_acquisition_pb');
+const data_acquisition_service = require('../bosdyn/api/data_acquisition_service_grpc_pb');
+const {now_timestamp} = require('../bosdyn-core/util');
+
+class DataAcquisitionResponseError extends ResponseError {
+	constructor(msg){
+		super(msg);
+		this.name = 'DataAcquisitionResponseError';
+	}
+};
+
+class RequestIdDoesNotExistError extends DataAcquisitionResponseError {
+	constructor(msg){
+		super(msg);
+		this.name = 'RequestIdDoesNotExistError';
+	}
+};
+
+class UnknownCaptureTypeError extends DataAcquisitionResponseError {
+	constructor(msg){
+		super(msg);
+		this.name = 'UnknownCaptureTypeError';
+	}
+};
+
+class CancellationFailedError extends DataAcquisitionResponseError {
+	constructor(msg){
+		super(msg);
+		this.name = 'CancellationFailedError';
+	}
+};
+
+/**
+* A client for triggering data acquisition and logging.
+* @class DataAcquisitionClient
+* @extends BaseClient
+*/
+class DataAcquisitionClient extends BaseClient {
+
+	static default_service_name = 'data-acquisition';
+    static service_type = 'bosdyn.api.DataAcquisitionService';
+
+    /**
+    * Create an instance of AuthClient's class.
+    * @param {?string} name
+    */
+    constructor(name=null){
+    	super(data_acquisition_service.DataAcquisitionServiceClient, name);
+    	this._timesync_endpoint = null;
+    }
+
+    /**
+    * Update instance from another object.
+    * @param {object} other The object where to copy from.
+    * @return {void}
+    */
+    update_from(other){
+        super.update_from(other);
+        try{
+            this._timesync_endpoint = other.time_sync.endpoint;
+        }catch(e){
+
+        }
+    }
+
+    /**
+    * Trigger a data acquisition to save data and metadata to the data buffer.
+    * @param {object} acquisition_requests The different image sources and
+    * data sources to capture from and save to the data buffer with the same timestamp.
+    * @param {string} action_name The unique action name that all data will be saved with.
+    * @param {string} group_name The unique group name that all data will be saved with.
+    * @param {?google.protobuf.Timestamp} data_timestamp The unique timestamp that all data will be
+    * saved with.
+    * @param {?(Metadata|object)} metadata The JSON structured metadata to be associated with
+    * the data returned by the DataAcquisitionService when logged in the data buffer
+    * service.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {*} If the RPC is successful, then it will return the acquire data request id, which can be
+    * used to check the status of the acquisition and get feedback.
+    * @throws {RpcError} Problem communicating with the robot.
+    */
+    async acquire_data(acquisition_requests, action_name, group_name, data_timestamp = null, metadata = null, args){
+
+        if(data_timestamp == null){
+            if(!this._timesync_endpoint){
+                data_timestamp = now_timestamp();
+            }else{
+                data_timestamp = this._timesync_endpoint.robot_timestamp_from_local_secs(Date.now());
+            }
+        }
+        const action_id = new data_acquisition.CaptureActionId()
+        .setActionName(action_name)
+        .setGroupName(group_name)
+        .setTimestamp(data_timestamp);
+
+        const metadata_proto = metadata_to_proto(metadata);
+
+        const request = new data_acquisition.AcquireDataRequest()
+        .setActionId(action_id)
+        .setMetadata(metadata_proto)
+        .setAcquisitionRequests(acquisition_requests);
+
+        return await this.call(this._stub.acquireData, request, get_request_id, acquire_data_error, args);
+    }
+
+    /**
+    * Async version of acquire_data().
+    * @param {object} acquisition_requests The different image sources and
+    * data sources to capture from and save to the data buffer with the same timestamp.
+    * @param {string} action_name The unique action name that all data will be saved with.
+    * @param {string} group_name The unique group name that all data will be saved with.
+    * @param {?google.protobuf.Timestamp} data_timestamp The unique timestamp that all data will be
+    * saved with.
+    * @param {?(Metadata|object)} metadata The JSON structured metadata to be associated with
+    * the data returned by the DataAcquisitionService when logged in the data buffer
+    * service.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {*} If the RPC is successful, then it will return the acquire data request id, which can be
+    * used to check the status of the acquisition and get feedback.
+    * @throws {RpcError} Problem communicating with the robot.
+    */
+    acquire_data_async(acquisition_requests, action_name, group_name, data_timestamp = null, metadata = null, args){
+
+        if(data_timestamp == null){
+            if(!this._timesync_endpoint){
+                data_timestamp = now_timestamp();
+            }else{
+                data_timestamp = this._timesync_endpoint.robot_timestamp_from_local_secs(Date.now());
+            }
+        }
+        const action_id = new data_acquisition.CaptureActionId()
+        .setActionName(action_name)
+        .setGroupName(group_name)
+        .setTimestamp(data_timestamp);
+
+        const metadata_proto = metadata_to_proto(metadata);
+        const request = new data_acquisition.AcquireDataRequest()
+        .setActionId(action_id)
+        .setMetadata(metadata_proto)
+        .setAcquisitionRequests(acquisition_requests);
+        return this.call_async(this._stub.acquireData, request, get_request_id, acquire_data_error, args);
+    }
+
+    /**
+    * Check the status of a data acquisition based on the request id.
+    * @param {number} request_id The request id associated with an AcquireData request.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {*} If the RPC is successful, then it will return the full status response, which includes the
+    * status as well as other information about any possible errors.
+    * @throws {RpcError} Problem communicating with the robot.
+    * @throws {RequestIdDoesNotExistError} The request id provided is incorrect.
+    */
+    async get_status(request_id, args){
+        const request = new data_acquisition.GetStatusRequest().setRequestId(request_id);
+        return await this.call(this._stub.getStatus, request, null, _get_status_error, args);
+    }
+
+    /**
+    * Async version of get_status().
+    * @param {number} request_id The request id associated with an AcquireData request.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {*} If the RPC is successful, then it will return the full status response, which includes the
+    * status as well as other information about any possible errors.
+    * @throws {RpcError} Problem communicating with the robot.
+    * @throws {RequestIdDoesNotExistError} The request id provided is incorrect.
+    */
+    get_status_async(request_id, args){
+        const request = new data_acquisition.GetStatusRequest().setRequestId(request_id);
+        return this.call_async(this._stub.getStatus, request, null, _get_status_error, args);
+    }
+
+    /**
+    * Get information from a DAQ service to list it's capabilities - which data, metadata,
+    * or processing the DAQ service will perform.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {data_acquisition.GetServiceInfoResponse} The GetServiceInfoResponse message, which contains all the different capabilities.
+    * @throws {RpcError} Problem communicating with the robot.
+    */
+    async get_service_info(args){
+        const request = new data_acquisition.GetServiceInfoRequest();
+        return await this.call(this._stub.getServiceInfo, request, _get_service_info_capabilities, common_header_errors, args);
+    }
+
+    /**
+    * Async version of get_service_info().
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {data_acquisition.GetServiceInfoResponse} The GetServiceInfoResponse message, which contains all the different capabilities.
+    * @throws {RpcError} Problem communicating with the robot.
+    */
+    get_service_info_async(args){
+        const request = new data_acquisition.GetServiceInfoRequest();
+        return this.call_async(this._stub.getServiceInfo, request, _get_service_info_capabilities, common_header_errors, args);
+    }
+
+    /**
+    * Cancel a data acquisition based on the request id.
+    * @param {number} request_id The request id associated with an AcquireData request.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {*} If the RPC is successful, then it will return the full status response, which includes the
+    * status as well as other information about any possible errors.
+    * @throws {RpcError} Problem communicating with the robot.
+    * @throws {CancellationFailedError} The data acquisitions associated with the request id were unable to be cancelled.
+    * @throws {RequestIdDoesNotExistError} The request id provided is incorrect.
+    */
+    async cancel_acquisition(request_id, args){
+        const request = new data_acquisition.CancelAcquisitionRequest().setRequestId(request_id);
+        return await this.call(this._stub.cancelAcquisition, request, null, _cancel_acquisition_error, args);
+    }
+
+    /**
+    * Async version of cancel_acquisition().
+    * @param {number} request_id The request id associated with an AcquireData request.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {*} If the RPC is successful, then it will return the full status response, which includes the
+    * status as well as other information about any possible errors.
+    * @throws {RpcError} Problem communicating with the robot.
+    * @throws {CancellationFailedError} The data acquisitions associated with the request id were unable to be cancelled.
+    * @throws {RequestIdDoesNotExistError} The request id provided is incorrect.
+    */
+    cancel_acquisition_async(request_id, args){
+        const request = new data_acquisition.CancelAcquisitionRequest().setRequestId(request_id);
+        return this.call_async(this._stub.cancelAcquisition, request, null, _cancel_acquisition_error, args);
+    }
+
+};
+
+const _ACQUIRE_DATA_STATUS_TO_ERROR = {
+	STATUS_OK: [null, null],
+	STATUS_UNKNOWN_CAPTURE_TYPE: error_pair(UnknownCaptureTypeError)
+};
+
+const _GET_STATUS_STATUS_TO_ERROR = {
+	STATUS_REQUEST_ID_DOES_NOT_EXIST: error_pair(RequestIdDoesNotExistError)
+};
+
+const _CANCEL_ACQUISITION_STATUS_TO_ERROR = {
+	STATUS_REQUEST_ID_DOES_NOT_EXIST: error_pair(RequestIdDoesNotExistError),
+	STATUS_FAILED_TO_CANCEL: error_pair(CancellationFailedError)
+};
+
+function metadata_to_proto(metadata){
+    let metadata_proto = null;
+    if(metadata instanceof data_acquisition.Metadata){
+        metadata_proto = metadata;
+    }else if(metadata instanceof Object){
+        metadata_proto = new data_acquisition.Metadata();
+        metadata_proto.setData(metadata);
+    }
+    return metadata_proto;
+}
+
+function acquire_data_error(response){
+    return error_factory(response, response.getStatus(), Object.keys(data_acquisition.AcquireDataResponse.Status), _ACQUIRE_DATA_STATUS_TO_ERROR);
+}
+
+function _get_status_error(response){
+    return error_factory(response, response.getStatus(), Object.keys(data_acquisition.GetStatusResponse.Status), _GET_STATUS_STATUS_TO_ERROR);
+}
+
+function _cancel_acquisition_error(response){
+    return error_factory(response, response.getStatus(), Object.keys(data_acquisition.CancelAcquisitionResponse.Status), _CANCEL_ACQUISITION_STATUS_TO_ERROR);
+}
+
+function _get_service_info_capabilities(response){
+    return response.getCapabilities();
+}
+
+function get_request_id(response){
+    return response.getRequestId();
+}
+
+module.exports = {
+    DataAcquisitionClient,
+    DataAcquisitionResponseError,
+    RequestIdDoesNotExistError,
+    UnknownCaptureTypeError,
+    CancellationFailedError
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+
+</body>
+</html>

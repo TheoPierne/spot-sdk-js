@@ -1,0 +1,17 @@
+{
+  "name": "estop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "estop_gui.js",
+  "scripts": {
+    "gui": "qode estop_gui.js",
+    "nogui": "qode estop_nogui.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nodegui/nodegui": "^0.47.0",
+    "reblessed": "^0.1.84"
+  }
+}

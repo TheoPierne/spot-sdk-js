@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> bosdyn-client/point_cloud.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AddRequestHeader.html">AddRequestHeader</a></li><li><a href="ArmSurfaceContactClient.html">ArmSurfaceContactClient</a></li><li><a href="AsyncGRPCTask.html">AsyncGRPCTask</a></li><li><a href="AsyncPeriodicGRPCTask.html">AsyncPeriodicGRPCTask</a></li><li><a href="AsyncPeriodicQuery.html">AsyncPeriodicQuery</a></li><li><a href="AsyncTasks.html">AsyncTasks</a></li><li><a href="AuthClient.html">AuthClient</a></li><li><a href="DataAcquisitionClient.html">DataAcquisitionClient</a></li><li><a href="DataAcquisitionStoreClient.html">DataAcquisitionStoreClient</a></li><li><a href="DataServiceClient.html">DataServiceClient</a></li><li><a href="DirectoryClient.html">DirectoryClient</a></li><li><a href="DoorClient.html">DoorClient</a></li><li><a href="FaultClient.html">FaultClient</a></li><li><a href="LicenseClient.html">LicenseClient</a></li><li><a href="LocalGridClient.html">LocalGridClient</a></li><li><a href="LogAnnotationClient.html">LogAnnotationClient</a></li><li><a href="LogAnnotationHandler.html">LogAnnotationHandler</a></li><li><a href="ManipulationApiClient.html">ManipulationApiClient</a></li><li><a href="NetworkComputeBridgeClient.html">NetworkComputeBridgeClient</a></li><li><a href="PayloadClient.html">PayloadClient</a></li><li><a href="PointCloudClient.html">PointCloudClient</a></li><li><a href="PowerClient.html">PowerClient</a></li><li><a href="RobotCommandClient.html">RobotCommandClient</a></li><li><a href="RobotIdClient.html">RobotIdClient</a></li><li><a href="RobotStateClient.html">RobotStateClient</a></li><li><a href="Sdk.html">Sdk</a></li><li><a href="TokenCache.html">TokenCache</a></li><li><a href="TokenCacheFilesystem.html">TokenCacheFilesystem</a></li><li><a href="TokenManager.html">TokenManager</a></li><li><a href="WorldObjectClient.html">WorldObjectClient</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_power_command">_power_command</a></li><li><a href="global.html#add_edge_to_tree">add_edge_to_tree</a></li><li><a href="global.html#block_for_trajectory_cmd">block_for_trajectory_cmd</a></li><li><a href="global.html#block_until_arm_arrives">block_until_arm_arrives</a></li><li><a href="global.html#blocking_selfright">blocking_selfright</a></li><li><a href="global.html#blocking_sit">blocking_sit</a></li><li><a href="global.html#blocking_stand">blocking_stand</a></li><li><a href="global.html#build_pc_request">build_pc_request</a></li><li><a href="global.html#create_insecure_channel">create_insecure_channel</a></li><li><a href="global.html#create_secure_channel">create_secure_channel</a></li><li><a href="global.html#create_secure_channel_creds">create_secure_channel_creds</a></li><li><a href="global.html#create_standard_sdk">create_standard_sdk</a></li><li><a href="global.html#decode_token">decode_token</a></li><li><a href="global.html#DEFAULT_MAX_MESSAGE_LENGTH">DEFAULT_MAX_MESSAGE_LENGTH</a></li><li><a href="global.html#express_se2_velocity_in_new_frame">express_se2_velocity_in_new_frame</a></li><li><a href="global.html#express_se3_velocity_in_new_frame">express_se3_velocity_in_new_frame</a></li><li><a href="global.html#generate_channel_options">generate_channel_options</a></li><li><a href="global.html#get_a_tform_b">get_a_tform_b</a></li><li><a href="global.html#get_frame_names">get_frame_names</a></li><li><a href="global.html#get_odom_tform_body">get_odom_tform_body</a></li><li><a href="global.html#get_se2_a_tform_b">get_se2_a_tform_b</a></li><li><a href="global.html#get_vision_tform_body">get_vision_tform_body</a></li><li><a href="global.html#has_arm">has_arm</a></li><li><a href="global.html#is_gravity_aligned_frame_name">is_gravity_aligned_frame_name</a></li><li><a href="global.html#is_powered_on">is_powered_on</a></li><li><a href="global.html#log_token_time_remaining">log_token_time_remaining</a></li><li><a href="global.html#make_add_world_object_req">make_add_world_object_req</a></li><li><a href="global.html#make_change_world_object_req">make_change_world_object_req</a></li><li><a href="global.html#make_delete_world_object_req">make_delete_world_object_req</a></li><li><a href="global.html#power_cycle_robot">power_cycle_robot</a></li><li><a href="global.html#power_off_motors">power_off_motors</a></li><li><a href="global.html#power_off_payload_ports">power_off_payload_ports</a></li><li><a href="global.html#power_off_robot">power_off_robot</a></li><li><a href="global.html#power_off_wifi_radio">power_off_wifi_radio</a></li><li><a href="global.html#power_on_motors">power_on_motors</a></li><li><a href="global.html#power_on_payload_ports">power_on_payload_ports</a></li><li><a href="global.html#power_on_wifi_radio">power_on_wifi_radio</a></li><li><a href="global.html#RefreshingAccessTokenAuthMetadataPlugin">RefreshingAccessTokenAuthMetadataPlugin</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#ResponseContext">ResponseContext</a></li><li><a href="global.html#safe_power_off">safe_power_off</a></li><li><a href="global.html#save">save</a></li><li><a href="global.html#shift_pan_angle">shift_pan_angle</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#translate_exception">translate_exception</a></li><li><a href="global.html#validate_frame_tree_snapshot">validate_frame_tree_snapshot</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>bosdyn-client/point_cloud.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const {BaseClient, error_factory, error_pair, common_header_errors, handle_common_header_errors} = require('./common');
+const {ResponseError, UnsetStatusError} = require('./exceptions');
+
+const point_cloud_protos = require('../bosdyn/api/point_cloud_pb');
+const point_cloud_service = require('../bosdyn/api/point_cloud_service_grpc_pb');
+
+class PointCloudResponseError extends ResponseError {
+	constructor(msg){
+		super(msg);
+		this.name = 'PointCloudResponseError';
+	}
+};
+
+class UnknownPointCloudSourceError extends PointCloudResponseError {
+	constructor(msg){
+		super(msg);
+		this.name = 'UnknownPointCloudSourceError';
+	}
+};
+
+class SourceDataError extends PointCloudResponseError {
+	constructor(msg){
+		super(msg);
+		this.name = 'SourceDataError';
+	}
+};
+
+class PointCloudDataError extends PointCloudResponseError {
+	constructor(msg){
+		super(msg);
+		this.name = 'PointCloudDataError';
+	}
+};
+
+const _STATUS_TO_ERROR = {
+	STATUS_OK: [null, null],
+	STATUS_UNKNOWN_SOURCE: error_pair(UnknownPointCloudSourceError),
+	STATUS_SOURCE_DATA_ERROR: error_pair(SourceDataError),
+    STATUS_UNKNOWN: error_pair(UnsetStatusError),
+    STATUS_POINT_CLOUD_DATA_ERROR: error_pair(PointCloudDataError)
+};
+
+function _error_from_response(response){
+    for(const point_cloud_response of response.getPointCloudResponses()){
+        const result = error_factory(response, point_cloud_response.getStatus(), Object.keys(point_cloud_protos.PointCloudResponse.Status), _STATUS_TO_ERROR);
+        if(result != null) return result;
+    }
+    return null;
+}
+
+/**
+* Client to authenticate to the robot.
+* @class PointCloudClient
+* @extends BaseClient
+*/
+class PointCloudClient extends BaseClient {
+
+	static default_service_name = 'point-cloud';
+    static service_type = 'bosdyn.api.PointCloudService';
+
+    /**
+    * Create an instance of PointCloudClient's class.
+    * @param {?string} name
+    */
+    constructor(name=null){
+    	super(point_cloud_service.PointCloudServiceClient, name);
+    }
+
+    /**
+    * Obtain the list of PointCloudSources.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {Array&lt;string>} A list of the different point cloud sources as strings.
+    * @throws {RpcError} Problem communicating with the robot.
+    */
+    async list_point_cloud_sources(args){
+        const req = PointCloudClient._get_list_point_cloud_source_request();
+        return await this.call(this._stub.listPointCloudSources, req, _list_point_cloud_sources_value, common_header_errors, args);
+    }
+
+    /**
+    * Async version of list_point_cloud_sources()
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {Array&lt;string>} A list of the different point cloud sources as strings.
+    * @throws {RpcError} Problem communicating with the robot.
+    */
+    list_point_cloud_sources_async(args){
+        const req = PointCloudClient._get_list_point_cloud_source_request();
+        return this.call_async(this._stub.listPointCloudSources, req, _list_point_cloud_sources_value, common_header_errors, args);
+    }
+
+    /**
+    * Obtain point clouds from sources using default parameters.
+    * @param {Array&lt;string>} point_cloud_sources The source names to request point clouds from.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {Array} A list of point cloud responses for each of the requested sources.
+    * @throws {RpcError} Problem communicating with the robot.
+    * @throws {UnknownPointCloudSourceError} Provided point cloud source was invalid or not found.
+    * @throws {point_cloud.SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
+    * @throws {UnsetStatusError} An internal PointCloudService issue has happened.
+    * @throws {PointCloudDataError} Problem with the point cloud data. Only PointCloudSource is filled.
+    */
+    async get_point_cloud_from_sources(point_cloud_sources, args){
+        return await this.get_point_cloud(point_cloud_sources.map(src => build_pc_request(src)), args);
+    }
+
+    /**
+    * Async version of get_point_cloud_from_sources().
+    * @param {Array&lt;string>} point_cloud_sources The source names to request point clouds from.
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {Array} A list of point cloud responses for each of the requested sources.
+    * @throws {RpcError} Problem communicating with the robot.
+    * @throws {UnknownPointCloudSourceError} Provided point cloud source was invalid or not found.
+    * @throws {point_cloud.SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
+    * @throws {UnsetStatusError} An internal PointCloudService issue has happened.
+    * @throws {PointCloudDataError} Problem with the point cloud data. Only PointCloudSource is filled.
+    */
+    get_point_cloud_from_sources_async(point_cloud_sources, args){
+        return this.get_point_cloud_async(point_cloud_sources.map(src => build_pc_request(src)), args);
+    }
+
+    /**
+    * Get the most recent point cloud.
+    * @param {Array&lt;point_cloud_protos.PointCloudRequest>} point_cloud_requests A list of PointCloudRequest protobuf
+    * messages which specify which point clouds to collect
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {Array} A list of point cloud responses for each of the requested sources.
+    * @throws {RpcError} Problem communicating with the robot.
+    * @throws {UnknownPointCloudSourceError} Provided point cloud source was invalid or not found.
+    * @throws {point_cloud.SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
+    * @throws {UnsetStatusError} An internal PointCloudService issue has happened.
+    * @throws {PointCloudDataError} Problem with the point cloud data. Only PointCloudSource is filled.
+    */
+    async get_point_cloud(point_cloud_requests, args){
+        const req = PointCloudClient._get_point_cloud_request(point_cloud_requests);
+        return await this.call(this._stub.getPointCloud, request, _get_point_cloud_value, _error_from_response, args);
+    }
+
+    /**
+    * Async version of get_point_cloud().
+    * @param {Array&lt;point_cloud_protos.PointCloudRequest>} point_cloud_requests A list of PointCloudRequest protobuf
+    * messages which specify which point clouds to collect
+    * @param {object} [args] Extra arguments for controlling RPC details.
+    * @return {Array} A list of point cloud responses for each of the requested sources.
+    * @throws {RpcError} Problem communicating with the robot.
+    * @throws {UnknownPointCloudSourceError} Provided point cloud source was invalid or not found.
+    * @throws {point_cloud.SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
+    * @throws {UnsetStatusError} An internal PointCloudService issue has happened.
+    * @throws {PointCloudDataError} Problem with the point cloud data. Only PointCloudSource is filled.
+    */
+    get_point_cloud_asyncs(point_cloud_requests, args){
+        var req = PointCloudClient._get_point_cloud_request(point_cloud_requests);
+        return this.call_async(this._stub.getPointCloud, request, _get_point_cloud_value, _error_from_response, args);
+    }
+
+    static _get_point_cloud_request(point_cloud_requests){
+    	return new point_cloud_protos.GetPointCloudRequest().setPointCloudRequestsList(point_cloud_requests);
+    }
+
+    static _get_list_point_cloud_source_request(){
+        return new point_cloud_protos.ListPointCloudSourcesRequest();
+    }
+
+};
+
+/**
+* Helper function which builds an PointCloudRequest from an point cloud source name.
+* @param {string} point_cloud_source_name The point cloud source to query.
+* @return {point_cloud_protos.PointCloudRequest} The PointCloudRequest protobuf message for the given parameters.
+*/
+function build_pc_request(point_cloud_source_name){
+	return new point_cloud_protos.PointCloudRequest().setPointCloudSourceName(point_cloud_source_name);
+}
+
+function _list_point_cloud_sources_value(response){
+    return response.getPointCloudSources();
+}
+
+function _get_point_cloud_value(response){
+    return response.getPointCloudResponses();
+}
+
+module.exports = {
+	PointCloudClient,
+	build_pc_request,
+	PointCloudResponseError,
+	UnknownPointCloudSourceError,
+	SourceDataError,
+	PointCloudDataError
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+
+</body>
+</html>

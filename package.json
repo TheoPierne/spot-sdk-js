@@ -4,7 +4,11 @@
   "description": "Develop applications and payloads for Spot using the unofficial Boston Dynamics Spot Node.js SDK.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install_arm64": "build-opencv --version 4.5.4 --flag=\"-DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_OSX_ARCHITECTURES=arm64\" build",
+    "install_4.5.5_cuda": "build-opencv --version 4.5.5 --flags=\"-DWITH_CUDA=ON -DWITH_CUDNN=ON -DOPENCV_DNN_CUDA=ON -DCUDA_FAST_MATH=ON\" build",
+    "do-install": "build-opencv build",
+    "lint": "eslint --config .eslintrc.json .",
+    "docs": "jsdoc -c jsdoc.json"
   },
   "keywords": [
     "spot",
@@ -25,32 +29,41 @@
   "author": "Théo Pierné",
   "license": "SEE LICENSE IN LICENSE FILE",
   "dependencies": {
-    "@grpc/grpc-js": "^1.5.6",
-    "@grpc/proto-loader": "^0.6.9",
-    "@tensorflow/tfjs": "^0.13.5",
+    "@grpc/grpc-js": "^1.6.7",
+    "@grpc/proto-loader": "^0.6.12",
+    "@u4/opencv4nodejs": "^6.1.5",
     "argparse": "^2.0.1",
     "expandenv": "^1.0.0",
-    "glob": "^7.2.0",
-    "google-protobuf": "^3.19.4",
-    "ip": "^1.1.5",
+    "glob": "^8.0.3",
+    "google-protobuf": "^3.20.1",
+    "ip": "^1.1.8",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
-    "luxon": "^2.3.1",
-    "moment": "^2.29.1",
-    "node-fetch": "^3.2.0",
+    "luxon": "^2.4.0",
+    "moment": "^2.29.3",
+    "node-fetch": "^3.2.4",
+    "node-pid-controller": "^1.0.1",
     "numjs": "github:TheoPierne/numjs",
     "object-sizeof": "^1.6.3",
-    "prompt": "^1.2.2",
+    "prompt": "^1.3.0",
     "protobufjs": "^6.11.2",
-    "semver": "^7.3.5",
-    "sharp": "^0.29.3",
+    "semver": "^7.3.7",
+    "sharp": "^0.30.2",
     "tmp": "^0.2.1",
-    "triple-beam": "^1.3.0",
-    "underscore": "^1.13.2",
+    "tracking": "^1.1.3",
+    "underscore": "^1.13.3",
     "which": "^2.0.2",
-    "winston": "^3.6.0"
+    "winston": "^3.7.2"
   },
   "engines": {
     "node": ">=16.13.0"
+  },
+  "devDependencies": {
+    "better-docs": "^2.7.2",
+    "eslint": "^8.15.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2"
   }
 }

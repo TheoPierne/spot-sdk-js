@@ -1,48 +1,51 @@
 'use strict';
 
+const { LoggerUtil } = require('../../bosdyn-client/loggerUtil');
 const auto_return_pb = require('../../bosdyn/api/auto_return/auto_return_pb');
 const auto_return_service_grpc_pb = require('../../bosdyn/api/auto_return/auto_return_service_grpc_pb');
 
-const {populate_response_header} = require('../util');
+const { populate_response_header } = require('../util');
 
-const config = {enable: false, req: {}};
+const logger = LoggerUtil.getLogger('AUTO_RETURN');
 
-function configure(call, callback){
-	console.log(`Nouvelle requete [AUTO_RETURN] /configure !`);
-	let reply = new auto_return_pb.ConfigureResponse();
-	populate_response_header(reply, call.request);
+const config = { enable: false, req: {} };
 
-	config.req = call.request;
-	config.enable = true;
+function configure(call, callback) {
+  logger.info('New request /configure !');
+  let reply = new auto_return_pb.ConfigureResponse();
+  populate_response_header(reply, call.request);
 
-	reply.setStatus(auto_return_pb.ConfigureResponse.Status.STATUS_OK);
+  config.req = call.request;
+  config.enable = true;
 
-	callback(null, reply);
+  reply.setStatus(auto_return_pb.ConfigureResponse.Status.STATUS_OK);
+
+  callback(null, reply);
 }
 
-function getConfiguration(call, callback){
-	console.log(`Nouvelle requete [AUTO_RETURN] /getConfiguration !`);
-	let reply = new auto_return_pb.GetConfigurationResponse();
-	populate_response_header(reply, call.request);
+function getConfiguration(call, callback) {
+  logger.info('New request /getConfiguration !');
+  let reply = new auto_return_pb.GetConfigurationResponse();
+  populate_response_header(reply, call.request);
 
-	reply.setRequest(config.req).setEnabled(config.enable);
+  reply.setRequest(config.req).setEnabled(config.enable);
 
-	callback(null, reply);
+  callback(null, reply);
 }
 
-function start(call, callback){
-	console.log(`Nouvelle requete [AUTO_RETURN] /start !`);
-	let reply = new auto_return_pb.StartResponse();
-	populate_response_header(reply, call.request);
+function start(call, callback) {
+  logger.info('New request /start !');
+  let reply = new auto_return_pb.StartResponse();
+  populate_response_header(reply, call.request);
 
-	callback(null, reply);
+  callback(null, reply);
 }
 
 module.exports = {
-	service: auto_return_service_grpc_pb.AutoReturnServiceService,
-	func: {
-		configure,
-		getConfiguration,
-		start
-	}
+  service: auto_return_service_grpc_pb.AutoReturnServiceService,
+  func: {
+    configure,
+    getConfiguration,
+    start,
+  },
 };

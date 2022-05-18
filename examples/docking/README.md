@@ -13,11 +13,13 @@ These examples need to be run with python3, and have the Spot SDK installed. See
 ```
 python3 -m pip install -r requirements.txt
 ```-->
+
 ## Dock My Robot Example
 
 ### Setup Robot
 
 To properly setup for this example:
+
 1. Have the robot powered off
 2. Have the robot close to the dock so it can see the fiducial, with a clear path between the robot and dock.
 3. Use an external E-Stop endpoint from an api client or tablet
@@ -25,10 +27,11 @@ To properly setup for this example:
 ### Running the Example
 
 When run, this script will
-* Power on and stand up the robot.
-* Move the robot onto the dock and engage the dock.
-* Will retry if the first attempt fails.
-* Power Off once engaged with the dock
+
+- Power on and stand up the robot.
+- Move the robot onto the dock and engage the dock.
+- Will retry if the first attempt fails.
+- Power Off once engaged with the dock
 
 ```
 node dock_my_robot.js --username USER --password PASSWORD --dock-id DOCKID ROBOT_IP

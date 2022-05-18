@@ -1,4 +1,6 @@
-/*const { Worker, isMainThread, workerData } = require('node:worker_threads');
+'use strict';
+
+/* Const { Worker, isMainThread, workerData } = require('node:worker_threads');
 
 if (isMainThread) {
   // This re-loads the current file inside a Worker instance.
@@ -8,10 +10,10 @@ if (isMainThread) {
   console.log('Inside Worker !', isMainThread, workerData);
 }*/
 
-const {TokenManager} = require('./token_manager');
+const { TokenManager } = require('./token_manager');
 
-const a = new TokenManager({address: '127.0.0.1'});
+const a = new TokenManager({ address: '127.0.0.1' });
 
 a.stop().then(() => {
-	console.log('Thread stop !');
+  console.log('Thread stop !');
 });

@@ -1,7 +1,7 @@
 # Packages
 node_modules/
 
-bosdyn.old/
+examples/**/node_modules/
 
 generate_js_file_with_proto_file.txt
 lib.txt
