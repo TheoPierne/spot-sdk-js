@@ -293,7 +293,7 @@ class Robot {
     return channelData;
   }
 
-  async authenticate(username, password, timeout = null) {
+  async authenticate(username, password, timeout) {
     console.log('Pensez à modifier authenticate dans le fichier robot.js');
     const default_service_name = AuthClient.default_service_name;
     const auth_channel = await this.ensure_insecure_channel(this._bootstrap_service_authorities[default_service_name]);
@@ -302,20 +302,20 @@ class Robot {
     this.update_user_token(user_token, username);
   }
 
-  async authenticate_with_token(token, timeout = null) {
+  async authenticate_with_token(token, timeout) {
     const auth_client = await this.ensure_client(AuthClient.default_service_name);
     const user_token = await auth_client.auth_with_token(token, this.app_token, { timeout });
     this.update_user_token(user_token);
   }
 
-  async authenticate_from_cache(username, timeout = null) {
+  async authenticate_from_cache(username, timeout) {
     const token = this.token_cache.read(this._get_token_id(username));
     const auth_client = await this.ensure_client(AuthClient.default_service_name);
     const user_token = await auth_client.auth_with_token(token, this.app_token, { timeout });
     this.update_user_token(user_token, username);
   }
 
-  async authenticate_from_payload_credentials(guid, secret, payload_registration_client = null, timeout = null) {
+  async authenticate_from_payload_credentials(guid, secret, payload_registration_client = null, timeout) {
     let printed_warning = false;
 
     if (payload_registration_client === null) {
