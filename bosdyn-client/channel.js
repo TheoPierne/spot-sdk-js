@@ -1,6 +1,6 @@
 'use strict';
 
-const Buffer = require('node:buffer');
+const { Buffer } = require('node:buffer');
 const grpc = require('@grpc/grpc-js');
 
 const {
