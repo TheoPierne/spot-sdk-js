@@ -13,7 +13,7 @@ const DEFAULT_RPC_TIMEOUT = 30 * 1000;
 
 function popObject(obj, key, defaultVal) {
   let ret = obj[key];
-  if (ret === undefined) {
+  if (ret === undefined || (key === 'timeout' && ret === null)) {
     ret = defaultVal;
   } else {
     delete obj[key];
@@ -244,11 +244,11 @@ class BaseClient {
     return a;
   }
 
-  update_response_iterator(response_iterator, logger, rpc_method, is_blocking) {
-    try {
+  update_response_iterator(response_handler, logger, rpc_method, is_blocking) {
+    return new Promise(resolve => {
       const a = [];
-      for (let response of response_iterator) {
-        response = this._apply_response_processors(cloneDeep(response));
+      response_handler.on('data', e => {
+        const response = this._apply_response_processors(cloneDeep(e));
         if (is_blocking) {
           logger.debug(
             `[COMMON] blocking response: ${rpc_method._method} ${BaseClient.request_trim_for_log(response)}`,
@@ -257,21 +257,51 @@ class BaseClient {
           logger.debug(`[COMMON] async response: ${rpc_method._method} ${BaseClient.request_trim_for_log(response)}`);
         }
         a.push(response);
-      }
-      return a;
-    } catch (e) {
-      throw translate_exception(e);
-    }
+      });
+
+      response_handler.on('end', e => {
+        console.log(e);
+        return resolve(a);
+      });
+
+      response_handler.on('error', e => {
+        throw translate_exception(e);
+      });
+    });
   }
 
-  #make(rpc_method, request, args) {
+  #make(rpc_method, request, { req = false, res = false } = {}, args) {
     const timeout = popObject(args, 'timeout', DEFAULT_RPC_TIMEOUT);
     rpc_method = rpc_method.bind(this._stub);
     return new Promise((resolve, reject) => {
-      rpc_method(request, { deadline: Date.now() + timeout }, (err, response) => {
-        if (err) return reject(err);
-        return resolve(response);
-      });
+      if (!req && !res) {
+        // If the request and the response are not a streams.
+        rpc_method(request, { deadline: Date.now() + timeout }, (err, response) => {
+          if (err) return reject(err);
+          return resolve(response);
+        });
+      } else if (!req && res) {
+        // If the request is not a stream but the response is one.
+        return resolve(rpc_method(request, { deadline: Date.now() + timeout }));
+      } else if (req && !res) {
+        // If the request is a stream but the response is not one.
+        const call = rpc_method({ deadline: Date.now() + timeout }, (err, response) => {
+          if (err) return reject(err);
+          return resolve(response);
+        });
+        for (const requestToMake of request) {
+          call.write(requestToMake);
+        }
+        call.end();
+      } else if (req && res) {
+        // If the request and the response are a streams.
+        const call = rpc_method({ deadline: Date.now() + timeout });
+        for (const requestToMake of request) {
+          call.write(requestToMake);
+        }
+        call.end();
+        return resolve(call);
+      }
     });
   }
 
@@ -289,7 +319,12 @@ class BaseClient {
     let response;
 
     try {
-      response = await this.#make(rpc_method, request, args);
+      response = await this.#make(
+        rpc_method,
+        request,
+        { req: rpc_method.requestStream, res: rpc_method.responseStream },
+        args,
+      );
     } catch (err) {
       console.log('Pensez à retirer le log du catch');
       console.log(err);
