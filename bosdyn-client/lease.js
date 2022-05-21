@@ -1,6 +1,11 @@
 'use strict';
 
+const process = require('node:process');
+const { setImmediate, clearImmediate } = require('node:timers');
+const { setTimeout: sleep } = require('node:timers/promises');
+
 const { cloneDeep } = require('lodash');
+
 const { BaseClient, common_lease_errors, common_header_errors, error_factory } = require('./common');
 const { ResponseError, ValueError, RpcError } = require('./exceptions');
 
@@ -464,7 +469,7 @@ class LeaseClient extends BaseClient {
   }
 
   static _make_retain_request(lease) {
-    return new lease_pb.RetainLeaseRequest().setLease(lease.getLease());
+    return new lease_pb.RetainLeaseRequest().setLease(lease.lease_proto);
   }
 
   static _make_list_leases_request(include_full_lease_info) {
@@ -575,6 +580,7 @@ class LeaseKeepAlive {
   ) {
     this.host_name = host_name;
     this.print_warnings = warnings;
+    this._must_acquire = must_acquire;
     this._return_at_exit = return_at_exit;
     if (!lease_client) throw new ValueError('lease_client must be set');
     this._lease_client = lease_client;
@@ -586,8 +592,6 @@ class LeaseKeepAlive {
     if (!resource) throw new ValueError('resource must be set');
     this._resource = resource;
 
-    this.#init(must_acquire);
-
     if (rpc_interval_seconds <= 0.0) {
       throw new ValueError(`rpc_interval_seconds must be > 0, was ${rpc_interval_seconds}`);
     }
@@ -596,29 +600,33 @@ class LeaseKeepAlive {
     this.logger = console;
 
     this._keep_running = keep_running_cb || (() => true);
-
     this._retain_lease_failed_cb = on_failure_callback || (() => null);
+    this._end_check_in_signal = false;
 
-    // This._end_check_in_signal = threading.Event()
-
-    /* this._thread = threading.Thread(target=this._periodic_check_in);
-    this._thread.daemon = true;
-    this._thread.start();*/
+    process.on('beforeExit', async () => {
+      if (this._return_at_exit) {
+        await this.shutdown.bind(this)();
+      } else {
+        this.shutdown.bind(this)();
+      }
+      process.exit(0);
+    });
   }
 
-  async #init(must_acquire) {
+  async init(must_acquire) {
     try {
       await this._lease_wallet.get_lease(this._resource);
     } catch (e) {
       try {
         await this._lease_client.acquire(this._resource);
       } catch (err) {
-        if (must_acquire) {
+        if (must_acquire || this._must_acquire) {
           throw new Error();
         }
         console.error(`Failed to acquire the lease in LeaseKeepAlive`, err);
       }
     }
+    this._thread = setImmediate(this._periodic_check_in.bind(this)).unref();
   }
 
   async shutdown() {
@@ -649,8 +657,9 @@ class LeaseKeepAlive {
   }
 
   _end_periodic_check_in() {
-    // This.logger.debug('Stopping check-in');
-    // this._end_check_in_signal.set();
+    this.logger.debug('Stopping check-in');
+    this._end_check_in_signal = true;
+    clearImmediate(this._thread);
   }
 
   _ok() {
@@ -663,9 +672,9 @@ class LeaseKeepAlive {
     return this._lease_client.retain_lease(lease);
   }
 
-  _periodic_check_in() {
+  async _periodic_check_in() {
     this.logger.info('Starting lease check-in');
-    /* eslint-disable-next-line no-constant-condition */
+    /* eslint-disable no-constant-condition, no-await-in-loop */
     while (true) {
       const exec_start = Date.now();
 
@@ -674,19 +683,22 @@ class LeaseKeepAlive {
       let isCatch = false;
 
       try {
-        this._check_in();
+        await this._check_in();
       } catch (e) {
         isCatch = true;
-        this.logger.warn(`Generic exception during check-in:\n${e}\n (resuming check-in)`);
+        if (this.print_warnings) {
+          this.logger.warn(`Generic exception during check-in:\n${e}\n(resuming check-in)`);
+        }
+        this._retain_lease_failed_cb(e);
       }
 
       if (!isCatch) {
         this._ok();
       }
 
-      const exec_seconds = Date.now() - exec_start;
+      const exec = Date.now() - exec_start;
 
-      if (this._end_check_in_signal.wait(this._rpc_interval_seconds - exec_seconds)) break;
+      if (await sleep(this._rpc_interval_seconds * 1000 - exec, this._end_check_in_signal)) break;
     }
     this.logger.info('Lease check-in stopped');
   }
