@@ -1,5 +1,7 @@
 'use strict';
 
+const process = require('node:process');
+
 const argparse = require('argparse');
 
 const util = require('../../bosdyn-client/util');
@@ -19,9 +21,8 @@ async function main(args = null) {
   const clientMission = await robot.ensure_client(MissionClient.default_service_name);
 
   const state = await clientMission.get_state();
-  console.log(`Got mission state: ${state}`);
-
-  return true;
+  console.log(`Got mission state:\n`, state.toObject());
+  process.exit(0);
 }
 
 if (require.main === module) {

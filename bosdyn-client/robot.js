@@ -122,7 +122,7 @@ class Robot {
 
   #exitHandler(options) {
     if (options.cleanup) this._shutdown();
-    if (options.exit) process.exit();
+    if (options.exit) process.exit(0);
   }
 
   _shutdown() {

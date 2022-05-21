@@ -1,5 +1,7 @@
 'use strict';
 
+const process = require('node:process');
+
 const argparse = require('argparse');
 
 const { AutoReturnClient } = require('../../bosdyn-client/auto_return');
@@ -32,6 +34,7 @@ async function main(args = null) {
 
   await autoreturn_client.configure(params, [lease_client.lease_wallet.get_lease().create_newer()]);
   await autoreturn_client.start();
+  process.exit(0);
 }
 
 if (require.main === module) {

@@ -1,5 +1,7 @@
 'use strict';
 
+const process = require('node:process');
+
 const argparse = require('argparse');
 
 const { IREnableDisableServiceClient } = require('../../bosdyn-client/ir_enable_disable');
@@ -23,8 +25,7 @@ async function main(args = null) {
   const ir_enable_disable_client = await robot.ensure_client(IREnableDisableServiceClient.default_service_name);
 
   await ir_enable_disable_client.set_ir_enabled(options.enable);
-
-  return true;
+  process.exit(0);
 }
 
 if (require.main === module) {

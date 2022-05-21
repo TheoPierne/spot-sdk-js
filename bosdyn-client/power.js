@@ -224,12 +224,12 @@ async function safe_power_off(command_client, state_client, timeout_sec = 30_000
 
 function power_on(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
   console.warn('[POWER] Replaced by the less ambiguous power_on_motors function.');
-  power_on_motors(power_client, timeout_sec, update_frequency, undefined, args);
+  power_on_motors(power_client, timeout_sec, update_frequency, args);
 }
 
 function power_off(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
   console.warn('[POWER] Replaced by the less ambiguous power_off_motors function.');
-  power_off_motors(power_client, timeout_sec, update_frequency, undefined, args);
+  power_off_motors(power_client, timeout_sec, update_frequency, args);
 }
 
 /**
@@ -391,7 +391,7 @@ async function _power_command(
   let responseId;
 
   try {
-    responseId = await power_client.power_command(request, null, args);
+    responseId = await power_client.power_command(request, undefined, args);
   } catch (e) {
     console.log(e);
     if (e instanceof TimedOutError) {

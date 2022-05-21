@@ -1,5 +1,7 @@
 'use strict';
 
+const process = require('node:process');
+
 const argparse = require('argparse');
 
 const { TimeSyncEndpoint, TimeSyncClient } = require('../../bosdyn-client/time_sync');
@@ -31,7 +33,8 @@ async function main(args = null) {
     `Round trip time seconds: ${time_sync_endpoint.round_trip_time.getSeconds()} 
     nanos: ${time_sync_endpoint.round_trip_time.getNanos()}`,
   );
-  return did_establish;
+
+  process.exit(0);
 }
 
 if (require.main === module) {

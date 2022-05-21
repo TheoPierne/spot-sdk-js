@@ -1,5 +1,7 @@
 'use strict';
 
+const process = require('node:process');
+
 const argparse = require('argparse');
 
 const { MyRobot } = require('./mySpot');
@@ -39,7 +41,7 @@ async function main(args = null) {
   }
 
   console.log('[SPOT_LIGHT] Done!!');
-  return true;
+  process.exit(0);
 }
 
 if (require.main === module) {

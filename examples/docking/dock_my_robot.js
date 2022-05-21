@@ -1,5 +1,7 @@
 'use strict';
 
+const process = require('node:process');
+
 const argparse = require('argparse');
 
 const { blocking_dock_robot } = require('../../bosdyn-client/docking');
@@ -22,10 +24,13 @@ async function run_docking(config) {
   /* await lease_client.take() */
   // eslint-disable-next-line
   const leaseKeepAlive = new LeaseKeepAlive(lease_client);
+  await leaseKeepAlive.init();
   await robot.power_on();
   await blocking_stand(command_client);
   await blocking_dock_robot(robot, config.dock_id);
   console.log('[DOCK MY ROBOT] Docking Success !');
+  await leaseKeepAlive.shutdown();
+  process.exit(0);
 }
 
 async function main(args = null) {

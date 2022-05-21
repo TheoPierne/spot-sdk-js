@@ -1,6 +1,6 @@
 'use strict';
 
-const Buffer = require('node:buffer');
+const { Buffer } = require('node:buffer');
 
 const cv = require('@u4/opencv4nodejs');
 const argparse = require('argparse');

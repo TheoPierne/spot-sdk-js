@@ -1,6 +1,6 @@
 'use strict';
 
-const Buffer = require('node:buffer');
+const { Buffer } = require('node:buffer');
 const cv = require('@u4/opencv4nodejs');
 const { ImageClient } = require('../../bosdyn-client/image');
 
@@ -144,6 +144,7 @@ class MyRobot {
       this._lease_client = await this._robot.ensure_client(LeaseClient.default_service_name);
       await this._lease_client.acquire();
       this._lease_keep_alive = new LeaseKeepAlive(this._lease_client);
+      await this._lease_keep_alive.init();
     }
 
     // Power the motor on

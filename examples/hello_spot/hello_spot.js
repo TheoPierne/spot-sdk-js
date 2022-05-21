@@ -3,6 +3,7 @@
 const { existsSync } = require('node:fs');
 const path = require('node:path');
 const process = require('node:process');
+const { setTimeout: sleep } = require('node:timers/promises');
 
 const argparse = require('argparse');
 const { ImageClient } = require('../../bosdyn-client/image');
@@ -12,7 +13,6 @@ const { RobotCommandBuilder, RobotCommandClient, blocking_stand } = require('../
 const { add_common_arguments } = require('../../bosdyn-client/util');
 const geometry = require('../../bosdyn-core/geometry');
 const image_util = require('../../bosdyn-core/image_util');
-const { sleep } = require('../../bosdyn-core/util');
 
 const client = require('../../index');
 
@@ -61,10 +61,10 @@ async function hello_spot(config) {
     const image_client = await robot.ensure_client(ImageClient.default_service_name);
     await image_client.list_image_sources();
     const image_response = await image_client.get_image_from_sources(['frontleft_fisheye_image']);
-    _maybe_display_image(image_response[0].getShot().getImage());
+    await _maybe_display_image(image_response[0].getShot().getImage());
 
     if (config.save || config.save_path !== null) {
-      _maybe_save_image(image_response[0].getShot().getImage(), config.save_path);
+      await _maybe_save_image(image_response[0].getShot().getImage(), config.save_path);
     }
 
     const log_comment = 'HelloSpot tutorial user comment.';
@@ -77,8 +77,10 @@ async function hello_spot(config) {
   } catch (e) {
     console.log(e);
   } finally {
-    lease_client.return_lease(lease);
+    await lease_client.return_lease(lease);
   }
+
+  process.exit(0);
 }
 
 async function _maybe_display_image(image, display_time = 3_000) {
@@ -128,10 +130,9 @@ async function main(args = null) {
 
   try {
     await hello_spot(options);
-    return true;
   } catch (e) {
     console.error('Hello, Spot! threw an exception: ', e);
-    return false;
+    throw e;
   }
 }
 

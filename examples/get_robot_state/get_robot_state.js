@@ -1,5 +1,7 @@
 'use strict';
 
+const process = require('node:process');
+
 const argparse = require('argparse');
 
 const { RobotStateClient } = require('../../bosdyn-client/robot_state');
@@ -31,7 +33,7 @@ async function main() {
     console.log(rep.toObject());
   }
 
-  return true;
+  process.exit(0);
 }
 
 if (require.main === module) {
