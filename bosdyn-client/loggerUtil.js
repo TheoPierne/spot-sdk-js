@@ -63,7 +63,7 @@ class LoggerUtil {
         }),
       ),
       level: level,
-      transports: [new transports.Console({ handleExceptions: true })],
+      transports: [new transports.Console()],
     });
   }
 }
