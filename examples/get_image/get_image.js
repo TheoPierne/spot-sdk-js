@@ -87,6 +87,7 @@ async function main(args = null) {
     for (const source of image_sources) {
       console.log(`\t${source.getName()}`);
     }
+    process.exit(0);
   }
 
   if (options.image_sources) {
@@ -123,9 +124,9 @@ async function main(args = null) {
 
       console.log(`Save ${image_saved_path}${extension} to ${__dirname}`);
     }
-    return true;
+    process.exit(0);
   }
-  return false;
+  process.exit(1);
 }
 
 if (require.main === module) {

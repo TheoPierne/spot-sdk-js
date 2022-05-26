@@ -29,11 +29,15 @@ async function main(args = null) {
     // From follow, it will transition back to sit if light is not seen
     spot_states[2].next_state = spot_states[0];
 
-    const results = [];
-    for (const state of spot_states) {
-      results.push(state.exe());
+    /* eslint-disable */
+    while(true){
+      const results = [];
+      for (const state of spot_states) {
+        results.push(state.exe());
+      }
+      await Promise.all(results);
     }
-    await Promise.all(results);
+    /* eslint-enable */
 
     // Start the state machine
   } catch (e) {

@@ -69,7 +69,7 @@ async function hello_spot(config) {
 
     const log_comment = 'HelloSpot tutorial user comment.';
     await robot.operator_comment(log_comment);
-    robot.logger.info('Added comment "%s" to robot log.', log_comment);
+    robot.logger.info(`Added comment "${log_comment}" to robot log.`);
 
     await robot.power_off(false, 20_000);
     console.assert(!(await robot.is_powered_on()), 'Robot power off failed.');
@@ -79,8 +79,6 @@ async function hello_spot(config) {
   } finally {
     await lease_client.return_lease(lease);
   }
-
-  process.exit(0);
 }
 
 async function _maybe_display_image(image, display_time = 3_000) {
@@ -130,6 +128,7 @@ async function main(args = null) {
 
   try {
     await hello_spot(options);
+    process.exit(0);
   } catch (e) {
     console.error('Hello, Spot! threw an exception: ', e);
     throw e;

@@ -413,8 +413,8 @@ class Robot {
     });
   }
 
-  time_sec() {
-    const robot_timestamp = this.time_sync.robot_timestamp_from_local_secs(Date.now());
+  async time_sec() {
+    const robot_timestamp = (await this.time_sync).robot_timestamp_from_local_secs(Date.now());
     return timestamp_to_sec(robot_timestamp);
   }
 
@@ -423,29 +423,29 @@ class Robot {
     let robot_timestamp = null;
     if (timestamp_secs === null) {
       try {
-        robot_timestamp = this.time_sync.robot_timestamp_from_local_secs(Date.now());
+        robot_timestamp = await (await this.time_sync).robot_timestamp_from_local_secs(Date.now());
       } catch (e) {
         robot_timestamp = null;
       }
     } else {
-      robot_timestamp = this.time_sync.robot_timestamp_from_local_secs(timestamp_secs);
+      robot_timestamp = await (await this.time_sync).robot_timestamp_from_local_secs(timestamp_secs);
     }
     await client.add_operator_comment(comment, robot_timestamp, { timeout });
   }
 
-  async power_on(timeout_sec = 20_000, update_frequency = 1.0, timeout = null) {
+  async power_on(timeout_msec = 20_000, update_frequency = 1.0, timeout = null) {
     const client = await this.ensure_client(PowerClient.default_service_name);
-    power_on(client, timeout_sec, update_frequency, { timeout });
+    await power_on(client, timeout_msec, update_frequency, { timeout });
   }
 
-  async power_off(cut_immediately = false, timeout_sec = 20_000, update_frequency = 1.0, timeout = null) {
+  async power_off(cut_immediately = false, timeout_msec = 20_000, update_frequency = 1.0, timeout = null) {
     if (cut_immediately) {
       const power_client = await this.ensure_client(PowerClient.default_service_name);
-      power_off(power_client, timeout_sec, update_frequency, { timeout });
+      await power_off(power_client, timeout_msec, update_frequency, { timeout });
     } else {
       const command_client = await this.ensure_client(RobotCommandClient.default_service_name);
       const state_client = await this.ensure_client(RobotStateClient.default_service_name);
-      safe_power_off(command_client, state_client, timeout_sec, update_frequency, { timeout });
+      await safe_power_off(command_client, state_client, timeout_msec, update_frequency, { timeout });
     }
   }
 

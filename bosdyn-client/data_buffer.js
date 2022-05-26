@@ -29,10 +29,10 @@ class DataBufferClient extends BaseClient {
     this._timesync_endpoint = null;
   }
 
-  update_from(other) {
+  async update_from(other) {
     super.update_from(other);
     try {
-      this._timesync_endpoint = other.time_sync.endpoint;
+      this._timesync_endpoint = (await other.time_sync).endpoint;
     } catch (e) {
       // Pass
     }
@@ -137,8 +137,10 @@ class DataBufferClient extends BaseClient {
         );
       }
 
+      console.log(converter)
+
       if (!isCatch) {
-        return converter.robot_timestamp_from_local_secs(Date.now());
+        return converter.robot_timestamp_from_local_secs(Date.now() / 1000);
       }
     }
     return null;

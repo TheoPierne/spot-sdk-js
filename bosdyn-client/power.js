@@ -74,8 +74,7 @@ class CommandTimedOutError extends PowerResponseError {
  * Commands are non blocking. Clients are expected to issue a power command and then periodically
  * check the status of this command.
  * This service requires ownership over the robot, in the form of a lease.
- * @class PowerClient
- * @extends BaseClient
+ * @extends {BaseClient}
  */
 class PowerClient extends BaseClient {
   static default_service_name = 'power';
@@ -184,24 +183,24 @@ function _power_status_from_response(response) {
  *
  * @param {RobotCommandClient} command_client Client for calling RobotCommandService safe power off.
  * @param {RobotStateClient} state_client Client for monitoring power state.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for.
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot.
  * @throws {CommandTimedOutError} Did not power off within timeout_sec.
  * @throws {RobotCommandResponseError} Something went wrong during the power off sequence.
  */
-async function safe_power_off(command_client, state_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function safe_power_off(command_client, state_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   const start_time = Date.now();
-  const end_time = start_time + timeout_sec;
+  const end_time = start_time + timeout_msec;
   const update_time = 1.0 / update_frequency;
 
   const full_body_command = new full_body_command_pb.FullBodyCommand.Request().setSafePowerOffRequest(
     new basic_command_pb.SafePowerOffCommand.Request(),
   );
   const command = new robot_command_pb.RobotCommand().setFullBodyCommand(full_body_command);
-  command_client.robot_command(command, args);
+  await command_client.robot_command(command, args);
 
   /* eslint-disable no-await-in-loop */
   while (Date.now() < end_time) {
@@ -222,150 +221,150 @@ async function safe_power_off(command_client, state_client, timeout_sec = 30_000
   throw new CommandTimedOutError();
 }
 
-function power_on(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_on(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   console.warn('[POWER] Replaced by the less ambiguous power_on_motors function.');
-  power_on_motors(power_client, timeout_sec, update_frequency, args);
+  await power_on_motors(power_client, timeout_msec, update_frequency, args);
 }
 
-function power_off(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_off(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   console.warn('[POWER] Replaced by the less ambiguous power_off_motors function.');
-  power_off_motors(power_client, timeout_sec, update_frequency, args);
+  await power_off_motors(power_client, timeout_msec, update_frequency, args);
 }
 
 /**
  * Power on the robot motors. This function blocks until the command returns success.
  *
  * @param {PowerClient} power_client Client for calling power service.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for.
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot.
- * @throws {CommandTimedOutError} Did not power off within timeout_sec.
+ * @throws {CommandTimedOutError} Did not power off within timeout_msec.
  * @throws {PowerResponseError} Something went wrong during the power off sequence.
  */
-function power_on_motors(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_on_motors(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   const request = power_pb.PowerCommandRequest.Request.REQUEST_ON_MOTORS;
-  _power_command(power_client, request, timeout_sec, update_frequency, undefined, args);
+  await _power_command(power_client, request, timeout_msec, update_frequency, undefined, args);
 }
 
 /**
  * Power off the robot motors.
  *
  * @param {PowerClient} power_client Client for calling power service.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for.
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot.
- * @throws {CommandTimedOutError} Did not power off within timeout_sec.
+ * @throws {CommandTimedOutError} Did not power off within timeout_msec.
  * @throws {PowerResponseError} Something went wrong during the power off sequence.
  */
-function power_off_motors(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_off_motors(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   const request = power_pb.PowerCommandRequest.Request.REQUEST_OFF_MOTORS;
-  _power_command(power_client, request, timeout_sec, update_frequency, undefined, args);
+  await _power_command(power_client, request, timeout_msec, update_frequency, undefined, args);
 }
 
 /**
  * Fully power off the robot. Powering off the robot will stop API comms.
  *
  * @param {PowerClient} power_client Client for calling power service.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for.
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot.
- * @throws {CommandTimedOutError} Did not power off within timeout_sec.
+ * @throws {CommandTimedOutError} Did not power off within timeout_msec.
  * @throws {PowerResponseError} Something went wrong during the power off sequence.
  */
-function power_off_robot(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_off_robot(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   const request = power_pb.PowerCommandRequest.Request.REQUEST_OFF_ROBOT;
-  _power_command(power_client, request, timeout_sec, update_frequency, true, args);
+  await _power_command(power_client, request, timeout_msec, update_frequency, true, args);
 }
 
 /**
  * Power cycle the robot. Power cycling the robot will stop API comms.
  *
  * @param {PowerClient} power_client Client for calling power service.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for.
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot.
- * @throws {CommandTimedOutError} Did not power off within timeout_sec.
+ * @throws {CommandTimedOutError} Did not power off within timeout_msec.
  * @throws {PowerResponseError} Something went wrong during the power off sequence.
  */
-function power_cycle_robot(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_cycle_robot(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   const request = power_pb.PowerCommandRequest.Request.REQUEST_CYCLE_ROBOT;
-  _power_command(power_client, request, timeout_sec, update_frequency, true, args);
+  await _power_command(power_client, request, timeout_msec, update_frequency, true, args);
 }
 
 /**
  * Power off the robot payload ports.
  *
  * @param {PowerClient} power_client Client for calling power service.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for.
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot.
- * @throws {CommandTimedOutError} Did not power off within timeout_sec.
+ * @throws {CommandTimedOutError} Did not power off within timeout_msec.
  * @throws {PowerResponseError} Something went wrong during the power off sequence.
  */
-function power_off_payload_ports(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_off_payload_ports(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   const request = power_pb.PowerCommandRequest.Request.REQUEST_OFF_PAYLOAD_PORTS;
-  _power_command(power_client, request, timeout_sec, update_frequency, undefined, args);
+  await _power_command(power_client, request, timeout_msec, update_frequency, undefined, args);
 }
 
 /**
  * Power on the robot payload ports.
  *
  * @param {PowerClient} power_client Client for calling power service.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for.
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot.
- * @throws {CommandTimedOutError} Did not power off within timeout_sec.
+ * @throws {CommandTimedOutError} Did not power off within timeout_msec.
  * @throws {PowerResponseError} Something went wrong during the power off sequence.
  */
-function power_on_payload_ports(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_on_payload_ports(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   const request = power_pb.PowerCommandRequest.Request.REQUEST_ON_PAYLOAD_PORTS;
-  _power_command(power_client, request, timeout_sec, update_frequency, undefined, args);
+  await _power_command(power_client, request, timeout_msec, update_frequency, undefined, args);
 }
 
 /**
  * Power off the robot Wi-Fi radio.
  *
  * @param {PowerClient} power_client Client for calling power service.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for.
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot.
- * @throws {CommandTimedOutError} Did not power off within timeout_sec.
+ * @throws {CommandTimedOutError} Did not power off within timeout_msec.
  * @throws {PowerResponseError} Something went wrong during the power off sequence.
  */
-function power_off_wifi_radio(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_off_wifi_radio(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   const request = power_pb.PowerCommandRequest.Request.REQUEST_OFF_WIFI_RADIO;
-  _power_command(power_client, request, timeout_sec, update_frequency, undefined, args);
+  await _power_command(power_client, request, timeout_msec, update_frequency, undefined, args);
 }
 
 /**
  * Power on the robot Wi-Fi radio.
  *
  * @param {PowerClient} power_client Client for calling power service.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for.
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot.
- * @throws {CommandTimedOutError} Did not power off within timeout_sec.
+ * @throws {CommandTimedOutError} Did not power off within timeout_msec.
  * @throws {PowerResponseError} Something went wrong during the power off sequence.
  */
-function power_on_wifi_radio(power_client, timeout_sec = 30_000, update_frequency = 1.0, args) {
+async function power_on_wifi_radio(power_client, timeout_msec = 30_000, update_frequency = 1.0, args) {
   const request = power_pb.PowerCommandRequest.Request.REQUEST_ON_WIFI_RADIO;
-  _power_command(power_client, request, timeout_sec, update_frequency, undefined, args);
+  await _power_command(power_client, request, timeout_msec, update_frequency, undefined, args);
 }
 
 /**
@@ -373,17 +372,17 @@ function power_on_wifi_radio(power_client, timeout_sec = 30_000, update_frequenc
  *
  * @param {PowerClient} power_client Client for calling power service.
  * @param {PowerCommandRequest} request Request to make to power service.
- * @param {number} [timeout_sec=30000] Max time this function will block for.
+ * @param {number} [timeout_msec=30000] Max time this function will block for (in milliseconds).
  * @param {number} [update_frequency=1.0] The frequency with which the robot should check if the command has succeeded.
  * @param {boolean} [expect_grpc_timeout=false] Expect API comms to drop on a success.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {void}
+ * @returns {Promise<void>}
  * @throws {RpcError} Problem communicating with the robot
  */
 async function _power_command(
   power_client,
   request,
-  timeout_sec = 30_000,
+  timeout_msec = 30_000,
   update_frequency = 1.0,
   expect_grpc_timeout = false,
   args,
@@ -406,7 +405,7 @@ async function _power_command(
   if (responseId.getStatus() === power_pb.PowerCommandStatus.STATUS_SUCCESS) return;
 
   const start_time = Date.now();
-  const end_time = start_time + timeout_sec;
+  const end_time = start_time + timeout_msec;
   const update_time = 1.0 / update_frequency;
 
   const power_command_id = responseId.getPowerCommandId();
@@ -457,7 +456,7 @@ async function _power_command(
  *
  * @param {RobotStateClient} state_client Robot state client instance.
  * @param {Object} [args] Extra arguments for controlling RPC details.
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  * @throws {RpcError} Problem communicating with the robot
  */
 async function is_powered_on(state_client, args) {

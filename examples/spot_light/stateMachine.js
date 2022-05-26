@@ -48,7 +48,7 @@ class StateMachine {
   async exe() {
     if (!this.enable) return;
 
-    await Promise.all(this._state_funcs.map(e => e.bind(this)()));
+    await Promise.all(this._state_funcs.map(async e => await e.bind(this)()));
     this.enable = false;
     if (this.next_state !== null) this.next_state.enable = true;
   }
@@ -221,7 +221,7 @@ class StateMachineFollow extends StateMachine {
 
       const MAX_ANGLE = 0.5;
 
-      console.log(this._init_pt, pt, num.subtract(this._init_pt, pt));
+      console.log(this._init_pt, pt, num.subtract(this._init_pt, pt).tolist());
 
       const adj = num
         .divide(num.subtract(this._init_pt, pt), this._init_pt)
