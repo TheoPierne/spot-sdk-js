@@ -1344,8 +1344,8 @@ proto.bosdyn.api.EstopCheckInRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
     endpoint: (f = msg.getEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
-    challenge: jspb.Message.getFieldWithDefault(msg, 3, "0"),
-    response: jspb.Message.getFieldWithDefault(msg, 4, "0"),
+    challenge: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    response: jspb.Message.getFieldWithDefault(msg, 4, 0),
     stopLevel: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
@@ -1394,11 +1394,11 @@ proto.bosdyn.api.EstopCheckInRequest.deserializeBinaryFromReader = function(msg,
       msg.setEndpoint(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readUint64String());
+      var value = /** @type {number} */ (reader.readUint64());
       msg.setChallenge(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readUint64String());
+      var value = /** @type {number} */ (reader.readUint64());
       msg.setResponse(value);
       break;
     case 5:
@@ -1451,15 +1451,15 @@ proto.bosdyn.api.EstopCheckInRequest.serializeBinaryToWriter = function(message,
     );
   }
   f = message.getChallenge();
-  if (parseInt(f, 10) !== 0) {
-    writer.writeUint64String(
+  if (f !== 0) {
+    writer.writeUint64(
       3,
       f
     );
   }
   f = message.getResponse();
-  if (parseInt(f, 10) !== 0) {
-    writer.writeUint64String(
+  if (f !== 0) {
+    writer.writeUint64(
       4,
       f
     );
@@ -1550,37 +1550,37 @@ proto.bosdyn.api.EstopCheckInRequest.prototype.hasEndpoint = function() {
 
 /**
  * optional uint64 challenge = 3;
- * @return {string}
+ * @return {number}
  */
 proto.bosdyn.api.EstopCheckInRequest.prototype.getChallenge = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
- * @param {string} value
+ * @param {number} value
  * @return {!proto.bosdyn.api.EstopCheckInRequest} returns this
  */
 proto.bosdyn.api.EstopCheckInRequest.prototype.setChallenge = function(value) {
-  return jspb.Message.setProto3StringIntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
 /**
  * optional uint64 response = 4;
- * @return {string}
+ * @return {number}
  */
 proto.bosdyn.api.EstopCheckInRequest.prototype.getResponse = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, "0"));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
 /**
- * @param {string} value
+ * @param {number} value
  * @return {!proto.bosdyn.api.EstopCheckInRequest} returns this
  */
 proto.bosdyn.api.EstopCheckInRequest.prototype.setResponse = function(value) {
-  return jspb.Message.setProto3StringIntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
@@ -1636,7 +1636,7 @@ proto.bosdyn.api.EstopCheckInResponse.toObject = function(includeInstance, msg) 
   var f, obj = {
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
     request: (f = msg.getRequest()) && proto.bosdyn.api.EstopCheckInRequest.toObject(includeInstance, f),
-    challenge: jspb.Message.getFieldWithDefault(msg, 3, "0"),
+    challenge: jspb.Message.getFieldWithDefault(msg, 3, 0),
     status: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
@@ -1685,7 +1685,7 @@ proto.bosdyn.api.EstopCheckInResponse.deserializeBinaryFromReader = function(msg
       msg.setRequest(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readUint64String());
+      var value = /** @type {number} */ (reader.readUint64());
       msg.setChallenge(value);
       break;
     case 4:
@@ -1738,8 +1738,8 @@ proto.bosdyn.api.EstopCheckInResponse.serializeBinaryToWriter = function(message
     );
   }
   f = message.getChallenge();
-  if (parseInt(f, 10) !== 0) {
-    writer.writeUint64String(
+  if (f !== 0) {
+    writer.writeUint64(
       3,
       f
     );
@@ -1840,19 +1840,19 @@ proto.bosdyn.api.EstopCheckInResponse.prototype.hasRequest = function() {
 
 /**
  * optional uint64 challenge = 3;
- * @return {string}
+ * @return {number}
  */
 proto.bosdyn.api.EstopCheckInResponse.prototype.getChallenge = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
- * @param {string} value
+ * @param {number} value
  * @return {!proto.bosdyn.api.EstopCheckInResponse} returns this
  */
 proto.bosdyn.api.EstopCheckInResponse.prototype.setChallenge = function(value) {
-  return jspb.Message.setProto3StringIntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 

@@ -21,6 +21,8 @@ var bosdyn_api_image_pb = require('../../../bosdyn/api/image_pb.js');
 goog.object.extend(proto, bosdyn_api_image_pb);
 var bosdyn_api_local_grid_pb = require('../../../bosdyn/api/local_grid_pb.js');
 goog.object.extend(proto, bosdyn_api_local_grid_pb);
+var bosdyn_api_payload_pb = require('../../../bosdyn/api/payload_pb.js');
+goog.object.extend(proto, bosdyn_api_payload_pb);
 var bosdyn_api_point_cloud_pb = require('../../../bosdyn/api/point_cloud_pb.js');
 goog.object.extend(proto, bosdyn_api_point_cloud_pb);
 var bosdyn_api_robot_state_pb = require('../../../bosdyn/api/robot_state_pb.js');
@@ -1649,7 +1651,7 @@ proto.bosdyn.api.graph_nav.Waypoint.prototype.hasAnnotations = function() {
  * @private {!Array<number>}
  * @const
  */
-proto.bosdyn.api.graph_nav.WaypointSnapshot.repeatedFields_ = [2,4,6];
+proto.bosdyn.api.graph_nav.WaypointSnapshot.repeatedFields_ = [2,4,6,12];
 
 
 
@@ -1693,7 +1695,10 @@ proto.bosdyn.api.graph_nav.WaypointSnapshot.toObject = function(includeInstance,
     bosdyn_api_local_grid_pb.LocalGrid.toObject, includeInstance),
     isPointCloudProcessed: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
     versionId: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    hasRemotePointCloudSensor: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
+    hasRemotePointCloudSensor: jspb.Message.getBooleanFieldWithDefault(msg, 10, false),
+    bodyTformRemotePointCloudSensor: (f = msg.getBodyTformRemotePointCloudSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+    payloadsList: jspb.Message.toObjectList(msg.getPayloadsList(),
+    bosdyn_api_payload_pb.Payload.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -1770,6 +1775,16 @@ proto.bosdyn.api.graph_nav.WaypointSnapshot.deserializeBinaryFromReader = functi
     case 10:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setHasRemotePointCloudSensor(value);
+      break;
+    case 11:
+      var value = new bosdyn_api_geometry_pb.SE3Pose;
+      reader.readMessage(value,bosdyn_api_geometry_pb.SE3Pose.deserializeBinaryFromReader);
+      msg.setBodyTformRemotePointCloudSensor(value);
+      break;
+    case 12:
+      var value = new bosdyn_api_payload_pb.Payload;
+      reader.readMessage(value,bosdyn_api_payload_pb.Payload.deserializeBinaryFromReader);
+      msg.addPayloads(value);
       break;
     default:
       reader.skipField();
@@ -1866,6 +1881,22 @@ proto.bosdyn.api.graph_nav.WaypointSnapshot.serializeBinaryToWriter = function(m
     writer.writeBool(
       10,
       f
+    );
+  }
+  f = message.getBodyTformRemotePointCloudSensor();
+  if (f != null) {
+    writer.writeMessage(
+      11,
+      f,
+      bosdyn_api_geometry_pb.SE3Pose.serializeBinaryToWriter
+    );
+  }
+  f = message.getPayloadsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      12,
+      f,
+      bosdyn_api_payload_pb.Payload.serializeBinaryToWriter
     );
   }
 };
@@ -2128,6 +2159,81 @@ proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.getHasRemotePointCloudSens
  */
 proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.setHasRemotePointCloudSensor = function(value) {
   return jspb.Message.setProto3BooleanField(this, 10, value);
+};
+
+
+/**
+ * optional bosdyn.api.SE3Pose body_tform_remote_point_cloud_sensor = 11;
+ * @return {?proto.bosdyn.api.SE3Pose}
+ */
+proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.getBodyTformRemotePointCloudSensor = function() {
+  return /** @type{?proto.bosdyn.api.SE3Pose} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_geometry_pb.SE3Pose, 11));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.SE3Pose|undefined} value
+ * @return {!proto.bosdyn.api.graph_nav.WaypointSnapshot} returns this
+*/
+proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.setBodyTformRemotePointCloudSensor = function(value) {
+  return jspb.Message.setWrapperField(this, 11, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.graph_nav.WaypointSnapshot} returns this
+ */
+proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.clearBodyTformRemotePointCloudSensor = function() {
+  return this.setBodyTformRemotePointCloudSensor(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.hasBodyTformRemotePointCloudSensor = function() {
+  return jspb.Message.getField(this, 11) != null;
+};
+
+
+/**
+ * repeated bosdyn.api.Payload payloads = 12;
+ * @return {!Array<!proto.bosdyn.api.Payload>}
+ */
+proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.getPayloadsList = function() {
+  return /** @type{!Array<!proto.bosdyn.api.Payload>} */ (
+    jspb.Message.getRepeatedWrapperField(this, bosdyn_api_payload_pb.Payload, 12));
+};
+
+
+/**
+ * @param {!Array<!proto.bosdyn.api.Payload>} value
+ * @return {!proto.bosdyn.api.graph_nav.WaypointSnapshot} returns this
+*/
+proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.setPayloadsList = function(value) {
+  return jspb.Message.setRepeatedWrapperField(this, 12, value);
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.Payload=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.bosdyn.api.Payload}
+ */
+proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.addPayloads = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 12, opt_value, proto.bosdyn.api.Payload, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.bosdyn.api.graph_nav.WaypointSnapshot} returns this
+ */
+proto.bosdyn.api.graph_nav.WaypointSnapshot.prototype.clearPayloadsList = function() {
+  return this.setPayloadsList([]);
 };
 
 
