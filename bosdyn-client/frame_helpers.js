@@ -8,6 +8,7 @@ const BODY_FRAME_NAME = 'body';
 const GRAV_ALIGNED_BODY_FRAME_NAME = 'flat_body';
 const ODOM_FRAME_NAME = 'odom';
 const GROUND_PLANE_FRAME_NAME = 'gpe';
+const HAND_FRAME_NAME = "hand";
 const UNKNOWN_FRAME_NAME = 'unknown';
 const RAYCAST_FRAME_NAME = 'walkto_raycast_intersection';
 
@@ -50,40 +51,40 @@ class ValidateFrameTreeDisjointError extends ValidateFrameTreeError {
  * repeated edges may not actually be valid - there could be cycles, disjoint
  * trees, or missing edges in the actual data structure.
  *
- * @param {Object} frame_tree_snapshot A snapshot of the data.
+ * @param {geometry_pb.FrameTreeSnapshot} frame_tree_snapshot A snapshot of the data.
  * @returns {boolean} True if valid
  * @throws {ValidateFrameTreeError} ValidateFrameTreeError in a number of cases:
  * Empty tree, invalid frame names in the tree, missing transforms
  * relating the two nodes, cycles in the tree, the tree is actually a DAG, and disconnected trees.
  */
 function validate_frame_tree_snapshot(frame_tree_snapshot) {
-  if (frame_tree_snapshot) throw new RangeError('No frame_tree_snapshot');
+  if (!frame_tree_snapshot) throw new RangeError('No frame_tree_snapshot');
 
   function _walk_up_tree(frame_name) {
     let cur_frame_name = frame_name;
-    const visited_frames = Set();
+    const visited_frames = new Set();
     visited_frames.add(cur_frame_name);
     /* eslint-disable no-constant-condition */
     while (true) {
-      const edge = frame_tree_snapshot.child_to_parent_edge_map.get(cur_frame_name);
+      const edge = frame_tree_snapshot.getChildToParentEdgeMapMap().get(cur_frame_name);
       if (!edge) throw new ValidateFrameTreeUnknownFrameError();
-      if (!edge.parent_frame_name) break;
-      if (edge.parent_frame_name in visited_frames) throw new ValidateFrameTreeCycleError();
-      visited_frames.add(edge.parent_frame_name);
-      cur_frame_name = edge.parent_frame_name;
+      if (!edge.getParentFrameName()) break;
+      if (visited_frames.has(edge.getParentFrameName())) throw new ValidateFrameTreeCycleError();
+      visited_frames.add(edge.getParentFrameName());
+      cur_frame_name = edge.getParentFrameName();
     }
     return cur_frame_name;
   }
 
   let root = null;
 
-  if (!frame_tree_snapshot.child_to_parent_edge_map) {
+  if (!frame_tree_snapshot.getChildToParentEdgeMapMap().toArray().length) {
     throw new ValidateFrameTreeError('Empty edges in FrameTreeSnapshot');
   }
 
-  for (const frame_name of frame_tree_snapshot.child_to_parent_edge_map) {
+  for (const [frame_name] of frame_tree_snapshot.getChildToParentEdgeMapMap().entries()) {
     if (!frame_name) throw new ValidateFrameTreeError('Empty child frame name');
-    let cur_root = _walk_up_tree(frame_name);
+    const cur_root = _walk_up_tree(frame_name);
     if (!root) {
       root = cur_root;
     } else if (cur_root !== root) {
@@ -99,7 +100,7 @@ function validate_frame_tree_snapshot(frame_tree_snapshot) {
  *
  * Using frame_tree_snapshot, find the math_helpers.SE3Pose to transform geometry from
  * frame_a's representation to frame_b's.
- * @param {Object} frame_tree_snapshot object representing the child_to_parent_edge_map
+ * @param {geometry_pb.FrameTreeSnapshot} frame_tree_snapshot object representing the child_to_parent_edge_map
  * @param {string} frame_a The first frame to check in.
  * @param {string} frame_b The second frame to check in.
  * @param {boolean} [validate=true] If the FrameTreeSnapshot should be checked for a valid tree structure
@@ -108,36 +109,36 @@ function validate_frame_tree_snapshot(frame_tree_snapshot) {
 function get_a_tform_b(frame_tree_snapshot, frame_a, frame_b, validate = true) {
   if (validate) validate_frame_tree_snapshot(frame_tree_snapshot);
 
-  if (!frame_tree_snapshot.child_to_parent_edge_map.get(frame_a)) return null;
-  if (!frame_tree_snapshot.child_to_parent_edge_map.get(frame_b)) return null;
+  if (!frame_tree_snapshot.getChildToParentEdgeMapMap().has(frame_a)) return null;
+  if (!frame_tree_snapshot.getChildToParentEdgeMapMap().has(frame_b)) return null;
 
   function _list_parent_edges(leaf_frame) {
     let parent_edges = [];
     let cur_frame = leaf_frame;
     /* eslint-disable no-constant-condition */
     while (true) {
-      const parent_edge = frame_tree_snapshot.child_to_parent_edge_map.get(cur_frame);
-      if (!parent_edge.parent_frame_name) break;
+      const parent_edge = frame_tree_snapshot.getChildToParentEdgeMapMap().get(cur_frame);
+      if (!parent_edge.getParentFrameName()) break;
       parent_edges.push(parent_edge);
-      cur_frame = parent_edge.parent_frame_name;
+      cur_frame = parent_edge.getParentFrameName();
     }
     return parent_edges;
   }
 
-  let inverse_edges = _list_parent_edges(frame_a);
-  let forward_edges = _list_parent_edges(frame_b);
+  const inverse_edges = _list_parent_edges(frame_a);
+  const forward_edges = _list_parent_edges(frame_b);
 
   function _accumulate_transforms(parent_edges) {
     let ret = math_helpers.SE3Pose.from_identity();
-    for (let parent_edge in parent_edges) {
-      ret *= math_helpers.SE3Pose.from_obj(parent_edge.parent_tform_child);
+    for (const parent_edge of parent_edges) {
+      ret = ret.mult(math_helpers.SE3Pose.from_obj(parent_edge.getParentTformChild()));
     }
     return ret;
   }
 
-  let frame_a_tform_root_frame = _accumulate_transforms(inverse_edges).reverse();
-  let root_frame_tform_frame_b = _accumulate_transforms(forward_edges);
-  return frame_a_tform_root_frame * root_frame_tform_frame_b;
+  const frame_a_tform_root_frame = _accumulate_transforms(inverse_edges).inverse();
+  const root_frame_tform_frame_b = _accumulate_transforms(forward_edges);
+  return frame_a_tform_root_frame.mult(root_frame_tform_frame_b);
 }
 
 /**
@@ -302,6 +303,7 @@ module.exports = {
   GRAV_ALIGNED_BODY_FRAME_NAME,
   ODOM_FRAME_NAME,
   GROUND_PLANE_FRAME_NAME,
+  HAND_FRAME_NAME,
   UNKNOWN_FRAME_NAME,
   RAYCAST_FRAME_NAME,
 };
