@@ -753,20 +753,18 @@ class RobotCommandBuilder {
     if (!params) params = RobotCommandBuilder.mobility_params(body_height, footprint_R_body);
     const any_params = RobotCommandBuilder._to_any(params);
 
-    const stance = new basic_command_pb.Stance()
-      .setSe2FrameName(se2_frame_name)
-      .setAccuracy(accuracy)
-      .setFootPosition(
-        new jspb.Map([
-          ['fl', pos_fl_rt_frame],
-          ['fr', pos_fr_rt_frame],
-          ['hl', pos_hl_rt_frame],
-          ['hr', pos_hr_rt_frame],
-        ]),
-      );
+    const stance = new basic_command_pb.Stance().setSe2FrameName(se2_frame_name).setAccuracy(accuracy);
+
+    stance
+      .getFootPositionsMap()
+      .set('fl', pos_fl_rt_frame)
+      .set('fr', pos_fr_rt_frame)
+      .set('hl', pos_hl_rt_frame)
+      .set('hr', pos_hr_rt_frame);
+
     const stance_request = new basic_command_pb.StanceCommand.Request().setStance(stance);
     const mobility_command = new mobility_command_pb.MobilityCommand.Request()
-      .setStandRequest(stance_request)
+      .setStanceRequest(stance_request)
       .setParams(any_params);
     const synchronized_command = new synchronized_command_pb.SynchronizedCommand.Request().setMobilityCommand(
       mobility_command,
@@ -1004,7 +1002,7 @@ class RobotCommandBuilder {
 
     const robot_cmd = new robot_command_pb.RobotCommand();
     // eslint-disable-next-line
-    const arm_joint_traj = robot_cmd.getSynchronizedCommand().getArmCommand().getArmJointMoveCommand().getTrajectory();
+		const arm_joint_traj = robot_cmd.getSynchronizedCommand().getArmCommand().getArmJointMoveCommand().getTrajectory();
 
     for (const i in [...Array(times.length).keys()]) {
       const traj_point = arm_joint_traj.points.add();
@@ -1198,7 +1196,7 @@ async function blocking_stand(command_client, timeout_sec = 10_000, update_frequ
       if (mob_status !== basic_command_pb.RobotCommandFeedbackStatus.Status.STATUS_PROCESSING) {
         throw new CommandFailedError(
           // eslint-disable-next-line
-        	`Stand (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[mob_status]})`
+					`Stand (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[mob_status]})`
         );
       }
       if (stand_status === basic_command_pb.StandCommand.Feedback.Status.STATUS_IS_STANDING) {
@@ -1256,7 +1254,7 @@ async function blocking_sit(command_client, timeout_sec = 10_000, update_frequen
       if (mob_status !== basic_command_pb.RobotCommandFeedbackStatus.Status.STATUS_PROCESSING) {
         throw new CommandFailedError(
           // eslint-disable-next-line
-          `Sit (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[mob_status]})`,
+					`Sit (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[mob_status]})`,
         );
       }
       if (sit_status === basic_command_pb.SitCommand.Feedback.Status.STATUS_IS_SITTING) {
@@ -1313,7 +1311,7 @@ async function blocking_selfright(command_client, timeout_sec = 30_000, update_f
       if (full_body_status !== basic_command_pb.RobotCommandFeedbackStatus.Status.STATUS_PROCESSING) {
         throw new CommandFailedError(
           // eslint-disable-next-line
-          `Self-right (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[full_body_status]})`,
+					`Self-right (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[full_body_status]})`,
         );
       }
       if (selfright_status === basic_command_pb.SelfRightCommand.Feedback.STATUS_COMPLETED) {
