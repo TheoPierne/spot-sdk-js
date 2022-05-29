@@ -48,7 +48,7 @@ class StateMachine {
   async exe() {
     if (!this.enable) return;
 
-    await Promise.all(this._state_funcs.map(async e => await e.bind(this)()));
+    await Promise.all(this._state_funcs.map(e => e.bind(this)()));
     this.enable = false;
     if (this.next_state !== null) this.next_state.enable = true;
   }

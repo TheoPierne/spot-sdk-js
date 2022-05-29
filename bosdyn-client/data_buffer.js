@@ -137,7 +137,7 @@ class DataBufferClient extends BaseClient {
         );
       }
 
-      console.log(converter)
+      console.log(converter);
 
       if (!isCatch) {
         return converter.robot_timestamp_from_local_secs(Date.now() / 1000);

@@ -135,7 +135,7 @@ class MyRobot {
 
     // Verify the robot is not estopped
     console.assert(
-     !(await this._robot.is_estopped()),
+      !(await this._robot.is_estopped()),
       'Robot is estopped. Please use an external E-Stop client, such as the estop SDK example, to configure E-Stop.',
     );
 

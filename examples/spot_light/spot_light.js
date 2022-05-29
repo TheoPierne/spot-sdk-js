@@ -38,18 +38,18 @@ async function main(args = null) {
       await Promise.all(results);
     }
     /* eslint-enable */
-
-    // Start the state machine
   } catch (e) {
-    return false;
+    throw e;
   }
-
-  console.log('[SPOT_LIGHT] Done!!');
-  process.exit(0);
 }
 
 if (require.main === module) {
-  main();
+  main()
+    .then(() => {
+      console.log('[SPOT_LIGHT] Done!!');
+      process.exit(0);
+    })
+    .catch(console.error);
 } else {
   module.exports = main;
 }
