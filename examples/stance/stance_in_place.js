@@ -52,9 +52,9 @@ async function run(config) {
     GRAV_ALIGNED_BODY_FRAME_NAME,
   );
 
-  console.log(vo_T_body)
+  console.log(vo_T_body);
 
-  process.exit(0)
+  process.exit(0);
 
   // Power On
   await robot.power_on();
@@ -104,11 +104,11 @@ async function main(args = null) {
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
-  if (!((0.2 <= Math.abs(options.x_offset)) && (Math.abs(options.x_offset) <= 0.5))) {
+  if (!(Math.abs(options.x_offset) >= 0.2 && Math.abs(options.x_offset) <= 0.5)) {
     throw new TypeError('Invalid x-offset value. Please pass a value between 0.2 and 0.5');
   }
 
-  if (!((0.1 <= Math.abs(options.y_offset)) && (Math.abs(options.y_offset) <= 0.4))) {
+  if (!(Math.abs(options.y_offset) >= 0.1 && Math.abs(options.y_offset) <= 0.4)) {
     throw new TypeError('Invalid y-offset value. Please pass a value between 0.1 and 0.4');
   }
 
