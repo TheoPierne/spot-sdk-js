@@ -8,7 +8,7 @@ const BODY_FRAME_NAME = 'body';
 const GRAV_ALIGNED_BODY_FRAME_NAME = 'flat_body';
 const ODOM_FRAME_NAME = 'odom';
 const GROUND_PLANE_FRAME_NAME = 'gpe';
-const HAND_FRAME_NAME = "hand";
+const HAND_FRAME_NAME = 'hand';
 const UNKNOWN_FRAME_NAME = 'unknown';
 const RAYCAST_FRAME_NAME = 'walkto_raycast_intersection';
 
