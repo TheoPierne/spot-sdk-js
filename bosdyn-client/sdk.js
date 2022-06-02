@@ -143,7 +143,7 @@ const _DEFAULT_SERVICE_CLIENTS = [
  * @returns {Sdk} sdk
  * @throws {RangeError} Robot cert could not be loaded.
  */
-function create_standard_sdk(client_name_prefix, service_clients = null, cert_resource_glob = null) {
+function create_standard_sdk(client_name_prefix, service_clients = null, cert_resource_glob) {
   _LOGGER.debug(`[SDK] Creating standard Sdk, cert glob: "${cert_resource_glob}"`);
   const sdk = new Sdk(client_name_prefix);
   const client_name = generate_client_name(client_name_prefix);
