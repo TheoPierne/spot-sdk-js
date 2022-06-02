@@ -296,7 +296,7 @@ class Robot {
   async authenticate(username, password, timeout) {
     console.log('Pensez à modifier authenticate dans le fichier robot.js');
     const default_service_name = AuthClient.default_service_name;
-    const auth_channel = await this.ensure_insecure_channel(this._bootstrap_service_authorities[default_service_name]);
+    const auth_channel = this.ensure_insecure_channel(this._bootstrap_service_authorities[default_service_name]);
     const auth_client = await this.ensure_client(default_service_name, auth_channel);
     const user_token = await auth_client.auth(username, password, this.app_token, { timeout });
     this.update_user_token(user_token, username);
