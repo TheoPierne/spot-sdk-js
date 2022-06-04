@@ -31,6 +31,7 @@
   "license": "SEE LICENSE IN LICENSE FILE",
   "dependencies": {
     "@grpc/grpc-js": "^1.6.7",
+    "@grpc/proto-loader": "^0.6.12",
     "@u4/opencv4nodejs": "^6.1.6",
     "argparse": "^2.0.1",
     "expandenv": "^1.0.0",
@@ -50,7 +51,7 @@
     "semver": "^7.3.7",
     "sharp": "^0.30.6",
     "tmp": "^0.2.1",
-    "underscore": "^1.13.3",
+    "underscore": "^1.13.4",
     "which": "^2.0.2",
     "winston": "^3.7.2"
   },
@@ -58,7 +59,7 @@
     "node": ">=16.13.0"
   },
   "devDependencies": {
-    "eslint": "^8.16.0",
+    "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
