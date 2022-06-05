@@ -3219,9 +3219,7 @@ proto.bosdyn.api.SeriesIdentifier.prototype.setSeriesType = function(value) {
  * @return {!jspb.Map<string,string>}
  */
 proto.bosdyn.api.SeriesIdentifier.prototype.getSpecMap = function(opt_noLazyCreate) {
-  return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 2, opt_noLazyCreate,
-      null));
+  return /** @type {!jspb.Map<string,string>} */ (jspb.Message.getMapField(this, 2, opt_noLazyCreate,null));
 };
 
 
@@ -3231,7 +3229,8 @@ proto.bosdyn.api.SeriesIdentifier.prototype.getSpecMap = function(opt_noLazyCrea
  */
 proto.bosdyn.api.SeriesIdentifier.prototype.clearSpecMap = function() {
   this.getSpecMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
