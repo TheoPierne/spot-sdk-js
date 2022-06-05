@@ -3,15 +3,15 @@
 const { PROTOBUF_CONTENT_TYPE } = require('./common');
 
 class MessageReader {
-  constructor(data_reader, require_protobuf = false){
+  constructor(data_reader, require_protobuf = false) {
     this._data_reader = data_reader;
     this._channel_name_to_series_descriptor = {};
     this._channel_name_to_series_index = {};
-    for (const [series_index, series_identifier] of data_reader.file_index.getSeriesIdentifiersList()){
+    for (const [series_index, series_identifier] of data_reader.file_index.getSeriesIdentifiersList()) {
       let channel_name;
 
-      if (series_identifier.getSpecMap().has("bosdyn:channel")) {
-        channel_name = series_identifier.getSpecMap().get("bosdyn:channel");
+      if (series_identifier.getSpecMap().has('bosdyn:channel')) {
+        channel_name = series_identifier.getSpecMap().get('bosdyn:channel');
       } else {
         continue;
       }
@@ -26,22 +26,22 @@ class MessageReader {
     }
   }
 
-  get data_reader(){
+  get data_reader() {
     return this._data_reader;
   }
 
-  get channel_name_to_series_descriptor(){
+  get channel_name_to_series_descriptor() {
     return this._channel_name_to_series_descriptor;
   }
 
-  series_index(channel_name, message_type = null){
+  series_index(channel_name, message_type = null) {
     if (message_type === null) return this._channel_name_to_series_index[channel_name];
 
-    for (const [series_index, series_identifier] of this._data_reader.file_index.getSeriesIdentifiersList()){
-      let channel_name;
+    for (const [series_index, series_identifier] of this._data_reader.file_index.getSeriesIdentifiersList()) {
+      let series_channel;
 
-      if (series_identifier.getSpecMap().has("bosdyn:channel")) {
-        channel_name = series_identifier.getSpecMap().get("bosdyn:channel");
+      if (series_identifier.getSpecMap().has('bosdyn:channel')) {
+        series_channel = series_identifier.getSpecMap().get('bosdyn:channel');
       } else {
         continue;
       }
@@ -57,14 +57,13 @@ class MessageReader {
     throw new TypeError(`No series with channel_name=${channel_name} and message_type=${message_type}`);
   }
 
-  series_index_to_descriptor(series_index){
+  series_index_to_descriptor(series_index) {
     return this._data_reader.file_index.series_descriptor(series_index);
   }
 
-  get_blob(series_index, index_in_series){
+  get_blob(series_index, index_in_series) {
     return this._data_reader.read(series_index, index_in_series);
   }
-
 }
 
 module.exports = {

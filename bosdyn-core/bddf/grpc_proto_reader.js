@@ -18,7 +18,7 @@ class GrpcProtoReader {
   }
 
   get_message(index_in_series) {
-    const [_desc, timestamp_nsec, data] = this._service_reader.data_reader.read(this._series_index, index_in_series);
+    const [, timestamp_nsec, data] = this._service_reader.data_reader.read(this._series_index, index_in_series);
     const protobuf = new this._proto_type(data);
     return [timestamp_nsec, protobuf];
   }

@@ -1,7 +1,6 @@
 'use strict';
 
 const loader = require('@grpc/proto-loader');
-const _ = require('underscore');
 
 const { GrpcRequests, GrpcResponses } = require('./bosdyn');
 const { LOGGER } = require('./common');
@@ -9,7 +8,7 @@ const { GrpcServiceReader } = require('./grpc_service_reader');
 
 function getFunctionName(glob, func) {
   return Object.entries(Object.getOwnPropertyDescriptors(glob))
-    .filter(([key, { value }]) => value === func)
+    .filter(([, { value }]) => value === func)
     .map(([key]) => key)[0];
 }
 

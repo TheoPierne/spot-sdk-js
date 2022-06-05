@@ -47,22 +47,23 @@ class DataReader extends BaseDataReader {
   }
 
   _read_index() {
-    this._file.seek(-END_MAGIC.length, os.SEEK_END);
+    this._file.seek(-END_MAGIC.length, 2);
     const end_magic = this._read(END_MAGIC.length);
     if (end_magic !== END_MAGIC) {
       throw new ParseError('Bad magic bytes at the end of the file.');
     }
-    this._file.seek(-INDEX_OFFSET_OFFSET, os.SEEK_END);
+    this._file.seek(-INDEX_OFFSET_OFFSET, 2);
     this._index_offset = this._checksum = struct.unpack('<QQ', this._read(16));
     if (this._index_offset < MAGIC.length) {
       throw new ParseError(`Invalid offset to index: ${this._index_offset})`);
     }
     this._file_index = this._read_desc_block_at('file_index', this._index_offset);
     // This._spec_index = [{key: value for key, value in desc.spec.items()} for desc in this._file_index.series_identifiers];
-    this._spec_index = this._file_index.series_identifiers.map(desc =>
-      Object.entries(desc.spec).map((key, val) => {
-        val;
-      }),
+    this._spec_index = this._file_index.getSeriesIdentifiersList().map(desc =>
+      desc
+        .getSpecMap()
+        .getEntryList()
+        .map(([key, val]) => ({ [key]: val })),
     );
   }
 
@@ -83,3 +84,7 @@ class DataReader extends BaseDataReader {
     return this._read_desc_block(descriptor_type_name);
   }
 }
+
+module.exports = {
+  DataReader,
+};
