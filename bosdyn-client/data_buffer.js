@@ -13,18 +13,25 @@ class InvalidArgument extends Error {
   }
 }
 
-async function log_event(robot, event_type, level, description, start_timestamp_secs,
-  end_timestamp_secs = null, id_str = null, parameters = null,
-  log_preserve_hint = data_buffer_protos.Event.LogPreserveHint.LOG_PRESERVE_HINT_NORMAL){
-
+async function log_event(
+  robot,
+  event_type,
+  level,
+  description,
+  start_timestamp_secs,
+  end_timestamp_secs = null,
+  id_str = null,
+  parameters = null,
+  log_preserve_hint = data_buffer_protos.Event.LogPreserveHint.LOG_PRESERVE_HINT_NORMAL,
+) {
   const data_buffer_client = await robot.ensure_client(DataBufferClient.default_service_name);
 
-  if(!id_str) id_str = uuid1();
+  if (!id_str) id_str = uuid1();
 
   await (await robot.time_sync).wait_for_sync();
   const robot_start_timestamp = await (await robot.time_sync).robot_timestamp_from_local_secs(start_timestamp_secs);
   let robot_end_timestamp;
-  if (end_timestamp_secs){
+  if (end_timestamp_secs) {
     robot_end_timestamp = await (await robot.time_sync).robot_timestamp_from_local_secs(end_timestamp_secs);
   } else {
     robot_end_timestamp = robot_start_timestamp;
@@ -39,16 +46,16 @@ async function log_event(robot, event_type, level, description, start_timestamp_
   }
 
   const event = new data_buffer_protos.Event()
-  .setType(event_type)
-  .setDescription(description)
-  .setSource(robot.client_name)
-  .setId(id_str)
-  .setStartTime(robot_start_timestamp)
-  .setEndTime(robot_end_timestamp)
-  .setLevel(level)
-  .setLogPreserveHint(log_preserve_hint);
+    .setType(event_type)
+    .setDescription(description)
+    .setSource(robot.client_name)
+    .setId(id_str)
+    .setStartTime(robot_start_timestamp)
+    .setEndTime(robot_end_timestamp)
+    .setLevel(level)
+    .setLogPreserveHint(log_preserve_hint);
 
-  if (parameters){
+  if (parameters) {
     for (const parameter of parameters) {
       event.addParameters(parameter);
     }
@@ -106,10 +113,10 @@ class DataBufferClient extends BaseClient {
     const request = new data_buffer_protos.RecordDataBlobsRequest();
     robot_timestamp = robot_timestamp || this._now_in_robot_basis(type_id);
     const dataBlob = new data_buffer_protos.DataBlob()
-    .setTimestamp(robot_timestamp)
-    .setChannel(channel)
-    .setTypeId(type_id)
-    .setData(data);
+      .setTimestamp(robot_timestamp)
+      .setChannel(channel)
+      .setTypeId(type_id)
+      .setData(data);
     request.addBlobData(dataBlob);
     request.setSync(write_sync);
 
@@ -149,16 +156,16 @@ class DataBufferClient extends BaseClient {
     sequence_id = 0,
     source = 'client',
     args,
-    ) {
+  ) {
     if (!(schema_id in this.log_tick_schemas)) throw new RangeError(`The log tick schema id "${schema_id}" is unknown`);
 
     const request = new data_buffer_protos.RecordSignalTicksRequest();
     const tickData = new data_buffer_protos.SignalTick()
-    .setSequenceId(sequence_id)
-    .setSource(source)
-    .setSchemaId(schema_id)
-    .setEncoding(encoding)
-    .setData(data);
+      .setSequenceId(sequence_id)
+      .setSource(source)
+      .setSchemaId(schema_id)
+      .setEncoding(encoding)
+      .setData(data);
     request.addTickData(tickData);
     return this.call(this._stub.recordSignalTicks, request, null, common_header_errors, args);
   }
@@ -180,7 +187,7 @@ class DataBufferClient extends BaseClient {
           `[DATA BUFFER] Could not timestamp message of type ${
             msg_type !== null ? msg_type : proto !== null ? proto?.displayName : 'Unknown'
           }`,
-          );
+        );
       }
 
       console.log(converter);
