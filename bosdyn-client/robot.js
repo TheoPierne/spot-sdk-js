@@ -6,7 +6,7 @@ const { isAsyncFunction } = require('node:util/types');
 
 const { AuthClient } = require('./auth');
 const channel = require('./channel');
-const { DataBufferClient } = require('./data_buffer');
+const { DataBufferClient, log_event } = require('./data_buffer');
 const { DirectoryClient } = require('./directory');
 const { DirectoryRegistrationClient } = require('./directory_registration');
 const { EstopClient, is_estopped } = require('./estop');
@@ -20,6 +20,8 @@ const { RobotStateClient, has_arm } = require('./robot_state');
 const { TimeSyncThread, TimeSyncClient } = require('./time_sync');
 const { TokenCache } = require('./token_cache');
 const { TokenManager } = require('./token_manager');
+
+const data_buffer_protos = require('../bosdyn/api/data_buffer_pb');
 
 const { timestamp_to_sec } = require('../bosdyn-core/util');
 
@@ -64,18 +66,18 @@ class UnregisteredServiceTypeError extends UnregisteredServiceError {
 }
 
 /**
- * Settings common to one user's access to one robot.
- * This is the main point of access to all client functionality.
- * The ensure_client member is used to get any client to a service exposed on the robot.
- * Additionally, many helpers are exposed to provide commonly used functionality without
- * explicitly accessing a particular client object.
- * Note that any rpc call made to the robot can raise an RpcError subclass if there are
- * errors communicating with the robot.
- * Additionally, ResponseErrors will be raised if there was an error acting on the request itself.
- * An InvalidRequestError indicates a programming error, where the request was malformed in some way.
- * InvalidRequestErrors will never be thrown except in the case of client bugs.
- * See also Sdk and BaseClient
- */
+* Settings common to one user's access to one robot.
+* This is the main point of access to all client functionality.
+* The ensure_client member is used to get any client to a service exposed on the robot.
+* Additionally, many helpers are exposed to provide commonly used functionality without
+* explicitly accessing a particular client object.
+* Note that any rpc call made to the robot can raise an RpcError subclass if there are
+* errors communicating with the robot.
+* Additionally, ResponseErrors will be raised if there was an error acting on the request itself.
+* An InvalidRequestError indicates a programming error, where the request was malformed in some way.
+* InvalidRequestErrors will never be thrown except in the case of client bugs.
+* See also Sdk and BaseClient
+*/
 class Robot {
   constructor(name = null) {
     this._name = name;
@@ -165,7 +167,7 @@ class Robot {
       {},
       this.service_client_factories_by_type,
       other.service_client_factories_by_type,
-    );
+      );
     this.service_type_by_name = Object.assign({}, this.service_type_by_name, other.service_type_by_name);
 
     this.cert = other.cert;
@@ -223,12 +225,12 @@ class Robot {
   }
 
   /**
-   * Verify the right information exists before calling the ensure_secure_channel method.
-   * @param  {string}  service_name Name of the service in the directory.
-   * @param  {boolean} [secure=true] Create a secure channel or not.
-   * @param  {Array} options Options of the grpc channel.
-   * @returns {Promise<*>|*} Existing channel if found, or newly created channel if not found.
-   */
+  * Verify the right information exists before calling the ensure_secure_channel method.
+  * @param  {string}  service_name Name of the service in the directory.
+  * @param  {boolean} [secure=true] Create a secure channel or not.
+  * @param  {Array} options Options of the grpc channel.
+  * @returns {Promise<*>|*} Existing channel if found, or newly created channel if not found.
+  */
   async ensure_channel(service_name, secure = true, options = []) {
     const option = options.length ? options.map(x => x[0]) : null;
 
@@ -255,8 +257,8 @@ class Robot {
 
     const skip_app_token_check = service_name === 'robot-id';
     return secure
-      ? this.ensure_secure_channel(authority, skip_app_token_check, options)
-      : this.ensure_insecure_channel(authority, options);
+    ? this.ensure_secure_channel(authority, skip_app_token_check, options)
+    : this.ensure_insecure_channel(authority, options);
   }
 
   async ensure_secure_channel(authority, skip_app_token_check = false, options = []) {
@@ -268,17 +270,17 @@ class Robot {
       this.cert,
       () => ({ app_token: this.app_token, user_token: this.user_token }),
       should_send_app_token,
-    );
+      );
     const channelData = channel.create_secure_channel(
       this.address,
       _DEFAULT_SECURE_CHANNEL_PORT,
       creds,
       authority,
       options,
-    );
+      );
     this.logger.debug(
       `[ROBOT] Created channel to ${this.address} at port ${_DEFAULT_SECURE_CHANNEL_PORT} with authority ${authority}`,
-    );
+      );
     this.channels_by_authority[authority] = channelData;
     return channelData;
   }
@@ -288,7 +290,7 @@ class Robot {
     const channelData = channel.create_insecure_channel(this.address, _DEFAULT_SECURE_CHANNEL_PORT, authority, options);
     this.logger.debug(
       `[ROBOT] Created channel to ${this.address} at port ${_DEFAULT_SECURE_CHANNEL_PORT} with authority ${authority}`,
-    );
+      );
     this.channels_by_authority[authority] = channelData;
     return channelData;
   }
@@ -365,7 +367,7 @@ class Robot {
   async list_services(
     directory_service_name = DirectoryClient.default_service_name,
     directory_service_authority = this._bootstrap_service_authorities[DirectoryClient.default_service_name],
-  ) {
+    ) {
     const directory_channel = await this.ensure_secure_channel(directory_service_authority);
     const dir_client = await this.ensure_client(directory_service_name, directory_channel);
     return dir_client.list();
@@ -374,7 +376,7 @@ class Robot {
   async sync_with_directory(
     directory_service_name = DirectoryClient.default_service_name,
     directory_service_authority = this._bootstrap_service_authorities[DirectoryClient.default_service_name],
-  ) {
+    ) {
     const remote_services = await this.list_services(directory_service_name, directory_service_authority);
     for (const service of remote_services) {
       console.log(service.getName());
@@ -431,6 +433,11 @@ class Robot {
       robot_timestamp = await (await this.time_sync).robot_timestamp_from_local_secs(timestamp_secs);
     }
     await client.add_operator_comment(comment, robot_timestamp, { timeout });
+  }
+
+  log_event(event_type, level, description, start_timestamp_secs, end_timestamp_secs = null,
+    id_str = null, parameters = null, log_preserve_hint = data_buffer_protos.Event.LogPreserveHint.LOG_PRESERVE_HINT_NORMAL){
+    return log_event(this, event_type, level, description, start_timestamp_secs, end_timestamp_secs, id_str, parameters, log_preserve_hint);
   }
 
   async power_on(timeout_msec = 20_000, update_frequency = 1.0, timeout = null) {
