@@ -37,7 +37,7 @@ async function run(config) {
     undefined,
     true,
     true,
-  );
+    );
   await lease_keep_alive.init();
 
   const command_client = await robot.ensure_client(RobotCommandClient.default_service_name);
@@ -50,11 +50,7 @@ async function run(config) {
     state.getKinematicState().getTransformsSnapshot(),
     VISION_FRAME_NAME,
     GRAV_ALIGNED_BODY_FRAME_NAME,
-  );
-
-  console.log(vo_T_body);
-
-  process.exit(0);
+    );
 
   // Power On
   await robot.power_on();
@@ -78,7 +74,7 @@ async function run(config) {
     pos_fr_rt_vision.position,
     pos_hl_rt_vision.position,
     pos_hr_rt_vision.position,
-  );
+    );
 
   console.log('After stance adjustment, press Ctrl-C to sit Spot and turn off motors.');
 
@@ -112,22 +108,15 @@ async function main(args = null) {
     throw new TypeError('Invalid y-offset value. Please pass a value between 0.1 and 0.4');
   }
 
-  /* eslint-disable no-useless-catch */
-
-  try {
-    await run(options);
-    return true;
-  } catch (e) {
-    throw e;
-  }
+  return run(options);
 }
 
 if (require.main === module) {
   main()
-    .then(() => process.exit(0))
-    .catch(e => {
-      throw e;
-    });
+  .then(() => process.exit(0))
+  .catch(e => {
+    throw e;
+  });
 } else {
   module.exports = main;
 }
