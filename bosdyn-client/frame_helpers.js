@@ -131,7 +131,7 @@ function get_a_tform_b(frame_tree_snapshot, frame_a, frame_b, validate = true) {
   function _accumulate_transforms(parent_edges) {
     let ret = math_helpers.SE3Pose.from_identity();
     for (const parent_edge of parent_edges) {
-      ret = ret.mult(math_helpers.SE3Pose.from_obj(parent_edge.getParentTformChild()));
+      ret = ret.mult(math_helpers.SE3Pose.from_proto(parent_edge.getParentTformChild()));
     }
     return ret;
   }
