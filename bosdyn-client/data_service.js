@@ -17,7 +17,7 @@ class InvalidArgument extends Error {
  * @extends BaseClient
  */
 class DataServiceClient extends BaseClient {
-  static default_service_name = 'data-service';
+  static default_service_name = 'data';
   static service_type = 'bosdyn.api.DataService';
 
   /**
@@ -35,11 +35,10 @@ class DataServiceClient extends BaseClient {
    * @param {Object} other The object where to copy from.
    * @returns {void}
    */
-  update_from(other) {
+  async update_from(other) {
     super.update_from(other);
-
     try {
-      this._timesync_endpoint = other.time_sync.endpoint;
+      this._timesync_endpoint = (await other.time_sync).endpoint;
     } catch (e) {
       // Pass
     }
