@@ -39,14 +39,14 @@ class ArmSurfaceContactClient extends BaseClient {
   /**
    * Update instance from another object.
    * @param {Object} other The object where to copy from.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  update_from(other) {
+  async update_from(other) {
     super.update_from(other);
     if (this.lease_wallet) add_lease_wallet_processors(this, this.lease_wallet);
 
     try {
-      this._timesync_endpoint = other.time_sync.endpoint;
+      this._timesync_endpoint = (await other.time_sync).endpoint;
     } catch (e) {
       // Pass
     }

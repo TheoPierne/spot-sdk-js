@@ -33,7 +33,7 @@ class DataServiceClient extends BaseClient {
   /**
    * Update instance from another object.
    * @param {Object} other The object where to copy from.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
   async update_from(other) {
     super.update_from(other);

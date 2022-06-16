@@ -28,11 +28,11 @@ class GraphNavClient extends BaseClient {
     this._data_chunk_size = 1_000;
   }
 
-  update_from(other) {
+  async update_from(other) {
     super.update_from(other);
     if (this.lease_wallet) add_lease_wallet_processors(this, this.lease_wallet);
     try {
-      this._timesync_endpoint = other.time_sync.endpoint;
+      this._timesync_endpoint = (await other.time_sync).endpoint;
     } catch (e) {
       // Pass
     }
