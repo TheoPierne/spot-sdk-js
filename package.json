@@ -60,7 +60,8 @@
     "node": ">=16.13.0"
   },
   "devDependencies": {
-    "eslint": "^8.17.0",
+    "better-docs": "^2.7.2",
+    "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",

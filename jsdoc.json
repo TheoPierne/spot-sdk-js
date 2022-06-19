@@ -5,6 +5,7 @@
     "excludePattern": "(node_modules/|docs)"
   },
   "opts": {
+    "template": "node_modules/better-docs",
     "encoding": "utf8",
     "destination": "docs/",
     "readme": "README.md",
@@ -14,6 +15,19 @@
   "templates": {
     "cleverLinks": false,
     "monospaceLinks": false,
-    "search": true
+    "search": true,
+    "better-docs": {
+      "name": "Spot-sdk-js",
+      "navLinks": [
+        {
+          "label": "Github spot-sdk-js",
+          "href": "https://github.com/TheoPierne/spot-sdk-js"
+        },
+        {
+          "label": "Github spot-server-js",
+          "href": "https://github.com/TheoPierne/spot-server-js"
+        }
+      ]
+    }
   }
 }
