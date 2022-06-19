@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> bosdyn-client/data_acquisition_store.js</title>
+  <title> Robot</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -99,160 +97,447 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Source</p>
-                    <h1>bosdyn-client/data_acquisition_store.js</h1>
+                    <p>Class</p>
+                    <h1>Robot</h1>
                 </header>
                 
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
+        <h2><span class="attribs"><span class="type-signature"></span></span>Robot<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Settings common to one user's access to one robot.
+This is the main point of access to all client functionality.
+The ensure_client member is used to get any client to a service exposed on the robot.
+Additionally, many helpers are exposed to provide commonly used functionality without
+explicitly accessing a particular client object.
+Note that any rpc call made to the robot can raise an RpcError subclass if there are
+errors communicating with the robot.
+Additionally, ResponseErrors will be raised if there was an error acting on the request itself.
+An InvalidRequestError indicates a programming error, where the request was malformed in some way.
+InvalidRequestErrors will never be thrown except in the case of client bugs.
+See also Sdk and BaseClient</div>
+        
+    
+</header>
 
-const { common_header_errors, BaseClient } = require('./common');
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        <div class=name>
+                            <span class="tag">Constructor</span>
+                        </div>
+                        
 
-const data_acquisition_store = require('../bosdyn/api/data_acquisition_store_pb');
-const data_acquisition_store_service = require('../bosdyn/api/data_acquisition_store_service_grpc_pb');
 
-/**
- * A client for triggering data acquisition store methods.
- * @class {DataAcquisitionStoreClient}
- * @extends {BaseClient}
- */
-class DataAcquisitionStoreClient extends BaseClient {
-  static default_service_name = 'data-acquisition-store';
-  static service_type = 'bosdyn.api.DataAcquisitionStoreService';
+    
+    <h4 class="name" id="Robot">
+        <a class="href-link" href="#Robot">#</a>
+        
+        <span class="code-name">
+            
+                new Robot<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
 
-  /**
-   * Create an instance of DataAcquisitionStoreClient's class.
-   * @param {?string} name Class name.
-   */
-  constructor(name = null) {
-    super(data_acquisition_store_service.DataAcquisitionStoreServiceClient, name);
-    this._timesync_endpoint = null;
-  }
+    
+    
 
-  /**
-   * Update instance from another object.
-   * @param {Object} other The object where to copy from.
-   * @returns {Promise&lt;void>}
-   */
-  async update_from(other) {
-    super.update_from(other);
 
-    try {
-      this._timesync_endpoint = (await other.time_sync).endpoint;
-    } catch (e) {
-      // Pass
-    }
-  }
 
-  /**
-   * List capture actions that satisfy the query parameters.
-   * @param {data_acquisition_store.DataQueryParams} query Query parameters.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;Array|Object>} CaptureActionIds for the actions matching the query parameters.
-   */
-  list_capture_actions(query, args) {
-    const request = new data_acquisition_store.ListCaptureActionsRequest().setQuery(query);
-    return this.call(this._stub.listCaptureActions, request, _get_action_ids, common_header_errors, args);
-  }
 
-  /**
-   * List images that satisfy the query parameters.
-   * @param {data_acquisition_store.DataQueryParams} query Query parameters.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;Array|Object>} DataIdentifiers for the images matching the query parameters.
-   */
-  list_stored_images(query, args) {
-    const request = new data_acquisition_store.ListStoredImagesRequest().setQuery(query);
-    return this.call(this._stub.listStoredImages, request, _get_data_ids, common_header_errors, args);
-  }
 
-  /**
-   * List metadata that satisfy the query parameters.
-   * @param {data_acquisition_store.DataQueryParams} query Query parameters.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;Array|Object>} DataIdentifiers for the images matching the query parameters.
-   */
-  list_stored_metadata(query, args) {
-    const request = new data_acquisition_store.ListStoredMetadataRequest().setQuery(query);
-    return this.call(this._stub.listStoredMetadata, request, _get_data_ids, common_header_errors, args);
-  }
 
-  /**
-   * List data that satisfy the query parameters.
-   * @param {data_acquisition_store.DataQueryParams} query Query parameters.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;Array|Object>} DataIdentifiers for the images matching the query parameters.
-   */
-  list_stored_data(query, args) {
-    const request = new data_acquisition_store.ListStoredDataRequest().setQuery(query);
-    return this.call(this._stub.listStoredData, request, _get_data_ids, common_header_errors, args);
-  }
 
-  /**
-   * Store image.
-   * @param {image_pb.ImageCapture} image Image to store.
-   * @param {data_acquisition_pb.DataIdentifier} data_id Data identifier to use for storing the image.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;data_acquisition_store.StoreImageResponse>} StoreImageResponse response.
-   */
-  store_image(image, data_id, args) {
-    const request = new data_acquisition_store.StoreImageRequest().setImage(image).setDataId(data_id);
-    return this.call(this._stub.storeImage, request, null, common_header_errors, args);
-  }
 
-  /**
-   * Store metadata.
-   * @param {data_acquisition_pb.AssociatedMetadata} associated_metadata Metadata to store. If metadata is
-   * not associated with a particular piece of data, the data_id field in this object
-   * needs to specify only the action_id part.
-   * @param {data_acquisition_pb.DataIdentifier} data_id Data identifier to use for storing this
-   * associated metadata.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;data_acquisition_store.StoreMetadataResponse>} StoreMetadataResponse response.
-   */
-  store_metadata(associated_metadata, data_id, args) {
-    const request = new data_acquisition_store.StoreMetadataRequest()
-      .setMetadata(associated_metadata)
-      .setDataId(data_id);
-    return this.call(this._stub.storeMetadata, request, null, common_header_errors, args);
-  }
 
-  /**
-   * Store data.
-   * @param {!(string|Uint8Array)} data Arbitrary data to store.
-   * @param {data_acquisition_pb.DataIdentifier} data_id Data identifier to use for storing this data.
-   * @param {?string} [file_extension=null] File extension to use for writing the data to a file.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;data_acquisition_store.StoreDataResponse>} StoreDataResponse response.
-   */
-  store_data(data, data_id, file_extension = null, args) {
-    const request = new data_acquisition_store.StoreDataRequest()
-      .setData(data)
-      .setDataId(data_id)
-      .setFileExtension(file_extension);
-    return this.call(this._stub.storeData, request, null, common_header_errors, args);
-  }
-}
 
-function _get_action_ids(response) {
-  return response.getActionIds();
-}
 
-function _get_data_ids(response) {
-  return response.getDataIds();
-}
 
-module.exports = {
-  DataAcquisitionStoreClient,
-};
-</code></pre>
-        </article>
-    </section>
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="bosdyn-client_robot.js.html" class="button">View Source</a>
+            <span>
+                <a href="bosdyn-client_robot.js.html">bosdyn-client/robot.js</a>, <a href="bosdyn-client_robot.js.html#line80">line 80</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="ensure_channel">
+        <a class="href-link" href="#ensure_channel">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                ensure_channel<span class="signature">(service_name, secure<span class="signature-attributes">opt</span>, options)</span><span class="type-signature"> &rarr; {Promise.&lt;*>|*}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Verify the right information exists before calling the ensure_secure_channel method.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>service_name</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">Name of the service in the directory.</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>secure</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">boolean</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+          true
+      
+      </td>
+  
+
+  <td class="description last">Create a secure channel or not.</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Array</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">Options of the grpc channel.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="bosdyn-client_robot.js.html" class="button">View Source</a>
+            <span>
+                <a href="bosdyn-client_robot.js.html">bosdyn-client/robot.js</a>, <a href="bosdyn-client_robot.js.html#line233">line 233</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Existing channel if found, or newly created channel if not found.</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Promise.&lt;*></code>
+|
+
+<code class="param-type">*</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

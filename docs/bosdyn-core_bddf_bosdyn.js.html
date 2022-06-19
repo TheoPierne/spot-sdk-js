@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> bosdyn-client/data_acquisition_store.js</title>
+  <title> bosdyn-core/bddf/bosdyn.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -100,7 +100,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>bosdyn-client/data_acquisition_store.js</h1>
+                    <h1>bosdyn-core/bddf/bosdyn.js</h1>
                 </header>
                 
 
@@ -111,144 +111,52 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const { common_header_errors, BaseClient } = require('./common');
-
-const data_acquisition_store = require('../bosdyn/api/data_acquisition_store_pb');
-const data_acquisition_store_service = require('../bosdyn/api/data_acquisition_store_service_grpc_pb');
+const { SeriesIdentifier } = require('./common');
 
 /**
- * A client for triggering data acquisition store methods.
- * @class {DataAcquisitionStoreClient}
- * @extends {BaseClient}
+ * Data series for named channels containing a list of messages.
  */
-class DataAcquisitionStoreClient extends BaseClient {
-  static default_service_name = 'data-acquisition-store';
-  static service_type = 'bosdyn.api.DataAcquisitionStoreService';
-
-  /**
-   * Create an instance of DataAcquisitionStoreClient's class.
-   * @param {?string} name Class name.
-   */
-  constructor(name = null) {
-    super(data_acquisition_store_service.DataAcquisitionStoreServiceClient, name);
-    this._timesync_endpoint = null;
-  }
-
-  /**
-   * Update instance from another object.
-   * @param {Object} other The object where to copy from.
-   * @returns {Promise&lt;void>}
-   */
-  async update_from(other) {
-    super.update_from(other);
-
-    try {
-      this._timesync_endpoint = (await other.time_sync).endpoint;
-    } catch (e) {
-      // Pass
-    }
-  }
-
-  /**
-   * List capture actions that satisfy the query parameters.
-   * @param {data_acquisition_store.DataQueryParams} query Query parameters.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;Array|Object>} CaptureActionIds for the actions matching the query parameters.
-   */
-  list_capture_actions(query, args) {
-    const request = new data_acquisition_store.ListCaptureActionsRequest().setQuery(query);
-    return this.call(this._stub.listCaptureActions, request, _get_action_ids, common_header_errors, args);
-  }
-
-  /**
-   * List images that satisfy the query parameters.
-   * @param {data_acquisition_store.DataQueryParams} query Query parameters.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;Array|Object>} DataIdentifiers for the images matching the query parameters.
-   */
-  list_stored_images(query, args) {
-    const request = new data_acquisition_store.ListStoredImagesRequest().setQuery(query);
-    return this.call(this._stub.listStoredImages, request, _get_data_ids, common_header_errors, args);
-  }
-
-  /**
-   * List metadata that satisfy the query parameters.
-   * @param {data_acquisition_store.DataQueryParams} query Query parameters.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;Array|Object>} DataIdentifiers for the images matching the query parameters.
-   */
-  list_stored_metadata(query, args) {
-    const request = new data_acquisition_store.ListStoredMetadataRequest().setQuery(query);
-    return this.call(this._stub.listStoredMetadata, request, _get_data_ids, common_header_errors, args);
-  }
-
-  /**
-   * List data that satisfy the query parameters.
-   * @param {data_acquisition_store.DataQueryParams} query Query parameters.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;Array|Object>} DataIdentifiers for the images matching the query parameters.
-   */
-  list_stored_data(query, args) {
-    const request = new data_acquisition_store.ListStoredDataRequest().setQuery(query);
-    return this.call(this._stub.listStoredData, request, _get_data_ids, common_header_errors, args);
-  }
-
-  /**
-   * Store image.
-   * @param {image_pb.ImageCapture} image Image to store.
-   * @param {data_acquisition_pb.DataIdentifier} data_id Data identifier to use for storing the image.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;data_acquisition_store.StoreImageResponse>} StoreImageResponse response.
-   */
-  store_image(image, data_id, args) {
-    const request = new data_acquisition_store.StoreImageRequest().setImage(image).setDataId(data_id);
-    return this.call(this._stub.storeImage, request, null, common_header_errors, args);
-  }
-
-  /**
-   * Store metadata.
-   * @param {data_acquisition_pb.AssociatedMetadata} associated_metadata Metadata to store. If metadata is
-   * not associated with a particular piece of data, the data_id field in this object
-   * needs to specify only the action_id part.
-   * @param {data_acquisition_pb.DataIdentifier} data_id Data identifier to use for storing this
-   * associated metadata.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;data_acquisition_store.StoreMetadataResponse>} StoreMetadataResponse response.
-   */
-  store_metadata(associated_metadata, data_id, args) {
-    const request = new data_acquisition_store.StoreMetadataRequest()
-      .setMetadata(associated_metadata)
-      .setDataId(data_id);
-    return this.call(this._stub.storeMetadata, request, null, common_header_errors, args);
-  }
-
-  /**
-   * Store data.
-   * @param {!(string|Uint8Array)} data Arbitrary data to store.
-   * @param {data_acquisition_pb.DataIdentifier} data_id Data identifier to use for storing this data.
-   * @param {?string} [file_extension=null] File extension to use for writing the data to a file.
-   * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise&lt;data_acquisition_store.StoreDataResponse>} StoreDataResponse response.
-   */
-  store_data(data, data_id, file_extension = null, args) {
-    const request = new data_acquisition_store.StoreDataRequest()
-      .setData(data)
-      .setDataId(data_id)
-      .setFileExtension(file_extension);
-    return this.call(this._stub.storeData, request, null, common_header_errors, args);
-  }
+class MessageChannel extends SeriesIdentifier {
+  static SERIES_TYPE = 'bosdyn:channel';
+  static CHANNEL = 'bosdyn:message-channel';
+  static KEYS = [MessageChannel.CHANNEL];
 }
 
-function _get_action_ids(response) {
-  return response.getActionIds();
+/**
+ * Data series for named channels containing a list of messages.
+ */
+class TypedMessageChannel extends SeriesIdentifier {
+  static SERIES_TYPE = 'bosdyn:typed-message-channel';
+  static CHANNEL = 'bosdyn:channel';
+  static MESSAGE_TYPE = 'bosdyn:message-type';
+  static KEYS = [TypedMessageChannel.CHANNEL, TypedMessageChannel.MESSAGE_TYPE];
 }
 
-function _get_data_ids(response) {
-  return response.getDataIds();
+/**
+ * Data series for request protobuf messages to a grpc service.
+ */
+class GrpcRequests extends SeriesIdentifier {
+  static SERIES_TYPE = 'bosdyn:grpc:requests';
+  static SERVICE_NAME = 'bosdyn:grpc:service';
+  static MESSAGE_TYPE = 'bosdyn:message-type';
+  static KEYS = [GrpcRequests.SERVICE_NAME, GrpcRequests.MESSAGE_TYPE];
+}
+
+/**
+ * Data series for response protobuf messages to a grpc service.
+ */
+class GrpcResponses extends SeriesIdentifier {
+  static SERIES_TYPE = 'bosdyn:grpc:responses';
+  static SERVICE_NAME = 'bosdyn:grpc:service';
+  static MESSAGE_TYPE = 'bosdyn:message-type';
+  static KEYS = [GrpcResponses.SERVICE_NAME, GrpcResponses.MESSAGE_TYPE];
 }
 
 module.exports = {
-  DataAcquisitionStoreClient,
+  MessageChannel,
+  TypedMessageChannel,
+  GrpcRequests,
+  GrpcResponses,
 };
 </code></pre>
         </article>
