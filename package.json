@@ -32,7 +32,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.6.7",
     "@grpc/proto-loader": "^0.6.13",
-    "@u4/opencv4nodejs": "^6.1.6",
+    "@u4/opencv4nodejs": "^6.2.0",
     "argparse": "^2.0.1",
     "expandenv": "^1.0.0",
     "glob": "^8.0.3",
