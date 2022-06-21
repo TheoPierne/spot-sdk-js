@@ -34,11 +34,14 @@ async function main(args = null) {
 
   await autoreturn_client.configure(params, [lease_client.lease_wallet.get_lease().create_newer()]);
   await autoreturn_client.start();
-  process.exit(0);
 }
 
 if (require.main === module) {
-  main();
+  main()
+  .then(() => process.exit(0))
+  .catch(e => {
+    throw e;
+  });
 } else {
   module.exports = main;
 }
