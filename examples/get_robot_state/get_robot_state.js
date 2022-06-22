@@ -32,12 +32,14 @@ async function main() {
     const rep = await robot_state_client.get_robot_metrics();
     console.log(rep.toObject());
   }
-
-  process.exit(0);
 }
 
 if (require.main === module) {
-  main();
+  main()
+  .then(() => process.exit(0))
+  .catch(e => {
+    throw e;
+  });
 } else {
   module.exports = main;
 }

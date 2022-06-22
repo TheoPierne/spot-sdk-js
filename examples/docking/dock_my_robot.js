@@ -30,7 +30,6 @@ async function run_docking(config) {
   await blocking_dock_robot(robot, config.dock_id);
   console.log('[DOCK MY ROBOT] Docking Success !');
   await leaseKeepAlive.shutdown();
-  process.exit(0);
 }
 
 async function main(args = null) {
@@ -43,7 +42,11 @@ async function main(args = null) {
 }
 
 if (require.main === module) {
-  main();
+  main()
+  .then(() => process.exit(0))
+  .catch(e => {
+    throw e;
+  });
 } else {
   module.exports = main;
 }

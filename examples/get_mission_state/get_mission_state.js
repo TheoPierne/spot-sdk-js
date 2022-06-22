@@ -22,11 +22,14 @@ async function main(args = null) {
 
   const state = await clientMission.get_state();
   console.log(`Got mission state:\n`, state.toObject());
-  process.exit(0);
 }
 
 if (require.main === module) {
-  main();
+  main()
+  .then(() => process.exit(0))
+  .catch(e => {
+    throw e;
+  });
 } else {
   module.exports = main;
 }

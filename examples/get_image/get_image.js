@@ -125,13 +125,15 @@ async function main(args = null) {
 
       console.log(`Save ${image_saved_path}${extension} to ${__dirname}`);
     }
-    process.exit(0);
   }
-  process.exit(1);
 }
 
 if (require.main === module) {
-  main();
+  main()
+  .then(() => process.exit(0))
+  .catch(e => {
+    throw e;
+  });
 } else {
   module.exports = main;
 }

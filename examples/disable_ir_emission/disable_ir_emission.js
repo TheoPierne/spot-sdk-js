@@ -25,11 +25,14 @@ async function main(args = null) {
   const ir_enable_disable_client = await robot.ensure_client(IREnableDisableServiceClient.default_service_name);
 
   await ir_enable_disable_client.set_ir_enabled(options.enable);
-  process.exit(0);
 }
 
 if (require.main === module) {
-  main();
+  main()
+  .then(() => process.exit(0))
+  .catch(e => {
+    throw e;
+  });
 } else {
   module.exports = main;
 }

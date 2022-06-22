@@ -28,17 +28,19 @@ async function main(args = null) {
   console.log(
     `Clock skew seconds: ${time_sync_endpoint.clock_skew.getSeconds()} 
     nanos: ${time_sync_endpoint.clock_skew.getNanos()}`,
-  );
+    );
   console.log(
     `Round trip time seconds: ${time_sync_endpoint.round_trip_time.getSeconds()} 
     nanos: ${time_sync_endpoint.round_trip_time.getNanos()}`,
-  );
-
-  process.exit(0);
+    );
 }
 
 if (require.main === module) {
-  main();
+  main()
+  .then(() => process.exit(0))
+  .catch(e => {
+    throw e;
+  })
 } else {
   module.exports = main;
 }

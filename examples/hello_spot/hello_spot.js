@@ -31,7 +31,7 @@ async function hello_spot(config) {
   console.assert(
     !is_estopped,
     'Robot is estopped. Please use an external E-Stop client, such as the estop SDK example, to configure E-Stop.',
-  );
+    );
 
   const lease_client = await robot.ensure_client(LeaseClient.default_service_name);
   const lease = await lease_client.acquire();
@@ -126,17 +126,15 @@ async function main(args = null) {
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
-  try {
-    await hello_spot(options);
-    process.exit(0);
-  } catch (e) {
-    console.error('Hello, Spot! threw an exception: ', e);
-    throw e;
-  }
+  await hello_spot(options);
 }
 
 if (require.main === module) {
-  main();
+  main()
+  .then(() => process.exit(0))
+  .catch(e => {
+    throw e;
+  });
 } else {
   module.exports = main;
 }
