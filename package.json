@@ -6,9 +6,9 @@
   "scripts": {
     "install_arm64": "build-opencv --version 4.5.4 --flag=\"-DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_OSX_ARCHITECTURES=arm64\" build",
     "install_4.5.5_cuda": "build-opencv --version 4.5.5 --flags=\"-DWITH_CUDA=ON -DWITH_CUDNN=ON -DOPENCV_DNN_CUDA=ON -DCUDA_FAST_MATH=ON\" build",
-    "build:opencv": "build-opencv --version 4.5.4 build",
-    "rebuild:opencv": "build-opencv --version 4.5.4 rebuild",
-    "build:proto": "node build.js",
+    "build_opencv": "build-opencv --version 4.5.4 build",
+    "rebuil_opencv": "build-opencv --version 4.5.4 rebuild",
+    "build_proto": "node build.js",
     "lint": "eslint --config .eslintrc.json .",
     "docs": "jsdoc -c jsdoc.json"
   },
@@ -33,7 +33,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.6.7",
     "@grpc/proto-loader": "^0.6.13",
-    "@u4/opencv4nodejs": "^6.2.0",
+    "@u4/opencv4nodejs": "^6.2.1",
     "argparse": "^2.0.1",
     "expandenv": "^1.0.0",
     "glob": "^8.0.3",
@@ -55,17 +55,17 @@
     "underscore": "^1.13.4",
     "uuid": "^8.3.2",
     "which": "^2.0.2",
-    "winston": "^3.8.0"
+    "winston": "^3.8.1"
   },
   "engines": {
     "node": ">=16.13.0"
   },
   "devDependencies": {
     "better-docs": "^2.7.2",
-    "eslint": "^8.18.0",
+    "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1"
   }
 }
