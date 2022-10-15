@@ -21,8 +21,6 @@ var bosdyn_api_lease_pb = require('../../../bosdyn/api/lease_pb.js');
 goog.object.extend(proto, bosdyn_api_lease_pb);
 var bosdyn_api_license_pb = require('../../../bosdyn/api/license_pb.js');
 goog.object.extend(proto, bosdyn_api_license_pb);
-var bosdyn_api_robot_state_pb = require('../../../bosdyn/api/robot_state_pb.js');
-goog.object.extend(proto, bosdyn_api_robot_state_pb);
 var bosdyn_api_world_object_pb = require('../../../bosdyn/api/world_object_pb.js');
 goog.object.extend(proto, bosdyn_api_world_object_pb);
 var bosdyn_api_graph_nav_map_pb = require('../../../bosdyn/api/graph_nav/map_pb.js');
@@ -36,7 +34,6 @@ goog.exportSymbol('proto.bosdyn.api.graph_nav.CreateWaypointResponse.Status', nu
 goog.exportSymbol('proto.bosdyn.api.graph_nav.GetRecordStatusRequest', null, global);
 goog.exportSymbol('proto.bosdyn.api.graph_nav.GetRecordStatusResponse', null, global);
 goog.exportSymbol('proto.bosdyn.api.graph_nav.GetRecordStatusResponse.MapState', null, global);
-goog.exportSymbol('proto.bosdyn.api.graph_nav.GetRecordStatusResponse.Status', null, global);
 goog.exportSymbol('proto.bosdyn.api.graph_nav.RecordingEnvironment', null, global);
 goog.exportSymbol('proto.bosdyn.api.graph_nav.SetRecordingEnvironmentRequest', null, global);
 goog.exportSymbol('proto.bosdyn.api.graph_nav.SetRecordingEnvironmentResponse', null, global);
@@ -1362,8 +1359,7 @@ proto.bosdyn.api.graph_nav.StartRecordingResponse.toObject = function(includeIns
     status: jspb.Message.getFieldWithDefault(msg, 4, 0),
     missingFiducialsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
     badPoseFiducialsList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
-    licenseStatus: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f)
+    licenseStatus: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -1434,11 +1430,6 @@ proto.bosdyn.api.graph_nav.StartRecordingResponse.deserializeBinaryFromReader = 
     case 6:
       var value = /** @type {!proto.bosdyn.api.LicenseInfo.Status} */ (reader.readEnum());
       msg.setLicenseStatus(value);
-      break;
-    case 8:
-      var value = new bosdyn_api_robot_state_pb.RobotImpairedState;
-      reader.readMessage(value,bosdyn_api_robot_state_pb.RobotImpairedState.deserializeBinaryFromReader);
-      msg.setImpairedState(value);
       break;
     default:
       reader.skipField();
@@ -1521,14 +1512,6 @@ proto.bosdyn.api.graph_nav.StartRecordingResponse.serializeBinaryToWriter = func
       f
     );
   }
-  f = message.getImpairedState();
-  if (f != null) {
-    writer.writeMessage(
-      8,
-      f,
-      bosdyn_api_robot_state_pb.RobotImpairedState.serializeBinaryToWriter
-    );
-  }
 };
 
 
@@ -1546,8 +1529,7 @@ proto.bosdyn.api.graph_nav.StartRecordingResponse.Status = {
   STATUS_REMOTE_CLOUD_FAILURE_NOT_IN_DIRECTORY: 7,
   STATUS_REMOTE_CLOUD_FAILURE_NO_DATA: 8,
   STATUS_FIDUCIAL_POSE_NOT_OK: 9,
-  STATUS_TOO_FAR_FROM_EXISTING_MAP: 10,
-  STATUS_ROBOT_IMPAIRED: 11
+  STATUS_TOO_FAR_FROM_EXISTING_MAP: 10
 };
 
 /**
@@ -1768,43 +1750,6 @@ proto.bosdyn.api.graph_nav.StartRecordingResponse.prototype.getLicenseStatus = f
  */
 proto.bosdyn.api.graph_nav.StartRecordingResponse.prototype.setLicenseStatus = function(value) {
   return jspb.Message.setProto3EnumField(this, 6, value);
-};
-
-
-/**
- * optional bosdyn.api.RobotImpairedState impaired_state = 8;
- * @return {?proto.bosdyn.api.RobotImpairedState}
- */
-proto.bosdyn.api.graph_nav.StartRecordingResponse.prototype.getImpairedState = function() {
-  return /** @type{?proto.bosdyn.api.RobotImpairedState} */ (
-    jspb.Message.getWrapperField(this, bosdyn_api_robot_state_pb.RobotImpairedState, 8));
-};
-
-
-/**
- * @param {?proto.bosdyn.api.RobotImpairedState|undefined} value
- * @return {!proto.bosdyn.api.graph_nav.StartRecordingResponse} returns this
-*/
-proto.bosdyn.api.graph_nav.StartRecordingResponse.prototype.setImpairedState = function(value) {
-  return jspb.Message.setWrapperField(this, 8, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.bosdyn.api.graph_nav.StartRecordingResponse} returns this
- */
-proto.bosdyn.api.graph_nav.StartRecordingResponse.prototype.clearImpairedState = function() {
-  return this.setImpairedState(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.bosdyn.api.graph_nav.StartRecordingResponse.prototype.hasImpairedState = function() {
-  return jspb.Message.getField(this, 8) != null;
 };
 
 
@@ -3898,9 +3843,7 @@ proto.bosdyn.api.graph_nav.GetRecordStatusResponse.toObject = function(includeIn
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
     isRecording: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
     recordingEnvironment: (f = msg.getRecordingEnvironment()) && proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject(includeInstance, f),
-    mapState: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    status: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f)
+    mapState: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -3954,15 +3897,6 @@ proto.bosdyn.api.graph_nav.GetRecordStatusResponse.deserializeBinaryFromReader =
     case 4:
       var value = /** @type {!proto.bosdyn.api.graph_nav.GetRecordStatusResponse.MapState} */ (reader.readEnum());
       msg.setMapState(value);
-      break;
-    case 5:
-      var value = /** @type {!proto.bosdyn.api.graph_nav.GetRecordStatusResponse.Status} */ (reader.readEnum());
-      msg.setStatus(value);
-      break;
-    case 6:
-      var value = new bosdyn_api_robot_state_pb.RobotImpairedState;
-      reader.readMessage(value,bosdyn_api_robot_state_pb.RobotImpairedState.deserializeBinaryFromReader);
-      msg.setImpairedState(value);
       break;
     default:
       reader.skipField();
@@ -4023,21 +3957,6 @@ proto.bosdyn.api.graph_nav.GetRecordStatusResponse.serializeBinaryToWriter = fun
       f
     );
   }
-  f = message.getStatus();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      5,
-      f
-    );
-  }
-  f = message.getImpairedState();
-  if (f != null) {
-    writer.writeMessage(
-      6,
-      f,
-      bosdyn_api_robot_state_pb.RobotImpairedState.serializeBinaryToWriter
-    );
-  }
 };
 
 
@@ -4048,15 +3967,6 @@ proto.bosdyn.api.graph_nav.GetRecordStatusResponse.MapState = {
   MAP_STATE_UNKNOWN: 0,
   MAP_STATE_OK: 1,
   MAP_STATE_TOO_LARGE_FOR_LICENSE: 2
-};
-
-/**
- * @enum {number}
- */
-proto.bosdyn.api.graph_nav.GetRecordStatusResponse.Status = {
-  STATUS_UNKNOWN: 0,
-  STATUS_OK: 1,
-  STATUS_ROBOT_IMPAIRED: 2
 };
 
 /**
@@ -4166,61 +4076,6 @@ proto.bosdyn.api.graph_nav.GetRecordStatusResponse.prototype.getMapState = funct
  */
 proto.bosdyn.api.graph_nav.GetRecordStatusResponse.prototype.setMapState = function(value) {
   return jspb.Message.setProto3EnumField(this, 4, value);
-};
-
-
-/**
- * optional Status status = 5;
- * @return {!proto.bosdyn.api.graph_nav.GetRecordStatusResponse.Status}
- */
-proto.bosdyn.api.graph_nav.GetRecordStatusResponse.prototype.getStatus = function() {
-  return /** @type {!proto.bosdyn.api.graph_nav.GetRecordStatusResponse.Status} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
-};
-
-
-/**
- * @param {!proto.bosdyn.api.graph_nav.GetRecordStatusResponse.Status} value
- * @return {!proto.bosdyn.api.graph_nav.GetRecordStatusResponse} returns this
- */
-proto.bosdyn.api.graph_nav.GetRecordStatusResponse.prototype.setStatus = function(value) {
-  return jspb.Message.setProto3EnumField(this, 5, value);
-};
-
-
-/**
- * optional bosdyn.api.RobotImpairedState impaired_state = 6;
- * @return {?proto.bosdyn.api.RobotImpairedState}
- */
-proto.bosdyn.api.graph_nav.GetRecordStatusResponse.prototype.getImpairedState = function() {
-  return /** @type{?proto.bosdyn.api.RobotImpairedState} */ (
-    jspb.Message.getWrapperField(this, bosdyn_api_robot_state_pb.RobotImpairedState, 6));
-};
-
-
-/**
- * @param {?proto.bosdyn.api.RobotImpairedState|undefined} value
- * @return {!proto.bosdyn.api.graph_nav.GetRecordStatusResponse} returns this
-*/
-proto.bosdyn.api.graph_nav.GetRecordStatusResponse.prototype.setImpairedState = function(value) {
-  return jspb.Message.setWrapperField(this, 6, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.bosdyn.api.graph_nav.GetRecordStatusResponse} returns this
- */
-proto.bosdyn.api.graph_nav.GetRecordStatusResponse.prototype.clearImpairedState = function() {
-  return this.setImpairedState(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.bosdyn.api.graph_nav.GetRecordStatusResponse.prototype.hasImpairedState = function() {
-  return jspb.Message.getField(this, 6) != null;
 };
 
 

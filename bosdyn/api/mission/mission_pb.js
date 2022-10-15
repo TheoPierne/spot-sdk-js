@@ -15,12 +15,8 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
 
-var bosdyn_api_alerts_pb = require('../../../bosdyn/api/alerts_pb.js');
-goog.object.extend(proto, bosdyn_api_alerts_pb);
 var bosdyn_api_geometry_pb = require('../../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
-var bosdyn_api_graph_nav_map_pb = require('../../../bosdyn/api/graph_nav/map_pb.js');
-goog.object.extend(proto, bosdyn_api_graph_nav_map_pb);
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
 var bosdyn_api_lease_pb = require('../../../bosdyn/api/lease_pb.js');
@@ -2217,8 +2213,7 @@ proto.bosdyn.api.mission.Question.toObject = function(includeInstance, msg) {
     text: jspb.Message.getFieldWithDefault(msg, 3, ""),
     optionsList: jspb.Message.toObjectList(msg.getOptionsList(),
     bosdyn_api_mission_nodes_pb.Prompt.Option.toObject, includeInstance),
-    forAutonomousProcessing: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
-    severity: jspb.Message.getFieldWithDefault(msg, 6, 0)
+    forAutonomousProcessing: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -2275,10 +2270,6 @@ proto.bosdyn.api.mission.Question.deserializeBinaryFromReader = function(msg, re
     case 5:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setForAutonomousProcessing(value);
-      break;
-    case 6:
-      var value = /** @type {!proto.bosdyn.api.AlertData.SeverityLevel} */ (reader.readEnum());
-      msg.setSeverity(value);
       break;
     default:
       reader.skipField();
@@ -2342,13 +2333,6 @@ proto.bosdyn.api.mission.Question.serializeBinaryToWriter = function(message, wr
   if (f) {
     writer.writeBool(
       5,
-      f
-    );
-  }
-  f = message.getSeverity();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      6,
       f
     );
   }
@@ -2462,24 +2446,6 @@ proto.bosdyn.api.mission.Question.prototype.getForAutonomousProcessing = functio
  */
 proto.bosdyn.api.mission.Question.prototype.setForAutonomousProcessing = function(value) {
   return jspb.Message.setProto3BooleanField(this, 5, value);
-};
-
-
-/**
- * optional bosdyn.api.AlertData.SeverityLevel severity = 6;
- * @return {!proto.bosdyn.api.AlertData.SeverityLevel}
- */
-proto.bosdyn.api.mission.Question.prototype.getSeverity = function() {
-  return /** @type {!proto.bosdyn.api.AlertData.SeverityLevel} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
-};
-
-
-/**
- * @param {!proto.bosdyn.api.AlertData.SeverityLevel} value
- * @return {!proto.bosdyn.api.mission.Question} returns this
- */
-proto.bosdyn.api.mission.Question.prototype.setSeverity = function(value) {
-  return jspb.Message.setProto3EnumField(this, 6, value);
 };
 
 
@@ -3875,9 +3841,7 @@ proto.bosdyn.api.mission.PlaySettings.toObject = function(includeInstance, msg) 
   var f, obj = {
     velocityLimit: (f = msg.getVelocityLimit()) && bosdyn_api_geometry_pb.SE2VelocityLimit.toObject(includeInstance, f),
     disableDirectedExploration: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    disableAlternateRouteFinding: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    pathFollowingMode: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    groundClutterMode: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    disableAlternateRouteFinding: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
   };
 
   if (includeInstance) {
@@ -3927,14 +3891,6 @@ proto.bosdyn.api.mission.PlaySettings.deserializeBinaryFromReader = function(msg
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setDisableAlternateRouteFinding(value);
       break;
-    case 4:
-      var value = /** @type {!proto.bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode} */ (reader.readEnum());
-      msg.setPathFollowingMode(value);
-      break;
-    case 5:
-      var value = /** @type {!proto.bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode} */ (reader.readEnum());
-      msg.setGroundClutterMode(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -3983,20 +3939,6 @@ proto.bosdyn.api.mission.PlaySettings.serializeBinaryToWriter = function(message
   if (f) {
     writer.writeBool(
       3,
-      f
-    );
-  }
-  f = message.getPathFollowingMode();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      4,
-      f
-    );
-  }
-  f = message.getGroundClutterMode();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      5,
       f
     );
   }
@@ -4073,42 +4015,6 @@ proto.bosdyn.api.mission.PlaySettings.prototype.getDisableAlternateRouteFinding 
  */
 proto.bosdyn.api.mission.PlaySettings.prototype.setDisableAlternateRouteFinding = function(value) {
   return jspb.Message.setProto3BooleanField(this, 3, value);
-};
-
-
-/**
- * optional bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode path_following_mode = 4;
- * @return {!proto.bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode}
- */
-proto.bosdyn.api.mission.PlaySettings.prototype.getPathFollowingMode = function() {
-  return /** @type {!proto.bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
-};
-
-
-/**
- * @param {!proto.bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode} value
- * @return {!proto.bosdyn.api.mission.PlaySettings} returns this
- */
-proto.bosdyn.api.mission.PlaySettings.prototype.setPathFollowingMode = function(value) {
-  return jspb.Message.setProto3EnumField(this, 4, value);
-};
-
-
-/**
- * optional bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode ground_clutter_mode = 5;
- * @return {!proto.bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode}
- */
-proto.bosdyn.api.mission.PlaySettings.prototype.getGroundClutterMode = function() {
-  return /** @type {!proto.bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
-};
-
-
-/**
- * @param {!proto.bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode} value
- * @return {!proto.bosdyn.api.mission.PlaySettings} returns this
- */
-proto.bosdyn.api.mission.PlaySettings.prototype.setGroundClutterMode = function(value) {
-  return jspb.Message.setProto3EnumField(this, 5, value);
 };
 
 

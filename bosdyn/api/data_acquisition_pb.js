@@ -2604,7 +2604,6 @@ proto.bosdyn.api.ImageSourceCapture.prototype.toObject = function(opt_includeIns
 proto.bosdyn.api.ImageSourceCapture.toObject = function(includeInstance, msg) {
   var f, obj = {
     imageService: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    imageRequest: (f = msg.getImageRequest()) && bosdyn_api_image_pb.ImageRequest.toObject(includeInstance, f),
     imageSource: jspb.Message.getFieldWithDefault(msg, 2, ""),
     pixelFormat: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
@@ -2646,11 +2645,6 @@ proto.bosdyn.api.ImageSourceCapture.deserializeBinaryFromReader = function(msg, 
     case 1:
       var value = /** @type {string} */ (reader.readString());
       msg.setImageService(value);
-      break;
-    case 4:
-      var value = new bosdyn_api_image_pb.ImageRequest;
-      reader.readMessage(value,bosdyn_api_image_pb.ImageRequest.deserializeBinaryFromReader);
-      msg.setImageRequest(value);
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
@@ -2696,14 +2690,6 @@ proto.bosdyn.api.ImageSourceCapture.serializeBinaryToWriter = function(message, 
       f
     );
   }
-  f = message.getImageRequest();
-  if (f != null) {
-    writer.writeMessage(
-      4,
-      f,
-      bosdyn_api_image_pb.ImageRequest.serializeBinaryToWriter
-    );
-  }
   f = message.getImageSource();
   if (f.length > 0) {
     writer.writeString(
@@ -2736,43 +2722,6 @@ proto.bosdyn.api.ImageSourceCapture.prototype.getImageService = function() {
  */
 proto.bosdyn.api.ImageSourceCapture.prototype.setImageService = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional ImageRequest image_request = 4;
- * @return {?proto.bosdyn.api.ImageRequest}
- */
-proto.bosdyn.api.ImageSourceCapture.prototype.getImageRequest = function() {
-  return /** @type{?proto.bosdyn.api.ImageRequest} */ (
-    jspb.Message.getWrapperField(this, bosdyn_api_image_pb.ImageRequest, 4));
-};
-
-
-/**
- * @param {?proto.bosdyn.api.ImageRequest|undefined} value
- * @return {!proto.bosdyn.api.ImageSourceCapture} returns this
-*/
-proto.bosdyn.api.ImageSourceCapture.prototype.setImageRequest = function(value) {
-  return jspb.Message.setWrapperField(this, 4, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.bosdyn.api.ImageSourceCapture} returns this
- */
-proto.bosdyn.api.ImageSourceCapture.prototype.clearImageRequest = function() {
-  return this.setImageRequest(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.bosdyn.api.ImageSourceCapture.prototype.hasImageRequest = function() {
-  return jspb.Message.getField(this, 4) != null;
 };
 
 
