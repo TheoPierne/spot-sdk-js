@@ -1,10 +1,11 @@
 'use strict';
 
+const process = require('node:process');
 const { Buffer } = require('node:buffer');
+
 const grpc = require('@grpc/grpc-js');
 
 const {
-  RpcError,
   ClientCancelledOperationError,
   InvalidAppTokenError,
   InvalidClientCertificateError,
@@ -13,15 +14,18 @@ const {
   PermissionDeniedError,
   ProxyConnectionError,
   ResponseTooLargeError,
+  RetryableUnavailableError,
+  RpcError,
   ServiceFailedDuringExecutionError,
   ServiceUnavailableError,
   TimedOutError,
+  TooManyRequestsError,
+  TransientFailureError,
   UnableToConnectToRobotError,
   UnauthenticatedError,
-  UnknownDnsNameError,
   UnimplementedError,
-  TransientFailureError,
-} = require('./exceptions.js');
+  UnknownDnsNameError,
+} = require('./exceptions');
 
 /**
  * Set default max message length for sending and receiving to 100MB. This value is used when
@@ -35,23 +39,19 @@ const DEFAULT_MAX_MESSAGE_LENGTH = 100 * 1024 ** 2;
 /**
  * Plugin to refresh access token.
  * @param {Function} token_cb Callable that returns an Object<app_token, user_token>
- * @param {boolean} add_app_token Whether to include an app token in the metadata.
- * This is necessary for compatibility with old robot software.
+ * @param {boolean} [add_app_token] Deprecated.
  * @returns {Function}
  */
-function RefreshingAccessTokenAuthMetadataPlugin(token_cb, add_app_token) {
+function RefreshingAccessTokenAuthMetadataPlugin(token_cb, add_app_token = null) {
   const _token_cb = token_cb;
-  const _add_app_token = add_app_token;
+  if (add_app_token !== null) {
+    process.emitWarning('add_app_token is deprecated for RefreshingAccessTokenAuthMetadataPlugin.', 'Do not set it');
+  }
 
   return function setMetadata(context, callback) {
-    const { app_token, user_token } = _token_cb();
+    const { user_token } = _token_cb();
     const metadata = new grpc.Metadata();
-    if (_add_app_token) {
-      metadata.set('authorization', `Bearer ${user_token}`);
-      metadata.set('x-bosdyn-apptoken', app_token);
-    } else {
-      metadata.set('authorization', `Bearer ${user_token}`);
-    }
+    metadata.set('authorization', `Bearer ${user_token}`);
     return callback(null, metadata);
   };
 }
@@ -60,11 +60,14 @@ function RefreshingAccessTokenAuthMetadataPlugin(token_cb, add_app_token) {
  * Returns credentials for establishing a secure channel. Uses previously set values on the linked Sdk and this.
  * @param {string|Buffer} cert The certificate to create channel credentials.
  * @param {Function} token_cb Callable that returns an Object<app_token, user_token>
- * @param {boolean} add_app_token Whether to include an app token in the metadata.
- * This is necessary for compatibility with old robot software.
+ * @param {boolean} add_app_token Deprecated.
  * @returns {Object}
  */
-function create_secure_channel_creds(cert, token_cb, add_app_token) {
+function create_secure_channel_creds(cert, token_cb, add_app_token = null) {
+  if (add_app_token !== null) {
+    process.emitWarning('add_app_token is deprecated for create_secure_channel_creds.', 'Do not set it');
+  }
+
   cert = Buffer.concat([Buffer.from(cert), Buffer.from('\0')]);
   const transport_creds = grpc.credentials.createSsl(cert);
   const plugin = RefreshingAccessTokenAuthMetadataPlugin(token_cb, add_app_token);
@@ -113,8 +116,8 @@ function create_insecure_channel(address, port, authority = null, options = {}) 
 
 * The list contains the values for max allowed message length for both sending and
 * receiving. If no values are provided, the default values of 100 MB are used.
-* @param {?number} [max_send_message_length=104857600] Max message length allowed for message to send.
-* @param {?number} [max_receive_message_length=104857600] Max message length allowed for message to receive.
+* @param {?number} [max_send_message_length=104_857_600] Max message length allowed for message to send.
+* @param {?number} [max_receive_message_length=104_857_600] Max message length allowed for message to receive.
 * @returns {Object} Object with values for channel options.
 */
 function generate_channel_options(max_send_message_length = null, max_receive_message_length = null) {
@@ -176,6 +179,15 @@ function translate_exception(rpc_error) {
   }
 
   if (code === grpc.status.UNAVAILABLE) {
+    if (msg.includes('Socket closed') || msg.includes('Connection reset by peer')) {
+      return new RetryableUnavailableError(msg);
+    }
+    if (msg.includes(502)) {
+      return new ServiceUnavailableError(msg);
+    }
+    if (msg.includes(429)) {
+      return new TooManyRequestsError(msg);
+    }
     return new UnableToConnectToRobotError(msg);
   }
 
