@@ -139,6 +139,10 @@ class Robot {
     }
   }
 
+  get host() {
+    return this._name;
+  }
+
   _get_token_id(username) {
     return `${this.serial_number}.${username}`;
   }
@@ -216,19 +220,12 @@ class Robot {
     return this._robot_id;
   }
 
-  async _should_send_app_token_on_each_request() {
-    const robot_id = await this.get_cached_robot_id();
-    const robot_software_version = robot_id.getSoftwareRelease().getVersion();
-    if (robot_software_version.getMajorVersion() <= 1 && robot_software_version.getMinorVersion() <= 1) return true;
-    return false;
-  }
-
   /**
    * Verify the right information exists before calling the ensure_secure_channel method.
    * @param  {string}  service_name Name of the service in the directory.
    * @param  {boolean} [secure=true] Create a secure channel or not.
    * @param  {Array} options Options of the grpc channel.
-   * @returns {Promise<*>|*} Existing channel if found, or newly created channel if not found.
+   * @returns {Promise<*>} Existing channel if found, or newly created channel if not found.
    */
   async ensure_channel(service_name, secure = true, options = []) {
     const option = options.length ? options.map(x => x[0]) : null;
@@ -260,16 +257,13 @@ class Robot {
       : this.ensure_insecure_channel(authority, options);
   }
 
-  async ensure_secure_channel(authority, skip_app_token_check = false, options = []) {
+  ensure_secure_channel(authority, skip_app_token_check = false, options = []) {
     if (authority in this.channels_by_authority) return this.channels_by_authority[authority];
 
-    const should_send_app_token = skip_app_token_check ? false : await this._should_send_app_token_on_each_request();
-
-    const creds = channel.create_secure_channel_creds(
-      this.cert,
-      () => ({ app_token: this.app_token, user_token: this.user_token }),
-      should_send_app_token,
-    );
+    const creds = channel.create_secure_channel_creds(this.cert, () => ({
+      app_token: this.app_token,
+      user_token: this.user_token,
+    }));
     const channelData = channel.create_secure_channel(
       this.address,
       _DEFAULT_SECURE_CHANNEL_PORT,
@@ -287,8 +281,8 @@ class Robot {
   ensure_insecure_channel(authority, options = []) {
     if (authority in this.channels_by_authority) return this.channels_by_authority[authority];
     const channelData = channel.create_insecure_channel(this.address, _DEFAULT_SECURE_CHANNEL_PORT, authority, options);
-    this.logger.debug(
-      `[ROBOT] Created channel to ${this.address} at port ${_DEFAULT_SECURE_CHANNEL_PORT} with authority ${authority}`,
+    this.logger.warn(
+      `[ROBOT] Created insecure channel to ${this.address} at port ${_DEFAULT_SECURE_CHANNEL_PORT} with authority ${authority}`,
     );
     this.channels_by_authority[authority] = channelData;
     return channelData;
@@ -297,7 +291,7 @@ class Robot {
   async authenticate(username, password, timeout) {
     console.log('Pensez à modifier authenticate dans le fichier robot.js');
     const default_service_name = AuthClient.default_service_name;
-    const auth_channel = this.ensure_insecure_channel(this._bootstrap_service_authorities[default_service_name]);
+    const auth_channel = this.ensure_secure_channel(this._bootstrap_service_authorities[default_service_name]);
     const auth_client = await this.ensure_client(default_service_name, auth_channel);
     const user_token = await auth_client.auth(username, password, this.app_token, { timeout });
     this.update_user_token(user_token, username);
