@@ -30,17 +30,6 @@ class LightingClient extends BaseClient {
     );
   }
 
-  get_led_brightness_async(args) {
-    const request = new LED_pb.GetLEDBrightnessRequest();
-    return this.call_async(
-      this._stub.getLEDBrightness,
-      request,
-      this._get_led_brightness_from_response,
-      this._lighting_error_from_response,
-      args,
-    );
-  }
-
   set_led_brightness(brightnesses, args) {
     const request = new LED_pb.SetLEDBrightnessRequest();
 
@@ -50,23 +39,6 @@ class LightingClient extends BaseClient {
     }
 
     return this.call(
-      this._stub.setLEDBrightness,
-      request,
-      this._set_led_brightness_from_response,
-      this._lighting_error_from_response,
-      args,
-    );
-  }
-
-  set_led_brightness_async(brightnesses, args) {
-    const request = new LED_pb.SetLEDBrightnessRequest();
-
-    for (const [i, brightness] of enumerate(brightnesses)) {
-      if (i >= 4) break;
-      request.getBrightnessesMap().set(i, brightness);
-    }
-
-    return this.call_async(
       this._stub.setLEDBrightness,
       request,
       this._set_led_brightness_from_response,
