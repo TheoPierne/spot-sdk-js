@@ -48,17 +48,17 @@ function RefreshingAccessTokenAuthMetadataPlugin(token_cb, add_app_token = null)
     process.emitWarning('add_app_token is deprecated for RefreshingAccessTokenAuthMetadataPlugin.', 'Do not set it');
   }
 
-  return function setMetadata(context, callback) {
+  return function (context, callback) {
     const { user_token } = _token_cb();
     const metadata = new grpc.Metadata();
     metadata.set('authorization', `Bearer ${user_token}`);
-    return callback(null, metadata);
+    callback(null, metadata);
   };
 }
 
 /**
  * Returns credentials for establishing a secure channel. Uses previously set values on the linked Sdk and this.
- * @param {string|Buffer} cert The certificate to create channel credentials.
+ * @param {Buffer} cert The certificate to create channel credentials.
  * @param {Function} token_cb Callable that returns an Object<app_token, user_token>
  * @param {boolean} add_app_token Deprecated.
  * @returns {Object}
@@ -68,8 +68,19 @@ function create_secure_channel_creds(cert, token_cb, add_app_token = null) {
     process.emitWarning('add_app_token is deprecated for create_secure_channel_creds.', 'Do not set it');
   }
 
-  cert = Buffer.concat([Buffer.from(cert), Buffer.from('\0')]);
-  const transport_creds = grpc.credentials.createSsl(cert);
+  let transport_creds;
+  if(process.env.NODE_ENV !== 'production') {
+    const { readFileSync } = require('node:fs');
+    const path = require('node:path');
+
+    transport_creds = grpc.credentials.createSsl(cert, 
+    readFileSync(path.join(__dirname, 'resources', 'client.key')),
+    readFileSync(path.join(__dirname, 'resources', 'client.crt'))
+    );
+  } else {
+    transport_creds = grpc.credentials.createSsl(cert);
+  }
+
   const plugin = RefreshingAccessTokenAuthMetadataPlugin(token_cb, add_app_token);
   const auth_creds = grpc.credentials.createFromMetadataGenerator(plugin);
   return grpc.credentials.combineChannelCredentials(transport_creds, auth_creds);
@@ -86,7 +97,7 @@ function create_secure_channel_creds(cert, token_cb, add_app_token = null) {
  */
 function create_secure_channel(address, port, creds, authority, options = {}) {
   const socket = `${address}:${port}`;
-  let complete_options = { 'grpc.ssl_target_name_override': authority };
+  let complete_options = { 'grpc.ssl_target_name_override': authority, 'grpc.default_authority': authority };
   complete_options = Object.assign({}, complete_options, options);
   return new grpc.Channel(socket, creds, complete_options);
 }
@@ -106,7 +117,7 @@ function create_insecure_channel(address, port, authority = null, options = {}) 
   const socket = `${address}:${port}`;
   let complete_options = {};
   const creds = grpc.credentials.createInsecure();
-  if (authority) complete_options = { 'grpc.ssl_target_name_override': authority };
+  if (authority) complete_options = { 'grpc.ssl_target_name_override': authority, 'grpc.default_authority': authority };
   if (Object.keys(options).length) complete_options = Object.assign({}, complete_options, options);
   return new grpc.Channel(socket, creds, complete_options);
 }

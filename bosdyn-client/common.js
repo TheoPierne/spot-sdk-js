@@ -213,12 +213,10 @@ class BaseClient {
   }
 
   set channel(channel) {
-    const grpc = require('@grpc/grpc-js');
-    console.log('Pensez à modif common.js pour retirer insecure credentials');
     this._channel = channel;
     this._stub = new this._stub_creation_func(
-      channel.defaultAuthority,
-      /* Channel.credentials.channelCredentials*/ grpc.credentials.createInsecure(),
+      channel.target.path,
+      channel.credentials.channelCredentials,
     );
   }
 

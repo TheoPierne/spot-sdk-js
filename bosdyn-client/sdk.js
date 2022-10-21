@@ -4,12 +4,16 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const process = require('node:process');
+
+require('dotenv').config({ path: path.resolve(`${__dirname}/../.env`) });
+
 const expandenv = require('expandenv');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 
 const { ArmSurfaceContactClient } = require('./arm_surface_contact');
 const { AuthClient } = require('./auth');
+// const { AutowalkClient } = require('./autowalk');
 const { AutoReturnClient } = require('./auto_return');
 const { DEFAULT_MAX_MESSAGE_LENGTH } = require('./channel');
 const { DataAcquisitionClient } = require('./data_acquisition');
@@ -98,6 +102,7 @@ function generate_client_name(prefix = '') {
 const _DEFAULT_SERVICE_CLIENTS = [
   ArmSurfaceContactClient,
   AuthClient,
+  // AutowalkClient,
   AutoReturnClient,
   DataAcquisitionClient,
   DataAcquisitionStoreClient,
@@ -249,8 +254,9 @@ class Sdk {
   load_robot_cert(resource_path_glob = null) {
     this.cert = null;
     if (resource_path_glob === null) {
-      const pathToResource = path.join(__dirname, 'resources', 'robot.pem');
-      this.cert = fs.readFileSync(pathToResource, 'utf-8');
+      const cert = (process.env.NODE_ENV !== 'production') ? 'ca.crt' : 'robot.pem';
+      const pathToResource = path.join(__dirname, 'resources', cert);
+      this.cert = fs.readFileSync(pathToResource);
     } else {
       const cert_paths = [];
       fs.readdirSync(resource_path_glob).forEach(file => {
@@ -263,7 +269,7 @@ class Sdk {
       if (cert_paths.length === 0) throw RangeError(`No files matched ${resource_path_glob}`);
       this.cert = '';
       for (const cert_path of cert_paths) {
-        this.cert += fs.readFileSync(cert_paths[cert_path], 'utf-8');
+        this.cert += fs.readFileSync(cert_paths[cert_path]);
       }
     }
   }
