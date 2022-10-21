@@ -93,6 +93,7 @@ class Robot {
     this.authorities_by_name = {};
     this._robot_id = null;
     this._has_arm = null;
+    this._secure_channel_port = _DEFAULT_SECURE_CHANNEL_PORT;
 
     // Things usually updated from an Sdk object.
     this.service_client_factories_by_type = {};
@@ -266,13 +267,13 @@ class Robot {
     }));
     const channelData = channel.create_secure_channel(
       this.address,
-      _DEFAULT_SECURE_CHANNEL_PORT,
+      this._secure_channel_port,
       creds,
       authority,
       options,
     );
     this.logger.debug(
-      `[ROBOT] Created channel to ${this.address} at port ${_DEFAULT_SECURE_CHANNEL_PORT} with authority ${authority}`,
+      `[ROBOT] Created channel to ${this.address} at port ${this._secure_channel_port} with authority ${authority}`,
     );
     this.channels_by_authority[authority] = channelData;
     return channelData;
@@ -280,16 +281,15 @@ class Robot {
 
   ensure_insecure_channel(authority, options = []) {
     if (authority in this.channels_by_authority) return this.channels_by_authority[authority];
-    const channelData = channel.create_insecure_channel(this.address, _DEFAULT_SECURE_CHANNEL_PORT, authority, options);
+    const channelData = channel.create_insecure_channel(this.address, this._secure_channel_port, authority, options);
     this.logger.warn(
-      `[ROBOT] Created insecure channel to ${this.address} at port ${_DEFAULT_SECURE_CHANNEL_PORT} with authority ${authority}`,
+      `[ROBOT] Created insecure channel to ${this.address} at port ${this._secure_channel_port} with authority ${authority}`,
     );
     this.channels_by_authority[authority] = channelData;
     return channelData;
   }
 
   async authenticate(username, password, timeout) {
-    console.log('Pensez à modifier authenticate dans le fichier robot.js');
     const default_service_name = AuthClient.default_service_name;
     const auth_channel = this.ensure_secure_channel(this._bootstrap_service_authorities[default_service_name]);
     const auth_client = await this.ensure_client(default_service_name, auth_channel);
@@ -344,9 +344,9 @@ class Robot {
 
   get_cached_usernames() {
     const matches = this.token_cache.match(this.serial_number);
-    let usernames = [];
+    const usernames = [];
     for (const match of matches) {
-      let username = match.split('.');
+      const username = match.split('.');
       usernames.push(username);
     }
     return usernames.sort();
@@ -488,6 +488,10 @@ class Robot {
     const state_client = await this.ensure_client(RobotStateClient.default_service_name);
     this._has_arm = has_arm(state_client, timeout);
     return this._has_arm;
+  }
+
+  update_secure_channel_port(secure_channel_port) {
+    this._secure_channel_port = secure_channel_port;
   }
 }
 
