@@ -33,8 +33,9 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.7.2",
     "@grpc/proto-loader": "^0.7.3",
-    "@u4/opencv4nodejs": "^6.2.4",
+    "@u4/opencv4nodejs": "^6.2.5",
     "argparse": "^2.0.1",
+    "dotenv": "^16.0.3",
     "expandenv": "^1.0.0",
     "glob": "^8.0.3",
     "google-protobuf": "^3.21.2",
