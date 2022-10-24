@@ -216,7 +216,8 @@ class BaseClient {
     this._channel = channel;
     this._stub = new this._stub_creation_func(
       channel.target.path,
-      channel.credentials.channelCredentials,
+      channel.credentials,
+      channel.options,
     );
   }
 
