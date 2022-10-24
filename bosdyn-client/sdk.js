@@ -7,6 +7,8 @@ const process = require('node:process');
 
 require('dotenv').config({ path: path.resolve(`${__dirname}/../.env`) });
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+
 const expandenv = require('expandenv');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
