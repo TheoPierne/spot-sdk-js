@@ -81,8 +81,6 @@ function create_secure_channel_creds(cert, token_cb, add_app_token = null) {
     transport_creds = grpc.credentials.createSsl(cert);
   }
 
-  console.log(transport_creds._getConnectionOptions().secureContext);
-
   const plugin = RefreshingAccessTokenAuthMetadataPlugin(token_cb);
   const auth_creds = grpc.credentials.createFromMetadataGenerator(plugin);
   return grpc.credentials.combineChannelCredentials(transport_creds, auth_creds);
