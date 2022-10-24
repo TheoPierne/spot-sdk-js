@@ -226,7 +226,7 @@ class Robot {
    * @param  {string}  service_name Name of the service in the directory.
    * @param  {boolean} [secure=true] Create a secure channel or not.
    * @param  {Array} options Options of the grpc channel.
-   * @returns {Promise<*>} Existing channel if found, or newly created channel if not found.
+   * @returns {Promise<any>} Existing channel if found, or newly created channel if not found.
    */
   async ensure_channel(service_name, secure = true, options = []) {
     const option = options.length ? options.map(x => x[0]) : null;
@@ -361,7 +361,7 @@ class Robot {
     directory_service_name = DirectoryClient.default_service_name,
     directory_service_authority = this._bootstrap_service_authorities[DirectoryClient.default_service_name],
   ) {
-    const directory_channel = await this.ensure_secure_channel(directory_service_authority);
+    const directory_channel = this.ensure_secure_channel(directory_service_authority);
     const dir_client = await this.ensure_client(directory_service_name, directory_channel);
     return dir_client.list();
   }
