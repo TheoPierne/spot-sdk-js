@@ -1,6 +1,7 @@
 'use strict';
 
 const { setTimeout: sleep } = require('node:timers/promises');
+const { Duration } = require('google-protobuf/google/protobuf/duration_pb');
 const { BaseClient, error_factory } = require('./common');
 const { ResponseError, InternalServerError, LicenseError, TimedOutError } = require('./exceptions');
 const { add_lease_wallet_processors } = require('./lease');
@@ -14,58 +15,72 @@ const robot_command_pb = require('../bosdyn/api/robot_command_pb');
 const robot_state_pb = require('../bosdyn/api/robot_state_pb');
 
 class PowerResponseError extends ResponseError {
-  constructor(msg) {
-    super(null, msg);
+  constructor(response, msg) {
+    super(response, msg);
     this.name = 'PowerResponseError';
   }
 }
 
 class ShorePowerConnectedError extends PowerResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(response, msg) {
+    super(response, msg);
     this.name = 'ShorePowerConnectedError';
   }
 }
 
 class BatteryMissingError extends PowerResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(response, msg) {
+    super(response, msg);
     this.name = 'BatteryMissingError';
   }
 }
 
 class CommandInProgressError extends PowerResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(response, msg) {
+    super(response, msg);
     this.name = 'CommandInProgressError';
   }
 }
 
 class EstoppedError extends PowerResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(response, msg) {
+    super(response, msg);
     this.name = 'EstoppedError';
   }
 }
 
+class OverriddenError extends PowerResponseError {
+  constructor(response, msg) {
+    super(response, msg);
+    this.name = 'OverriddenError';
+  }
+}
+
 class FaultedError extends PowerResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(response, msg) {
+    super(response, msg);
     this.name = 'FaultedError';
   }
 }
 
-class PowerError extends PowerResponseError {
+class PowerError extends Error {
   constructor(msg) {
     super(msg);
     this.name = 'PowerError';
   }
 }
 
-class CommandTimedOutError extends PowerResponseError {
+class CommandTimedOutError extends PowerError {
   constructor(msg) {
     super(msg);
     this.name = 'CommandTimedOutError';
+  }
+}
+
+class FanControlTemperatureError extends PowerResponseError {
+  constructor(response, msg) {
+    super(response, msg);
+    this.name = 'FanControlTemperatureError';
   }
 }
 
@@ -105,6 +120,16 @@ class PowerClient extends BaseClient {
     );
   }
 
+  fan_power_command(percent_power, duration, lease = null, args) {
+    const req = PowerClient._fan_power_command_request(lease, percent_power, duration);
+    return this.call(this._stub.fanPowerCommand, req, null, _fan_power_command_error_from_response, args);
+  }
+
+  fan_power_command_feedback(command_id, args) {
+    const req = PowerClient._fan_power_command_feedback_request(command_id);
+    return this.call(this._stub.fanPowerCommandFeedback, req, null, _fan_power_feedback_error_from_response, args);
+  }
+
   static _power_command_request(lease, request) {
     return new power_pb.PowerCommandRequest().setLease(lease).setRequest(request);
   }
@@ -112,13 +137,24 @@ class PowerClient extends BaseClient {
   static _power_command_feedback_request(power_command_id) {
     return new power_pb.PowerCommandFeedbackRequest().setPowerCommandId(power_command_id);
   }
+
+  static _fan_power_command_request(lease, percent_power, duration) {
+    const duration_pb = new Duration().setSeconds(duration);
+    return new power_pb.FanPowerCommandRequest()
+      .setLease(lease)
+      .setPercentPower(percent_power)
+      .setDuration(duration_pb);
+  }
+
+  static _fan_power_command_feedback_request(command_id) {
+    return new power_pb.FanPowerCommandFeedbackRequest().setCommandId(command_id);
+  }
 }
 
 function _handle_license_errors(func) {
-  function wrapper(args, kwargs) {
+  return function (args, kwargs) {
     return _common_license_errors(args) || func(args, kwargs);
-  }
-  return wrapper;
+  };
 }
 
 function _common_license_errors(response) {
@@ -162,10 +198,36 @@ const _STATUS_TO_ERROR = {
     LicenseError,
     'Request was rejected due to using an invalid license.',
   ],
+  [power_pb.PowerCommandStatus.STATUS_OVERRIDDEN]: [
+    OverriddenError,
+    'The command was overridden and is no longer valid.',
+  ],
 };
+
+const _FAN_STATUS_TO_ERROR = {
+  [power_pb.FanPowerCommandResponse.Status.STATUS_OK]: [null, null],
+  [power_pb.FanPowerCommandResponse.Status.STATUS_TEMPERATURE_TOO_HIGH]: [
+    FanControlTemperatureError,
+    'Current measured robot temperatures are too high to accept user fan command.',
+  ],
+};
+
+function _fan_power_command_error_from_response(response) {
+  return error_factory(
+    response,
+    response.getStatus(),
+    Object.keys(power_pb.FanPowerCommandResponse.Status),
+    _FAN_STATUS_TO_ERROR,
+  );
+}
 
 function _power_command_error_from_response(response) {
   return error_factory(response, response.getStatus(), Object.keys(power_pb.PowerCommandStatus), _STATUS_TO_ERROR);
+}
+
+// eslint-disable-next-line
+function _fan_power_feedback_error_from_response(response){
+  return null;
 }
 
 // eslint-disable-next-line
@@ -200,7 +262,7 @@ async function safe_power_off(command_client, state_client, timeout_msec = 30_00
     new basic_command_pb.SafePowerOffCommand.Request(),
   );
   const command = new robot_command_pb.RobotCommand().setFullBodyCommand(full_body_command);
-  await command_client.robot_command(command, args);
+  await command_client.robot_command(command, null, null, null, args);
 
   /* eslint-disable no-await-in-loop */
   while (Date.now() < end_time) {
@@ -421,9 +483,9 @@ async function _power_command(
       );
       if (response === power_pb.PowerCommandStatus.STATUS_SUCCESS) return;
       if (response !== power_pb.PowerCommandStatus.STATUS_IN_PROGRESS) {
-        const error_type = _STATUS_TO_ERROR[response][0];
-        const message = _STATUS_TO_ERROR[response][1];
-        throw new error_type(message);
+        const [error_type, message] = _STATUS_TO_ERROR[response];
+        if (!error_type && !message) throw new Error('Unknown error');
+        throw new error_type(null, message);
       }
     } catch (e) {
       const errorClass = Object.values(_STATUS_TO_ERROR)
@@ -443,7 +505,7 @@ async function _power_command(
     }
     const call_time = Date.now() - start_call_time;
     const sleep_time = Math.max(0.0, update_time - call_time);
-    console.log(update_time - call_time);
+    console.log(sleep_time);
     await sleep(sleep_time);
   }
   /* eslint-enable no-await-in-loop */
