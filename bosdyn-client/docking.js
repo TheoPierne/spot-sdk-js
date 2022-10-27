@@ -211,7 +211,7 @@ async function blocking_undock(robot, timeout = 20_000) {
   const docking_client = await robot.ensure_client(DockingClient.default_service_name);
 
   const cmd_end_time = Date.now() + timeout;
-  const cmd_timeout = cmd_end_time + 10;
+  const cmd_timeout = cmd_end_time + 10_000;
 
   const time_sync = await robot.time_sync;
 
@@ -239,9 +239,19 @@ async function blocking_undock(robot, timeout = 20_000) {
   throw new CommandFailedError('Error undocking the robot, timeout exceeded.');
 }
 
+async function get_dock_id(robot) {
+  const docking_client = await robot.ensure_client(DockingClient.default_service_name);
+  const dock_state = await docking_client.get_docking_state();
+  if (dock_state.getStatus() === docking_pb.DockState.DockedStatus.DOCK_STATUS_DOCKED) {
+    return dock_state.getDockId();
+  }
+  return null;
+}
+
 module.exports = {
   DockingClient,
   blocking_dock_robot,
   blocking_go_to_prep_pose,
   blocking_undock,
+  get_dock_id,
 };
