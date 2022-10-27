@@ -1,11 +1,10 @@
 'use strict';
 
 const { setTimeout: sleep } = require('node:timers/promises');
-const jspb = require('google-protobuf');
 const any_pb = require('google-protobuf/google/protobuf/any_pb');
 const wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb');
 
-const { BaseClient, error_factory, error_pair } = require('./common');
+const { BaseClient, error_factory } = require('./common');
 const { ResponseError, InvalidRequestError, UnsetStatusError } = require('./exceptions');
 const { BODY_FRAME_NAME, ODOM_FRAME_NAME, get_se2_a_tform_b } = require('./frame_helpers');
 const { add_lease_wallet_processors } = require('./lease');
@@ -42,43 +41,43 @@ class NoTimeSyncError extends RobotCommandResponseError {
 }
 
 class ExpiredError extends RobotCommandResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(res, msg) {
+    super(res, msg);
     this.name = 'ExpiredError';
   }
 }
 
 class TooDistantError extends RobotCommandResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(res, msg) {
+    super(res, msg);
     this.name = 'TooDistantError';
   }
 }
 
 class NotPoweredOnError extends RobotCommandResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(res, msg) {
+    super(res, msg);
     this.name = 'NotPoweredOnError';
   }
 }
 
 class BehaviorFaultError extends RobotCommandResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(res, msg) {
+    super(res, msg);
     this.name = 'BehaviorFaultError';
   }
 }
 
 class NotClearedError extends RobotCommandResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(res, msg) {
+    super(res, msg);
     this.name = 'NotClearedError';
   }
 }
 
 class UnsupportedError extends RobotCommandResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(res, msg) {
+    super(res, msg);
     this.name = 'UnsupportedError';
   }
 }
@@ -98,9 +97,16 @@ class CommandTimedOutError extends Error {
 }
 
 class UnknownFrameError extends RobotCommandResponseError {
-  constructor(msg) {
-    super(msg);
+  constructor(res, msg) {
+    super(res, msg);
     this.name = 'UnknownFrameError';
+  }
+}
+
+class DockedError extends RobotCommandResponseError {
+  constructor(res, msg) {
+    super(res, msg);
+    this.name = 'DockedError';
   }
 }
 
@@ -378,14 +384,42 @@ function _robot_command_value(response) {
 
 const _ROBOT_COMMAND_STATUS_TO_ERROR = {
   [robot_command_pb.RobotCommandResponse.Status.STATUS_OK]: [null, null],
-  [robot_command_pb.RobotCommandResponse.Status.STATUS_INVALID_REQUEST]: error_pair(InvalidRequestError),
-  [robot_command_pb.RobotCommandResponse.Status.STATUS_UNSUPPORTED]: error_pair(UnsupportedError),
-  [robot_command_pb.RobotCommandResponse.Status.STATUS_NO_TIMESYNC]: error_pair(NoTimeSyncError),
-  [robot_command_pb.RobotCommandResponse.Status.STATUS_EXPIRED]: error_pair(ExpiredError),
-  [robot_command_pb.RobotCommandResponse.Status.STATUS_TOO_DISTANT]: error_pair(TooDistantError),
-  [robot_command_pb.RobotCommandResponse.Status.STATUS_NOT_POWERED_ON]: error_pair(NotPoweredOnError),
-  [robot_command_pb.RobotCommandResponse.Status.STATUS_BEHAVIOR_FAULT]: error_pair(BehaviorFaultError),
-  [robot_command_pb.RobotCommandResponse.Status.STATUS_UNKNOWN_FRAME]: error_pair(UnknownFrameError),
+  [robot_command_pb.RobotCommandResponse.Status.STATUS_INVALID_REQUEST]: [
+    InvalidRequestError,
+    'The provided request arguments are ill-formed or invalid, independent of the system state.',
+  ],
+  [robot_command_pb.RobotCommandResponse.Status.STATUS_UNSUPPORTED]: [
+    UnsupportedError,
+    'The API supports this request, but the system does not support this request.',
+  ],
+  [robot_command_pb.RobotCommandResponse.Status.STATUS_NO_TIMESYNC]: [
+    NoTimeSyncError,
+    'Client has not done timesync with robot.',
+  ],
+  [robot_command_pb.RobotCommandResponse.Status.STATUS_EXPIRED]: [
+    ExpiredError,
+    'The command was received after its max_duration had already passed.',
+  ],
+  [robot_command_pb.RobotCommandResponse.Status.STATUS_TOO_DISTANT]: [
+    TooDistantError,
+    'The command end time was too far in the future.',
+  ],
+  [robot_command_pb.RobotCommandResponse.Status.STATUS_NOT_POWERED_ON]: [
+    NotPoweredOnError,
+    'The robot must be powered on to accept a command.',
+  ],
+  [robot_command_pb.RobotCommandResponse.Status.STATUS_BEHAVIOR_FAULT]: [
+    BehaviorFaultError,
+    'The robot may not be commanded with uncleared behavior faults.',
+  ],
+  [robot_command_pb.RobotCommandResponse.Status.STATUS_DOCKED]: [
+    DockedError,
+    'The command cannot be executed while the robot is docked.',
+  ],
+  [robot_command_pb.RobotCommandResponse.Status.STATUS_UNKNOWN_FRAME]: [
+    UnknownFrameError,
+    'Robot does not know how to handle supplied frame.',
+  ],
 };
 
 function _robot_command_error(response) {
@@ -400,14 +434,14 @@ function _robot_command_error(response) {
 function _robot_command_feedback_error(response) {
   const code = robot_command_pb.RobotCommandFeedbackResponse.Status.STATUS_UNKNOWN;
   /* eslint-disable */
-	if (
-		response.getStatus() !== code ||
-		response.getFeedback().getFullBodyFeedback().getStatus() ||
-		response.getFeedback().getSynchronizedFeedback().getMobilityCommandFeedback().getStatus() ||
-		response.getFeedback().getSynchronizedFeedback().getArmCommandFeedback().getStatus() ||
-		response.getFeedback().getSynchronizedFeedback().getGripperCommandFeedback().getStatus()
-		) {
-		return null;
+  if (
+    response.getStatus() !== code ||
+    response.getFeedback().getFullBodyFeedback().getStatus() ||
+    response.getFeedback().getSynchronizedFeedback().getMobilityCommandFeedback().getStatus() ||
+    response.getFeedback().getSynchronizedFeedback().getArmCommandFeedback().getStatus() ||
+    response.getFeedback().getSynchronizedFeedback().getGripperCommandFeedback().getStatus()
+    ) {
+    return null;
 } else {
 	return UnsetStatusError(response);
 }
@@ -557,7 +591,7 @@ class RobotCommandBuilder {
     frame_name = BODY_FRAME_NAME,
   ) {
     // eslint-disable-next-line
-		console.warn('[ROBOT COMMAND] Mobility commands are now sent as a part of synchronized commands. Use synchro_velocity_command instead.');
+    console.warn('[ROBOT COMMAND] Mobility commands are now sent as a part of synchronized commands. Use synchro_velocity_command instead.');
     if (!params) params = RobotCommandBuilder.mobility_params(body_height, undefined, locomotion_hint);
     const any_params = RobotCommandBuilder._to_any(params);
     const linear = new geometry_pb.Vec2().setX(v_x).setY(v_y);
@@ -578,7 +612,7 @@ class RobotCommandBuilder {
 
   static stand_command(params = null, body_height = 0.0, footprint_R_body = new geometry.EulerZXY()) {
     // eslint-disable-next-line
-		console.warn('[ROBOT COMMAND] Mobility commands are now sent as a part of synchronized commands. Use synchro_stand_command instead.');
+    console.warn('[ROBOT COMMAND] Mobility commands are now sent as a part of synchronized commands. Use synchro_stand_command instead.');
     if (!params) params = RobotCommandBuilder.mobility_params(body_height, footprint_R_body);
     const any_params = RobotCommandBuilder._to_any(params);
     const mobility_command = new mobility_command_pb.MobilityCommand.Request()
@@ -590,7 +624,7 @@ class RobotCommandBuilder {
 
   static sit_command(params = null) {
     // eslint-disable-next-line
-		console.warn('[ROBOT COMMAND] Mobility commands are now sent as a part of synchronized commands. Use synchro_sit_command instead.');
+    console.warn('[ROBOT COMMAND] Mobility commands are now sent as a part of synchronized commands. Use synchro_sit_command instead.');
     if (!params) params = RobotCommandBuilder.mobility_params();
     const any_params = RobotCommandBuilder._to_any(params);
     const mobility_command = new mobility_command_pb.MobilityCommand.Request()
@@ -817,7 +851,7 @@ class RobotCommandBuilder {
 
   static arm_gaze_command(x, y, z, frame_name, build_on_command = null) {
     // eslint-disable-next-line
-		const pos = new geometry_pb.Vec3().setX(x).setY(y).setZ(z);
+    const pos = new geometry_pb.Vec3().setX(x).setY(y).setZ(z);
     const point1 = new trajectory_pb.Vec3TrajectoryPoint().setPoint(pos);
     const traj = new trajectory_pb.Vec3Trajectory().setPointsList([point1]);
     const gaze_cmd = new arm_command_pb.GazeCommand.Request()
@@ -1002,7 +1036,7 @@ class RobotCommandBuilder {
 
     const robot_cmd = new robot_command_pb.RobotCommand();
     // eslint-disable-next-line
-		const arm_joint_traj = robot_cmd.getSynchronizedCommand().getArmCommand().getArmJointMoveCommand().getTrajectory();
+    const arm_joint_traj = robot_cmd.getSynchronizedCommand().getArmCommand().getArmJointMoveCommand().getTrajectory();
 
     for (const i in [...Array(times.length).keys()]) {
       const traj_point = arm_joint_traj.points.add();
@@ -1196,7 +1230,7 @@ async function blocking_stand(command_client, timeout_sec = 10_000, update_frequ
       if (mob_status !== basic_command_pb.RobotCommandFeedbackStatus.Status.STATUS_PROCESSING) {
         throw new CommandFailedError(
           // eslint-disable-next-line
-					`Stand (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[mob_status]})`
+          `Stand (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[mob_status]})`
         );
       }
       if (stand_status === basic_command_pb.StandCommand.Feedback.Status.STATUS_IS_STANDING) {
@@ -1254,7 +1288,7 @@ async function blocking_sit(command_client, timeout_sec = 10_000, update_frequen
       if (mob_status !== basic_command_pb.RobotCommandFeedbackStatus.Status.STATUS_PROCESSING) {
         throw new CommandFailedError(
           // eslint-disable-next-line
-					`Sit (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[mob_status]})`,
+          `Sit (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[mob_status]})`,
         );
       }
       if (sit_status === basic_command_pb.SitCommand.Feedback.Status.STATUS_IS_SITTING) {
@@ -1311,7 +1345,7 @@ async function blocking_selfright(command_client, timeout_sec = 30_000, update_f
       if (full_body_status !== basic_command_pb.RobotCommandFeedbackStatus.Status.STATUS_PROCESSING) {
         throw new CommandFailedError(
           // eslint-disable-next-line
-					`Self-right (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[full_body_status]})`,
+          `Self-right (ID ${command_id}) no longer processing (now ${basic_command_pb.RobotCommandFeedbackStatus.Status[full_body_status]})`,
         );
       }
       if (selfright_status === basic_command_pb.SelfRightCommand.Feedback.STATUS_COMPLETED) {
