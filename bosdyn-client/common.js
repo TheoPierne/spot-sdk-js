@@ -307,7 +307,6 @@ class BaseClient {
         call.end();
         return resolve(call);
       }
-      return reject(new Error());
     });
   }
 
