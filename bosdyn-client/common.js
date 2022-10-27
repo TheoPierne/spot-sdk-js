@@ -214,11 +214,7 @@ class BaseClient {
 
   set channel(channel) {
     this._channel = channel;
-    this._stub = new this._stub_creation_func(
-      channel.target.path,
-      channel.credentials,
-      channel.options,
-    );
+    this._stub = new this._stub_creation_func(channel.target.path, channel.credentials, channel.options);
   }
 
   update_from(other) {
@@ -311,6 +307,7 @@ class BaseClient {
         call.end();
         return resolve(call);
       }
+      return reject(new Error());
     });
   }
 

@@ -1,7 +1,6 @@
 'use strict';
 
 const process = require('node:process');
-const { Buffer } = require('node:buffer');
 
 const grpc = require('@grpc/grpc-js');
 
@@ -48,7 +47,7 @@ function RefreshingAccessTokenAuthMetadataPlugin(token_cb, add_app_token = null)
     process.emitWarning('add_app_token is deprecated for RefreshingAccessTokenAuthMetadataPlugin.', 'Do not set it');
   }
 
-  return function (context, callback) {
+  return function metadata(context, callback) {
     const { user_token } = _token_cb();
     const metadata = new grpc.Metadata();
     metadata.set('authorization', `Bearer ${user_token}`);
@@ -69,13 +68,14 @@ function create_secure_channel_creds(cert, token_cb, add_app_token = null) {
   }
 
   let transport_creds;
-  if(process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production') {
     const { readFileSync } = require('node:fs');
     const path = require('node:path');
 
-    transport_creds = grpc.credentials.createSsl(cert, 
-    readFileSync(path.join(__dirname, 'resources', 'client.key')),
-    readFileSync(path.join(__dirname, 'resources', 'client.crt'))
+    transport_creds = grpc.credentials.createSsl(
+      cert,
+      readFileSync(path.join(__dirname, 'resources', 'client.key')),
+      readFileSync(path.join(__dirname, 'resources', 'client.crt')),
     );
   } else {
     transport_creds = grpc.credentials.createSsl(cert);
