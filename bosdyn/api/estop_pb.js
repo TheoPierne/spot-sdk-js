@@ -1345,7 +1345,7 @@ proto.bosdyn.api.EstopCheckInRequest.toObject = function(includeInstance, msg) {
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
     endpoint: (f = msg.getEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
     challenge: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    response: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    response: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     stopLevel: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
@@ -1398,7 +1398,7 @@ proto.bosdyn.api.EstopCheckInRequest.deserializeBinaryFromReader = function(msg,
       msg.setChallenge(value);
       break;
     case 4:
-      var value = /** @type {number} */ (reader.readUint64());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setResponse(value);
       break;
     case 5:
@@ -1458,8 +1458,8 @@ proto.bosdyn.api.EstopCheckInRequest.serializeBinaryToWriter = function(message,
     );
   }
   f = message.getResponse();
-  if (f !== 0) {
-    writer.writeUint64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       4,
       f
     );
@@ -1568,19 +1568,19 @@ proto.bosdyn.api.EstopCheckInRequest.prototype.setChallenge = function(value) {
 
 /**
  * optional uint64 response = 4;
- * @return {number}
+ * @return {string}
  */
 proto.bosdyn.api.EstopCheckInRequest.prototype.getResponse = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.bosdyn.api.EstopCheckInRequest} returns this
  */
 proto.bosdyn.api.EstopCheckInRequest.prototype.setResponse = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3StringIntField(this, 4, value);
 };
 
 

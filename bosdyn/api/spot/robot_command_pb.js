@@ -29,6 +29,7 @@ goog.exportSymbol('proto.bosdyn.api.spot.BodyExternalForceParams', null, global)
 goog.exportSymbol('proto.bosdyn.api.spot.BodyExternalForceParams.ExternalForceIndicator', null, global);
 goog.exportSymbol('proto.bosdyn.api.spot.LocomotionHint', null, global);
 goog.exportSymbol('proto.bosdyn.api.spot.MobilityParams', null, global);
+goog.exportSymbol('proto.bosdyn.api.spot.MobilityParams.StairsMode', null, global);
 goog.exportSymbol('proto.bosdyn.api.spot.ObstacleParams', null, global);
 goog.exportSymbol('proto.bosdyn.api.spot.SwingHeight', null, global);
 goog.exportSymbol('proto.bosdyn.api.spot.TerrainParams', null, global);
@@ -195,6 +196,7 @@ proto.bosdyn.api.spot.MobilityParams.toObject = function(includeInstance, msg) {
     bodyControl: (f = msg.getBodyControl()) && proto.bosdyn.api.spot.BodyControlParams.toObject(includeInstance, f),
     locomotionHint: jspb.Message.getFieldWithDefault(msg, 3, 0),
     stairHint: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+    stairsMode: jspb.Message.getFieldWithDefault(msg, 17, 0),
     allowDegradedPerception: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
     obstacleParams: (f = msg.getObstacleParams()) && proto.bosdyn.api.spot.ObstacleParams.toObject(includeInstance, f),
     swingHeight: jspb.Message.getFieldWithDefault(msg, 7, 0),
@@ -257,6 +259,10 @@ proto.bosdyn.api.spot.MobilityParams.deserializeBinaryFromReader = function(msg,
     case 4:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setStairHint(value);
+      break;
+    case 17:
+      var value = /** @type {!proto.bosdyn.api.spot.MobilityParams.StairsMode} */ (reader.readEnum());
+      msg.setStairsMode(value);
       break;
     case 5:
       var value = /** @type {boolean} */ (reader.readBool());
@@ -356,6 +362,13 @@ proto.bosdyn.api.spot.MobilityParams.serializeBinaryToWriter = function(message,
       f
     );
   }
+  f = message.getStairsMode();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      17,
+      f
+    );
+  }
   f = message.getAllowDegradedPerception();
   if (f) {
     writer.writeBool(
@@ -424,6 +437,16 @@ proto.bosdyn.api.spot.MobilityParams.serializeBinaryToWriter = function(message,
   }
 };
 
+
+/**
+ * @enum {number}
+ */
+proto.bosdyn.api.spot.MobilityParams.StairsMode = {
+  STAIRS_MODE_UNKNOWN: 0,
+  STAIRS_MODE_OFF: 1,
+  STAIRS_MODE_ON: 2,
+  STAIRS_MODE_AUTO: 3
+};
 
 /**
  * optional bosdyn.api.SE2VelocityLimit vel_limit = 1;
@@ -532,6 +555,24 @@ proto.bosdyn.api.spot.MobilityParams.prototype.getStairHint = function() {
  */
 proto.bosdyn.api.spot.MobilityParams.prototype.setStairHint = function(value) {
   return jspb.Message.setProto3BooleanField(this, 4, value);
+};
+
+
+/**
+ * optional StairsMode stairs_mode = 17;
+ * @return {!proto.bosdyn.api.spot.MobilityParams.StairsMode}
+ */
+proto.bosdyn.api.spot.MobilityParams.prototype.getStairsMode = function() {
+  return /** @type {!proto.bosdyn.api.spot.MobilityParams.StairsMode} */ (jspb.Message.getFieldWithDefault(this, 17, 0));
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.spot.MobilityParams.StairsMode} value
+ * @return {!proto.bosdyn.api.spot.MobilityParams} returns this
+ */
+proto.bosdyn.api.spot.MobilityParams.prototype.setStairsMode = function(value) {
+  return jspb.Message.setProto3EnumField(this, 17, value);
 };
 
 

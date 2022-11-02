@@ -297,6 +297,28 @@ function deserialize_bosdyn_api_graph_nav_UploadWaypointSnapshotResponse(buffer_
   return bosdyn_api_graph_nav_graph_nav_pb.UploadWaypointSnapshotResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_bosdyn_api_graph_nav_ValidateGraphRequest(arg) {
+  if (!(arg instanceof bosdyn_api_graph_nav_graph_nav_pb.ValidateGraphRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.graph_nav.ValidateGraphRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_graph_nav_ValidateGraphRequest(buffer_arg) {
+  return bosdyn_api_graph_nav_graph_nav_pb.ValidateGraphRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_graph_nav_ValidateGraphResponse(arg) {
+  if (!(arg instanceof bosdyn_api_graph_nav_graph_nav_pb.ValidateGraphResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.graph_nav.ValidateGraphResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_graph_nav_ValidateGraphResponse(buffer_arg) {
+  return bosdyn_api_graph_nav_graph_nav_pb.ValidateGraphResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 
 // The GraphNav service service is a place-based localization and locomotion service. The service can
 // be used to get/set the localization, upload and download the current graph nav maps, and send navigation
@@ -457,6 +479,19 @@ downloadEdgeSnapshot: {
     requestDeserialize: deserialize_bosdyn_api_graph_nav_DownloadEdgeSnapshotRequest,
     responseSerialize: serialize_bosdyn_api_graph_nav_DownloadEdgeSnapshotResponse,
     responseDeserialize: deserialize_bosdyn_api_graph_nav_DownloadEdgeSnapshotResponse,
+  },
+  // Verify that the graph is still valid and all required external services are still available.
+// A map that was valid at upload time may not still be valid if required services are no longer running.
+validateGraph: {
+    path: '/bosdyn.api.graph_nav.GraphNavService/ValidateGraph',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_graph_nav_graph_nav_pb.ValidateGraphRequest,
+    responseType: bosdyn_api_graph_nav_graph_nav_pb.ValidateGraphResponse,
+    requestSerialize: serialize_bosdyn_api_graph_nav_ValidateGraphRequest,
+    requestDeserialize: deserialize_bosdyn_api_graph_nav_ValidateGraphRequest,
+    responseSerialize: serialize_bosdyn_api_graph_nav_ValidateGraphResponse,
+    responseDeserialize: deserialize_bosdyn_api_graph_nav_ValidateGraphResponse,
   },
 };
 
