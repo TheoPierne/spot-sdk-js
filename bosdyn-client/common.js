@@ -213,8 +213,18 @@ class BaseClient {
   }
 
   set channel(channel) {
-    this._channel = channel;
+    if (channel.internalChannel === undefined) {
+      this._channel = channel;
+    } else {
+      this._channel = channel.internalChannel;
+      channel = channel.internalChannel;
+    }
     this._stub = new this._stub_creation_func(channel.target.path, channel.credentials, channel.options);
+    // this._stub = new this._stub_creation_func(
+    //   channel.internalChannel.target.path,
+    //   channel.internalChannel.credentials,
+    //   channel.internalChannel.options,
+    // );
   }
 
   update_from(other) {

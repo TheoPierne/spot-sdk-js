@@ -11,9 +11,8 @@ const prompt = require('prompt');
 const { InvalidTokenError } = require('./auth');
 const { generate_channel_options } = require('./channel');
 const { LoggerUtil } = require('./loggerUtil');
-const { now_timestamp } = require('../bosdyn-core/util');
-
 const header_pb = require('../bosdyn/api/header_pb');
+const { now_timestamp } = require('../bosdyn-core/util');
 
 const _LOGGER = LoggerUtil.getLogger(path.basename(__filename).replace('.js', ''));
 
@@ -150,24 +149,39 @@ class GrpcServiceRunner {
     service_servicer,
     add_servicer_to_server_fn,
     port = 0,
-    max_workers = 4,
+    test,
+    // max_workers = 4,
     max_send_message_length = null,
     max_receive_message_length = null,
     timeout_secs = 3,
     force_sigint_capture = true,
     logger = null,
   ) {
+    this.add_servicer_to_server_fn = add_servicer_to_server_fn;
     this.logger = logger || _LOGGER;
     this.timeout_secs = timeout_secs;
     this.force_sigint_capture = force_sigint_capture;
-
+    this.port = port;
+    this.max_send_message_length = max_send_message_length;
+    this.max_receive_message_length = max_receive_message_length;
+    this.test = test;
+    this.service_servicer = service_servicer;
     this.server_type_name = service_servicer.constructor.name;
-
-    this.server = new grpc.Server(generate_channel_options(max_send_message_length, max_receive_message_length));
-    add_servicer_to_server_fn(service_servicer, this.server);
-    this.port = this.server.bindAsync(port, new grpc.ServerCredentials().createInsecure());
-    this.server.start();
+    // this.server = new grpc.Server(generate_channel_options(max_send_message_length, max_receive_message_length));
+    // this.server.addService(add_servicer_to_server_fn, this.server);
+    this.server = this.getServer();
+    this.server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), () => {
+      this.server.start();
+    });
     this.logger.info(`Started the "${this.server_type_name}" server.`);
+  }
+
+  getServer() {
+    var server = new grpc.Server(
+      generate_channel_options(this.max_send_message_length, this.max_receive_message_length),
+    );
+    server.addService(this.add_servicer_to_server_fn, this.service_servicer);
+    return server;
   }
 
   async stop() {
@@ -176,10 +190,20 @@ class GrpcServiceRunner {
     await sleep(this.timeout_secs);
   }
 
-  run_until_interrupt() {
-    process.on('SIGINT', () => {
-      this.stop();
-    });
+  async run_until_interrupt() {
+    if (this.force_sigint_capture) {
+      process.on('SIGINT', process.exit);
+    }
+
+    try {
+      while (true) {
+        await new Promise(resolve => sleep(1000, resolve));
+      }
+    } catch (err) {
+      if (err.name === 'InterruptError') {
+        this.stop();
+      }
+    }
   }
 }
 
