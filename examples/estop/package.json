@@ -5,13 +5,13 @@
   "main": "estop_gui.js",
   "scripts": {
     "gui": "qode estop_gui.js",
-    "nogui": "qode estop_nogui.js"
+    "nogui": "node estop_nogui.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nodegui/nodegui": "^0.57.1",
-    "reblessed": "^0.1.84"
+    "@nodegui/nodegui": "^0.61.2",
+    "reblessed": "^0.2.1"
   }
 }
