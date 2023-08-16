@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 // Original file comments:
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -128,7 +128,7 @@ getStatus: {
     responseSerialize: serialize_bosdyn_api_GetStatusResponse,
     responseDeserialize: deserialize_bosdyn_api_GetStatusResponse,
   },
-  // Get information from a DAQ service; lists acquisition capabilities.
+  // Get information from a Data Acquisition service; lists acquisition capabilities.
 getServiceInfo: {
     path: '/bosdyn.api.DataAcquisitionService/GetServiceInfo',
     requestStream: false,

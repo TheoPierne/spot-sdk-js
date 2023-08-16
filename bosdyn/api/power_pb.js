@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
 goog.object.extend(proto, google_protobuf_duration_pb);
@@ -2325,7 +2331,8 @@ proto.bosdyn.api.PowerCommandStatus = {
   STATUS_INTERNAL_ERROR: 8,
   STATUS_LICENSE_ERROR: 9,
   INCOMPATIBLE_HARDWARE_ERROR: 10,
-  STATUS_OVERRIDDEN: 11
+  STATUS_OVERRIDDEN: 11,
+  STATUS_KEEPALIVE_MOTORS_OFF: 12
 };
 
 goog.object.extend(exports, proto.bosdyn.api);

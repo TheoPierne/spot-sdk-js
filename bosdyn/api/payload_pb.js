@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -226,6 +232,9 @@ proto.bosdyn.api.Payload.toObject = function(includeInstance, msg) {
     bodyTformPayload: (f = msg.getBodyTformPayload()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
     mountTformPayload: (f = msg.getMountTformPayload()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
     mountFrameName: jspb.Message.getFieldWithDefault(msg, 13, 0),
+    livenessTimeoutSecs: jspb.Message.getFloatingPointFieldWithDefault(msg, 15, 0.0),
+    ipv4Address: jspb.Message.getFieldWithDefault(msg, 16, ""),
+    linkSpeed: jspb.Message.getFieldWithDefault(msg, 17, 0),
     massVolumeProperties: (f = msg.getMassVolumeProperties()) && proto.bosdyn.api.PayloadMassVolumeProperties.toObject(includeInstance, f),
     presetConfigurationsList: jspb.Message.toObjectList(msg.getPresetConfigurationsList(),
     proto.bosdyn.api.PayloadPreset.toObject, includeInstance)
@@ -311,6 +320,18 @@ proto.bosdyn.api.Payload.deserializeBinaryFromReader = function(msg, reader) {
     case 13:
       var value = /** @type {!proto.bosdyn.api.MountFrameName} */ (reader.readEnum());
       msg.setMountFrameName(value);
+      break;
+    case 15:
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setLivenessTimeoutSecs(value);
+      break;
+    case 16:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setIpv4Address(value);
+      break;
+    case 17:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setLinkSpeed(value);
       break;
     case 10:
       var value = new proto.bosdyn.api.PayloadMassVolumeProperties;
@@ -428,6 +449,27 @@ proto.bosdyn.api.Payload.serializeBinaryToWriter = function(message, writer) {
   if (f !== 0.0) {
     writer.writeEnum(
       13,
+      f
+    );
+  }
+  f = message.getLivenessTimeoutSecs();
+  if (f !== 0.0) {
+    writer.writeDouble(
+      15,
+      f
+    );
+  }
+  f = message.getIpv4Address();
+  if (f.length > 0) {
+    writer.writeString(
+      16,
+      f
+    );
+  }
+  f = message.getLinkSpeed();
+  if (f !== 0) {
+    writer.writeInt32(
+      17,
       f
     );
   }
@@ -721,6 +763,60 @@ proto.bosdyn.api.Payload.prototype.getMountFrameName = function() {
  */
 proto.bosdyn.api.Payload.prototype.setMountFrameName = function(value) {
   return jspb.Message.setProto3EnumField(this, 13, value);
+};
+
+
+/**
+ * optional double liveness_timeout_secs = 15;
+ * @return {number}
+ */
+proto.bosdyn.api.Payload.prototype.getLivenessTimeoutSecs = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 15, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.Payload} returns this
+ */
+proto.bosdyn.api.Payload.prototype.setLivenessTimeoutSecs = function(value) {
+  return jspb.Message.setProto3FloatField(this, 15, value);
+};
+
+
+/**
+ * optional string ipv4_address = 16;
+ * @return {string}
+ */
+proto.bosdyn.api.Payload.prototype.getIpv4Address = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 16, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.bosdyn.api.Payload} returns this
+ */
+proto.bosdyn.api.Payload.prototype.setIpv4Address = function(value) {
+  return jspb.Message.setProto3StringField(this, 16, value);
+};
+
+
+/**
+ * optional int32 link_speed = 17;
+ * @return {number}
+ */
+proto.bosdyn.api.Payload.prototype.getLinkSpeed = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 17, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.Payload} returns this
+ */
+proto.bosdyn.api.Payload.prototype.setLinkSpeed = function(value) {
+  return jspb.Message.setProto3IntField(this, 17, value);
 };
 
 

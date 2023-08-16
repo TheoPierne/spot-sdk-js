@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -909,7 +915,11 @@ proto.bosdyn.api.GripperCameraParams.toObject = function(includeInstance, msg) {
     drawFocusRoiRectangle: (f = msg.getDrawFocusRoiRectangle()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
     hdr: jspb.Message.getFieldWithDefault(msg, 17, 0),
     ledMode: jspb.Message.getFieldWithDefault(msg, 19, 0),
-    ledTorchBrightness: (f = msg.getLedTorchBrightness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
+    ledTorchBrightness: (f = msg.getLedTorchBrightness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+    whiteBalanceTemperatureAuto: (f = msg.getWhiteBalanceTemperatureAuto()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+    gamma: (f = msg.getGamma()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+    whiteBalanceTemperature: (f = msg.getWhiteBalanceTemperature()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+    sharpness: (f = msg.getSharpness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1017,6 +1027,26 @@ proto.bosdyn.api.GripperCameraParams.deserializeBinaryFromReader = function(msg,
       var value = new google_protobuf_wrappers_pb.FloatValue;
       reader.readMessage(value,google_protobuf_wrappers_pb.FloatValue.deserializeBinaryFromReader);
       msg.setLedTorchBrightness(value);
+      break;
+    case 5:
+      var value = new google_protobuf_wrappers_pb.BoolValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.BoolValue.deserializeBinaryFromReader);
+      msg.setWhiteBalanceTemperatureAuto(value);
+      break;
+    case 6:
+      var value = new google_protobuf_wrappers_pb.FloatValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.FloatValue.deserializeBinaryFromReader);
+      msg.setGamma(value);
+      break;
+    case 8:
+      var value = new google_protobuf_wrappers_pb.FloatValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.FloatValue.deserializeBinaryFromReader);
+      msg.setWhiteBalanceTemperature(value);
+      break;
+    case 9:
+      var value = new google_protobuf_wrappers_pb.FloatValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.FloatValue.deserializeBinaryFromReader);
+      msg.setSharpness(value);
       break;
     default:
       reader.skipField();
@@ -1164,6 +1194,38 @@ proto.bosdyn.api.GripperCameraParams.serializeBinaryToWriter = function(message,
       google_protobuf_wrappers_pb.FloatValue.serializeBinaryToWriter
     );
   }
+  f = message.getWhiteBalanceTemperatureAuto();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
+    );
+  }
+  f = message.getGamma();
+  if (f != null) {
+    writer.writeMessage(
+      6,
+      f,
+      google_protobuf_wrappers_pb.FloatValue.serializeBinaryToWriter
+    );
+  }
+  f = message.getWhiteBalanceTemperature();
+  if (f != null) {
+    writer.writeMessage(
+      8,
+      f,
+      google_protobuf_wrappers_pb.FloatValue.serializeBinaryToWriter
+    );
+  }
+  f = message.getSharpness();
+  if (f != null) {
+    writer.writeMessage(
+      9,
+      f,
+      google_protobuf_wrappers_pb.FloatValue.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -1172,12 +1234,18 @@ proto.bosdyn.api.GripperCameraParams.serializeBinaryToWriter = function(message,
  */
 proto.bosdyn.api.GripperCameraParams.CameraMode = {
   MODE_UNKNOWN: 0,
-  MODE_1280_720_60FPS_UYVY: 1,
+  MODE_640_480: 11,
   MODE_640_480_120FPS_UYVY: 11,
+  MODE_1280_720: 1,
+  MODE_1280_720_60FPS_UYVY: 1,
+  MODE_1920_1080: 14,
   MODE_1920_1080_60FPS_MJPG: 14,
+  MODE_3840_2160: 15,
   MODE_3840_2160_30FPS_MJPG: 15,
-  MODE_4208_3120_20FPS_MJPG: 16,
-  MODE_4096_2160_30FPS_MJPG: 17
+  MODE_4096_2160: 17,
+  MODE_4096_2160_30FPS_MJPG: 17,
+  MODE_4208_3120: 16,
+  MODE_4208_3120_20FPS_MJPG: 16
 };
 
 /**
@@ -1684,6 +1752,154 @@ proto.bosdyn.api.GripperCameraParams.prototype.clearLedTorchBrightness = functio
  */
 proto.bosdyn.api.GripperCameraParams.prototype.hasLedTorchBrightness = function() {
   return jspb.Message.getField(this, 20) != null;
+};
+
+
+/**
+ * optional google.protobuf.BoolValue white_balance_temperature_auto = 5;
+ * @return {?proto.google.protobuf.BoolValue}
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.getWhiteBalanceTemperatureAuto = function() {
+  return /** @type{?proto.google.protobuf.BoolValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.BoolValue, 5));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.bosdyn.api.GripperCameraParams} returns this
+*/
+proto.bosdyn.api.GripperCameraParams.prototype.setWhiteBalanceTemperatureAuto = function(value) {
+  return jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.GripperCameraParams} returns this
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.clearWhiteBalanceTemperatureAuto = function() {
+  return this.setWhiteBalanceTemperatureAuto(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.hasWhiteBalanceTemperatureAuto = function() {
+  return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional google.protobuf.FloatValue gamma = 6;
+ * @return {?proto.google.protobuf.FloatValue}
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.getGamma = function() {
+  return /** @type{?proto.google.protobuf.FloatValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.FloatValue, 6));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.FloatValue|undefined} value
+ * @return {!proto.bosdyn.api.GripperCameraParams} returns this
+*/
+proto.bosdyn.api.GripperCameraParams.prototype.setGamma = function(value) {
+  return jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.GripperCameraParams} returns this
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.clearGamma = function() {
+  return this.setGamma(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.hasGamma = function() {
+  return jspb.Message.getField(this, 6) != null;
+};
+
+
+/**
+ * optional google.protobuf.FloatValue white_balance_temperature = 8;
+ * @return {?proto.google.protobuf.FloatValue}
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.getWhiteBalanceTemperature = function() {
+  return /** @type{?proto.google.protobuf.FloatValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.FloatValue, 8));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.FloatValue|undefined} value
+ * @return {!proto.bosdyn.api.GripperCameraParams} returns this
+*/
+proto.bosdyn.api.GripperCameraParams.prototype.setWhiteBalanceTemperature = function(value) {
+  return jspb.Message.setWrapperField(this, 8, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.GripperCameraParams} returns this
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.clearWhiteBalanceTemperature = function() {
+  return this.setWhiteBalanceTemperature(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.hasWhiteBalanceTemperature = function() {
+  return jspb.Message.getField(this, 8) != null;
+};
+
+
+/**
+ * optional google.protobuf.FloatValue sharpness = 9;
+ * @return {?proto.google.protobuf.FloatValue}
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.getSharpness = function() {
+  return /** @type{?proto.google.protobuf.FloatValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.FloatValue, 9));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.FloatValue|undefined} value
+ * @return {!proto.bosdyn.api.GripperCameraParams} returns this
+*/
+proto.bosdyn.api.GripperCameraParams.prototype.setSharpness = function(value) {
+  return jspb.Message.setWrapperField(this, 9, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.GripperCameraParams} returns this
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.clearSharpness = function() {
+  return this.setSharpness(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.GripperCameraParams.prototype.hasSharpness = function() {
+  return jspb.Message.getField(this, 9) != null;
 };
 
 

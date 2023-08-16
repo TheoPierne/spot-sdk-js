@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_full_body_command_pb = require('../../bosdyn/api/full_body_command_pb.js');
 goog.object.extend(proto, bosdyn_api_full_body_command_pb);
@@ -23,6 +29,8 @@ var bosdyn_api_lease_pb = require('../../bosdyn/api/lease_pb.js');
 goog.object.extend(proto, bosdyn_api_lease_pb);
 var bosdyn_api_mobility_command_pb = require('../../bosdyn/api/mobility_command_pb.js');
 goog.object.extend(proto, bosdyn_api_mobility_command_pb);
+var bosdyn_api_robot_state_pb = require('../../bosdyn/api/robot_state_pb.js');
+goog.object.extend(proto, bosdyn_api_robot_state_pb);
 var bosdyn_api_synchronized_command_pb = require('../../bosdyn/api/synchronized_command_pb.js');
 goog.object.extend(proto, bosdyn_api_synchronized_command_pb);
 goog.exportSymbol('proto.bosdyn.api.ClearBehaviorFaultRequest', null, global);
@@ -196,7 +204,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.bosdyn.api.ClearBehaviorFaultResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.bosdyn.api.ClearBehaviorFaultResponse.repeatedFields_, null);
 };
 goog.inherits(proto.bosdyn.api.ClearBehaviorFaultResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -2096,6 +2104,13 @@ proto.bosdyn.api.ClearBehaviorFaultRequest.prototype.setBehaviorFaultId = functi
 
 
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.bosdyn.api.ClearBehaviorFaultResponse.repeatedFields_ = [5];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -2129,7 +2144,10 @@ proto.bosdyn.api.ClearBehaviorFaultResponse.toObject = function(includeInstance,
   var f, obj = {
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
     leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    behaviorFault: (f = msg.getBehaviorFault()) && bosdyn_api_robot_state_pb.BehaviorFault.toObject(includeInstance, f),
+    blockingSystemFaultsList: jspb.Message.toObjectList(msg.getBlockingSystemFaultsList(),
+    bosdyn_api_robot_state_pb.SystemFault.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -2179,6 +2197,16 @@ proto.bosdyn.api.ClearBehaviorFaultResponse.deserializeBinaryFromReader = functi
     case 3:
       var value = /** @type {!proto.bosdyn.api.ClearBehaviorFaultResponse.Status} */ (reader.readEnum());
       msg.setStatus(value);
+      break;
+    case 4:
+      var value = new bosdyn_api_robot_state_pb.BehaviorFault;
+      reader.readMessage(value,bosdyn_api_robot_state_pb.BehaviorFault.deserializeBinaryFromReader);
+      msg.setBehaviorFault(value);
+      break;
+    case 5:
+      var value = new bosdyn_api_robot_state_pb.SystemFault;
+      reader.readMessage(value,bosdyn_api_robot_state_pb.SystemFault.deserializeBinaryFromReader);
+      msg.addBlockingSystemFaults(value);
       break;
     default:
       reader.skipField();
@@ -2230,6 +2258,22 @@ proto.bosdyn.api.ClearBehaviorFaultResponse.serializeBinaryToWriter = function(m
     writer.writeEnum(
       3,
       f
+    );
+  }
+  f = message.getBehaviorFault();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      bosdyn_api_robot_state_pb.BehaviorFault.serializeBinaryToWriter
+    );
+  }
+  f = message.getBlockingSystemFaultsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      5,
+      f,
+      bosdyn_api_robot_state_pb.SystemFault.serializeBinaryToWriter
     );
   }
 };
@@ -2333,6 +2377,81 @@ proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.getStatus = function() {
  */
 proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.setStatus = function(value) {
   return jspb.Message.setProto3EnumField(this, 3, value);
+};
+
+
+/**
+ * optional BehaviorFault behavior_fault = 4;
+ * @return {?proto.bosdyn.api.BehaviorFault}
+ */
+proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.getBehaviorFault = function() {
+  return /** @type{?proto.bosdyn.api.BehaviorFault} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_robot_state_pb.BehaviorFault, 4));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.BehaviorFault|undefined} value
+ * @return {!proto.bosdyn.api.ClearBehaviorFaultResponse} returns this
+*/
+proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.setBehaviorFault = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ClearBehaviorFaultResponse} returns this
+ */
+proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.clearBehaviorFault = function() {
+  return this.setBehaviorFault(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.hasBehaviorFault = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * repeated SystemFault blocking_system_faults = 5;
+ * @return {!Array<!proto.bosdyn.api.SystemFault>}
+ */
+proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.getBlockingSystemFaultsList = function() {
+  return /** @type{!Array<!proto.bosdyn.api.SystemFault>} */ (
+    jspb.Message.getRepeatedWrapperField(this, bosdyn_api_robot_state_pb.SystemFault, 5));
+};
+
+
+/**
+ * @param {!Array<!proto.bosdyn.api.SystemFault>} value
+ * @return {!proto.bosdyn.api.ClearBehaviorFaultResponse} returns this
+*/
+proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.setBlockingSystemFaultsList = function(value) {
+  return jspb.Message.setRepeatedWrapperField(this, 5, value);
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.SystemFault=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.bosdyn.api.SystemFault}
+ */
+proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.addBlockingSystemFaults = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 5, opt_value, proto.bosdyn.api.SystemFault, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.bosdyn.api.ClearBehaviorFaultResponse} returns this
+ */
+proto.bosdyn.api.ClearBehaviorFaultResponse.prototype.clearBlockingSystemFaultsList = function() {
+  return this.setBlockingSystemFaultsList([]);
 };
 
 

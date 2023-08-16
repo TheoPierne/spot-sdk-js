@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_basic_command_pb = require('../../../bosdyn/api/basic_command_pb.js');
 goog.object.extend(proto, bosdyn_api_basic_command_pb);
@@ -672,7 +678,8 @@ proto.bosdyn.api.spot.OpenDoorCommandResponse.serializeBinaryToWriter = function
 proto.bosdyn.api.spot.OpenDoorCommandResponse.Status = {
   STATUS_UNKNOWN: 0,
   STATUS_OK: 1,
-  STATUS_ROBOT_COMMAND_ERROR: 2
+  STATUS_ROBOT_COMMAND_ERROR: 2,
+  STATUS_DOOR_PLANE_NOT_DETECTED: 3
 };
 
 /**
@@ -1018,6 +1025,7 @@ proto.bosdyn.api.spot.OpenDoorFeedbackResponse.toObject = function(includeInstan
   var f, obj = {
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
     status: jspb.Message.getFieldWithDefault(msg, 100, 0),
+    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
     feedback: (f = msg.getFeedback()) && proto.bosdyn.api.spot.DoorCommand.Feedback.toObject(includeInstance, f)
   };
 
@@ -1063,6 +1071,11 @@ proto.bosdyn.api.spot.OpenDoorFeedbackResponse.deserializeBinaryFromReader = fun
     case 100:
       var value = /** @type {!proto.bosdyn.api.RobotCommandFeedbackStatus.Status} */ (reader.readEnum());
       msg.setStatus(value);
+      break;
+    case 3:
+      var value = new bosdyn_api_lease_pb.LeaseUseResult;
+      reader.readMessage(value,bosdyn_api_lease_pb.LeaseUseResult.deserializeBinaryFromReader);
+      msg.setLeaseUseResult(value);
       break;
     case 2:
       var value = new proto.bosdyn.api.spot.DoorCommand.Feedback;
@@ -1111,6 +1124,14 @@ proto.bosdyn.api.spot.OpenDoorFeedbackResponse.serializeBinaryToWriter = functio
     writer.writeEnum(
       100,
       f
+    );
+  }
+  f = message.getLeaseUseResult();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      bosdyn_api_lease_pb.LeaseUseResult.serializeBinaryToWriter
     );
   }
   f = message.getFeedback();
@@ -1176,6 +1197,43 @@ proto.bosdyn.api.spot.OpenDoorFeedbackResponse.prototype.getStatus = function() 
  */
 proto.bosdyn.api.spot.OpenDoorFeedbackResponse.prototype.setStatus = function(value) {
   return jspb.Message.setProto3EnumField(this, 100, value);
+};
+
+
+/**
+ * optional bosdyn.api.LeaseUseResult lease_use_result = 3;
+ * @return {?proto.bosdyn.api.LeaseUseResult}
+ */
+proto.bosdyn.api.spot.OpenDoorFeedbackResponse.prototype.getLeaseUseResult = function() {
+  return /** @type{?proto.bosdyn.api.LeaseUseResult} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_lease_pb.LeaseUseResult, 3));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.LeaseUseResult|undefined} value
+ * @return {!proto.bosdyn.api.spot.OpenDoorFeedbackResponse} returns this
+*/
+proto.bosdyn.api.spot.OpenDoorFeedbackResponse.prototype.setLeaseUseResult = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.spot.OpenDoorFeedbackResponse} returns this
+ */
+proto.bosdyn.api.spot.OpenDoorFeedbackResponse.prototype.clearLeaseUseResult = function() {
+  return this.setLeaseUseResult(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.spot.OpenDoorFeedbackResponse.prototype.hasLeaseUseResult = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -2352,7 +2410,8 @@ proto.bosdyn.api.spot.DoorCommand.Feedback.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot.DoorCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    distancePastThreshold: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -2393,6 +2452,10 @@ proto.bosdyn.api.spot.DoorCommand.Feedback.deserializeBinaryFromReader = functio
       var value = /** @type {!proto.bosdyn.api.spot.DoorCommand.Feedback.Status} */ (reader.readEnum());
       msg.setStatus(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setDistancePastThreshold(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2429,6 +2492,13 @@ proto.bosdyn.api.spot.DoorCommand.Feedback.serializeBinaryToWriter = function(me
       f
     );
   }
+  f = message.getDistancePastThreshold();
+  if (f !== 0.0) {
+    writer.writeDouble(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -2438,7 +2508,9 @@ proto.bosdyn.api.spot.DoorCommand.Feedback.serializeBinaryToWriter = function(me
 proto.bosdyn.api.spot.DoorCommand.Feedback.Status = {
   STATUS_UNKNOWN: 0,
   STATUS_COMPLETED: 1,
-  STATUS_IN_PROGRESS: 2
+  STATUS_IN_PROGRESS: 2,
+  STATUS_STALLED: 3,
+  STATUS_NOT_DETECTED: 4
 };
 
 /**
@@ -2456,6 +2528,24 @@ proto.bosdyn.api.spot.DoorCommand.Feedback.prototype.getStatus = function() {
  */
 proto.bosdyn.api.spot.DoorCommand.Feedback.prototype.setStatus = function(value) {
   return jspb.Message.setProto3EnumField(this, 1, value);
+};
+
+
+/**
+ * optional double distance_past_threshold = 2;
+ * @return {number}
+ */
+proto.bosdyn.api.spot.DoorCommand.Feedback.prototype.getDistancePastThreshold = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 2, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.spot.DoorCommand.Feedback} returns this
+ */
+proto.bosdyn.api.spot.DoorCommand.Feedback.prototype.setDistancePastThreshold = function(value) {
+  return jspb.Message.setProto3FloatField(this, 2, value);
 };
 
 

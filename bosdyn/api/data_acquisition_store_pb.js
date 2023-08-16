@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.object.extend(proto, google_protobuf_timestamp_pb);
@@ -1361,7 +1367,8 @@ proto.bosdyn.api.StoreImageResponse.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.StoreImageResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+    id: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -1403,6 +1410,10 @@ proto.bosdyn.api.StoreImageResponse.deserializeBinaryFromReader = function(msg, 
       reader.readMessage(value,bosdyn_api_header_pb.ResponseHeader.deserializeBinaryFromReader);
       msg.setHeader(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setId(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1438,6 +1449,13 @@ proto.bosdyn.api.StoreImageResponse.serializeBinaryToWriter = function(message, 
       1,
       f,
       bosdyn_api_header_pb.ResponseHeader.serializeBinaryToWriter
+    );
+  }
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeUint64(
+      2,
+      f
     );
   }
 };
@@ -1477,6 +1495,24 @@ proto.bosdyn.api.StoreImageResponse.prototype.clearHeader = function() {
  */
 proto.bosdyn.api.StoreImageResponse.prototype.hasHeader = function() {
   return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional uint64 id = 2;
+ * @return {number}
+ */
+proto.bosdyn.api.StoreImageResponse.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.StoreImageResponse} returns this
+ */
+proto.bosdyn.api.StoreImageResponse.prototype.setId = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -1765,7 +1801,8 @@ proto.bosdyn.api.StoreMetadataResponse.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.StoreMetadataResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+    id: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -1807,6 +1844,10 @@ proto.bosdyn.api.StoreMetadataResponse.deserializeBinaryFromReader = function(ms
       reader.readMessage(value,bosdyn_api_header_pb.ResponseHeader.deserializeBinaryFromReader);
       msg.setHeader(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setId(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1842,6 +1883,13 @@ proto.bosdyn.api.StoreMetadataResponse.serializeBinaryToWriter = function(messag
       1,
       f,
       bosdyn_api_header_pb.ResponseHeader.serializeBinaryToWriter
+    );
+  }
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeUint64(
+      2,
+      f
     );
   }
 };
@@ -1881,6 +1929,24 @@ proto.bosdyn.api.StoreMetadataResponse.prototype.clearHeader = function() {
  */
 proto.bosdyn.api.StoreMetadataResponse.prototype.hasHeader = function() {
   return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional uint64 id = 2;
+ * @return {number}
+ */
+proto.bosdyn.api.StoreMetadataResponse.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.StoreMetadataResponse} returns this
+ */
+proto.bosdyn.api.StoreMetadataResponse.prototype.setId = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -2169,7 +2235,8 @@ proto.bosdyn.api.StoreAlertDataResponse.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.StoreAlertDataResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+    id: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2211,6 +2278,10 @@ proto.bosdyn.api.StoreAlertDataResponse.deserializeBinaryFromReader = function(m
       reader.readMessage(value,bosdyn_api_header_pb.ResponseHeader.deserializeBinaryFromReader);
       msg.setHeader(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setId(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2246,6 +2317,13 @@ proto.bosdyn.api.StoreAlertDataResponse.serializeBinaryToWriter = function(messa
       1,
       f,
       bosdyn_api_header_pb.ResponseHeader.serializeBinaryToWriter
+    );
+  }
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeUint64(
+      2,
+      f
     );
   }
 };
@@ -2285,6 +2363,24 @@ proto.bosdyn.api.StoreAlertDataResponse.prototype.clearHeader = function() {
  */
 proto.bosdyn.api.StoreAlertDataResponse.prototype.hasHeader = function() {
   return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional uint64 id = 2;
+ * @return {number}
+ */
+proto.bosdyn.api.StoreAlertDataResponse.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.StoreAlertDataResponse} returns this
+ */
+proto.bosdyn.api.StoreAlertDataResponse.prototype.setId = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -2606,7 +2702,8 @@ proto.bosdyn.api.StoreDataResponse.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.StoreDataResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+    id: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2648,6 +2745,10 @@ proto.bosdyn.api.StoreDataResponse.deserializeBinaryFromReader = function(msg, r
       reader.readMessage(value,bosdyn_api_header_pb.ResponseHeader.deserializeBinaryFromReader);
       msg.setHeader(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setId(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2683,6 +2784,13 @@ proto.bosdyn.api.StoreDataResponse.serializeBinaryToWriter = function(message, w
       1,
       f,
       bosdyn_api_header_pb.ResponseHeader.serializeBinaryToWriter
+    );
+  }
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeUint64(
+      2,
+      f
     );
   }
 };
@@ -2722,6 +2830,24 @@ proto.bosdyn.api.StoreDataResponse.prototype.clearHeader = function() {
  */
 proto.bosdyn.api.StoreDataResponse.prototype.hasHeader = function() {
   return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional uint64 id = 2;
+ * @return {number}
+ */
+proto.bosdyn.api.StoreDataResponse.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.StoreDataResponse} returns this
+ */
+proto.bosdyn.api.StoreDataResponse.prototype.setId = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 

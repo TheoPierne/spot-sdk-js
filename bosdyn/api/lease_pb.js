@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -2936,7 +2942,8 @@ proto.bosdyn.api.LeaseResource.toObject = function(includeInstance, msg) {
     resource: jspb.Message.getFieldWithDefault(msg, 1, ""),
     lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
     leaseOwner: (f = msg.getLeaseOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f),
-    staleTime: (f = msg.getStaleTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+    staleTime: (f = msg.getStaleTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+    isStale: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -2991,6 +2998,10 @@ proto.bosdyn.api.LeaseResource.deserializeBinaryFromReader = function(msg, reade
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setStaleTime(value);
+      break;
+    case 5:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsStale(value);
       break;
     default:
       reader.skipField();
@@ -3050,6 +3061,13 @@ proto.bosdyn.api.LeaseResource.serializeBinaryToWriter = function(message, write
       4,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
+    );
+  }
+  f = message.getIsStale();
+  if (f) {
+    writer.writeBool(
+      5,
+      f
     );
   }
 };
@@ -3181,6 +3199,24 @@ proto.bosdyn.api.LeaseResource.prototype.clearStaleTime = function() {
  */
 proto.bosdyn.api.LeaseResource.prototype.hasStaleTime = function() {
   return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional bool is_stale = 5;
+ * @return {boolean}
+ */
+proto.bosdyn.api.LeaseResource.prototype.getIsStale = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 5, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.LeaseResource} returns this
+ */
+proto.bosdyn.api.LeaseResource.prototype.setIsStale = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 5, value);
 };
 
 

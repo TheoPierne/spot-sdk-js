@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -1295,7 +1301,8 @@ proto.bosdyn.api.HardwareConfiguration.toObject = function(includeInstance, msg)
     canPowerCommandRequestOffRobot: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
     canPowerCommandRequestCycleRobot: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
     canPowerCommandRequestPayloadPorts: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    canPowerCommandRequestWifiRadio: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
+    canPowerCommandRequestWifiRadio: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+    hasAudioVisualSystem: jspb.Message.getBooleanFieldWithDefault(msg, 7, false)
   };
 
   if (includeInstance) {
@@ -1352,6 +1359,10 @@ proto.bosdyn.api.HardwareConfiguration.deserializeBinaryFromReader = function(ms
     case 5:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setCanPowerCommandRequestWifiRadio(value);
+      break;
+    case 7:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setHasAudioVisualSystem(value);
       break;
     default:
       reader.skipField();
@@ -1415,6 +1426,13 @@ proto.bosdyn.api.HardwareConfiguration.serializeBinaryToWriter = function(messag
   if (f) {
     writer.writeBool(
       5,
+      f
+    );
+  }
+  f = message.getHasAudioVisualSystem();
+  if (f) {
+    writer.writeBool(
+      7,
       f
     );
   }
@@ -1527,6 +1545,24 @@ proto.bosdyn.api.HardwareConfiguration.prototype.getCanPowerCommandRequestWifiRa
  */
 proto.bosdyn.api.HardwareConfiguration.prototype.setCanPowerCommandRequestWifiRadio = function(value) {
   return jspb.Message.setProto3BooleanField(this, 5, value);
+};
+
+
+/**
+ * optional bool has_audio_visual_system = 7;
+ * @return {boolean}
+ */
+proto.bosdyn.api.HardwareConfiguration.prototype.getHasAudioVisualSystem = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 7, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.HardwareConfiguration} returns this
+ */
+proto.bosdyn.api.HardwareConfiguration.prototype.setHasAudioVisualSystem = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 7, value);
 };
 
 
@@ -8827,7 +8863,8 @@ proto.bosdyn.api.RobotImpairedState.ImpairedStatus = {
   IMPAIRED_STATUS_NO_MOTOR_POWER: 4,
   IMPAIRED_STATUS_REMOTE_CLOUDS_NOT_WORKING: 5,
   IMPAIRED_STATUS_SERVICE_FAULT: 6,
-  IMPAIRED_STATUS_BEHAVIOR_FAULT: 7
+  IMPAIRED_STATUS_BEHAVIOR_FAULT: 7,
+  IMPAIRED_STATUS_ENTITY_DETECTOR_NOT_WORKING: 8
 };
 
 /**

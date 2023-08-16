@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 // Original file comments:
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -56,7 +56,8 @@ function deserialize_bosdyn_api_MutateWorldObjectResponse(buffer_arg) {
 }
 
 
-// The world object service provides a way to track and store objects detected in the world around the robot.
+// The world object service provides a way to track and store objects detected in the world around
+// the robot.
 var WorldObjectServiceService = exports.WorldObjectServiceService = {
   // Request a list of all the world objects in the robot's perception scene.
 listWorldObjects: {

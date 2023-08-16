@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -306,7 +312,8 @@ proto.bosdyn.api.docking.DockingCommandRequest.toObject = function(includeInstan
     dockingStationId: jspb.Message.getFieldWithDefault(msg, 3, 0),
     clockIdentifier: jspb.Message.getFieldWithDefault(msg, 4, ""),
     endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    prepPoseBehavior: jspb.Message.getFieldWithDefault(msg, 9, 0)
+    prepPoseBehavior: jspb.Message.getFieldWithDefault(msg, 9, 0),
+    requireFiducial: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
   };
 
   if (includeInstance) {
@@ -369,6 +376,10 @@ proto.bosdyn.api.docking.DockingCommandRequest.deserializeBinaryFromReader = fun
     case 9:
       var value = /** @type {!proto.bosdyn.api.docking.PrepPoseBehavior} */ (reader.readEnum());
       msg.setPrepPoseBehavior(value);
+      break;
+    case 10:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setRequireFiducial(value);
       break;
     default:
       reader.skipField();
@@ -441,6 +452,13 @@ proto.bosdyn.api.docking.DockingCommandRequest.serializeBinaryToWriter = functio
   if (f !== 0.0) {
     writer.writeEnum(
       9,
+      f
+    );
+  }
+  f = message.getRequireFiducial();
+  if (f) {
+    writer.writeBool(
+      10,
       f
     );
   }
@@ -609,6 +627,24 @@ proto.bosdyn.api.docking.DockingCommandRequest.prototype.getPrepPoseBehavior = f
  */
 proto.bosdyn.api.docking.DockingCommandRequest.prototype.setPrepPoseBehavior = function(value) {
   return jspb.Message.setProto3EnumField(this, 9, value);
+};
+
+
+/**
+ * optional bool require_fiducial = 10;
+ * @return {boolean}
+ */
+proto.bosdyn.api.docking.DockingCommandRequest.prototype.getRequireFiducial = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 10, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.docking.DockingCommandRequest} returns this
+ */
+proto.bosdyn.api.docking.DockingCommandRequest.prototype.setRequireFiducial = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 10, value);
 };
 
 
@@ -2676,7 +2712,8 @@ proto.bosdyn.api.docking.GetDockingStateResponse.prototype.hasDockState = functi
 proto.bosdyn.api.docking.DockType = {
   DOCK_TYPE_UNKNOWN: 0,
   DOCK_TYPE_CONTACT_PROTOTYPE: 2,
-  DOCK_TYPE_SPOT_DOCK: 3
+  DOCK_TYPE_SPOT_DOCK: 3,
+  DOCK_TYPE_SPOT_DOGHOUSE: 4
 };
 
 /**
