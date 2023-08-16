@@ -3,18 +3,20 @@
 const child_process = require('node:child_process');
 const { join, resolve } = require('node:path');
 
-const version = '3.2.0';
+const version = '3.3.0';
 
 const paths = [
   `../spot-sdk-py/spot-sdk-${version}/protos`,
   `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/*.proto`,
   `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/autowalk/*.proto`,
-  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/spot_cam/*.proto`,
-  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/spot/*.proto`,
-  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/mission/*.proto`,
-  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/graph_nav/*.proto`,
-  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/docking/*.proto`,
   `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/auto_return/*.proto`,
+  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/docking/*.proto`,
+  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/graph_nav/*.proto`,
+  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/keepalive/*.proto`,
+  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/log_status/*.proto`,
+  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/mission/*.proto`,
+  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/spot/*.proto`,
+  `../spot-sdk-py/spot-sdk-${version}/protos/bosdyn/api/spot_cam/*.proto`,
 ];
 
 const output = './';
