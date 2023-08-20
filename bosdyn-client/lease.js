@@ -374,6 +374,7 @@ class LeaseWallet {
 class LeaseClient extends BaseClient {
   static default_service_name = 'lease';
   static service_type = 'bosdyn.api.LeaseService';
+  DEFAULT_RESOURCES = Object.create(null);
 
   constructor(lease_wallet = null) {
     super(lease_service_grpc_pb.LeaseServiceClient);

@@ -17,6 +17,7 @@ const graph_nav_pb = require('../bosdyn/api/graph_nav/graph_nav_pb');
 const graph_nav_service_grpc_pb = require('../bosdyn/api/graph_nav/graph_nav_service_grpc_pb');
 const map_pb = require('../bosdyn/api/graph_nav/map_pb');
 const nav_pb = require('../bosdyn/api/graph_nav/nav_pb');
+var lease_pb = require('../bosdyn/api/lease_pb.js');
 
 class GraphNavClient extends BaseClient {
   static default_service_name = 'graph-nav-service';
@@ -306,6 +307,7 @@ class GraphNavClient extends BaseClient {
   }
 
   static _build_clear_graph_request(lease) {
+    if (lease === null) lease = lease_pb.Lease();
     return new graph_nav_pb.ClearGraphRequest().setLease(lease);
   }
 

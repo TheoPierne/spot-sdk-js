@@ -4,10 +4,10 @@ const process = require('node:process');
 const jspb = require('google-protobuf');
 const any_pb = require('google-protobuf/google/protobuf/any_pb');
 const constants = require('./constants');
-const { ValueError } = require('../bosdyn-client/exceptions');
 const graph_nav_pb = require('../bosdyn/api/graph_nav/graph_nav_pb');
 const nodes_pb = require('../bosdyn/api/mission/nodes_pb');
 const util_pb = require('../bosdyn/api/mission/util_pb');
+const { ValueError } = require('../bosdyn-client/exceptions');
 
 const DUMMY_MESSAGE = new nodes_pb.Node().setName('dummy-message-for-parameterization');
 
@@ -178,7 +178,7 @@ function field_desc_to_pb_type(field_desc) {
   ) {
     return util_pb.VariableDeclaration.Type.TYPE_INT;
   } else if (field_desc.type in [field_desc.TYPE_DOUBLE, field_desc.TYPE_FLOAT]) {
-    return util_pb.VariableDeclaration.Type.TYPE_FLOAT;
+    return util_pb.Type.TYPE_FLOAT;
   } else if (field_desc.type === field_desc.TYPE_BOOL) {
     return util_pb.VariableDeclaration.Type.TYPE_BOOL;
   } else if (field_desc.type === field_desc.TYPE_STRING) {
