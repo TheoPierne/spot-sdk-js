@@ -1,6 +1,6 @@
 'use strict';
 
-const { NdArray, array, identity, dot, multiply, zeros, sqrt, arccos, cos, sin } = require('numjs');
+const { NdArray, array, identity, dot, sqrt, arccos, cos, sin } = require('numjs');
 const _ = require('underscore');
 
 const geometry_pb = require('../bosdyn/api/geometry_pb');
@@ -12,26 +12,27 @@ class ArithmeticError extends Error {
   }
 }
 
+function recenter_value_mod(value, center, amplitude) {
+  let new_value = ((value - center) % amplitude) + center;
+  if (new_value >= center + 0.5 * amplitude) {
+    new_value -= amplitude;
+  } else if (new_value < center - 0.5 * amplitude) {
+    new_value += amplitude;
+  }
+
+  return new_value;
+}
+
+function recenter_angle_mod(theta, center) {
+  return recenter_value_mod(theta, center, 2 * Math.PI);
+}
+
 function angle_diff(a1, a2) {
-  let v = a1 - a2;
-  while (v > Math.PI) {
-    v -= 2 * Math.PI;
-  }
-  while (v < -Math.PI) {
-    v += 2 * Math.PI;
-  }
-  return v;
+  return recenter_angle_mod(a1 - a2, 0.0);
 }
 
 function angle_diff_degrees(a1, a2) {
-  let v = a1 - a2;
-  while (v > 180) {
-    v -= 360;
-  }
-  while (v < -180) {
-    v += 360;
-  }
-  return v;
+  return recenter_value_mod(a1 - a2, 0.0, 360.0);
 }
 
 class Vec2 {
@@ -126,7 +127,7 @@ class Vec3 {
     return this.add(other.negative());
   }
 
-  get lenght() {
+  get length() {
     return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
   }
 
@@ -144,7 +145,7 @@ class Vec3 {
     if (!(other instanceof Vec3)) throw new TypeError(`Can't cross types Vec3 and ${other.constructor.name}.`);
     return new Vec3(
       this.y * other.z - this.z * other.y,
-      this.x * other.z - this.z * other.x,
+      this.z * other.x - this.x * other.z,
       this.x * other.y - this.y * other.x,
     );
   }
@@ -177,8 +178,9 @@ class SE2Pose {
   }
 
   to_obj(proto = {}) {
-    proto.position = { x: this.x, y: this.y };
-    proto.angle = this.angle;
+    const pos = new geometry_pb.Vec2().setX(this.x).setY(this.y);
+    proto.setPosition(pos);
+    proto.setAngle(this.angle);
   }
 
   to_proto() {
@@ -194,12 +196,16 @@ class SE2Pose {
   mult(other) {
     if (other instanceof Vec2) {
       const rotation_matrix = array(this.to_rot_matrix());
-      const rotated_pos = dot(rotation_matrix.T, [other.x, other.y]);
+      const rotated_pos = dot(rotation_matrix, [other.x, other.y]);
       return new Vec2(this.x + rotated_pos.get(0), this.y + rotated_pos.get(1));
     } else if (other instanceof SE2Pose) {
       const rotation_matrix = array(this.to_rot_matrix());
-      const rotated_pos = dot(rotation_matrix.T, [other.x, other.y]);
-      return new SE2Pose(this.x + rotated_pos.get(0), this.y + rotated_pos.get(1), this.angle + other.angle);
+      const rotated_pos = dot(rotation_matrix, [other.x, other.y]);
+      return new SE2Pose(
+        this.x + rotated_pos.get(0),
+        this.y + rotated_pos.get(1),
+        recenter_angle_mod(this.angle + other.angle, 0),
+      );
     } else {
       throw new TypeError(`Can't multiply types ${this.constructor.name} and ${other.constructor.name}.`);
     }
@@ -208,31 +214,32 @@ class SE2Pose {
   to_rot_matrix() {
     const c = Math.cos(this.angle);
     const s = Math.sin(this.angle);
-    return [
+    return array([
       [c, -s],
       [s, c],
-    ];
+    ]);
   }
 
   to_matrix() {
     const c = Math.cos(this.angle);
     const s = Math.sin(this.angle);
-    return [
+    return array([
       [c, -s, this.x],
       [s, c, this.y],
       [0, 0, 1],
-    ];
+    ]);
   }
 
   to_adjoint_matrix() {
-    const a_R_b = this.to_rot_matrix();
-    const position_skew_mat = skew_matrix_2d(this.position);
-    const a_adjoint_b = new NdArray(
-      array([
-        [a_R_b, position_skew_mat.T],
-        [0, 0, 1],
-      ]),
-    );
+    const a_R_b = this.to_rot_matrix().tolist();
+    const position_skew_mat = skew_matrix_2d(this.position).T.tolist();
+
+    const a_adjoint_b = array([
+      [...a_R_b[0], ...position_skew_mat[0]],
+      [...a_R_b[1], ...position_skew_mat[1]],
+      [0, 0, 1],
+    ]);
+
     return a_adjoint_b;
   }
 
@@ -241,14 +248,15 @@ class SE2Pose {
   }
 
   static from_matrix(mat) {
-    const x = mat.get([0, 2]);
-    const y = mat.get([1, 2]);
-    const angle = Math.acos(mat.get([0, 0]));
+    const x = mat.get(0, 2);
+    const y = mat.get(1, 2);
+    const angle = Math.atan2(mat.get(1, 0), mat.get(0, 0));
     return new SE2Pose(x, y, angle);
   }
 
-  static from_obj(tform) {
-    return new SE2Pose(tform.position.x, tform.position.y, tform.angle);
+  static from_proto(tform) {
+    const position = tform.getPosition();
+    return new SE2Pose(position.getX(), position.getY(), tform.getAngle());
   }
 
   get_closest_se3_transform(height_z = 0.0) {
@@ -269,8 +277,8 @@ class SE2Velocity {
   }
 
   to_obj(proto) {
-    proto.linear = { x: this.linear_velocity_x, y: this.linear_velocity_y };
-    proto.angular = this.angular_velocity;
+    proto.setLinear(new geometry_pb.Vec2().setX(this.linear_velocity_x).setY(this.linear_velocity_y));
+    proto.setAngular(this.angular_velocity);
   }
 
   to_proto() {
@@ -294,12 +302,12 @@ class SE2Velocity {
       }
     }
     if (se2_vel_vector instanceof NdArray) {
-      if (se2_vel_vector.shape[0].length !== 3 || se2_vel_vector.shape[0] !== 3) {
+      if (se2_vel_vector.shape[0] !== 3) {
         // eslint-disable-next-line
         console.log(`[MATH HELPERS] Velocity numjs array must have 3 elements. The input has the wrong dimension of: ${se2_vel_vector.shape[0]}`);
         return null;
       } else {
-        return new SE2Velocity(se2_vel_vector[0], se2_vel_vector[1], se2_vel_vector[2]);
+        return new SE2Velocity(se2_vel_vector.get(0, 0), se2_vel_vector.get(0, 1), se2_vel_vector.get(0, 2));
       }
     }
     return new SE2Velocity(0, 0, 0);
@@ -314,7 +322,7 @@ class SE2Velocity {
   }
 
   static from_proto(vel) {
-    return new SE2Velocity(vel.linear.x, vel.linear.y, vel.angular);
+    return new SE2Velocity(vel.getLinear().getX(), vel.getLinear().getY(), vel.getAngular());
   }
 }
 
@@ -334,8 +342,14 @@ class SE3Velocity {
   }
 
   to_obj(proto) {
-    proto.linear = { x: this.linear_velocity_x, y: this.linear_velocity_y, z: this.linear_velocity_z };
-    proto.angular = { x: this.angular_velocity_x, y: this.angular_velocity_y, z: this.angular_velocity_z };
+    proto.setLinear(
+      // eslint-disable-next-line newline-per-chained-call
+      new geometry_pb.Vec3().setX(this.linear_velocity_x).setY(this.linear_velocity_y).setZ(this.linear_velocity_z),
+    );
+    proto.setAngular(
+      // eslint-disable-next-line newline-per-chained-call
+      new geometry_pb.Vec3().setX(this.angular_velocity_x).setY(this.angular_velocity_y).setZ(this.angular_velocity_z),
+    );
   }
 
   to_proto() {
@@ -404,12 +418,12 @@ class SE3Velocity {
         return null;
       } else {
         return new SE3Velocity(
-          se3_vel_vector[0],
-          se3_vel_vector[1],
-          se3_vel_vector[2],
-          se3_vel_vector[3],
-          se3_vel_vector[4],
-          se3_vel_vector[5],
+          se3_vel_vector.get(0, 0),
+          se3_vel_vector.get(1, 0),
+          se3_vel_vector.get(2, 0),
+          se3_vel_vector.get(3, 0),
+          se3_vel_vector.get(4, 0),
+          se3_vel_vector.get(5, 0),
         );
       }
     }
@@ -440,20 +454,21 @@ class SE3Pose {
   }
 
   static from_se2(tform, z = 0) {
-    return new SE3Pose(tform.getX(), tform.getY(), z, Quat.from_yaw(tform.getAngle()));
+    return new SE3Pose(tform.x, tform.y, z, Quat.from_yaw(tform.angle));
   }
 
   to_obj(proto) {
     // eslint-disable-next-line
     proto.setPosition(new geometry_pb.Vec3().setX(this.x).setY(this.y).setZ(this.z));
+    proto.setRotation(new geometry_pb.Quaternion());
     this.rot.to_obj(proto.getRotation());
   }
 
   to_proto() {
     /* eslint-disable */
     return new geometry_pb.SE3Pose()
-    .setPosition(new geometry_pb.Vec3().setX(this.x).setY(this.y).setZ(this.z))
-    .setRotation(new geometry_pb.Quaternion().setX(this.rot.x).setY(this.rot.y).setZ(this.rot.z).setW(this.rot.w));
+      .setPosition(new geometry_pb.Vec3().setX(this.x).setY(this.y).setZ(this.z))
+      .setRotation(new geometry_pb.Quaternion().setX(this.rot.x).setY(this.rot.y).setZ(this.rot.z).setW(this.rot.w));
     /* eslint-enable */
   }
 
@@ -535,15 +550,23 @@ class SE3Pose {
   }
 
   to_adjoint_matrix() {
-    const a_R_b = this.rot.to_matrix();
-    const position_skew_mat = skew_matrix_3d(this.position);
-    const mat = multiply(position_skew_mat, a_R_b).tolist();
-    const a_adjoint_b = new NdArray(
-      array([
-        [a_R_b, mat],
-        [zeros(3, 3), a_R_b],
-      ]),
-    );
+    let a_R_b = this.rot.to_matrix();
+    let position_skew_mat = skew_matrix_3d(this.position);
+
+    const mat = dot(position_skew_mat, a_R_b).tolist();
+    const zeros3x3 = [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ];
+
+    a_R_b = a_R_b.tolist();
+    position_skew_mat = position_skew_mat.tolist();
+
+    const row1 = a_R_b.map((row, index) => row.concat(mat[index]));
+    const row2 = zeros3x3.map((row, index) => row.concat(a_R_b[index]));
+    const a_adjoint_b = array(row1.concat(row2));
+
     return a_adjoint_b;
   }
 
@@ -591,22 +614,23 @@ class Quat {
 
   transform_vec3(vec3) {
     const [x, y, z] = this.transform_point(vec3.x, vec3.y, vec3.z);
+    // eslint-disable-next-line newline-per-chained-call
     return new geometry_pb.Vec3().setX(x).setY(y).setZ(z);
   }
 
   to_matrix() {
     const ret = identity(3);
-    ret.set(0, 0, 1.0 - 2.0 * this.y * this.y - 2.0 * this.z * this.z);
-    ret.set(0, 1, 2.0 * this.x * this.y - 2.0 * this.z * this.w);
-    ret.set(0, 2, 2.0 * this.x * this.z + 2.0 * this.y * this.w);
+    ret.set(0, 0, 1 - 2 * this.y * this.y - 2 * this.z * this.z);
+    ret.set(0, 1, 2 * this.x * this.y - 2 * this.z * this.w);
+    ret.set(0, 2, 2 * this.x * this.z + 2 * this.y * this.w);
 
-    ret.set(1, 0, 2.0 * this.x * this.y + 2.0 * this.z * this.w);
-    ret.set(1, 1, 1.0 - 2.0 * this.x * this.x - 2.0 * this.z * this.z);
-    ret.set(1, 2, 2.0 * this.y * this.z - 2.0 * this.x * this.w);
+    ret.set(1, 0, 2 * this.x * this.y + 2 * this.z * this.w);
+    ret.set(1, 1, 1 - 2 * this.x * this.x - 2 * this.z * this.z);
+    ret.set(1, 2, 2 * this.y * this.z - 2 * this.x * this.w);
 
-    ret.set(2, 0, 2.0 * this.x * this.z - 2.0 * this.y * this.w);
-    ret.set(2, 1, 2.0 * this.y * this.z + 2.0 * this.x * this.w);
-    ret.set(2, 2, 1.0 - 2.0 * this.x * this.x - 2.0 * this.y * this.y);
+    ret.set(2, 0, 2 * this.x * this.z - 2 * this.y * this.w);
+    ret.set(2, 1, 2 * this.y * this.z + 2 * this.x * this.w);
+    ret.set(2, 2, 1 - 2 * this.x * this.x - 2 * this.y * this.y);
 
     return ret;
   }
@@ -705,17 +729,17 @@ class Quat {
 
   to_yaw() {
     const yaw_only_quat = this.closest_yaw_only_quaternion();
-    return 2 * Math.atan2(yaw_only_quat.z, yaw_only_quat.w);
+    return recenter_angle_mod(2 * Math.atan2(yaw_only_quat.z, yaw_only_quat.w), 0);
   }
 
   to_axis_angle() {
     const d = this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z;
     if (d === 0.0 || d === 0) return [0.0, [0, 0, 1]];
     const mag = 1.0 - this.w * this.w;
-    if (mag <= 1e-3) return [0.0, [0, 0, 1]];
+    if (mag <= 1e-12) return [0.0, [0, 0, 1]];
 
     const denom = Math.sqrt(mag);
-    if (denom < 1e-3) return [0.0, [0, 0, 1]];
+    if (denom < 1e-12) return [0.0, [0, 0, 1]];
 
     const angle = 2.0 * Math.acos(this.w);
     const axis = [this.x / denom, this.y / denom, this.z / denom];
@@ -744,24 +768,30 @@ class Quat {
         this.w * other_quat.y - this.x * other_quat.z + this.y * other_quat.w + this.z * other_quat.x,
         this.w * other_quat.z + this.x * other_quat.y - this.y * other_quat.x + this.z * other_quat.w,
       );
-    } else if (other_quat instanceof Vec3) {
-      const [x, y, z] = this.transform_point(other.x, other.y, other.z);
+    }
+    if (other_quat instanceof Vec3) {
+      const [x, y, z] = this.transform_point(other_quat.x, other_quat.y, other_quat.z);
       return new Vec3(x, y, z);
     }
+    throw new TypeError(`Can't multiply types Quat and ${typeof other}.`);
   }
 
+  /**
+   * Normalizes the quaternion.
+   * @returns {Quat}
+   */
   normalize() {
     let q = array([this.w, this.x, this.y, this.z]);
-    const len = sqrt(dot(q.transpose(), q));
+    const len = sqrt(dot(q.transpose(), q)).tolist()[0];
     if (len < 1e-15) {
-      q = [1.0, 0.0, 0.0, 0.0];
+      q = array([1, 0, 0, 0]);
     } else {
-      q /= len;
+      q = q.divide(len);
     }
-    this.w = q[0];
-    this.x = q[1];
-    this.y = q[2];
-    this.z = q[3];
+    this.w = q.get(0);
+    this.x = q.get(1);
+    this.y = q.get(2);
+    this.z = q.get(3);
     return this;
   }
 
@@ -770,7 +800,7 @@ class Quat {
     if (mag > 0) {
       return new Quat(this.w / mag, 0, 0, this.z / mag);
     } else {
-      return new Quat(0, 0, 1, 0);
+      return new Quat(0, 0, 1, 0).mult(this);
     }
   }
 
@@ -779,8 +809,8 @@ class Quat {
     let v1 = array([b.w, b.x, b.y, b.z]);
     let dotRes = dot(v0.T, v1);
 
-    if (dotRes.get(0) < 0.0) {
-      v0 = v0.multiply(-1.0);
+    if (dotRes.get(0) < 0) {
+      v0 = v0.multiply(-1);
       dotRes = dotRes.negative();
     }
 
@@ -799,12 +829,78 @@ class Quat {
       // Compute this value only once
       const sin_theta_0 = sin(theta_0);
 
-      const s0 = cos(theta).substract(dot.multiply(sin_theta).divide(sin_theta_0));
+      const s0 = cos(theta).subtract(dotRes.multiply(sin_theta).divide(sin_theta_0));
       const s1 = sin_theta.divide(sin_theta_0);
 
       result = s0.multiply(v0).add(s1.multiply(v1));
     }
     return new Quat(result.get(0), result.get(1), result.get(2), result.get(3));
+  }
+
+  /**
+   * Returns a quaternion representing the rotation from u to v.
+   * @param {Vec3} u_in An instance of Vec3
+   * @param {Vec3} v_in An instance of Vec3
+   * @returns {Quat}
+   */
+  static from_two_vectors(u_in, v_in) {
+    // Normalizing by max avoids all sorts of underflow and overflow issues when we multiply
+    // terms together, including any issues in calculating the norm itself.
+    const max_u = array([Math.abs(u_in.x), Math.abs(u_in.y), Math.abs(u_in.z)]).max();
+    const max_v = array([Math.abs(v_in.x), Math.abs(v_in.y), Math.abs(v_in.z)]).max();
+    if (max_u === 0 || max_v === 0) {
+      // Undefined; return identity
+      return new Quat(1, 0, 0, 0);
+    }
+
+    const u = u_in.multiply(1 / max_u);
+    const v = v_in.multiply(1 / max_v);
+
+    const u_dot_v = u.dot(v);
+    const u_dot_u = u.dot(u);
+    const v_dot_v = v.dot(v);
+    const norm_u_norm_v = Math.sqrt(u_dot_u * v_dot_v);
+
+    if (u_dot_v < 0) {
+      // When this is the case, things get annoying because the | u || v | + u.v(see u_dot_v >= 0
+      // case below) has cancellation; this leads us to a different formula that is sensitive to
+      // the magnitude of c.If the vectors are close to antipodal, the cross product itself can
+      // be ill conditioned.Algebraically, u x(u + v) is equal to u x v, but, the result is
+      // much more likely to be orthogonal to u and v for extreme cases.
+      const c = u.cross(u + v);
+      const max_c = array([Math.abs(c.x), Math.abs(c.y), Math.abs(c.z)]).max();
+      if (max_c === 0) {
+        // We pick an orthogonal axis, avoiding the smallest one
+        if (Math.abs(u.x) > Math.abs(u.y)) {
+          if (Math.abs(u.y) > Math.abs(u.z)) {
+            const q = new Quat(0, -u.y, u.x, 0);
+            return q.normalize();
+          }
+        } else {
+          const q = new Quat(0, u.z, 0, -u.x);
+          return q.normalize();
+        }
+      } else if (Math.abs(u.x) > Math.abs(u.z)) {
+        const q = new Quat(0, -u.y, u.x, 0);
+        return q.normalize();
+      } else {
+        const q = new Quat(0, 0, -u.z, u.y);
+        return q.normalize();
+      }
+      const c_scl = c.multiply(1 / max_c);
+      const norm2_c_scl = c_scl.dot(c_scl);
+      const tmp = c_scl.multiply(norm_u_norm_v - u_dot_v);
+      const q = new Quat(norm2_c_scl * max_c, tmp.x, tmp.y, tmp.z);
+      return q.normalize();
+    } else {
+      const c = u.cross(v);
+      const q = new Quat(norm_u_norm_v + u_dot_v, c.x, c.y, c.z);
+      return q.normalize();
+    }
+  }
+
+  conj() {
+    return new Quat(this.w, -this.x, -this.y, -this.z);
   }
 }
 
@@ -849,13 +945,14 @@ function skew_matrix_2d(vec2_proto) {
 function transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b) {
   let se2_velocity_in_b_vector;
   if (se2_velocity_in_b instanceof geometry_pb.SE2Velocity) {
-    se2_velocity_in_b_vector = SE2Velocity.from_obj(se2_velocity_in_b).to_vector();
+    se2_velocity_in_b_vector = SE2Velocity.from_proto(se2_velocity_in_b).to_vector();
   } else if (se2_velocity_in_b instanceof SE2Velocity) {
     se2_velocity_in_b_vector = se2_velocity_in_b.to_vector();
   } else {
     return null;
   }
-  const se2_velocity_in_a_vector = new NdArray(multiply(a_adjoint_b_matrix, se2_velocity_in_b_vector));
+
+  const se2_velocity_in_a_vector = dot(a_adjoint_b_matrix, se2_velocity_in_b_vector);
   const se2_velocity_in_a = SE2Velocity.from_vector(se2_velocity_in_a_vector);
   return se2_velocity_in_a;
 }
@@ -863,13 +960,14 @@ function transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b) {
 function transform_se3velocity(a_adjoint_b_matrix, se3_velocity_in_b) {
   let se3_velocity_in_b_vec;
   if (se3_velocity_in_b instanceof geometry_pb.SE3Velocity) {
-    se3_velocity_in_b_vec = SE3Velocity.from_obj(se3_velocity_in_b).to_vector();
+    se3_velocity_in_b_vec = SE3Velocity.from_proto(se3_velocity_in_b).to_vector();
   } else if (se3_velocity_in_b instanceof SE3Velocity) {
     se3_velocity_in_b_vec = se3_velocity_in_b.to_vector();
   } else {
     return null;
   }
-  const se3_velocity_in_a_vec = new NdArray(multiply(a_adjoint_b_matrix, se3_velocity_in_b_vec));
+
+  const se3_velocity_in_a_vec = dot(a_adjoint_b_matrix, se3_velocity_in_b_vec);
   const se3_velocity_in_a = SE3Velocity.from_vector(se3_velocity_in_a_vec);
   return se3_velocity_in_a;
 }
@@ -889,7 +987,7 @@ function quat_to_eulerZYX(q) {
     yaw = Math.atan2(2 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
     roll = Math.atan2(2 * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
   }
-  return { yaw, pitch, roll };
+  return [yaw, pitch, roll];
 }
 
 module.exports = {
@@ -911,4 +1009,6 @@ module.exports = {
   transform_se2velocity,
   transform_se3velocity,
   quat_to_eulerZYX,
+  recenter_value_mod,
+  recenter_angle_mod,
 };
