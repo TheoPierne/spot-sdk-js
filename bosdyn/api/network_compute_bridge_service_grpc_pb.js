@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 // Original file comments:
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -55,6 +55,28 @@ function deserialize_bosdyn_api_NetworkComputeResponse(buffer_arg) {
   return bosdyn_api_network_compute_bridge_pb.NetworkComputeResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_bosdyn_api_WorkerComputeRequest(arg) {
+  if (!(arg instanceof bosdyn_api_network_compute_bridge_pb.WorkerComputeRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.WorkerComputeRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_WorkerComputeRequest(buffer_arg) {
+  return bosdyn_api_network_compute_bridge_pb.WorkerComputeRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_WorkerComputeResponse(arg) {
+  if (!(arg instanceof bosdyn_api_network_compute_bridge_pb.WorkerComputeResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.WorkerComputeResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_WorkerComputeResponse(buffer_arg) {
+  return bosdyn_api_network_compute_bridge_pb.WorkerComputeResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 
 // RPCs for sending images or other data to networked server for computation.
 var NetworkComputeBridgeService = exports.NetworkComputeBridgeService = {
@@ -97,6 +119,17 @@ var NetworkComputeBridgeWorkerService = exports.NetworkComputeBridgeWorkerServic
     requestDeserialize: deserialize_bosdyn_api_NetworkComputeRequest,
     responseSerialize: serialize_bosdyn_api_NetworkComputeResponse,
     responseDeserialize: deserialize_bosdyn_api_NetworkComputeResponse,
+  },
+  workerCompute: {
+    path: '/bosdyn.api.NetworkComputeBridgeWorker/WorkerCompute',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_network_compute_bridge_pb.WorkerComputeRequest,
+    responseType: bosdyn_api_network_compute_bridge_pb.WorkerComputeResponse,
+    requestSerialize: serialize_bosdyn_api_WorkerComputeRequest,
+    requestDeserialize: deserialize_bosdyn_api_WorkerComputeRequest,
+    responseSerialize: serialize_bosdyn_api_WorkerComputeResponse,
+    responseDeserialize: deserialize_bosdyn_api_WorkerComputeResponse,
   },
   listAvailableModels: {
     path: '/bosdyn.api.NetworkComputeBridgeWorker/ListAvailableModels',

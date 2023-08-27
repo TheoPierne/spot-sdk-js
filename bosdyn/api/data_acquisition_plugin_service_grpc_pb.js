@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 // Original file comments:
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -100,12 +100,13 @@ function deserialize_bosdyn_api_GetStatusResponse(buffer_arg) {
 }
 
 
-// The DataAcquisitionPluginService is a gRPC service that a payload developer implements to retrieve
-// data from a sensor (or more generally perform some payload action) and optionally store that data
-// on the robot via the DataAcquisitionStore service.
+// The DataAcquisitionPluginService is a gRPC service that a payload developer implements to
+// retrieve data from a sensor (or more generally perform some payload action) and optionally store
+// that data on the robot via the DataAcquisitionStore service.
 var DataAcquisitionPluginServiceService = exports.DataAcquisitionPluginServiceService = {
   // Trigger a data acquisition to save metadata and non-image data to the data buffer.
-// Sent by the main DAQ as a result of a data acquisition request from the tablet or a client.
+// Sent by the main Data Acquisition service as a result of a data acquisition request from the
+// tablet or a client.
 acquirePluginData: {
     path: '/bosdyn.api.DataAcquisitionPluginService/AcquirePluginData',
     requestStream: false,
@@ -129,7 +130,7 @@ getStatus: {
     responseSerialize: serialize_bosdyn_api_GetStatusResponse,
     responseDeserialize: deserialize_bosdyn_api_GetStatusResponse,
   },
-  // Get information from a DAQ service; lists acquisition capabilities.
+  // Get information from a Data Acquisition service; lists acquisition capabilities.
 getServiceInfo: {
     path: '/bosdyn.api.DataAcquisitionPluginService/GetServiceInfo',
     requestStream: false,

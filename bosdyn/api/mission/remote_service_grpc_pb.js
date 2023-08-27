@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 // Original file comments:
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -31,6 +31,28 @@ function serialize_bosdyn_api_mission_EstablishSessionResponse(arg) {
 
 function deserialize_bosdyn_api_mission_EstablishSessionResponse(buffer_arg) {
   return bosdyn_api_mission_remote_pb.EstablishSessionResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_mission_GetRemoteMissionServiceInfoRequest(arg) {
+  if (!(arg instanceof bosdyn_api_mission_remote_pb.GetRemoteMissionServiceInfoRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.mission.GetRemoteMissionServiceInfoRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_mission_GetRemoteMissionServiceInfoRequest(buffer_arg) {
+  return bosdyn_api_mission_remote_pb.GetRemoteMissionServiceInfoRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_mission_GetRemoteMissionServiceInfoResponse(arg) {
+  if (!(arg instanceof bosdyn_api_mission_remote_pb.GetRemoteMissionServiceInfoResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.mission.GetRemoteMissionServiceInfoResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_mission_GetRemoteMissionServiceInfoResponse(buffer_arg) {
+  return bosdyn_api_mission_remote_pb.GetRemoteMissionServiceInfoResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_bosdyn_api_mission_StopRequest(arg) {
@@ -152,6 +174,19 @@ teardownSession: {
     requestDeserialize: deserialize_bosdyn_api_mission_TeardownSessionRequest,
     responseSerialize: serialize_bosdyn_api_mission_TeardownSessionResponse,
     responseDeserialize: deserialize_bosdyn_api_mission_TeardownSessionResponse,
+  },
+  // Asks the service what to describe itself  Can be called by clients at mission
+// record time to parameterize a RemoteGrpc node.
+getRemoteMissionServiceInfo: {
+    path: '/bosdyn.api.mission.RemoteMissionService/GetRemoteMissionServiceInfo',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_mission_remote_pb.GetRemoteMissionServiceInfoRequest,
+    responseType: bosdyn_api_mission_remote_pb.GetRemoteMissionServiceInfoResponse,
+    requestSerialize: serialize_bosdyn_api_mission_GetRemoteMissionServiceInfoRequest,
+    requestDeserialize: deserialize_bosdyn_api_mission_GetRemoteMissionServiceInfoRequest,
+    responseSerialize: serialize_bosdyn_api_mission_GetRemoteMissionServiceInfoResponse,
+    responseDeserialize: deserialize_bosdyn_api_mission_GetRemoteMissionServiceInfoResponse,
   },
 };
 

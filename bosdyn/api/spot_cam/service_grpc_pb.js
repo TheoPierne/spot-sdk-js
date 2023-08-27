@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 // Original file comments:
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -262,6 +262,28 @@ function deserialize_bosdyn_api_spot_cam_GetIrColormapResponse(buffer_arg) {
   return bosdyn_api_spot_cam_compositor_pb.GetIrColormapResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_bosdyn_api_spot_cam_GetIrMeterOverlayRequest(arg) {
+  if (!(arg instanceof bosdyn_api_spot_cam_compositor_pb.GetIrMeterOverlayRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.spot_cam.GetIrMeterOverlayRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_spot_cam_GetIrMeterOverlayRequest(buffer_arg) {
+  return bosdyn_api_spot_cam_compositor_pb.GetIrMeterOverlayRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_spot_cam_GetIrMeterOverlayResponse(arg) {
+  if (!(arg instanceof bosdyn_api_spot_cam_compositor_pb.GetIrMeterOverlayResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.spot_cam.GetIrMeterOverlayResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_spot_cam_GetIrMeterOverlayResponse(buffer_arg) {
+  return bosdyn_api_spot_cam_compositor_pb.GetIrMeterOverlayResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_bosdyn_api_spot_cam_GetLEDBrightnessRequest(arg) {
   if (!(arg instanceof bosdyn_api_spot_cam_LED_pb.GetLEDBrightnessRequest)) {
     throw new Error('Expected argument of type bosdyn.api.spot_cam.GetLEDBrightnessRequest');
@@ -304,6 +326,28 @@ function serialize_bosdyn_api_spot_cam_GetPowerStatusResponse(arg) {
 
 function deserialize_bosdyn_api_spot_cam_GetPowerStatusResponse(buffer_arg) {
   return bosdyn_api_spot_cam_power_pb.GetPowerStatusResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_spot_cam_GetPtzFocusStateRequest(arg) {
+  if (!(arg instanceof bosdyn_api_spot_cam_ptz_pb.GetPtzFocusStateRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.spot_cam.GetPtzFocusStateRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_spot_cam_GetPtzFocusStateRequest(buffer_arg) {
+  return bosdyn_api_spot_cam_ptz_pb.GetPtzFocusStateRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_spot_cam_GetPtzFocusStateResponse(arg) {
+  if (!(arg instanceof bosdyn_api_spot_cam_ptz_pb.GetPtzFocusStateResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.spot_cam.GetPtzFocusStateResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_spot_cam_GetPtzFocusStateResponse(buffer_arg) {
+  return bosdyn_api_spot_cam_ptz_pb.GetPtzFocusStateResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_bosdyn_api_spot_cam_GetPtzPositionRequest(arg) {
@@ -922,6 +966,28 @@ function deserialize_bosdyn_api_spot_cam_SetPowerStatusResponse(buffer_arg) {
   return bosdyn_api_spot_cam_power_pb.SetPowerStatusResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_bosdyn_api_spot_cam_SetPtzFocusStateRequest(arg) {
+  if (!(arg instanceof bosdyn_api_spot_cam_ptz_pb.SetPtzFocusStateRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.spot_cam.SetPtzFocusStateRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_spot_cam_SetPtzFocusStateRequest(buffer_arg) {
+  return bosdyn_api_spot_cam_ptz_pb.SetPtzFocusStateRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_spot_cam_SetPtzFocusStateResponse(arg) {
+  if (!(arg instanceof bosdyn_api_spot_cam_ptz_pb.SetPtzFocusStateResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.spot_cam.SetPtzFocusStateResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_spot_cam_SetPtzFocusStateResponse(buffer_arg) {
+  return bosdyn_api_spot_cam_ptz_pb.SetPtzFocusStateResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_bosdyn_api_spot_cam_SetPtzPositionRequest(arg) {
   if (!(arg instanceof bosdyn_api_spot_cam_ptz_pb.SetPtzPositionRequest)) {
     throw new Error('Expected argument of type bosdyn.api.spot_cam.SetPtzPositionRequest');
@@ -1163,6 +1229,18 @@ setIrMeterOverlay: {
     responseSerialize: serialize_bosdyn_api_spot_cam_SetIrMeterOverlayResponse,
     responseDeserialize: deserialize_bosdyn_api_spot_cam_SetIrMeterOverlayResponse,
   },
+  // retrieve settings for the 'ir meter overlay'
+getIrMeterOverlay: {
+    path: '/bosdyn.api.spot_cam.CompositorService/GetIrMeterOverlay',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_spot_cam_compositor_pb.GetIrMeterOverlayRequest,
+    responseType: bosdyn_api_spot_cam_compositor_pb.GetIrMeterOverlayResponse,
+    requestSerialize: serialize_bosdyn_api_spot_cam_GetIrMeterOverlayRequest,
+    requestDeserialize: deserialize_bosdyn_api_spot_cam_GetIrMeterOverlayRequest,
+    responseSerialize: serialize_bosdyn_api_spot_cam_GetIrMeterOverlayResponse,
+    responseDeserialize: deserialize_bosdyn_api_spot_cam_GetIrMeterOverlayResponse,
+  },
 };
 
 exports.CompositorServiceClient = grpc.makeGenericClientConstructor(CompositorServiceService);
@@ -1313,7 +1391,8 @@ tag: {
     responseSerialize: serialize_bosdyn_api_spot_cam_TagResponse,
     responseDeserialize: deserialize_bosdyn_api_spot_cam_TagResponse,
   },
-  // EnableDebug starts the periodic logging of health data to the database; this increases disk utilization, but will record data that is useful post-mortum
+  // EnableDebug starts the periodic logging of health data to the database; this increases disk
+// utilization, but will record data that is useful post-mortum
 enableDebug: {
     path: '/bosdyn.api.spot_cam.MediaLogService/EnableDebug',
     requestStream: false,
@@ -1474,12 +1553,35 @@ initializeLens: {
     responseSerialize: serialize_bosdyn_api_spot_cam_InitializeLensResponse,
     responseDeserialize: deserialize_bosdyn_api_spot_cam_InitializeLensResponse,
   },
+  setPtzFocusState: {
+    path: '/bosdyn.api.spot_cam.PtzService/SetPtzFocusState',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_spot_cam_ptz_pb.SetPtzFocusStateRequest,
+    responseType: bosdyn_api_spot_cam_ptz_pb.SetPtzFocusStateResponse,
+    requestSerialize: serialize_bosdyn_api_spot_cam_SetPtzFocusStateRequest,
+    requestDeserialize: deserialize_bosdyn_api_spot_cam_SetPtzFocusStateRequest,
+    responseSerialize: serialize_bosdyn_api_spot_cam_SetPtzFocusStateResponse,
+    responseDeserialize: deserialize_bosdyn_api_spot_cam_SetPtzFocusStateResponse,
+  },
+  getPtzFocusState: {
+    path: '/bosdyn.api.spot_cam.PtzService/GetPtzFocusState',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_spot_cam_ptz_pb.GetPtzFocusStateRequest,
+    responseType: bosdyn_api_spot_cam_ptz_pb.GetPtzFocusStateResponse,
+    requestSerialize: serialize_bosdyn_api_spot_cam_GetPtzFocusStateRequest,
+    requestDeserialize: deserialize_bosdyn_api_spot_cam_GetPtzFocusStateRequest,
+    responseSerialize: serialize_bosdyn_api_spot_cam_GetPtzFocusStateResponse,
+    responseDeserialize: deserialize_bosdyn_api_spot_cam_GetPtzFocusStateResponse,
+  },
 };
 
 exports.PtzServiceClient = grpc.makeGenericClientConstructor(PtzServiceService);
 // Upload and play sounds over the SpotCam's speakers.
 var AudioServiceService = exports.AudioServiceService = {
-  // Given a soundRequest that identifies a single sound present in the system's sound effects table, PlaySound executes the sound effect.
+  // Given a soundRequest that identifies a single sound present in the system's sound effects
+// table, PlaySound executes the sound effect.
 playSound: {
     path: '/bosdyn.api.spot_cam.AudioService/PlaySound',
     requestStream: false,
@@ -1491,10 +1593,11 @@ playSound: {
     responseSerialize: serialize_bosdyn_api_spot_cam_PlaySoundResponse,
     responseDeserialize: deserialize_bosdyn_api_spot_cam_PlaySoundResponse,
   },
-  // LoadSound loads a sound effect into the system's sound table. The stream must contain a wav file, with a RIFF header describing it.
-// The arguement is a stream, to allow for sounds that are bigger then the MTU of the network; in this case, the complete stream must
-// contain the entire sound. If the stream ends early, an error will be returned. The header and sound fields of the entire stream must
-// be the same.
+  // LoadSound loads a sound effect into the system's sound table. The stream must contain a wav
+// file, with a RIFF header describing it. The arguement is a stream, to allow for sounds that
+// are bigger then the MTU of the network; in this case, the complete stream must contain the
+// entire sound. If the stream ends early, an error will be returned. The header and sound
+// fields of the entire stream must be the same.
 loadSound: {
     path: '/bosdyn.api.spot_cam.AudioService/LoadSound',
     requestStream: true,
@@ -1603,7 +1706,8 @@ getVolume: {
 exports.AudioServiceClient = grpc.makeGenericClientConstructor(AudioServiceService);
 // Query temperature and built-in test results.
 var HealthServiceService = exports.HealthServiceService = {
-  // GetTemperature returns a list of thermometers in the system, and the temperature that they measure.
+  // GetTemperature returns a list of thermometers in the system, and the temperature that they
+// measure.
 getTemperature: {
     path: '/bosdyn.api.spot_cam.HealthService/GetTemperature',
     requestStream: false,
@@ -1615,8 +1719,9 @@ getTemperature: {
     responseSerialize: serialize_bosdyn_api_spot_cam_GetTemperatureResponse,
     responseDeserialize: deserialize_bosdyn_api_spot_cam_GetTemperatureResponse,
   },
-  // GetBitStatus returns two lists; a list of system events, and a list of ways that the system is degraded;
-// for instance, a degredation may include a missing PTZ unit, or a missing USB storage device.
+  // GetBitStatus returns two lists; a list of system events, and a list of ways that the system
+// is degraded; for instance, a degredation may include a missing PTZ unit, or a missing USB
+// storage device.
 getBITStatus: {
     path: '/bosdyn.api.spot_cam.HealthService/GetBITStatus',
     requestStream: false,
@@ -1640,8 +1745,9 @@ clearBITEvents: {
     responseSerialize: serialize_bosdyn_api_spot_cam_ClearBITEventsResponse,
     responseDeserialize: deserialize_bosdyn_api_spot_cam_ClearBITEventsResponse,
   },
-  // GetSystemLog retrieves an encrypted log of system events, for factory diagnosis of possible issues.
-// The data streamed back should be concatenated to a single file, before sending to the manufacturer.
+  // GetSystemLog retrieves an encrypted log of system events, for factory diagnosis of possible
+// issues. The data streamed back should be concatenated to a single file, before sending to the
+// manufacturer.
 getSystemLog: {
     path: '/bosdyn.api.spot_cam.HealthService/GetSystemLog',
     requestStream: false,
@@ -1658,7 +1764,8 @@ getSystemLog: {
 exports.HealthServiceClient = grpc.makeGenericClientConstructor(HealthServiceService);
 // Modify or query network settings of the SpotCam and ICE resolution servers.
 var NetworkServiceService = exports.NetworkServiceService = {
-  // SetICEConfiguration sets up parameters for ICE, including addresses for STUN and TURN services
+  // SetICEConfiguration sets up parameters for ICE, including addresses for STUN and TURN
+// services
 setICEConfiguration: {
     path: '/bosdyn.api.spot_cam.NetworkService/SetICEConfiguration',
     requestStream: false,
@@ -1670,7 +1777,8 @@ setICEConfiguration: {
     responseSerialize: serialize_bosdyn_api_spot_cam_SetICEConfigurationResponse,
     responseDeserialize: deserialize_bosdyn_api_spot_cam_SetICEConfigurationResponse,
   },
-  // GetICEConfiguration retrieves currently set parameters for ICE, including addresses for STUN and TURN services
+  // GetICEConfiguration retrieves currently set parameters for ICE, including addresses for STUN
+// and TURN services
 getICEConfiguration: {
     path: '/bosdyn.api.spot_cam.NetworkService/GetICEConfiguration',
     requestStream: false,

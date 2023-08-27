@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
 goog.object.extend(proto, google_protobuf_wrappers_pb);
@@ -800,7 +806,8 @@ proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams.toOb
     minLoopClosurePathLength: (f = msg.getMinLoopClosurePathLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     maxLoopClosureHeightChange: (f = msg.getMaxLoopClosureHeightChange()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     maxLoopClosureEdgeLength: (f = msg.getMaxLoopClosureEdgeLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    numExtraLoopClosureIterations: (f = msg.getNumExtraLoopClosureIterations()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f)
+    numExtraLoopClosureIterations: (f = msg.getNumExtraLoopClosureIterations()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
+    pruneEdges: (f = msg.getPruneEdges()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -861,6 +868,11 @@ proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams.dese
       var value = new google_protobuf_wrappers_pb.Int32Value;
       reader.readMessage(value,google_protobuf_wrappers_pb.Int32Value.deserializeBinaryFromReader);
       msg.setNumExtraLoopClosureIterations(value);
+      break;
+    case 6:
+      var value = new google_protobuf_wrappers_pb.BoolValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.BoolValue.deserializeBinaryFromReader);
+      msg.setPruneEdges(value);
       break;
     default:
       reader.skipField();
@@ -929,6 +941,14 @@ proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams.seri
       5,
       f,
       google_protobuf_wrappers_pb.Int32Value.serializeBinaryToWriter
+    );
+  }
+  f = message.getPruneEdges();
+  if (f != null) {
+    writer.writeMessage(
+      6,
+      f,
+      google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
     );
   }
 };
@@ -1119,6 +1139,43 @@ proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams.prot
 };
 
 
+/**
+ * optional google.protobuf.BoolValue prune_edges = 6;
+ * @return {?proto.google.protobuf.BoolValue}
+ */
+proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams.prototype.getPruneEdges = function() {
+  return /** @type{?proto.google.protobuf.BoolValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.BoolValue, 6));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams} returns this
+*/
+proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams.prototype.setPruneEdges = function(value) {
+  return jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams} returns this
+ */
+proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams.prototype.clearPruneEdges = function() {
+  return this.setPruneEdges(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.graph_nav.ProcessTopologyRequest.OdometryLoopClosureParams.prototype.hasPruneEdges = function() {
+  return jspb.Message.getField(this, 6) != null;
+};
+
+
 
 
 
@@ -1154,7 +1211,8 @@ proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams.toOb
     minLoopClosurePathLength: (f = msg.getMinLoopClosurePathLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     maxLoopClosureEdgeLength: (f = msg.getMaxLoopClosureEdgeLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     maxFiducialDistance: (f = msg.getMaxFiducialDistance()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxLoopClosureHeightChange: (f = msg.getMaxLoopClosureHeightChange()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+    maxLoopClosureHeightChange: (f = msg.getMaxLoopClosureHeightChange()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+    pruneEdges: (f = msg.getPruneEdges()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1210,6 +1268,11 @@ proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams.dese
       var value = new google_protobuf_wrappers_pb.DoubleValue;
       reader.readMessage(value,google_protobuf_wrappers_pb.DoubleValue.deserializeBinaryFromReader);
       msg.setMaxLoopClosureHeightChange(value);
+      break;
+    case 5:
+      var value = new google_protobuf_wrappers_pb.BoolValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.BoolValue.deserializeBinaryFromReader);
+      msg.setPruneEdges(value);
       break;
     default:
       reader.skipField();
@@ -1270,6 +1333,14 @@ proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams.seri
       4,
       f,
       google_protobuf_wrappers_pb.DoubleValue.serializeBinaryToWriter
+    );
+  }
+  f = message.getPruneEdges();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
     );
   }
 };
@@ -1420,6 +1491,43 @@ proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams.prot
  */
 proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams.prototype.hasMaxLoopClosureHeightChange = function() {
   return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional google.protobuf.BoolValue prune_edges = 5;
+ * @return {?proto.google.protobuf.BoolValue}
+ */
+proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams.prototype.getPruneEdges = function() {
+  return /** @type{?proto.google.protobuf.BoolValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.BoolValue, 5));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams} returns this
+*/
+proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams.prototype.setPruneEdges = function(value) {
+  return jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams} returns this
+ */
+proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams.prototype.clearPruneEdges = function() {
+  return this.setPruneEdges(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.graph_nav.ProcessTopologyRequest.FiducialLoopClosureParams.prototype.hasPruneEdges = function() {
+  return jspb.Message.getField(this, 5) != null;
 };
 
 
@@ -5290,7 +5398,7 @@ proto.bosdyn.api.graph_nav.ProcessAnchoringRequest.prototype.setStreamIntermedia
  * @private {!Array<number>}
  * @const
  */
-proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.repeatedFields_ = [3,4,9,10,11,12,13];
+proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.repeatedFields_ = [3,4,9,10,11,12,13,14];
 
 
 
@@ -5339,7 +5447,9 @@ proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.toObject = function(includeI
     proto.bosdyn.api.graph_nav.WorldObjectAnchorHint.toObject, includeInstance),
     missingSnapshotIdsList: (f = jspb.Message.getRepeatedField(msg, 11)) == null ? undefined : f,
     missingWaypointIdsList: (f = jspb.Message.getRepeatedField(msg, 12)) == null ? undefined : f,
-    invalidHintsList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f
+    invalidHintsList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f,
+    inconsistentEdgesList: jspb.Message.toObjectList(msg.getInconsistentEdgesList(),
+    bosdyn_api_graph_nav_map_pb.Edge.Id.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -5432,6 +5542,11 @@ proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.deserializeBinaryFromReader 
     case 13:
       var value = /** @type {string} */ (reader.readString());
       msg.addInvalidHints(value);
+      break;
+    case 14:
+      var value = new bosdyn_api_graph_nav_map_pb.Edge.Id;
+      reader.readMessage(value,bosdyn_api_graph_nav_map_pb.Edge.Id.deserializeBinaryFromReader);
+      msg.addInconsistentEdges(value);
       break;
     default:
       reader.skipField();
@@ -5556,6 +5671,14 @@ proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.serializeBinaryToWriter = fu
     writer.writeRepeatedString(
       13,
       f
+    );
+  }
+  f = message.getInconsistentEdgesList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      14,
+      f,
+      bosdyn_api_graph_nav_map_pb.Edge.Id.serializeBinaryToWriter
     );
   }
 };
@@ -5966,6 +6089,44 @@ proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.prototype.addInvalidHints = 
  */
 proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.prototype.clearInvalidHintsList = function() {
   return this.setInvalidHintsList([]);
+};
+
+
+/**
+ * repeated Edge.Id inconsistent_edges = 14;
+ * @return {!Array<!proto.bosdyn.api.graph_nav.Edge.Id>}
+ */
+proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.prototype.getInconsistentEdgesList = function() {
+  return /** @type{!Array<!proto.bosdyn.api.graph_nav.Edge.Id>} */ (
+    jspb.Message.getRepeatedWrapperField(this, bosdyn_api_graph_nav_map_pb.Edge.Id, 14));
+};
+
+
+/**
+ * @param {!Array<!proto.bosdyn.api.graph_nav.Edge.Id>} value
+ * @return {!proto.bosdyn.api.graph_nav.ProcessAnchoringResponse} returns this
+*/
+proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.prototype.setInconsistentEdgesList = function(value) {
+  return jspb.Message.setRepeatedWrapperField(this, 14, value);
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.graph_nav.Edge.Id=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.bosdyn.api.graph_nav.Edge.Id}
+ */
+proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.prototype.addInconsistentEdges = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 14, opt_value, proto.bosdyn.api.graph_nav.Edge.Id, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.bosdyn.api.graph_nav.ProcessAnchoringResponse} returns this
+ */
+proto.bosdyn.api.graph_nav.ProcessAnchoringResponse.prototype.clearInconsistentEdgesList = function() {
+  return this.setInconsistentEdgesList([]);
 };
 
 

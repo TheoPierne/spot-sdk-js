@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_alerts_pb = require('../../bosdyn/api/alerts_pb.js');
 goog.object.extend(proto, bosdyn_api_alerts_pb);
@@ -23,6 +29,8 @@ var bosdyn_api_image_pb = require('../../bosdyn/api/image_pb.js');
 goog.object.extend(proto, bosdyn_api_image_pb);
 var bosdyn_api_network_compute_bridge_pb = require('../../bosdyn/api/network_compute_bridge_pb.js');
 goog.object.extend(proto, bosdyn_api_network_compute_bridge_pb);
+var bosdyn_api_service_customization_pb = require('../../bosdyn/api/service_customization_pb.js');
+goog.object.extend(proto, bosdyn_api_service_customization_pb);
 var google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 goog.object.extend(proto, google_protobuf_any_pb);
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
@@ -59,6 +67,7 @@ goog.exportSymbol('proto.bosdyn.api.ImageSourceCapture', null, global);
 goog.exportSymbol('proto.bosdyn.api.Metadata', null, global);
 goog.exportSymbol('proto.bosdyn.api.NetworkComputeCapability', null, global);
 goog.exportSymbol('proto.bosdyn.api.NetworkComputeCapture', null, global);
+goog.exportSymbol('proto.bosdyn.api.NetworkComputeCapture.InputCase', null, global);
 goog.exportSymbol('proto.bosdyn.api.NetworkComputeError', null, global);
 goog.exportSymbol('proto.bosdyn.api.NetworkComputeError.ErrorCode', null, global);
 goog.exportSymbol('proto.bosdyn.api.PluginServiceError', null, global);
@@ -305,7 +314,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.bosdyn.api.NetworkComputeCapture = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.bosdyn.api.NetworkComputeCapture.oneofGroups_);
 };
 goog.inherits(proto.bosdyn.api.NetworkComputeCapture, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -644,7 +653,8 @@ proto.bosdyn.api.DataAcquisitionCapability.toObject = function(includeInstance, 
     name: jspb.Message.getFieldWithDefault(msg, 1, ""),
     description: jspb.Message.getFieldWithDefault(msg, 2, ""),
     channelName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    serviceName: jspb.Message.getFieldWithDefault(msg, 4, "")
+    serviceName: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.Spec.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -696,6 +706,11 @@ proto.bosdyn.api.DataAcquisitionCapability.deserializeBinaryFromReader = functio
     case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setServiceName(value);
+      break;
+    case 5:
+      var value = new bosdyn_api_service_customization_pb.DictParam.Spec;
+      reader.readMessage(value,bosdyn_api_service_customization_pb.DictParam.Spec.deserializeBinaryFromReader);
+      msg.setCustomParams(value);
       break;
     default:
       reader.skipField();
@@ -752,6 +767,14 @@ proto.bosdyn.api.DataAcquisitionCapability.serializeBinaryToWriter = function(me
     writer.writeString(
       4,
       f
+    );
+  }
+  f = message.getCustomParams();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      bosdyn_api_service_customization_pb.DictParam.Spec.serializeBinaryToWriter
     );
   }
 };
@@ -826,6 +849,43 @@ proto.bosdyn.api.DataAcquisitionCapability.prototype.getServiceName = function()
  */
 proto.bosdyn.api.DataAcquisitionCapability.prototype.setServiceName = function(value) {
   return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional DictParam.Spec custom_params = 5;
+ * @return {?proto.bosdyn.api.DictParam.Spec}
+ */
+proto.bosdyn.api.DataAcquisitionCapability.prototype.getCustomParams = function() {
+  return /** @type{?proto.bosdyn.api.DictParam.Spec} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_service_customization_pb.DictParam.Spec, 5));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.DictParam.Spec|undefined} value
+ * @return {!proto.bosdyn.api.DataAcquisitionCapability} returns this
+*/
+proto.bosdyn.api.DataAcquisitionCapability.prototype.setCustomParams = function(value) {
+  return jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.DataAcquisitionCapability} returns this
+ */
+proto.bosdyn.api.DataAcquisitionCapability.prototype.clearCustomParams = function() {
+  return this.setCustomParams(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.DataAcquisitionCapability.prototype.hasCustomParams = function() {
+  return jspb.Message.getField(this, 5) != null;
 };
 
 
@@ -1110,7 +1170,8 @@ proto.bosdyn.api.NetworkComputeCapability.toObject = function(includeInstance, m
     serverConfig: (f = msg.getServerConfig()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration.toObject(includeInstance, f),
     availableModelsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
     labelsList: jspb.Message.toObjectList(msg.getLabelsList(),
-    bosdyn_api_network_compute_bridge_pb.ModelLabels.toObject, includeInstance)
+    bosdyn_api_network_compute_bridge_pb.ModelLabels.toObject, includeInstance),
+    models: (f = msg.getModels()) && bosdyn_api_network_compute_bridge_pb.AvailableModels.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1160,6 +1221,11 @@ proto.bosdyn.api.NetworkComputeCapability.deserializeBinaryFromReader = function
       var value = new bosdyn_api_network_compute_bridge_pb.ModelLabels;
       reader.readMessage(value,bosdyn_api_network_compute_bridge_pb.ModelLabels.deserializeBinaryFromReader);
       msg.addLabels(value);
+      break;
+    case 3:
+      var value = new bosdyn_api_network_compute_bridge_pb.AvailableModels;
+      reader.readMessage(value,bosdyn_api_network_compute_bridge_pb.AvailableModels.deserializeBinaryFromReader);
+      msg.setModels(value);
       break;
     default:
       reader.skipField();
@@ -1211,6 +1277,14 @@ proto.bosdyn.api.NetworkComputeCapability.serializeBinaryToWriter = function(mes
       6,
       f,
       bosdyn_api_network_compute_bridge_pb.ModelLabels.serializeBinaryToWriter
+    );
+  }
+  f = message.getModels();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      bosdyn_api_network_compute_bridge_pb.AvailableModels.serializeBinaryToWriter
     );
   }
 };
@@ -1325,6 +1399,43 @@ proto.bosdyn.api.NetworkComputeCapability.prototype.addLabels = function(opt_val
  */
 proto.bosdyn.api.NetworkComputeCapability.prototype.clearLabelsList = function() {
   return this.setLabelsList([]);
+};
+
+
+/**
+ * optional AvailableModels models = 3;
+ * @return {?proto.bosdyn.api.AvailableModels}
+ */
+proto.bosdyn.api.NetworkComputeCapability.prototype.getModels = function() {
+  return /** @type{?proto.bosdyn.api.AvailableModels} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_network_compute_bridge_pb.AvailableModels, 3));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.AvailableModels|undefined} value
+ * @return {!proto.bosdyn.api.NetworkComputeCapability} returns this
+*/
+proto.bosdyn.api.NetworkComputeCapability.prototype.setModels = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.NetworkComputeCapability} returns this
+ */
+proto.bosdyn.api.NetworkComputeCapability.prototype.clearModels = function() {
+  return this.setModels(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.NetworkComputeCapability.prototype.hasModels = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -1839,7 +1950,8 @@ proto.bosdyn.api.DataIdentifier.toObject = function(includeInstance, msg) {
   var f, obj = {
     actionId: (f = msg.getActionId()) && proto.bosdyn.api.CaptureActionId.toObject(includeInstance, f),
     channel: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    dataName: jspb.Message.getFieldWithDefault(msg, 3, "")
+    dataName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    id: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -1889,6 +2001,10 @@ proto.bosdyn.api.DataIdentifier.deserializeBinaryFromReader = function(msg, read
       var value = /** @type {string} */ (reader.readString());
       msg.setDataName(value);
       break;
+    case 4:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setId(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1937,6 +2053,13 @@ proto.bosdyn.api.DataIdentifier.serializeBinaryToWriter = function(message, writ
   if (f.length > 0) {
     writer.writeString(
       3,
+      f
+    );
+  }
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeUint64(
+      4,
       f
     );
   }
@@ -2013,6 +2136,24 @@ proto.bosdyn.api.DataIdentifier.prototype.getDataName = function() {
  */
 proto.bosdyn.api.DataIdentifier.prototype.setDataName = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional uint64 id = 4;
+ * @return {number}
+ */
+proto.bosdyn.api.DataIdentifier.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.DataIdentifier} returns this
+ */
+proto.bosdyn.api.DataIdentifier.prototype.setId = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
@@ -2844,7 +2985,8 @@ proto.bosdyn.api.DataCapture.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.DataCapture.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, "")
+    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2885,6 +3027,11 @@ proto.bosdyn.api.DataCapture.deserializeBinaryFromReader = function(msg, reader)
       var value = /** @type {string} */ (reader.readString());
       msg.setName(value);
       break;
+    case 9:
+      var value = new bosdyn_api_service_customization_pb.DictParam;
+      reader.readMessage(value,bosdyn_api_service_customization_pb.DictParam.deserializeBinaryFromReader);
+      msg.setCustomParams(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2921,6 +3068,14 @@ proto.bosdyn.api.DataCapture.serializeBinaryToWriter = function(message, writer)
       f
     );
   }
+  f = message.getCustomParams();
+  if (f != null) {
+    writer.writeMessage(
+      9,
+      f,
+      bosdyn_api_service_customization_pb.DictParam.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -2942,6 +3097,69 @@ proto.bosdyn.api.DataCapture.prototype.setName = function(value) {
 };
 
 
+/**
+ * optional DictParam custom_params = 9;
+ * @return {?proto.bosdyn.api.DictParam}
+ */
+proto.bosdyn.api.DataCapture.prototype.getCustomParams = function() {
+  return /** @type{?proto.bosdyn.api.DictParam} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_service_customization_pb.DictParam, 9));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.DictParam|undefined} value
+ * @return {!proto.bosdyn.api.DataCapture} returns this
+*/
+proto.bosdyn.api.DataCapture.prototype.setCustomParams = function(value) {
+  return jspb.Message.setWrapperField(this, 9, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.DataCapture} returns this
+ */
+proto.bosdyn.api.DataCapture.prototype.clearCustomParams = function() {
+  return this.setCustomParams(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.DataCapture.prototype.hasCustomParams = function() {
+  return jspb.Message.getField(this, 9) != null;
+};
+
+
+
+/**
+ * Oneof group definitions for this message. Each group defines the field
+ * numbers belonging to that group. When of these fields' value is set, all
+ * other fields in the group are cleared. During deserialization, if multiple
+ * fields are encountered for a group, only the last value seen will be kept.
+ * @private {!Array<!Array<number>>}
+ * @const
+ */
+proto.bosdyn.api.NetworkComputeCapture.oneofGroups_ = [[1,3]];
+
+/**
+ * @enum {number}
+ */
+proto.bosdyn.api.NetworkComputeCapture.InputCase = {
+  INPUT_NOT_SET: 0,
+  INPUT_DATA: 1,
+  INPUT_DATA_BRIDGE: 3
+};
+
+/**
+ * @return {proto.bosdyn.api.NetworkComputeCapture.InputCase}
+ */
+proto.bosdyn.api.NetworkComputeCapture.prototype.getInputCase = function() {
+  return /** @type {proto.bosdyn.api.NetworkComputeCapture.InputCase} */(jspb.Message.computeOneofCase(this, proto.bosdyn.api.NetworkComputeCapture.oneofGroups_[0]));
+};
 
 
 
@@ -2975,6 +3193,7 @@ proto.bosdyn.api.NetworkComputeCapture.prototype.toObject = function(opt_include
 proto.bosdyn.api.NetworkComputeCapture.toObject = function(includeInstance, msg) {
   var f, obj = {
     inputData: (f = msg.getInputData()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeInputData.toObject(includeInstance, f),
+    inputDataBridge: (f = msg.getInputDataBridge()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeInputDataBridge.toObject(includeInstance, f),
     serverConfig: (f = msg.getServerConfig()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration.toObject(includeInstance, f)
   };
 
@@ -3016,6 +3235,11 @@ proto.bosdyn.api.NetworkComputeCapture.deserializeBinaryFromReader = function(ms
       var value = new bosdyn_api_network_compute_bridge_pb.NetworkComputeInputData;
       reader.readMessage(value,bosdyn_api_network_compute_bridge_pb.NetworkComputeInputData.deserializeBinaryFromReader);
       msg.setInputData(value);
+      break;
+    case 3:
+      var value = new bosdyn_api_network_compute_bridge_pb.NetworkComputeInputDataBridge;
+      reader.readMessage(value,bosdyn_api_network_compute_bridge_pb.NetworkComputeInputDataBridge.deserializeBinaryFromReader);
+      msg.setInputDataBridge(value);
       break;
     case 2:
       var value = new bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration;
@@ -3059,6 +3283,14 @@ proto.bosdyn.api.NetworkComputeCapture.serializeBinaryToWriter = function(messag
       bosdyn_api_network_compute_bridge_pb.NetworkComputeInputData.serializeBinaryToWriter
     );
   }
+  f = message.getInputDataBridge();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      bosdyn_api_network_compute_bridge_pb.NetworkComputeInputDataBridge.serializeBinaryToWriter
+    );
+  }
   f = message.getServerConfig();
   if (f != null) {
     writer.writeMessage(
@@ -3085,7 +3317,7 @@ proto.bosdyn.api.NetworkComputeCapture.prototype.getInputData = function() {
  * @return {!proto.bosdyn.api.NetworkComputeCapture} returns this
 */
 proto.bosdyn.api.NetworkComputeCapture.prototype.setInputData = function(value) {
-  return jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setOneofWrapperField(this, 1, proto.bosdyn.api.NetworkComputeCapture.oneofGroups_[0], value);
 };
 
 
@@ -3104,6 +3336,43 @@ proto.bosdyn.api.NetworkComputeCapture.prototype.clearInputData = function() {
  */
 proto.bosdyn.api.NetworkComputeCapture.prototype.hasInputData = function() {
   return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional NetworkComputeInputDataBridge input_data_bridge = 3;
+ * @return {?proto.bosdyn.api.NetworkComputeInputDataBridge}
+ */
+proto.bosdyn.api.NetworkComputeCapture.prototype.getInputDataBridge = function() {
+  return /** @type{?proto.bosdyn.api.NetworkComputeInputDataBridge} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_network_compute_bridge_pb.NetworkComputeInputDataBridge, 3));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.NetworkComputeInputDataBridge|undefined} value
+ * @return {!proto.bosdyn.api.NetworkComputeCapture} returns this
+*/
+proto.bosdyn.api.NetworkComputeCapture.prototype.setInputDataBridge = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 3, proto.bosdyn.api.NetworkComputeCapture.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.NetworkComputeCapture} returns this
+ */
+proto.bosdyn.api.NetworkComputeCapture.prototype.clearInputDataBridge = function() {
+  return this.setInputDataBridge(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.NetworkComputeCapture.prototype.hasInputDataBridge = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -5046,7 +5315,8 @@ proto.bosdyn.api.AcquirePluginDataResponse.toObject = function(includeInstance, 
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
     status: jspb.Message.getFieldWithDefault(msg, 2, 0),
     requestId: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    timeoutDeadline: (f = msg.getTimeoutDeadline()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+    timeoutDeadline: (f = msg.getTimeoutDeadline()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+    customParamError: (f = msg.getCustomParamError()) && bosdyn_api_service_customization_pb.CustomParamError.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5100,6 +5370,11 @@ proto.bosdyn.api.AcquirePluginDataResponse.deserializeBinaryFromReader = functio
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setTimeoutDeadline(value);
+      break;
+    case 6:
+      var value = new bosdyn_api_service_customization_pb.CustomParamError;
+      reader.readMessage(value,bosdyn_api_service_customization_pb.CustomParamError.deserializeBinaryFromReader);
+      msg.setCustomParamError(value);
       break;
     default:
       reader.skipField();
@@ -5160,6 +5435,14 @@ proto.bosdyn.api.AcquirePluginDataResponse.serializeBinaryToWriter = function(me
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
+  f = message.getCustomParamError();
+  if (f != null) {
+    writer.writeMessage(
+      6,
+      f,
+      bosdyn_api_service_customization_pb.CustomParamError.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -5169,7 +5452,8 @@ proto.bosdyn.api.AcquirePluginDataResponse.serializeBinaryToWriter = function(me
 proto.bosdyn.api.AcquirePluginDataResponse.Status = {
   STATUS_UNKNOWN: 0,
   STATUS_OK: 1,
-  STATUS_UNKNOWN_CAPTURE_TYPE: 2
+  STATUS_UNKNOWN_CAPTURE_TYPE: 2,
+  STATUS_CUSTOM_PARAMS_ERROR: 3
 };
 
 /**
@@ -5279,6 +5563,43 @@ proto.bosdyn.api.AcquirePluginDataResponse.prototype.clearTimeoutDeadline = func
  */
 proto.bosdyn.api.AcquirePluginDataResponse.prototype.hasTimeoutDeadline = function() {
   return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional CustomParamError custom_param_error = 6;
+ * @return {?proto.bosdyn.api.CustomParamError}
+ */
+proto.bosdyn.api.AcquirePluginDataResponse.prototype.getCustomParamError = function() {
+  return /** @type{?proto.bosdyn.api.CustomParamError} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_service_customization_pb.CustomParamError, 6));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.CustomParamError|undefined} value
+ * @return {!proto.bosdyn.api.AcquirePluginDataResponse} returns this
+*/
+proto.bosdyn.api.AcquirePluginDataResponse.prototype.setCustomParamError = function(value) {
+  return jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.AcquirePluginDataResponse} returns this
+ */
+proto.bosdyn.api.AcquirePluginDataResponse.prototype.clearCustomParamError = function() {
+  return this.setCustomParamError(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.AcquirePluginDataResponse.prototype.hasCustomParamError = function() {
+  return jspb.Message.getField(this, 6) != null;
 };
 
 

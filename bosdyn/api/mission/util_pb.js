@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 goog.object.extend(proto, google_protobuf_any_pb);
@@ -1169,7 +1175,8 @@ proto.bosdyn.api.mission.UserData.prototype.toObject = function(opt_includeInsta
 proto.bosdyn.api.mission.UserData.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    bytestring: msg.getBytestring_asB64()
+    bytestring: msg.getBytestring_asB64(),
+    sourceRepresentation: (f = msg.getSourceRepresentation()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1214,6 +1221,11 @@ proto.bosdyn.api.mission.UserData.deserializeBinaryFromReader = function(msg, re
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setBytestring(value);
       break;
+    case 4:
+      var value = new google_protobuf_any_pb.Any;
+      reader.readMessage(value,google_protobuf_any_pb.Any.deserializeBinaryFromReader);
+      msg.setSourceRepresentation(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1255,6 +1267,14 @@ proto.bosdyn.api.mission.UserData.serializeBinaryToWriter = function(message, wr
     writer.writeBytes(
       3,
       f
+    );
+  }
+  f = message.getSourceRepresentation();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      google_protobuf_any_pb.Any.serializeBinaryToWriter
     );
   }
 };
@@ -1317,6 +1337,43 @@ proto.bosdyn.api.mission.UserData.prototype.getBytestring_asU8 = function() {
  */
 proto.bosdyn.api.mission.UserData.prototype.setBytestring = function(value) {
   return jspb.Message.setProto3BytesField(this, 3, value);
+};
+
+
+/**
+ * optional google.protobuf.Any source_representation = 4;
+ * @return {?proto.google.protobuf.Any}
+ */
+proto.bosdyn.api.mission.UserData.prototype.getSourceRepresentation = function() {
+  return /** @type{?proto.google.protobuf.Any} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_any_pb.Any, 4));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Any|undefined} value
+ * @return {!proto.bosdyn.api.mission.UserData} returns this
+*/
+proto.bosdyn.api.mission.UserData.prototype.setSourceRepresentation = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.mission.UserData} returns this
+ */
+proto.bosdyn.api.mission.UserData.prototype.clearSourceRepresentation = function() {
+  return this.setSourceRepresentation(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.mission.UserData.prototype.hasSourceRepresentation = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 

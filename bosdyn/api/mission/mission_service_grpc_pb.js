@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 // Original file comments:
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -224,7 +224,9 @@ function deserialize_bosdyn_api_mission_StopMissionResponse(buffer_arg) {
 
 // The MissionService can be used to specify high level autonomous behaviors for Spot using behavior trees.
 var MissionServiceService = exports.MissionServiceService = {
-  // Load a mission to run later.
+  // RPCs for loading missions to the robot. NOTE: LoadMission and LoadMissionAsChunks may fail
+// for large missions because the request and response may exceed the maximum message size. Use
+// LoadMissionAsChunks2 instead.
 loadMission: {
     path: '/bosdyn.api.mission.MissionService/LoadMission',
     requestStream: false,
@@ -236,9 +238,10 @@ loadMission: {
     responseSerialize: serialize_bosdyn_api_mission_LoadMissionResponse,
     responseDeserialize: deserialize_bosdyn_api_mission_LoadMissionResponse,
   },
-  // Alternative loading method for large missions, that allows you to break the 
-// mission up into multiple streamed requests.  The data chunks should deserialize
-// into a LoadMissionRequest
+  // This RPC may be deprecated in the future, please use LoadMissionAsChunks2 instead. Non-preferred
+// method for loading large missions to the robot because only the request is a streaming RPC. The data
+// chunks are deserialized into a LoadMissionRequest. NOTE: LoadMissionAsChunks may fail for large missions
+// because the response may exceed the maximum message size.
 loadMissionAsChunks: {
     path: '/bosdyn.api.mission.MissionService/LoadMissionAsChunks',
     requestStream: true,
@@ -249,6 +252,20 @@ loadMissionAsChunks: {
     requestDeserialize: deserialize_bosdyn_api_DataChunk,
     responseSerialize: serialize_bosdyn_api_mission_LoadMissionResponse,
     responseDeserialize: deserialize_bosdyn_api_mission_LoadMissionResponse,
+  },
+  // Preferred RPC for loading large missions to the robot because both the request and response
+// are streaming RPCs, allowing you to break the message up into multiple streamed messages. The
+// data chunks are deserialized into a LoadMissionRequest and LoadMissionResponse.
+loadMissionAsChunks2: {
+    path: '/bosdyn.api.mission.MissionService/LoadMissionAsChunks2',
+    requestStream: true,
+    responseStream: true,
+    requestType: bosdyn_api_data_chunk_pb.DataChunk,
+    responseType: bosdyn_api_data_chunk_pb.DataChunk,
+    requestSerialize: serialize_bosdyn_api_DataChunk,
+    requestDeserialize: deserialize_bosdyn_api_DataChunk,
+    responseSerialize: serialize_bosdyn_api_DataChunk,
+    responseDeserialize: deserialize_bosdyn_api_DataChunk,
   },
   // Start executing a loaded mission.
 // Will not restart a mission that has run to completion. Use RestartMission to do that.
@@ -313,7 +330,9 @@ getState: {
     responseSerialize: serialize_bosdyn_api_mission_GetStateResponse,
     responseDeserialize: deserialize_bosdyn_api_mission_GetStateResponse,
   },
-  // Get static information regarding the mission. Used to interpret mission state.
+  // RPCs for getting static information regarding the mission. Used to interpret mission state.
+// NOTE: GetInfo may fail for large missions because the response may exceed the maximum message size.
+// Use GetInfoAsChunks instead.
 getInfo: {
     path: '/bosdyn.api.mission.MissionService/GetInfo',
     requestStream: false,
@@ -324,6 +343,20 @@ getInfo: {
     requestDeserialize: deserialize_bosdyn_api_mission_GetInfoRequest,
     responseSerialize: serialize_bosdyn_api_mission_GetInfoResponse,
     responseDeserialize: deserialize_bosdyn_api_mission_GetInfoResponse,
+  },
+  // Preferred RPC for getting the status of large missions from the robot because the response is a streaming
+// streaming RPC, allowing you to break the message up into multiple streamed messages. THe data chunks are
+// deserialized into a GetInfoResponse.
+getInfoAsChunks: {
+    path: '/bosdyn.api.mission.MissionService/GetInfoAsChunks',
+    requestStream: false,
+    responseStream: true,
+    requestType: bosdyn_api_mission_mission_pb.GetInfoRequest,
+    responseType: bosdyn_api_data_chunk_pb.DataChunk,
+    requestSerialize: serialize_bosdyn_api_mission_GetInfoRequest,
+    requestDeserialize: deserialize_bosdyn_api_mission_GetInfoRequest,
+    responseSerialize: serialize_bosdyn_api_DataChunk,
+    responseDeserialize: deserialize_bosdyn_api_DataChunk,
   },
   // Download the mission as it was uploaded to the service.
 getMission: {
@@ -336,6 +369,20 @@ getMission: {
     requestDeserialize: deserialize_bosdyn_api_mission_GetMissionRequest,
     responseSerialize: serialize_bosdyn_api_mission_GetMissionResponse,
     responseDeserialize: deserialize_bosdyn_api_mission_GetMissionResponse,
+  },
+  // Alternative method to download large missions that allows you to break
+// the mission up into multiple streamed requests. Each data chunk message should be
+// deserialized as a GetMissionResponse protobuf message.
+getMissionAsChunks: {
+    path: '/bosdyn.api.mission.MissionService/GetMissionAsChunks',
+    requestStream: false,
+    responseStream: true,
+    requestType: bosdyn_api_mission_mission_pb.GetMissionRequest,
+    responseType: bosdyn_api_data_chunk_pb.DataChunk,
+    requestSerialize: serialize_bosdyn_api_mission_GetMissionRequest,
+    requestDeserialize: deserialize_bosdyn_api_mission_GetMissionRequest,
+    responseSerialize: serialize_bosdyn_api_DataChunk,
+    responseDeserialize: deserialize_bosdyn_api_DataChunk,
   },
   // Specify an answer to the question asked by the mission.
 answerQuestion: {

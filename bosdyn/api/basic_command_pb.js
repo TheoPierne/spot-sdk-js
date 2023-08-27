@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -36,7 +42,9 @@ goog.exportSymbol('proto.bosdyn.api.ConstrainedManipulationCommand', null, globa
 goog.exportSymbol('proto.bosdyn.api.ConstrainedManipulationCommand.Feedback', null, global);
 goog.exportSymbol('proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.Status', null, global);
 goog.exportSymbol('proto.bosdyn.api.ConstrainedManipulationCommand.Request', null, global);
+goog.exportSymbol('proto.bosdyn.api.ConstrainedManipulationCommand.Request.ControlMode', null, global);
 goog.exportSymbol('proto.bosdyn.api.ConstrainedManipulationCommand.Request.TaskSpeedCase', null, global);
+goog.exportSymbol('proto.bosdyn.api.ConstrainedManipulationCommand.Request.TaskTargetPositionCase', null, global);
 goog.exportSymbol('proto.bosdyn.api.ConstrainedManipulationCommand.Request.TaskType', null, global);
 goog.exportSymbol('proto.bosdyn.api.FollowArmCommand', null, global);
 goog.exportSymbol('proto.bosdyn.api.FollowArmCommand.Feedback', null, global);
@@ -5949,7 +5957,7 @@ proto.bosdyn.api.ConstrainedManipulationCommand.serializeBinaryToWriter = functi
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.bosdyn.api.ConstrainedManipulationCommand.Request.oneofGroups_ = [[3,4]];
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.oneofGroups_ = [[3,4],[11,12]];
 
 /**
  * @enum {number}
@@ -5965,6 +5973,22 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.TaskSpeedCase = {
  */
 proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.getTaskSpeedCase = function() {
   return /** @type {proto.bosdyn.api.ConstrainedManipulationCommand.Request.TaskSpeedCase} */(jspb.Message.computeOneofCase(this, proto.bosdyn.api.ConstrainedManipulationCommand.Request.oneofGroups_[0]));
+};
+
+/**
+ * @enum {number}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.TaskTargetPositionCase = {
+  TASK_TARGET_POSITION_NOT_SET: 0,
+  TARGET_LINEAR_POSITION: 11,
+  TARGET_ANGLE: 12
+};
+
+/**
+ * @return {proto.bosdyn.api.ConstrainedManipulationCommand.Request.TaskTargetPositionCase}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.getTaskTargetPositionCase = function() {
+  return /** @type {proto.bosdyn.api.ConstrainedManipulationCommand.Request.TaskTargetPositionCase} */(jspb.Message.computeOneofCase(this, proto.bosdyn.api.ConstrainedManipulationCommand.Request.oneofGroups_[1]));
 };
 
 
@@ -6006,7 +6030,12 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.toObject = function(incl
     torqueLimit: (f = msg.getTorqueLimit()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     taskType: jspb.Message.getFieldWithDefault(msg, 7, 0),
     endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    enableRobotLocomotion: (f = msg.getEnableRobotLocomotion()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+    enableRobotLocomotion: (f = msg.getEnableRobotLocomotion()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+    controlMode: jspb.Message.getFieldWithDefault(msg, 10, 0),
+    targetLinearPosition: jspb.Message.getFloatingPointFieldWithDefault(msg, 11, 0.0),
+    targetAngle: jspb.Message.getFloatingPointFieldWithDefault(msg, 12, 0.0),
+    accelLimit: (f = msg.getAccelLimit()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+    resetEstimator: (f = msg.getResetEstimator()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6083,6 +6112,28 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.deserializeBinaryFromRea
       var value = new google_protobuf_wrappers_pb.BoolValue;
       reader.readMessage(value,google_protobuf_wrappers_pb.BoolValue.deserializeBinaryFromReader);
       msg.setEnableRobotLocomotion(value);
+      break;
+    case 10:
+      var value = /** @type {!proto.bosdyn.api.ConstrainedManipulationCommand.Request.ControlMode} */ (reader.readEnum());
+      msg.setControlMode(value);
+      break;
+    case 11:
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setTargetLinearPosition(value);
+      break;
+    case 12:
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setTargetAngle(value);
+      break;
+    case 13:
+      var value = new google_protobuf_wrappers_pb.DoubleValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.DoubleValue.deserializeBinaryFromReader);
+      msg.setAccelLimit(value);
+      break;
+    case 14:
+      var value = new google_protobuf_wrappers_pb.BoolValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.BoolValue.deserializeBinaryFromReader);
+      msg.setResetEstimator(value);
       break;
     default:
       reader.skipField();
@@ -6181,6 +6232,43 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.serializeBinaryToWriter 
       google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
     );
   }
+  f = message.getControlMode();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      10,
+      f
+    );
+  }
+  f = /** @type {number} */ (jspb.Message.getField(message, 11));
+  if (f != null) {
+    writer.writeDouble(
+      11,
+      f
+    );
+  }
+  f = /** @type {number} */ (jspb.Message.getField(message, 12));
+  if (f != null) {
+    writer.writeDouble(
+      12,
+      f
+    );
+  }
+  f = message.getAccelLimit();
+  if (f != null) {
+    writer.writeMessage(
+      13,
+      f,
+      google_protobuf_wrappers_pb.DoubleValue.serializeBinaryToWriter
+    );
+  }
+  f = message.getResetEstimator();
+  if (f != null) {
+    writer.writeMessage(
+      14,
+      f,
+      google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -6195,6 +6283,15 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.TaskType = {
   TASK_TYPE_R3_CIRCLE_FORCE: 4,
   TASK_TYPE_R3_LINEAR_FORCE: 5,
   TASK_TYPE_HOLD_POSE: 6
+};
+
+/**
+ * @enum {number}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.ControlMode = {
+  CONTROL_MODE_UNKNOWN: 0,
+  CONTROL_MODE_POSITION: 1,
+  CONTROL_MODE_VELOCITY: 2
 };
 
 /**
@@ -6490,6 +6587,170 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.hasEnableRobot
 };
 
 
+/**
+ * optional ControlMode control_mode = 10;
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request.ControlMode}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.getControlMode = function() {
+  return /** @type {!proto.bosdyn.api.ConstrainedManipulationCommand.Request.ControlMode} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.ConstrainedManipulationCommand.Request.ControlMode} value
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.setControlMode = function(value) {
+  return jspb.Message.setProto3EnumField(this, 10, value);
+};
+
+
+/**
+ * optional double target_linear_position = 11;
+ * @return {number}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.getTargetLinearPosition = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 11, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.setTargetLinearPosition = function(value) {
+  return jspb.Message.setOneofField(this, 11, proto.bosdyn.api.ConstrainedManipulationCommand.Request.oneofGroups_[1], value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.clearTargetLinearPosition = function() {
+  return jspb.Message.setOneofField(this, 11, proto.bosdyn.api.ConstrainedManipulationCommand.Request.oneofGroups_[1], undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.hasTargetLinearPosition = function() {
+  return jspb.Message.getField(this, 11) != null;
+};
+
+
+/**
+ * optional double target_angle = 12;
+ * @return {number}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.getTargetAngle = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 12, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.setTargetAngle = function(value) {
+  return jspb.Message.setOneofField(this, 12, proto.bosdyn.api.ConstrainedManipulationCommand.Request.oneofGroups_[1], value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.clearTargetAngle = function() {
+  return jspb.Message.setOneofField(this, 12, proto.bosdyn.api.ConstrainedManipulationCommand.Request.oneofGroups_[1], undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.hasTargetAngle = function() {
+  return jspb.Message.getField(this, 12) != null;
+};
+
+
+/**
+ * optional google.protobuf.DoubleValue accel_limit = 13;
+ * @return {?proto.google.protobuf.DoubleValue}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.getAccelLimit = function() {
+  return /** @type{?proto.google.protobuf.DoubleValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.DoubleValue, 13));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.DoubleValue|undefined} value
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+*/
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.setAccelLimit = function(value) {
+  return jspb.Message.setWrapperField(this, 13, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.clearAccelLimit = function() {
+  return this.setAccelLimit(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.hasAccelLimit = function() {
+  return jspb.Message.getField(this, 13) != null;
+};
+
+
+/**
+ * optional google.protobuf.BoolValue reset_estimator = 14;
+ * @return {?proto.google.protobuf.BoolValue}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.getResetEstimator = function() {
+  return /** @type{?proto.google.protobuf.BoolValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.BoolValue, 14));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+*/
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.setResetEstimator = function(value) {
+  return jspb.Message.setWrapperField(this, 14, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Request} returns this
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.clearResetEstimator = function() {
+  return this.setResetEstimator(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Request.prototype.hasResetEstimator = function() {
+  return jspb.Message.getField(this, 14) != null;
+};
+
+
 
 
 
@@ -6523,7 +6784,8 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.prototype.toObject = fu
 proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
     status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    desiredWrenchOdomFrame: (f = msg.getDesiredWrenchOdomFrame()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f)
+    desiredWrenchOdomFrame: (f = msg.getDesiredWrenchOdomFrame()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+    estimationActivated: (f = msg.getEstimationActivated()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6569,6 +6831,11 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.deserializeBinaryFromRe
       reader.readMessage(value,bosdyn_api_geometry_pb.Wrench.deserializeBinaryFromReader);
       msg.setDesiredWrenchOdomFrame(value);
       break;
+    case 3:
+      var value = new google_protobuf_wrappers_pb.BoolValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.BoolValue.deserializeBinaryFromReader);
+      msg.setEstimationActivated(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -6611,6 +6878,14 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.serializeBinaryToWriter
       2,
       f,
       bosdyn_api_geometry_pb.Wrench.serializeBinaryToWriter
+    );
+  }
+  f = message.getEstimationActivated();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
     );
   }
 };
@@ -6678,6 +6953,43 @@ proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.prototype.clearDesiredW
  */
 proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.prototype.hasDesiredWrenchOdomFrame = function() {
   return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional google.protobuf.BoolValue estimation_activated = 3;
+ * @return {?proto.google.protobuf.BoolValue}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.prototype.getEstimationActivated = function() {
+  return /** @type{?proto.google.protobuf.BoolValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.BoolValue, 3));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Feedback} returns this
+*/
+proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.prototype.setEstimationActivated = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ConstrainedManipulationCommand.Feedback} returns this
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.prototype.clearEstimationActivated = function() {
+  return this.setEstimationActivated(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ConstrainedManipulationCommand.Feedback.prototype.hasEstimationActivated = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 

@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var bosdyn_api_basic_command_pb = require('../../bosdyn/api/basic_command_pb.js');
 goog.object.extend(proto, bosdyn_api_basic_command_pb);
@@ -40,6 +46,7 @@ goog.exportSymbol('proto.bosdyn.api.ArmCommand.Request', null, global);
 goog.exportSymbol('proto.bosdyn.api.ArmCommand.Request.CommandCase', null, global);
 goog.exportSymbol('proto.bosdyn.api.ArmImpedanceCommand', null, global);
 goog.exportSymbol('proto.bosdyn.api.ArmImpedanceCommand.Feedback', null, global);
+goog.exportSymbol('proto.bosdyn.api.ArmImpedanceCommand.Feedback.Status', null, global);
 goog.exportSymbol('proto.bosdyn.api.ArmImpedanceCommand.Request', null, global);
 goog.exportSymbol('proto.bosdyn.api.ArmJointMoveCommand', null, global);
 goog.exportSymbol('proto.bosdyn.api.ArmJointMoveCommand.Feedback', null, global);
@@ -8577,7 +8584,13 @@ proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.ArmImpedanceCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
+    commandedWrenchFromStiffnessAtToolInDesiredTool: (f = msg.getCommandedWrenchFromStiffnessAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+    commandedWrenchFromDampingAtToolInDesiredTool: (f = msg.getCommandedWrenchFromDampingAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+    commandedWrenchFromFeedForwardAtToolInDesiredTool: (f = msg.getCommandedWrenchFromFeedForwardAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+    totalCommandedWrenchAtToolInDesiredTool: (f = msg.getTotalCommandedWrenchAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+    totalMeasuredWrenchAtToolInDesiredTool: (f = msg.getTotalMeasuredWrenchAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8614,6 +8627,40 @@ proto.bosdyn.api.ArmImpedanceCommand.Feedback.deserializeBinaryFromReader = func
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = /** @type {!proto.bosdyn.api.ArmImpedanceCommand.Feedback.Status} */ (reader.readEnum());
+      msg.setStatus(value);
+      break;
+    case 2:
+      var value = new bosdyn_api_geometry_pb.FrameTreeSnapshot;
+      reader.readMessage(value,bosdyn_api_geometry_pb.FrameTreeSnapshot.deserializeBinaryFromReader);
+      msg.setTransformsSnapshot(value);
+      break;
+    case 3:
+      var value = new bosdyn_api_geometry_pb.Wrench;
+      reader.readMessage(value,bosdyn_api_geometry_pb.Wrench.deserializeBinaryFromReader);
+      msg.setCommandedWrenchFromStiffnessAtToolInDesiredTool(value);
+      break;
+    case 4:
+      var value = new bosdyn_api_geometry_pb.Wrench;
+      reader.readMessage(value,bosdyn_api_geometry_pb.Wrench.deserializeBinaryFromReader);
+      msg.setCommandedWrenchFromDampingAtToolInDesiredTool(value);
+      break;
+    case 5:
+      var value = new bosdyn_api_geometry_pb.Wrench;
+      reader.readMessage(value,bosdyn_api_geometry_pb.Wrench.deserializeBinaryFromReader);
+      msg.setCommandedWrenchFromFeedForwardAtToolInDesiredTool(value);
+      break;
+    case 6:
+      var value = new bosdyn_api_geometry_pb.Wrench;
+      reader.readMessage(value,bosdyn_api_geometry_pb.Wrench.deserializeBinaryFromReader);
+      msg.setTotalCommandedWrenchAtToolInDesiredTool(value);
+      break;
+    case 7:
+      var value = new bosdyn_api_geometry_pb.Wrench;
+      reader.readMessage(value,bosdyn_api_geometry_pb.Wrench.deserializeBinaryFromReader);
+      msg.setTotalMeasuredWrenchAtToolInDesiredTool(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -8643,6 +8690,311 @@ proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.serializeBinary = functi
  */
 proto.bosdyn.api.ArmImpedanceCommand.Feedback.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getStatus();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      1,
+      f
+    );
+  }
+  f = message.getTransformsSnapshot();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      bosdyn_api_geometry_pb.FrameTreeSnapshot.serializeBinaryToWriter
+    );
+  }
+  f = message.getCommandedWrenchFromStiffnessAtToolInDesiredTool();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      bosdyn_api_geometry_pb.Wrench.serializeBinaryToWriter
+    );
+  }
+  f = message.getCommandedWrenchFromDampingAtToolInDesiredTool();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      bosdyn_api_geometry_pb.Wrench.serializeBinaryToWriter
+    );
+  }
+  f = message.getCommandedWrenchFromFeedForwardAtToolInDesiredTool();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      bosdyn_api_geometry_pb.Wrench.serializeBinaryToWriter
+    );
+  }
+  f = message.getTotalCommandedWrenchAtToolInDesiredTool();
+  if (f != null) {
+    writer.writeMessage(
+      6,
+      f,
+      bosdyn_api_geometry_pb.Wrench.serializeBinaryToWriter
+    );
+  }
+  f = message.getTotalMeasuredWrenchAtToolInDesiredTool();
+  if (f != null) {
+    writer.writeMessage(
+      7,
+      f,
+      bosdyn_api_geometry_pb.Wrench.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * @enum {number}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.Status = {
+  STATUS_UNKNOWN: 0,
+  STATUS_TRAJECTORY_COMPLETE: 1,
+  STATUS_IN_PROGRESS: 2,
+  STATUS_TRAJECTORY_STALLED: 3
+};
+
+/**
+ * optional Status status = 1;
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback.Status}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.getStatus = function() {
+  return /** @type {!proto.bosdyn.api.ArmImpedanceCommand.Feedback.Status} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.ArmImpedanceCommand.Feedback.Status} value
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.setStatus = function(value) {
+  return jspb.Message.setProto3EnumField(this, 1, value);
+};
+
+
+/**
+ * optional FrameTreeSnapshot transforms_snapshot = 2;
+ * @return {?proto.bosdyn.api.FrameTreeSnapshot}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.getTransformsSnapshot = function() {
+  return /** @type{?proto.bosdyn.api.FrameTreeSnapshot} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_geometry_pb.FrameTreeSnapshot, 2));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.FrameTreeSnapshot|undefined} value
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+*/
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.setTransformsSnapshot = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.clearTransformsSnapshot = function() {
+  return this.setTransformsSnapshot(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.hasTransformsSnapshot = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional Wrench commanded_wrench_from_stiffness_at_tool_in_desired_tool = 3;
+ * @return {?proto.bosdyn.api.Wrench}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.getCommandedWrenchFromStiffnessAtToolInDesiredTool = function() {
+  return /** @type{?proto.bosdyn.api.Wrench} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_geometry_pb.Wrench, 3));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.Wrench|undefined} value
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+*/
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.setCommandedWrenchFromStiffnessAtToolInDesiredTool = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.clearCommandedWrenchFromStiffnessAtToolInDesiredTool = function() {
+  return this.setCommandedWrenchFromStiffnessAtToolInDesiredTool(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.hasCommandedWrenchFromStiffnessAtToolInDesiredTool = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional Wrench commanded_wrench_from_damping_at_tool_in_desired_tool = 4;
+ * @return {?proto.bosdyn.api.Wrench}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.getCommandedWrenchFromDampingAtToolInDesiredTool = function() {
+  return /** @type{?proto.bosdyn.api.Wrench} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_geometry_pb.Wrench, 4));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.Wrench|undefined} value
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+*/
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.setCommandedWrenchFromDampingAtToolInDesiredTool = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.clearCommandedWrenchFromDampingAtToolInDesiredTool = function() {
+  return this.setCommandedWrenchFromDampingAtToolInDesiredTool(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.hasCommandedWrenchFromDampingAtToolInDesiredTool = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional Wrench commanded_wrench_from_feed_forward_at_tool_in_desired_tool = 5;
+ * @return {?proto.bosdyn.api.Wrench}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.getCommandedWrenchFromFeedForwardAtToolInDesiredTool = function() {
+  return /** @type{?proto.bosdyn.api.Wrench} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_geometry_pb.Wrench, 5));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.Wrench|undefined} value
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+*/
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.setCommandedWrenchFromFeedForwardAtToolInDesiredTool = function(value) {
+  return jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.clearCommandedWrenchFromFeedForwardAtToolInDesiredTool = function() {
+  return this.setCommandedWrenchFromFeedForwardAtToolInDesiredTool(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.hasCommandedWrenchFromFeedForwardAtToolInDesiredTool = function() {
+  return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional Wrench total_commanded_wrench_at_tool_in_desired_tool = 6;
+ * @return {?proto.bosdyn.api.Wrench}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.getTotalCommandedWrenchAtToolInDesiredTool = function() {
+  return /** @type{?proto.bosdyn.api.Wrench} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_geometry_pb.Wrench, 6));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.Wrench|undefined} value
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+*/
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.setTotalCommandedWrenchAtToolInDesiredTool = function(value) {
+  return jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.clearTotalCommandedWrenchAtToolInDesiredTool = function() {
+  return this.setTotalCommandedWrenchAtToolInDesiredTool(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.hasTotalCommandedWrenchAtToolInDesiredTool = function() {
+  return jspb.Message.getField(this, 6) != null;
+};
+
+
+/**
+ * optional Wrench total_measured_wrench_at_tool_in_desired_tool = 7;
+ * @return {?proto.bosdyn.api.Wrench}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.getTotalMeasuredWrenchAtToolInDesiredTool = function() {
+  return /** @type{?proto.bosdyn.api.Wrench} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_geometry_pb.Wrench, 7));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.Wrench|undefined} value
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+*/
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.setTotalMeasuredWrenchAtToolInDesiredTool = function(value) {
+  return jspb.Message.setWrapperField(this, 7, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback} returns this
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.clearTotalMeasuredWrenchAtToolInDesiredTool = function() {
+  return this.setTotalMeasuredWrenchAtToolInDesiredTool(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.hasTotalMeasuredWrenchAtToolInDesiredTool = function() {
+  return jspb.Message.getField(this, 7) != null;
 };
 
 
