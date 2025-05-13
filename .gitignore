@@ -4,5 +4,5 @@ node_modules/
 examples/**/node_modules/
 
 generate_js_file_with_proto_file.txt
-lib.txt
 .env
+count.output.json

@@ -1,3 +1,4 @@
 docs
 files
-bosdyn/api
+src/bosdyn/api
+CODEOWNERS
