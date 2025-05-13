@@ -5,13 +5,18 @@ const { Buffer } = require('node:buffer');
 const process = require('node:process');
 const test = require('node:test');
 
-const { TokenCache, TokenCacheFilesystem, NotInCacheError, ClearFailedError } = require('../bosdyn-client/token_cache');
+const {
+  TokenCache,
+  TokenCacheFilesystem,
+  NotInCacheError,
+  ClearFailedError,
+} = require('../src/bosdyn-client/token_cache');
 
 /**
  * Get a token cache file system instance
  * @returns {TokenCacheFilesystem}
  */
-function _get_token_cache_filesystem() {
+function _getTokenCacheFilesystem() {
   if ('TEST_TMPDIR' in process.env) {
     return new TokenCacheFilesystem(process.env.TEST_TMPDIR);
   }
@@ -26,12 +31,12 @@ test('test_no_op_cache', () => {
 });
 
 test('test_read_empty_cache', () => {
-  const tc = _get_token_cache_filesystem();
+  const tc = _getTokenCacheFilesystem();
   assert.throws(() => tc.read('nonexistent'), NotInCacheError);
 });
 
 test('test_read_one_entry_cache', () => {
-  const tc = _get_token_cache_filesystem();
+  const tc = _getTokenCacheFilesystem();
   tc.write('base_user1', Buffer.from('100'));
 
   assert.throws(() => tc.read('user_bad'), NotInCacheError);
@@ -40,7 +45,7 @@ test('test_read_one_entry_cache', () => {
 });
 
 test('test_read_two_entries_cache', () => {
-  const tc = _get_token_cache_filesystem();
+  const tc = _getTokenCacheFilesystem();
   tc.write('base_user2', Buffer.from('200'));
   tc.write('base_user1', Buffer.from('100'));
 
@@ -50,7 +55,7 @@ test('test_read_two_entries_cache', () => {
 });
 
 test('test_matching', () => {
-  const tc = _get_token_cache_filesystem();
+  const tc = _getTokenCacheFilesystem();
   tc.write('base_user2', Buffer.from('200'));
   tc.write('base_user1', Buffer.from('100'));
 
@@ -59,7 +64,7 @@ test('test_matching', () => {
 });
 
 test('test_no_matches', () => {
-  const tc = _get_token_cache_filesystem();
+  const tc = _getTokenCacheFilesystem();
   tc.write('base_user2', Buffer.from('200'));
   tc.write('base_user1', Buffer.from('100'));
 
@@ -68,7 +73,7 @@ test('test_no_matches', () => {
 });
 
 test('test_clearing_existing_tokens', () => {
-  const tc = _get_token_cache_filesystem();
+  const tc = _getTokenCacheFilesystem();
   tc.write('base_user2', Buffer.from('200'));
   tc.write('base_user1', Buffer.from('100'));
 
@@ -80,7 +85,7 @@ test('test_clearing_existing_tokens', () => {
 });
 
 test('test_clearing_nonexisting_tokens', () => {
-  const tc = _get_token_cache_filesystem();
+  const tc = _getTokenCacheFilesystem();
 
   assert.throws(() => tc.clear('user_bad'), ClearFailedError);
 });

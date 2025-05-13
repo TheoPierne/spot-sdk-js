@@ -7,103 +7,93 @@ const { setTimeout: sleep } = require('node:timers/promises');
 const grpc = require('@grpc/grpc-js');
 
 const helpers = require('./helpers');
-const robot_id_pb = require('../bosdyn/api/robot_id_pb');
-const { RobotIdServiceClient, RobotIdServiceService } = require('../bosdyn/api/robot_id_service_grpc_pb');
-const { TimedOutError } = require('../bosdyn-client/exceptions');
-const { RobotIdClient, version_array } = require('../bosdyn-client/robot_id');
+const robotIdPb = require('../src/bosdyn/api/robot_id_pb');
+const { RobotIdServiceClient, RobotIdServiceService } = require('../src/bosdyn/api/robot_id_service_grpc_pb');
+const { TimedOutError } = require('../src/bosdyn-client/exceptions');
+const { RobotIdClient, toVersionArray } = require('../src/bosdyn-client/robot_id');
 
 class MockRobotIdServicer extends RobotIdServiceClient {
-  constructor(rpc_delay = 0, robot_id = null) {
-    super('0.0.0.0:54520', grpc.ChannelCredentials.createInsecure());
-    this._rpc_delay = rpc_delay;
-    this._robot_id = robot_id || new robot_id_pb.RobotId();
+  constructor(rpcDelay = 0, robotId = null) {
+    super('127.0.0.1:54520', grpc.ChannelCredentials.createInsecure());
+    this._rpcDelay = rpcDelay;
+    this._robotId = robotId || new robotIdPb.RobotId();
   }
 
-  async getRobotId(request) {
-    const resp = new robot_id_pb.RobotIdResponse();
-    helpers.add_common_header(resp, request);
-    resp.setRobotId(this._robot_id);
-    await sleep(this._rpc_delay);
-    return resp;
+  async getRobotId(call, callback) {
+    const resp = new robotIdPb.RobotIdResponse();
+    helpers.addCommonHeader(resp, call.request);
+    resp.setRobotId(this._robotId);
+    if (this._rpcDelay > 0) {
+      await sleep(this._rpcDelay);
+    }
+    callback(null, resp);
   }
 }
 
-function _setup(rpc_delay = 0, robot_id = null) {
+function _setup(rpcDelay = 0, robotId = null) {
   const client = new RobotIdClient();
-  const server = helpers.setup_client_and_service(client, {
-    service: RobotIdServiceService,
-    func: {
-      getRobotId(call, callback) {
-        const reply = new robot_id_pb.RobotIdResponse();
-        helpers.add_common_header(reply, call.request);
-
-        /*const versionSoftwareRelease = new robot_id_pb.SoftwareVersion()
-          .setMajorVersion(1)
-          .setMinorVersion(1)
-          .setPatchLevel(12);
-
-        const softwareRelease = new robot_id_pb.RobotSoftwareRelease().setVersion(versionSoftwareRelease);
-
-        const robotId = new robot_id_pb.RobotId()
-          .setSerialNumber('B12313')
-          .setNickname('goofball')
-          .setSpecies('spot')
-          .setVersion('1.1.12')
-          .setSoftwareRelease(softwareRelease)
-          .setComputerSerialNumber('fdafds');*/
-
-        reply.setRobotId(call.request.getRobotId()); //
-        callback(null, reply);
-      },
-    },
+  const service = new MockRobotIdServicer(rpcDelay, robotId);
+  const server = helpers.setupClientAndService(client, {
+    servicer: RobotIdServiceService,
+    service: service,
   });
-  const service = new MockRobotIdServicer(rpc_delay, robot_id);
-  return [client, service, server];
+  return { client, service, server };
 }
 
-function _create_fake_robot_id() {
-  const robot_id = new robot_id_pb.RobotId();
-  robot_id.setSerialNumber('B12313');
-  robot_id.setSpecies('spot');
-  robot_id.setVersion('1.1.12');
-  robot_id.setNickname('goofball');
-  robot_id.setComputerSerialNumber('fdafds');
+function _createFakeRobotId() {
+  const robotId = new robotIdPb.RobotId();
+  robotId.setSerialNumber('B12313');
+  robotId.setSpecies('spot');
+  robotId.setVersion('1.1.12');
+  robotId.setNickname('goofball');
+  robotId.setComputerSerialNumber('fdafds');
 
-  const versionSoftwareRelease = new robot_id_pb.SoftwareVersion()
+  const versionSoftwareRelease = new robotIdPb.SoftwareVersion()
     .setMajorVersion(1)
     .setMinorVersion(1)
     .setPatchLevel(12);
-  const softwareRelease = new robot_id_pb.RobotSoftwareRelease().setVersion(versionSoftwareRelease);
+  const softwareRelease = new robotIdPb.RobotSoftwareRelease().setVersion(versionSoftwareRelease);
 
-  robot_id.setSoftwareRelease(softwareRelease);
-  return robot_id;
+  robotId.setSoftwareRelease(softwareRelease);
+  return robotId;
 }
 
-function _check_robot_id(robot_id) {
-  assert.strictEqual(robot_id.getSerialNumber(), 'B12313');
-  assert.strictEqual(robot_id.getSpecies(), 'spot');
+function _checkRobotId(robotId) {
+  assert.strictEqual(robotId.getSerialNumber(), 'B12313');
+  assert.strictEqual(robotId.getSpecies(), 'spot');
 }
+
+test.beforeEach(async () => {
+  // Sleep 100ms before each test to wait freeing server port
+  await sleep(100);
+});
 
 test('test_get_robot_id', async () => {
-  const [client, , server] = _setup(0, _create_fake_robot_id());
-  const robot_id = await client.get_id();
-  _check_robot_id(robot_id);
-  server.forceShutdown();
+  const { client, server } = _setup(0, _createFakeRobotId());
+  try {
+    const robotId = await client.getId();
+    _checkRobotId(robotId);
+  } finally {
+    server.forceShutdown();
+  }
 });
 
 test('test_get_robot_id_timeout', () => {
   const timeout = 100;
-  const [client, , server] = _setup(2 * timeout, _create_fake_robot_id());
+  const { client, server } = _setup(2 * timeout, _createFakeRobotId());
   assert
     .rejects(async () => {
-      await client.get_id({ timeout });
+      await client.getId({ timeout });
     }, TimedOutError)
-    .then(() => server.forceShutdown());
+    .finally(() => server.forceShutdown());
 });
 
-test('test_version_tuple', async () => {
-  const [client, , server] = _setup(0, _create_fake_robot_id());
-  const robot_id = await client.get_id();
-  assert.deepStrictEqual(version_array(robot_id.getSoftwareRelease().getVersion()), [1, 1, 12]);
-  server.forceShutdown();
+test('test_version_array', async () => {
+  const { client, server } = _setup(0, _createFakeRobotId());
+  try {
+    const robotId = await client.getId();
+    assert.deepStrictEqual(toVersionArray(robotId.getSoftwareRelease().getVersion()), [1, 1, 12]);
+  } finally {
+    server.forceShutdown();
+  }
 });

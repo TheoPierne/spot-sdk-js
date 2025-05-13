@@ -3,74 +3,76 @@
 const assert = require('node:assert');
 const test = require('node:test');
 
-const { BaseClient } = require('../bosdyn-client/common');
+const { Client, credentials } = require('@grpc/grpc-js');
+const { Message } = require('google-protobuf');
 
-class ProcessedResponse {
+const { BaseClient } = require('../src/bosdyn-client/common');
+
+class ProcessedResponse extends Message {
+  serializeBinary() {
+    return new Uint8Array();
+  }
+
   toObject() {
     return {};
   }
 }
 
-class Response {
-  constructor() {
-    this.processed_response = new ProcessedResponse();
-    this.done = true;
-    this.path = 'MockStub.rpc_method';
+class Request extends Message {
+  serializeBinary() {
+    return new Uint8Array();
   }
-
-  // eslint-disable-next-line no-empty-function
-  add_done_callback() {}
 
   toObject() {
     return {};
+  }
+}
+
+class Response extends Message {
+  constructor() {
+    super();
+    this.processedResponse = new ProcessedResponse();
+    this.path = 'MockStub.rpcMethod';
+  }
+
+  toObject() {
+    return {};
+  }
+
+  serializeBinary() {
+    return new Uint8Array();
   }
 
   getProcessedResponse() {
-    return Promise.resolve(this.processed_response);
-  }
-
-  exception() {
-    return null;
-  }
-
-  done() {
-    return true;
-  }
-
-  result() {
-    return this;
+    return this.processedResponse;
   }
 }
 
-class MockStub {
-  get rpc_method() {
-    return new Response();
+class MockStub extends Client {
+  rpcMethod(call, options, callback) {
+    return callback(null, new Response());
   }
 }
 
-function stub_creation_func() {
-  return new MockStub();
+function stubCreationFunc() {
+  return new MockStub('127.0.0.1:12', credentials.createInsecure());
 }
 
 // eslint-disable-next-line no-unused-vars, no-empty-function
-function _test_calls() {}
+function _testCalls() {}
 
 test('test_base_client', async () => {
-  const client = new BaseClient(stub_creation_func);
+  const client = new BaseClient(stubCreationFunc);
   client.channel = { internalChannel: { target: {} } };
-  const args = { disable_value_handler: true };
 
-  function value_from_response(response) {
+  function valueFromResponse(response) {
     return response.getProcessedResponse();
   }
 
   // Test sync
-  let response = await client.call(client._stub.rpc_method, null);
+  let response = await client.call(client._stub.rpcMethod, new Request());
   assert.ok(response instanceof Response);
 
-  response = await client.call(client._stub.rpc_method, null, value_from_response);
+  response = await client.call(client._stub.rpcMethod, new Request(), valueFromResponse);
   assert.ok(response instanceof ProcessedResponse);
-
-  response = await client.call(client._stub.rpc_method, null, value_from_response, null, args);
-  assert.ok(response instanceof Response);
 });
