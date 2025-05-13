@@ -1,35 +1,37 @@
+#!/usr/bin/env node
 'use strict';
 
 const process = require('node:process');
 
-const argparse = require('argparse');
+const { ArgumentParser } = require('argparse');
 
-const util = require('../../bosdyn-client/util');
-const { MissionClient } = require('../../bosdyn-mission/client');
-const client = require('../../index');
+const util = require('../../src/bosdyn-client/util');
+const { MissionClient } = require('../../src/bosdyn-mission/client');
+const { createStandardSdk } = require('../../src/index');
 
 async function main(args = null) {
-  const parser = argparse.ArgumentParser();
-  util.add_common_arguments(parser);
+  const parser = new ArgumentParser();
+  util.addCommonArguments(parser);
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
-  const sdk = client.sdk.create_standard_sdk('get_mission_state_example', [MissionClient]);
-  const robot = sdk.create_robot(options.hostname);
+  const sdk = createStandardSdk('get_mission_state_example', [MissionClient]);
+  const robot = sdk.createRobot(options.hostname);
 
   await robot.authenticate(options.username, options.password);
-  const clientMission = await robot.ensure_client(MissionClient.default_service_name);
+  /** @type {MissionClient} */
+  const clientMission = await robot.ensureClient(MissionClient.defaultServiceName);
 
-  const state = await clientMission.get_state();
+  const state = await clientMission.getState();
   console.log(`Got mission state:\n`, state.toObject());
 }
 
 if (require.main === module) {
   main()
-  .then(() => process.exit(0))
-  .catch(e => {
-    throw e;
-  });
+    .then(() => process.exit(0))
+    .catch(e => {
+      throw e;
+    });
 } else {
   module.exports = main;
 }

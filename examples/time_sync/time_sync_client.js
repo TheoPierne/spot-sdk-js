@@ -1,46 +1,48 @@
+#!/usr/bin/env node
 'use strict';
 
 const process = require('node:process');
 
-const argparse = require('argparse');
+const { ArgumentParser } = require('argparse');
 
-const { TimeSyncEndpoint, TimeSyncClient } = require('../../bosdyn-client/time_sync');
-const util = require('../../bosdyn-client/util');
-const client = require('../../index');
+const { TimeSyncEndpoint, TimeSyncClient } = require('../../src/bosdyn-client/time_sync');
+const util = require('../../src/bosdyn-client/util');
+const { createStandardSdk } = require('../../src/index');
 
 async function main(args = null) {
-  const parser = argparse.ArgumentParser();
-  util.add_common_arguments(parser);
+  const parser = new ArgumentParser();
+  util.addCommonArguments(parser);
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
-  const sdk = client.sdk.create_standard_sdk('TimeSyncClient');
-  const robot = sdk.create_robot(options.hostname);
+  const sdk = createStandardSdk('TimeSyncClient');
+  const robot = sdk.createRobot(options.hostname);
   await robot.authenticate(options.username, options.password);
-  const time_sync_client = await robot.ensure_client(TimeSyncClient.default_service_name);
+  /** @type {TimeSyncClient} */
+  const timeSyncClient = await robot.ensureClient(TimeSyncClient.defaultServiceName);
 
-  const time_sync_endpoint = new TimeSyncEndpoint(time_sync_client);
+  const timeSyncEndpoint = new TimeSyncEndpoint(timeSyncClient);
 
-  const did_establish = await time_sync_endpoint.establish_timesync(10, false);
+  const didEstablish = await timeSyncEndpoint.establishTimesync(10, false);
 
-  console.log(`Did establish timesync: ${did_establish}`);
-  console.log(`Client ID: ${time_sync_endpoint.clock_identifier}`);
+  console.log(`Did establish timesync: ${didEstablish}`);
+  console.log(`Client ID: ${timeSyncEndpoint.clockIdentifier}`);
   console.log(
-    `Clock skew seconds: ${time_sync_endpoint.clock_skew.getSeconds()} 
-    nanos: ${time_sync_endpoint.clock_skew.getNanos()}`,
-    );
+    `Clock skew seconds: ${timeSyncEndpoint.clockSkew.getSeconds()} 
+    nanos: ${timeSyncEndpoint.clockSkew.getNanos()}`,
+  );
   console.log(
-    `Round trip time seconds: ${time_sync_endpoint.round_trip_time.getSeconds()} 
-    nanos: ${time_sync_endpoint.round_trip_time.getNanos()}`,
-    );
+    `Round trip time seconds: ${timeSyncEndpoint.roundTripTime.getSeconds()} 
+    nanos: ${timeSyncEndpoint.roundTripTime.getNanos()}`,
+  );
 }
 
 if (require.main === module) {
   main()
-  .then(() => process.exit(0))
-  .catch(e => {
-    throw e;
-  })
+    .then(() => process.exit(0))
+    .catch(e => {
+      throw e;
+    });
 } else {
   module.exports = main;
 }

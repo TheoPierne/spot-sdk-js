@@ -6,23 +6,23 @@ const { setInterval } = require('node:timers');
 const argparse = require('argparse');
 const blessed = require('reblessed');
 
+const estop_pb = require('../../bosdyn/api/estop_pb');
+const robot_state_pb = require('../../bosdyn/api/robot_state_pb');
 const { EstopEndpoint, EstopKeepAlive, EstopClient, EndpointUnknownError } = require('../../bosdyn-client/estop');
 const { RobotStateClient } = require('../../bosdyn-client/robot_state');
 const util = require('../../bosdyn-client/util');
-const estop_pb = require('../../bosdyn/api/estop_pb');
-const robot_state_pb = require('../../bosdyn/api/robot_state_pb');
 const client = require('../../index');
 
 class EstopNoGui {
   constructor(robot_client, timeout_sec, name = null) {
     const ep = new EstopEndpoint(robot_client, name, timeout_sec);
-    ep.force_simple_setup();
+    ep.force_simple_setup().then(() => {
+      this.estop_keep_alive = new EstopKeepAlive(ep);
+      this.estop_keep_alive.allow();
 
-    this.estop_keep_alive = new EstopKeepAlive(ep);
-    this.estop_keep_alive.allow();
-
-    process.stdin.resume();
-    process.on('SIGINT', this.estop_keep_alive._end_periodic_check_in);
+      process.stdin.resume();
+      process.on('SIGINT', this.estop_keep_alive._end_periodic_check_in);
+    });
   }
 
   stop() {
@@ -39,7 +39,7 @@ class EstopNoGui {
 }
 
 async function main(args = null) {
-  const parser = argparse.ArgumentParser();
+  const parser = new argparse.ArgumentParser();
   util.add_common_arguments(parser);
   parser.add_argument('-t', '--timeout', { type: 'float', default: 5, help: 'Timeout in seconds' });
 
@@ -53,17 +53,17 @@ async function main(args = null) {
   await robot.authenticate(options.username, options.password);
 
   // Create estop client for the robot
-  const estop_client = await robot.ensure_client(EstopClient.default_service_name);
+  const estop_client = await robot.ensureClient(EstopClient.defaultServiceName);
 
   // Create nogui estop
   // Assuming timeout is in seconds.
   const estop_nogui = new EstopNoGui(estop_client, options.timeout * 1000, 'Estop NoGUI');
 
   // Create robot state client for the robot
-  const state_client = await robot.ensure_client(RobotStateClient.default_service_name);
+  const state_client = await robot.ensureClient(RobotStateClient.defaultServiceName);
 
   // Create a screen object.
-  const screen = blessed.screen({ smartCSR: true });
+  const screen = blessed.screen({ fastCSR: true });
   screen.title = 'Bosdyn Spot EStop';
 
   function cleanup_example(msg) {

@@ -1,45 +1,47 @@
+#!/usr/bin/env node
 'use strict';
 
 const process = require('node:process');
 
-const argparse = require('argparse');
+const { ArgumentParser } = require('argparse');
 
-const { RobotStateClient } = require('../../bosdyn-client/robot_state');
-const util = require('../../bosdyn-client/util');
-const client = require('../../index');
+const { RobotStateClient } = require('../../src/bosdyn-client/robot_state');
+const util = require('../../src/bosdyn-client/util');
+const { createStandardSdk } = require('../../src/index');
 
 async function main() {
   const commands = ['state', 'hardware', 'metrics'];
 
-  const parser = argparse.ArgumentParser();
-  util.add_common_arguments(parser);
+  const parser = new ArgumentParser();
+  util.addCommonArguments(parser);
   parser.add_argument('command', { choices: commands, help: 'Command to run' });
 
   const options = parser.parse_args();
 
-  const sdk = client.sdk.create_standard_sdk('RobotStateClient');
-  const robot = sdk.create_robot(options.hostname);
+  const sdk = createStandardSdk('RobotStateClient');
+  const robot = sdk.createRobot(options.hostname);
   await robot.authenticate(options.username, options.password);
-  const robot_state_client = await robot.ensure_client(RobotStateClient.default_service_name);
+  /** @type {RobotStateClient} */
+  const robotStateClient = await robot.ensureClient(RobotStateClient.defaultServiceName);
 
   if (options.command === 'state') {
-    const rep = await robot_state_client.get_robot_state();
+    const rep = await robotStateClient.getRobotState();
     console.log(rep.toObject());
   } else if (options.command === 'hardware') {
-    const rep = await robot_state_client.get_hardware_config_with_link_info();
+    const rep = await robotStateClient.getHardwareConfigWithLinkInfo();
     console.log(rep.toObject());
   } else if (options.command === 'metrics') {
-    const rep = await robot_state_client.get_robot_metrics();
+    const rep = await robotStateClient.getRobotMetrics();
     console.log(rep.toObject());
   }
 }
 
 if (require.main === module) {
   main()
-  .then(() => process.exit(0))
-  .catch(e => {
-    throw e;
-  });
+    .then(() => process.exit(0))
+    .catch(e => {
+      throw e;
+    });
 } else {
   module.exports = main;
 }

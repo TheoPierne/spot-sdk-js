@@ -1,15 +1,16 @@
+#!/usr/bin/env node
 'use strict';
 
 const process = require('node:process');
 
-const argparse = require('argparse');
+const { ArgumentParser } = require('argparse');
 
-const { IREnableDisableServiceClient } = require('../../bosdyn-client/ir_enable_disable');
-const util = require('../../bosdyn-client/util');
-const client = require('../../index');
+const { IREnableDisableServiceClient } = require('../../src/bosdyn-client/ir_enable_disable');
+const util = require('../../src/bosdyn-client/util');
+const { createStandardSdk } = require('../../src/index');
 
 async function main(args = null) {
-  const parser = argparse.ArgumentParser();
+  const parser = new ArgumentParser();
   util.add_common_arguments(parser);
 
   const group = parser.add_mutually_exclusive_group({ required: true });
@@ -18,21 +19,22 @@ async function main(args = null) {
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
-  const sdk = client.sdk.create_standard_sdk('ir_emission_test');
-  const robot = sdk.create_robot(options.hostname);
+  const sdk = createStandardSdk('ir_emission_test');
+  const robot = sdk.createRobot(options.hostname);
 
   await robot.authenticate(options.username, options.password);
-  const ir_enable_disable_client = await robot.ensure_client(IREnableDisableServiceClient.default_service_name);
+  /** @type {IREnableDisableServiceClient} */
+  const irEnableDisableClient = await robot.ensureClient(IREnableDisableServiceClient.defaultServiceName);
 
-  await ir_enable_disable_client.set_ir_enabled(options.enable);
+  await irEnableDisableClient.setIrEnabled(options.enable);
 }
 
 if (require.main === module) {
   main()
-  .then(() => process.exit(0))
-  .catch(e => {
-    throw e;
-  });
+    .then(() => process.exit(0))
+    .catch(e => {
+      throw e;
+    });
 } else {
   module.exports = main;
 }

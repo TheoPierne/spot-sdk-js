@@ -1,17 +1,18 @@
+#!/usr/bin/env node
 'use strict';
 
 const { Buffer } = require('node:buffer');
 const process = require('node:process');
 
+const nj = require('@d4c/numjs').default;
 const cv = require('@u4/opencv4nodejs');
-const argparse = require('argparse');
-const nj = require('numjs');
+const { ArgumentParser } = require('argparse');
 
-const { ImageClient, build_image_request } = require('../../bosdyn-client/image');
-const util = require('../../bosdyn-client/util');
-const image_pb = require('../../bosdyn/api/image_pb');
+const image_pb = require('../../src/bosdyn/api/image_pb');
+const { ImageClient, buildImageRequest } = require('../../src/bosdyn-client/image');
+const util = require('../../src/bosdyn-client/util');
 
-const client = require('../../index');
+const { createStandardSdk } = require('../../src/index');
 
 const ROTATION_ANGLE = {
   back_fisheye_image: 0,
@@ -21,15 +22,15 @@ const ROTATION_ANGLE = {
   right_fisheye_image: 180,
 };
 
-function pixel_format_type_strings() {
+function pixelFormatTypeStrings() {
   return Object.keys(image_pb.Image.PixelFormat).slice(1);
 }
 
-function pixel_format_string_to_enum(enum_string) {
-  return image_pb.Image.PixelFormat[enum_string];
+function pixelFormatStringToEnum(enumString) {
+  return image_pb.Image.PixelFormat[enumString];
 }
 
-function rotate_bound(image, angle) {
+function rotateBound(image, angle) {
   const [h, w] = image.sizes;
   const [cX, cY] = [Math.round(w / 2), Math.round(h / 2)];
 
@@ -53,50 +54,51 @@ function rotate_bound(image, angle) {
 }
 
 async function main(args = null) {
-  const parser = argparse.ArgumentParser();
-  util.add_common_arguments(parser);
+  const parser = new ArgumentParser();
+  util.addCommonArguments(parser);
 
   parser.add_argument('--list', { help: 'list image sources', action: 'store_true' });
   parser.add_argument('--auto-rotate', { help: 'rotate right and front images to be upright', action: 'store_true' });
   parser.add_argument('--image-sources', { help: 'Get image from source(s)', action: 'append' });
   parser.add_argument('--image-service', {
     help: 'Name of the image service to query.',
-    default: ImageClient.default_service_name,
+    default: ImageClient.defaultServiceName,
   });
   parser.add_argument('--pixel-format', {
     help: 'Requested pixel format of image. If supplied, will be used for all sources.',
-    choices: pixel_format_type_strings(),
+    choices: pixelFormatTypeStrings(),
   });
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
-  const sdk = client.sdk.create_standard_sdk('image_capture');
-  const robot = sdk.create_robot(options.hostname);
+  const sdk = createStandardSdk('image_capture');
+  const robot = sdk.createRobot(options.hostname);
   await robot.authenticate(options.username, options.password);
-  await robot.sync_with_directory();
-  await (await robot.time_sync).wait_for_sync();
+  await robot.syncWithDirectory();
+  await (await robot.timeSync).waitForSync();
 
-  const image_client = await robot.ensure_client(options.image_service);
+  /** @type {ImageClient} */
+  const imageClient = await robot.ensureClient(options.image_service);
 
   if (!options.list && !options.image_sources) {
     parser.error('Must provide actionable argument (list or image-sources).');
   }
 
   if (options.list) {
-    const image_sources = await image_client.list_image_sources();
+    const imageSources = await imageClient.listImageSources();
     console.log('Image sources:');
-    for (const source of image_sources) {
+    for (const source of imageSources) {
       console.log(`\t${source.getName()}`);
     }
     process.exit(0);
   }
 
   if (options.image_sources) {
-    const pixel_format = pixel_format_string_to_enum(options.pixel_format);
-    const image_requests = options.image_sources.map(x => build_image_request(x, undefined, undefined, pixel_format));
-    const image_responses = await image_client.get_image(image_requests);
+    const pixelFormat = pixelFormatStringToEnum(options.pixel_format);
+    const imageRequests = options.image_sources.map(x => buildImageRequest(x, undefined, undefined, pixelFormat));
+    const imageResponses = await imageClient.getImage(imageRequests);
 
-    for (const image of image_responses) {
+    for (const image of imageResponses) {
       let extension, dtype;
 
       if (image.getShot().getImage().getPixelFormat() === image_pb.Image.PixelFormat.PIXEL_FORMAT_DEPTH_U16) {
@@ -115,25 +117,25 @@ async function main(args = null) {
 
       if (options.auto_rotate) {
         const rot = ROTATION_ANGLE[image.getSource().getName()];
-        img = rotate_bound(img, rot);
+        img = rotateBound(img, rot);
       }
 
       // Save the image from the GetImage request to the current directory with the filename
       // matching that of the image source.
-      const image_saved_path = image.getSource().getName().replace('/', '');
-      cv.imwrite(`${image_saved_path}${extension}`, img);
+      const imageSavedPath = image.getSource().getName().replace('/', '');
+      cv.imwrite(`${imageSavedPath}${extension}`, img);
 
-      console.log(`Save ${image_saved_path}${extension} to ${__dirname}`);
+      console.log(`Save ${imageSavedPath}${extension} to ${__dirname}`);
     }
   }
 }
 
 if (require.main === module) {
   main()
-  .then(() => process.exit(0))
-  .catch(e => {
-    throw e;
-  });
+    .then(() => process.exit(0))
+    .catch(e => {
+      throw e;
+    });
 } else {
   module.exports = main;
 }
