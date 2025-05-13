@@ -1,0 +1,14 @@
+{
+  "name": "get_image",
+  "version": "1.0.0",
+  "main": "get_image.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@u4/opencv4nodejs": "^6.5.2"
+  }
+}

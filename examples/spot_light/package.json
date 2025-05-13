@@ -1,0 +1,15 @@
+{
+  "name": "spot_light",
+  "version": "1.0.0",
+  "description": "<!-- Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.",
+  "main": "spot_light.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@u4/opencv4nodejs": "^6.5.2"
+  }
+}
