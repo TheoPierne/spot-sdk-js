@@ -1,10 +1,11 @@
 'use strict';
 
 const { exec } = require('node:child_process');
+const { platform } = require('node:os');
 const { join, resolve } = require('node:path');
 const { emitWarning } = require('node:process');
 
-const version = '5.0.0';
+const version = '5.0.1';
 
 const paths = [
   `../spot-sdk-py/spot-sdk-${version}/protos`,
@@ -24,6 +25,8 @@ const paths = [
 
 const output = './src';
 
+const protocGenTsBin = resolve('./node_modules/.bin/protoc-gen-ts' + (platform() === 'win32' ? '.cmd' : ''));
+
 const jsBuildOptions = [
   `--js_out=import_style=commonjs,binary:${output}`,
   `--grpc_out=grpc_js:${output}`,
@@ -31,7 +34,7 @@ const jsBuildOptions = [
 ];
 
 const dTsBuildOptions = [
-  `--plugin=protoc-gen-ts=${resolve('./node_modules/.bin/protoc-gen-ts')}.cmd`,
+  `--plugin=protoc-gen-ts=${protocGenTsBin}`,
   `--ts_out=grpc_js:${output}`,
   `--proto_path=${paths.map(e => resolve(join(e))).join(' ')}`,
 ];
