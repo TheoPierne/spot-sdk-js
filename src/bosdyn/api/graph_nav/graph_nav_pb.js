@@ -10564,7 +10564,8 @@ proto.bosdyn.api.graph_nav.UploadGraphRequest.toObject = function(includeInstanc
     graph: (f = msg.getGraph()) && bosdyn_api_graph_nav_map_pb.Graph.toObject(includeInstance, f),
     lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
     generateNewAnchoring: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    treatValidationWarningsAsErrors: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
+    treatValidationWarningsAsErrors: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+    replaceGraph: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
   };
 
   if (includeInstance) {
@@ -10623,6 +10624,10 @@ proto.bosdyn.api.graph_nav.UploadGraphRequest.deserializeBinaryFromReader = func
     case 5:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setTreatValidationWarningsAsErrors(value);
+      break;
+    case 6:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setReplaceGraph(value);
       break;
     default:
       reader.skipField();
@@ -10688,6 +10693,13 @@ proto.bosdyn.api.graph_nav.UploadGraphRequest.serializeBinaryToWriter = function
   if (f) {
     writer.writeBool(
       5,
+      f
+    );
+  }
+  f = message.getReplaceGraph();
+  if (f) {
+    writer.writeBool(
+      6,
       f
     );
   }
@@ -10838,6 +10850,24 @@ proto.bosdyn.api.graph_nav.UploadGraphRequest.prototype.getTreatValidationWarnin
  */
 proto.bosdyn.api.graph_nav.UploadGraphRequest.prototype.setTreatValidationWarningsAsErrors = function(value) {
   return jspb.Message.setProto3BooleanField(this, 5, value);
+};
+
+
+/**
+ * optional bool replace_graph = 6;
+ * @return {boolean}
+ */
+proto.bosdyn.api.graph_nav.UploadGraphRequest.prototype.getReplaceGraph = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 6, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.graph_nav.UploadGraphRequest} returns this
+ */
+proto.bosdyn.api.graph_nav.UploadGraphRequest.prototype.setReplaceGraph = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 6, value);
 };
 
 
@@ -11093,7 +11123,8 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.toObject = function(includeInstan
     sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
     areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f),
     mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f),
-    validationStatus: (f = msg.getValidationStatus()) && proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.toObject(includeInstance, f)
+    validationStatus: (f = msg.getValidationStatus()) && proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.toObject(includeInstance, f),
+    replacedGraph: jspb.Message.getBooleanFieldWithDefault(msg, 13, false)
   };
 
   if (includeInstance) {
@@ -11183,6 +11214,10 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.deserializeBinaryFromReader = fun
       var value = new proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus;
       reader.readMessage(value,proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.deserializeBinaryFromReader);
       msg.setValidationStatus(value);
+      break;
+    case 13:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setReplacedGraph(value);
       break;
     default:
       reader.skipField();
@@ -11301,6 +11336,13 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.serializeBinaryToWriter = functio
       12,
       f,
       proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.serializeBinaryToWriter
+    );
+  }
+  f = message.getReplacedGraph();
+  if (f) {
+    writer.writeBool(
+      13,
+      f
     );
   }
 };
@@ -12499,6 +12541,24 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.prototype.clearValidationStatus =
  */
 proto.bosdyn.api.graph_nav.UploadGraphResponse.prototype.hasValidationStatus = function() {
   return jspb.Message.getField(this, 12) != null;
+};
+
+
+/**
+ * optional bool replaced_graph = 13;
+ * @return {boolean}
+ */
+proto.bosdyn.api.graph_nav.UploadGraphResponse.prototype.getReplacedGraph = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 13, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.graph_nav.UploadGraphResponse} returns this
+ */
+proto.bosdyn.api.graph_nav.UploadGraphResponse.prototype.setReplacedGraph = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 13, value);
 };
 
 

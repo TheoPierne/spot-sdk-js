@@ -15743,7 +15743,9 @@ proto.bosdyn.api.spot.BuzzerNoteParams.Note = {
   NOTE_F: 4,
   NOTE_G: 5,
   NOTE_A: 6,
-  NOTE_B: 7
+  NOTE_B: 7,
+  NOTE_PEAK_SPL: 8,
+  NOTE_REST: 9
 };
 
 /**

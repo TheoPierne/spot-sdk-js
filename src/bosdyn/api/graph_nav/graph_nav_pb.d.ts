@@ -1435,6 +1435,8 @@ export class UploadGraphRequest extends jspb.Message {
     setGenerateNewAnchoring(value: boolean): UploadGraphRequest;
     getTreatValidationWarningsAsErrors(): boolean;
     setTreatValidationWarningsAsErrors(value: boolean): UploadGraphRequest;
+    getReplaceGraph(): boolean;
+    setReplaceGraph(value: boolean): UploadGraphRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UploadGraphRequest.AsObject;
@@ -1453,6 +1455,7 @@ export namespace UploadGraphRequest {
         lease?: bosdyn_api_lease_pb.Lease.AsObject,
         generateNewAnchoring: boolean,
         treatValidationWarningsAsErrors: boolean,
+        replaceGraph: boolean,
     }
 }
 
@@ -1536,6 +1539,8 @@ export class UploadGraphResponse extends jspb.Message {
     clearValidationStatus(): void;
     getValidationStatus(): UploadGraphResponse.ValidationStatus | undefined;
     setValidationStatus(value?: UploadGraphResponse.ValidationStatus): UploadGraphResponse;
+    getReplacedGraph(): boolean;
+    setReplacedGraph(value: boolean): UploadGraphResponse;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UploadGraphResponse.AsObject;
@@ -1561,6 +1566,7 @@ export namespace UploadGraphResponse {
         areaCallbackError?: AreaCallbackServiceError.AsObject,
         mapStats?: bosdyn_api_graph_nav_map_pb.MapStats.AsObject,
         validationStatus?: UploadGraphResponse.ValidationStatus.AsObject,
+        replacedGraph: boolean,
     }
 
 
