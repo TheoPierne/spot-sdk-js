@@ -3,7 +3,6 @@
 const { createHash } = require('node:crypto');
 const { createWriteStream, existsSync, readFileSync, mkdirSync, writeFileSync } = require('node:fs');
 const { join } = require('node:path');
-const process = require('node:process');
 
 const { StringValue } = require('google-protobuf/google/protobuf/wrappers_pb');
 
@@ -22,6 +21,14 @@ const { addLeaseWalletProcessors } = require('../bosdyn-client/lease');
 const { NoTimeSyncError, _TimeConverter } = require('../bosdyn-client/robot_command');
 const { DefaultDict } = require('../bosdyn-client/util');
 const { secondsToDuration } = require('../bosdyn-core/util');
+
+/**
+ * @typedef {import('../bosdyn-client/robot').Robot} Robot
+ */
+
+/**
+ * @typedef {import('../bosdyn-client/time_sync').TimeSyncEndpoint} TimeSyncEndpoint
+ */
 
 /**
  * Client for Choreography Service.
@@ -48,11 +55,11 @@ class ChoreographyClient extends BaseClient {
      * @private
      */
     this._timesyncEndpoint = null;
-
-    /** @todo remove this warning after fully test this client */
-    console.warn(`This client hasn't been tested. Bugs may appear!`);
   }
 
+  /**
+   * @param {Robot} other 
+   */
   async updateFrom(other) {
     super.updateFrom(other);
     if (this.leaseWallet) {
@@ -87,7 +94,7 @@ class ChoreographyClient extends BaseClient {
    */
   listAllMoves(args) {
     const request = new choreographySequencePb.ListAllMovesRequest();
-    return this.call(this._stub.listAllMoves, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.listAllMoves, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -97,7 +104,7 @@ class ChoreographyClient extends BaseClient {
    */
   listAllSequences(args) {
     const request = new choreographySequencePb.ListAllSequencesRequest();
-    return this.call(this._stub.listAllSequences, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.listAllSequences, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -114,7 +121,7 @@ class ChoreographyClient extends BaseClient {
     const request = new choreographySequencePb.UploadChoreographyRequest()
       .setChoreographySequence(choreographySeq)
       .setNonStringParsing(nonStrictParsing);
-    return this.call(this._stub.uploadChoreography, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.uploadChoreography, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -132,7 +139,7 @@ class ChoreographyClient extends BaseClient {
     const request = new choreographySequencePb.UploadAnimatedMoveRequest()
       .setAnimatedMove(animation)
       .setAnimatedMoveGeneratedId(genIdProto);
-    return this.call(this._stub.uploadAnimatedMove, request, null, _uploadAnimatedMoveErrors, args);
+    return this.call(this._stub.uploadAnimatedMove, request, null, _uploadAnimatedMoveErrors, false, args);
   }
 
   /**
@@ -142,7 +149,7 @@ class ChoreographyClient extends BaseClient {
    */
   async getChoreographyStatus(args) {
     const request = new choreographySequencePb.ChoreographyStatusRequest();
-    const status = await this.call(this._stub.choreographyStatus, request, null, null, args);
+    const status = await this.call(this._stub.choreographyStatus, request, null, null, false, args);
     const clientTime = new _TimeConverter(this, this.timesyncEndpoint).localSecondsFromRobotTimestamp(
       status.getValidityTime(),
     );
@@ -356,7 +363,7 @@ class ChoreographyClient extends BaseClient {
    */
   choreographyTimeAdjust(overrideClientStartTime, timeDifference = null, validityTime = null, args) {
     const request = this.buildChoreographyTimeAdjustRequest(overrideClientStartTime, timeDifference, validityTime);
-    return this.call(this._stub.choreographyTimeAdjust, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.choreographyTimeAdjust, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -381,7 +388,7 @@ class ChoreographyClient extends BaseClient {
       choreographyStartingSlice,
       lease,
     );
-    return this.call(this._stub.executeChoreography, request, null, _executeChoreographyErrors, args);
+    return this.call(this._stub.executeChoreography, request, null, _executeChoreographyErrors, false, args);
   }
 
   /**
@@ -398,7 +405,40 @@ class ChoreographyClient extends BaseClient {
    */
   choreographyCommand(commandList, clientEndTime, lease = null, args) {
     const request = this.buildChoreographyCommandRequest(commandList, clientEndTime, lease);
-    return this.call(this._stub.choreographyCommand, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.choreographyCommand, request, null, commonHeaderErrors, false, args);
+  }
+  
+  /**
+   * Tell the robot its legs are a non-standard size to help avoid self-collision. Typically used for robots that are wearing costumes.
+   * Configuration will be permanently stored (persisting through reboot) until cleared by sending an empty request.
+   * @param {choreographySequencePb.LegSize|number[]} frontLeftSize New leg configuration dimensions for the front left leg. Either 
+   * a LegSize message or a list of 4 floats. If null, all config values are set to zero.
+   * @param {choreographySequencePb.LegSize|number[]} frontRightSize Same as frontLeftSize, but for the front right leg.
+   * @param {choreographySequencePb.LegSize|number[]} hindLeftSize Same as frontLeftSize, but for the hind left leg.
+   * @param {choreographySequencePb.LegSize|number[]} hindRightSize Same as frontLeftSize, but for the hind right leg.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<choreographySequencePb.LegSizeConfigurationResponse>}
+   */
+  legSizeConfiguration(frontLeftSize = null, frontRightSize = null, hindLeftSize = null, hindRightSize = null, args) {
+    const req = this.buildLegSizeConfigurationRequest(frontLeftSize, frontRightSize, hindLeftSize, hindRightSize);
+    
+    return this.call(this._stub.legSizeConfiguration, req, null, commonHeaderErrors, false, args);
+  }
+  
+  /**
+   * Read the current leg size configuration from the robot. On a robot with the default leg size configuration the 
+   * values for each leg's LegSize will be:
+   * * distance_inward = 0.02 m
+   * * distance_outward = 0.02 m
+   * * distance_forward = 0.035 m                                          
+   * * distance_backward = 0.035 m
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<choreographySequencePb.LegSizeConfigurationStateResponse>}
+   */
+  legSizeConfigurationState(args) {
+    const req = new choreographySequencePb.LegSizeConfigurationStateRequest();
+    
+    return this.call(this._stub.legSizeConfigurationState, req, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -412,7 +452,7 @@ class ChoreographyClient extends BaseClient {
    */
   startRecordingState(durationSecs, continueSessionId = 0, args) {
     const request = this.buildStartRecordingStateRequest(durationSecs, continueSessionId);
-    return this.call(this._stub.startRecordingState, request, null, _startRecordingStateErrors, args);
+    return this.call(this._stub.startRecordingState, request, null, _startRecordingStateErrors, false, args);
   }
 
   /**
@@ -422,7 +462,7 @@ class ChoreographyClient extends BaseClient {
    */
   stopRecordingState(args) {
     const request = new choreographySequencePb.StopRecordingStateRequest();
-    return this.call(this._stub.stopRecordingState, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.stopRecordingState, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -440,7 +480,7 @@ class ChoreographyClient extends BaseClient {
     const request = new choreographySequencePb.GetChoreographySequenceRequest()
       .setSequenceName(seqName)
       .setReturnAnimationNamesOnly(returnAnimationNamesOnly);
-    return this.call(this._stub.getChoreographySequence, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.getChoreographySequence, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -452,7 +492,7 @@ class ChoreographyClient extends BaseClient {
    */
   getAnimation(name, args) {
     const request = new choreographySequencePb.GetAnimationRequest().setName(name);
-    return this.call(this._stub.getAnimation, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.getAnimation, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -465,7 +505,7 @@ class ChoreographyClient extends BaseClient {
    */
   saveSequence(seqName, labels = [], args) {
     const request = this.buildSaveSequenceRequest(seqName, labels);
-    return this.call(this._stub.saveSequence, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.saveSequence, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -476,7 +516,7 @@ class ChoreographyClient extends BaseClient {
    */
   deleteSequence(seqName, args) {
     const request = new choreographySequencePb.DeleteSequenceRequest().setSequenceName(seqName);
-    return this.call(this._stub.deleteSequence, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.deleteSequence, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -489,7 +529,7 @@ class ChoreographyClient extends BaseClient {
    */
   modifyChoreographyInfo(seqName, addLabels = [], removeLabels = [], args) {
     const request = this.buildModifyChoreographyInfoRequest(seqName, addLabels, removeLabels);
-    return this.call(this._stub.modifyChoreographyInfo, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.modifyChoreographyInfo, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -499,7 +539,7 @@ class ChoreographyClient extends BaseClient {
    */
   clearAllSequenceFiles(args) {
     const request = new choreographySequencePb.ClearAllSequenceFilesRequest();
-    return this.call(this._stub.clearAllSequenceFiles, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.clearAllSequenceFiles, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -519,6 +559,7 @@ class ChoreographyClient extends BaseClient {
       request,
       _getStreamedChoreographyStateLog,
       _downloadRobotStateLogStreamErrors,
+      false,
       args,
     );
   }
@@ -574,6 +615,35 @@ class ChoreographyClient extends BaseClient {
       .setSequenceName(sequenceName)
       .setAddLabelsList(addLabels)
       .setRemoveLabelsList(removeLabels);
+  }
+  
+  buildLegSize(distInward = 0, distOutward = 0, distForward = 0, distBackward = 0) {
+    return new choreographySequencePb.LegSize()
+      .setDistanceInward(distInward)
+      .setDistanceOutward(distOutward)
+      .setDistanceForward(distForward)
+      .setDistanceBackward(distBackward);
+  }
+  
+  buildLegSizeConfigurationRequest(frontLeftSize = null, frontRightSide = null, hindLeftSize = null, hindRightSize = null) {
+    const req = new choreographySequencePb.LegSizeConfigurationRequest();
+    
+    if (Array.isArray(frontLeftSize) && frontLeftSize.lenght === 4) {
+      frontLeftSize = this.buildLegSize(frontLeftSize[0], frontLeftSize[1], frontLeftSize[2], frontLeftSize[3]);
+    }
+    if (Array.isArray(frontRightSide) && frontRightSide.lenght === 4) {
+      frontRightSide = this.buildLegSize(frontRightSide[0], frontRightSide[1], frontRightSide[2], frontRightSide[3]);
+    }
+    if (Array.isArray(hindLeftSize) && hindLeftSize.lenght === 4) {
+      hindLeftSize = this.buildLegSize(hindLeftSize[0], hindLeftSize[1], hindLeftSize[2], hindLeftSize[3]);
+    }
+    if (Array.isArray(hindRightSize) && hindRightSize.lenght === 4) {
+      hindRightSize = this.buildLegSize(hindRightSize[0], hindRightSize[1], hindRightSize[2], hindRightSize[3]);
+    }
+    
+    req.setFrontLeftSize(frontLeftSize).setFrontRightSize(frontRightSide).setHindLeftSize(hindLeftSize).setHindRightSize(hindRightSize);
+    
+    return req;
   }
 
   _updateTimestampFilter(timestamp, timesyncEndpoint) {
