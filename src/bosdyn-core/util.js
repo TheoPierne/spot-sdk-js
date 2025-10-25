@@ -69,13 +69,13 @@ function durationToSeconds(duration) {
 function secondsToDuration(seconds) {
   const durationSeconds = parseInt(seconds);
   const durationNanos = parseInt((seconds - durationSeconds) * NSEC_PER_SEC);
-  return new duration_pb.Duration([durationSeconds, durationNanos]);
+  return new duration_pb.Duration().setSeconds(durationSeconds).setNanos(durationNanos);
 }
 
 function secondsToTimestamp(seconds) {
   const timestampSeconds = parseInt(seconds);
   const timestampNanos = parseInt((seconds - timestampSeconds) * NSEC_PER_SEC);
-  return new time_pb.Timestamp([timestampSeconds, timestampNanos]);
+  return new time_pb.Timestamp().setSeconds(timestampSeconds).setNanos(timestampNanos);
 }
 
 function timestampStr(timestamp) {
@@ -132,7 +132,7 @@ function getNanoSecTime() {
 }
 
 function timestampToSec(t) {
-  return t.getSeconds() + t.getNanos();
+  return t.getSeconds() + t.getNanos() / NSEC_PER_SEC;
 }
 
 function timestampToNsec(t) {
@@ -140,10 +140,10 @@ function timestampToNsec(t) {
 }
 
 function timestampToDatetime(t = { getSeconds: () => Date.now() / 1000 }, useNanos = true) {
-  if (!useNanos || t.getNanos === undefined) {
-    return new Date(t.getSeconds() * 1000).toLocaleString();
-  }
-  return new Date(t.getSeconds() * 1000 + t.getNanos() * 1e-9).toLocaleString();
+  const ms = useNanos && typeof t.getNanos === 'function'
+    ? (t.getSeconds() * 1000) + (t.getNanos() / 1e6)
+    : (t.getSeconds() * 1000);
+  return new Date(ms).toLocaleString();
 }
 
 function secsToHms(seconds) {
@@ -159,23 +159,58 @@ function distanceStr(meters) {
   return `${Number.parseFloat(meters).toFixed(2) / 1000} km`;
 }
 
-class DatetimeParseError extends Error {
-  constructor(msg) {
-    super(msg);
-    this.name = 'DatetimeParseError';
-  }
+class DatetimeParseError extends Error {}
+
+function nowUnixSeconds() {
+  return Date.now() / 1000;
+}
+
+function parseYYYYMMDD_HHmmss(s) {
+  // s = "YYYYMMDD_HHmmss"
+  const y = +s.slice(0, 4);
+  const M = +s.slice(4, 6) - 1; // 0-based
+  const d = +s.slice(6, 8);
+  const hh = +s.slice(9, 11);
+  const mm = +s.slice(11, 13);
+  const ss = +s.slice(13, 15);
+  return new Date(y, M, d, hh, mm, ss).getTime() / 1000;
+}
+
+function parseYYYYMMDD(s) {
+  // s = "YYYYMMDD" -> minuit local
+  const y = +s.slice(0, 4);
+  const M = +s.slice(4, 6) - 1;
+  const d = +s.slice(6, 8);
+  return new Date(y, M, d, 0, 0, 0).getTime() / 1000;
+}
+
+function parseRelative(val, unit) {
+  const n = parseInt(val.slice(0, -1), 10);
+  const seconds = unit === 'd' ? n * 86400
+                : unit === 'h' ? n * 3600
+                : unit === 'm' ? n * 60
+                : n;
+  return nowUnixSeconds() - seconds;
+}
+
+function parseNanosecondsEpoch(val) {
+  const ns = BigInt(val);
+  const s = Number(ns / BigInt(1e9));
+  const rem = Number(ns % BigInt(1e9)) / 1e9;
+  return s + rem;
 }
 
 const TIME_FORMATS = [
-  [/^\d{8}_\d{6}$/, val => moment(val, 'YYYYMMDD_HHmmss')],
-  [/^\d{8}$/, val => moment(val, 'YYYYMMDD')],
-  [/^\d+[hH]$/, val => moment().subtract(parseInt(val.slice(0, -1)), 'hours')],
-  [/^\d+s$/, val => moment().subtract(parseInt(val.slice(0, -1)), 'seconds')],
-  [/^\d+m$/, val => moment().subtract(parseInt(val.slice(0, -1)), 'minutes')],
-  [/^\d+d$/, val => moment().subtract(parseInt(val.slice(0, -1)), 'days')],
-  [/^\d{10}$/, val => moment.unix(parseInt(val))],
-  [/^\d{10}(\.\d{0-3})?$/, val => moment.unix(parseFloat(val))],
-  [/^\d{13}$/, val => moment.unix(parseInt(val) * 1e-9)],
+  [/^\d{8}_\d{6}$/, v => parseYYYYMMDD_HHmmss(v)],
+  [/^\d{8}$/, v => parseYYYYMMDD(v)],
+  [/^\d+[dD]$/, v => parseRelative(v.toLowerCase(), 'd')],
+  [/^\d+[hH]$/, v => parseRelative(v.toLowerCase(), 'h')],
+  [/^\d+[mM]$/, v => parseRelative(v.toLowerCase(), 'm')],
+  [/^\d+[sS]$/, v => parseRelative(v.toLowerCase(), 's')],
+  [/^\d{10}$/, v => parseInt(v, 10)],
+  [/^\d{10}\.\d+$/, v => parseFloat(v)],
+  [/^\d{13}$/, v => parseInt(v, 10) / 1000],
+  [/^\d{19,20}$/, v => parseNanosecondsEpoch(v)],
 ];
 
 /**
