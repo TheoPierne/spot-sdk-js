@@ -32,6 +32,10 @@ class TimedOutError extends TimeSyncError {}
 class InactiveThreadError extends TimeSyncError {}
 
 /**
+ * @typedef {import('google-protobuf/google/protobuf/duration_pb').Duration} Duration
+ */
+
+/**
  * A client for establishing time-sync with a server/robot.
  * @extends {BaseClient<TimeSyncServiceClient>}
  */
@@ -205,7 +209,7 @@ class TimeSyncEndpoint {
 
   /**
    * The previous round trip time.
-   * @returns {duration_pb.Duration|null}
+   * @returns {Duration|null}
    * @readonly
    */
   get roundTripTime() {
@@ -224,7 +228,7 @@ class TimeSyncEndpoint {
 
   /**
    * The best current estimate of clock skew from the time-sync service.
-   * @returns {durationPb.Duration}
+   * @returns {Duration}
    * @throws {NotEstablishedError} Time sync has not yet been established.
    * @readonly
    */
@@ -303,7 +307,7 @@ class TimeSyncEndpoint {
   /**
    * Convert a local time in seconds to a timestamp proto in robot time.
    * @param {number} localTimeSecs Timestamp in seconds since the unix epoch (e.g., from Date.now()).
-   * @returns {timePb.Timestamp}
+   * @returns {Timestamp}
    * @throws {NotEstablishedError} Time sync has not yet been established.
    */
   robotTimestampFromLocalSecs(localTimeSecs) {
@@ -374,7 +378,6 @@ class TimeSyncThread {
    * @returns {void}
    */
   start() {
-    if (this._loop) return;
     this._shouldExit = false;
     this._exception = null;
     this._event.clear();
@@ -451,7 +454,7 @@ class TimeSyncThread {
   }
 
   get stopped() {
-    return this._event.isSet();
+    return !this._event.isSet();
   }
 
   get exception() {
@@ -465,7 +468,7 @@ class TimeSyncThread {
   /**
    * Get current estimate for robot clock skew from local time.
    * @param {number} timesyncTimeoutSec Time to wait for timesync before doing conversion.
-   * @returns {Promise<durationPb.Duration>}
+   * @returns {Promise<Duration>}
    */
   async getRobotClockSkew(timesyncTimeoutSec = 0) {
     await this.waitForSync(timesyncTimeoutSec);
