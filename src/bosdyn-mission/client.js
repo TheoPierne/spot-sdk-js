@@ -15,55 +15,17 @@ const {
 const { chunkMessage } = require('../bosdyn-client/data_chunk');
 const { ValueError, ResponseError, TimeSyncRequired } = require('../bosdyn-client/exceptions');
 const { DefaultDict } = require('../bosdyn-client/util');
+const { addLeaseWalletProcessors } = require('../bosdyn-client/lease');
 
-class MissionResponseError extends ResponseError {
-  constructor(res, msg) {
-    super(res, msg);
-    this.name = 'MissionResponseError';
-  }
-}
-
-class InvalidQuestionId extends MissionResponseError {
-  constructor(res, msg) {
-    super(res, msg);
-    this.name = 'InvalidQuestionId';
-  }
-}
-
-class InvalidAnswerCode extends MissionResponseError {
-  constructor(res, msg) {
-    super(res, msg);
-    this.name = 'InvalidAnswerCode';
-  }
-}
-
-class QuestionAlreadyAnswered extends MissionResponseError {
-  constructor(res, msg) {
-    super(res, msg);
-    this.name = 'QuestionAlreadyAnswered';
-  }
-}
-
-class CustomParamsError extends MissionResponseError {
-  constructor(res, msg) {
-    super(res, msg);
-    this.name = 'CustomParamsError';
-  }
-}
-
-class IncompatibleAnswer extends MissionResponseError {
-  constructor(res, msg) {
-    super(res, msg);
-    this.name = 'IncompatibleAnswer';
-  }
-}
-
-class CompilationError extends MissionResponseError {
-  constructor(res, msg) {
-    super(res, msg);
-    this.name = 'CompilationError';
-  }
-}
+class MissionResponseError extends ResponseError {}
+class InvalidQuestionId extends MissionResponseError {}
+class InvalidAnswerCode extends MissionResponseError {}
+class QuestionAlreadyAnswered extends MissionResponseError {}
+class CustomParamsError extends MissionResponseError {}
+class IncompatibleAnswer extends MissionResponseError {}
+class CompilationError extends MissionResponseError {}
+class NoMissionError extends MissionResponseError {}
+class NoMissionPlayingError extends MissionResponseError {}
 
 class ValidationError extends MissionResponseError {
   constructor(res, msg) {
@@ -77,19 +39,9 @@ class ValidationError extends MissionResponseError {
   }
 }
 
-class NoMissionError extends MissionResponseError {
-  constructor(res, msg) {
-    super(res, msg);
-    this.name = 'NoMissionError';
-  }
-}
-
-class NoMissionPlayingError extends MissionResponseError {
-  constructor(res, msg) {
-    super(res, msg);
-    this.name = 'NoMissionPlayingError';
-  }
-}
+/**
+ * @typedef {import('../bosdyn-client/robot').Robot} Robot
+ */
 
 /**
  * Client for the Mission service.
@@ -104,8 +56,16 @@ class MissionClient extends BaseClient {
     this._timesyncEndpoint = null;
   }
 
+  /**
+   * @param {Robot} other 
+   */
   async updateFrom(other) {
     super.updateFrom(other);
+    
+    if (this.leaseWallet) {
+      addLeaseWalletProcessors(this, this.leaseWallet);
+    }
+    
     try {
       this._timesyncEndpoint = (await other.timeSync).endpoint;
     } catch (e) {
