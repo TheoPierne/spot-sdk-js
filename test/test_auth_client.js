@@ -28,11 +28,10 @@ class MockAuthClientService extends AuthServiceClient {
     this._rpcDelay = rpcDelay;
   }
 
-  async getAuthToken(call, callback) {
+  async getAuthToken({ request }, callback) {
     const res = new authPb.GetAuthTokenResponse();
-    helpers.addCommonHeader(res, call.request);
+    helpers.addCommonHeader(res, request);
 
-    const { request } = call;
     if (request.getUsername()) {
       if (
         request.getUsername() === MockAuthClientService.USERNAME &&
