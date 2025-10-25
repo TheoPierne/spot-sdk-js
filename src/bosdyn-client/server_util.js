@@ -2,8 +2,15 @@
 
 const headerPb = require('../bosdyn/api/header_pb');
 const { nowTimestamp } = require('../bosdyn-core/util');
+const { StoreImageRequest, StoreDataRequest } = require('../bosdyn/api/data_acquisition_store_pb');
+const { GetImageResponse } = require('../bosdyn/api/image_pb');
+const { GetLocalGridsResponse } = require('../bosdyn/api/local_grid_pb');
+const { RecordSignalTicksRequest, RecordDataBlobsRequest } = require('../bosdyn/api/data_buffer_pb');
+const { Any } = require('google-protobuf/google/protobuf/any_pb');
 
-// Je n'ai pas la conversion du __enter__ et __exit__ en JavaScript pour l'instant !
+/**
+ * @typedef {import('./data_buffer').DataBufferClient} DataBufferClient
+ */
 
 /**
 * Helper to log gRPC request and response message to the data buffer for a service.
@@ -14,63 +21,73 @@ const { nowTimestamp } = require('../bosdyn-core/util');
 * information before logging.
 * @param {protobuf} response Any gRPC response message with a bosdyn.api.ResponseHeader proto.
 * @param {protobuf} request Any gRPC request message with a bosdyn.api.RequestHeader proto.
-* @param {DataBufferClient} [rpc_logger=null] Optional data buffer client to log the messages; if not
+* @param {DataBufferClient} [rpcLogger=null] Optional data buffer client to log the messages; if not
   provided, only the headers will be mutated and nothing will be logged.
 * @returns {void}
 */
-function ResponseContext(response, request, rpc_logger = null) {
+function ResponseContext(response, request, rpcLogger = null) {
   console.warn('Ne marche peut etre pas ! [server_util.js:7]');
 
-  response.header.request_header = request.header;
+  response.getHeader().setRequestHeader(request.getHeader());
 
   try {
     response.getHeader().setRequestReceivedTimestamp(nowTimestamp());
-    if (rpc_logger) rpc_logger.add_protobuf_async(request);
+    if (rpcLogger) rpcLogger.addProtobuf(request);
     return response;
   } catch (e) {
-    if (response.getHeader().getError().getCode() === response.header.error.CODE_UNSPECIFIED) {
-      response.getHeader().getError().setCode(response.header.error.CODE_OK);
+    if (response.getHeader().getError().getCode() === headerPb.CommonError.Code.CODE_UNSPECIFIED) {
+      response.getHeader().getError().setCode(headerPb.CommonError.Code.CODE_OK);
     }
     if (exc_type !== null) {
-      response.getHeader().getError().setCode(response.header.error.CODE_INTERNAL_SERVER_ERROR);
+      response.getHeader().getError().setCode(headerPb.CommonError.Code.CODE_INTERNAL_SERVER_ERROR);
       response
         .getHeader()
         .getError()
         .setMessage(`[${typeof e}] ${e}`);
     }
-    if (rpc_logger) rpc_logger.add_protobuf_async(response);
+    if (rpcLogger) rpcLogger.addProtobuf(response);
   }
 }
 
+/**
+ * @typedef {import('google-protobuf').Message} Message
+ */
+
+/**
+ * Sets the ResponseHeader header in the response.
+ * @param {Message} response The GRPC response message to be populated.
+ * @param {Message} request The header from the request is added to the response.
+ * @param {headerPb.CommonError.Code} [errorCode] The status for the RPC response.
+ * @param {string} [errorMsg] An optional error message describing a bad header status failure.
+ */
 function populateResponseHeader(response, request, errorCode = headerPb.CommonError.Code.CODE_OK, errorMsg = null) {
   const header = new headerPb.ResponseHeader();
   header.setRequestHeader(request.getHeader());
   header.setRequestReceivedTimestamp(nowTimestamp());
   const error = new headerPb.CommonError();
   error.setCode(errorCode);
-  if (errorMsg !== null || errorMsg) error.setMessage(errorMsg);
+  if (errorMsg) error.setMessage(errorMsg);
   header.setError(error);
   const copiedRequest = request.clone();
-  stripLargeBytesFields(copiedRequest);
-  // Header.getRequest().Pack(copied_request) Je ne sais pas si cela est utile (.Pack())
+  stripLargeBytesFields(copiedRequest); 
+  header.setRequest(new Any().pack(copiedRequest.serializeBinary()));
   response.setHeader(header);
 }
 
 function stripLargeBytesFields(protoMessage) {
-  const messageType = protoMessage;
+  const messageType = protoMessage.constructor;
   const whitelistMap = getBytesFieldWhitelist();
   if (messageType in whitelistMap) whitelistMap[messageType](protoMessage);
 }
 
 function getBytesFieldWhitelist() {
   return {
-    GetImageResponse: stripGetImageResponse,
-    GetLocalGridsResponse: stripLocalGridResponses,
-    StoreDataRequest: stripStoreDataRequest,
-    StoreImageRequest: stripStoreImageRequest,
-    RecordSignalTicksRequest: stripRecordSignalTick,
-    RecordDataBlobsRequest: stripRecordDataBlob,
-    AddLogAnnotationRequest: stripLogAnnotation,
+    [GetImageResponse]: stripGetImageResponse,
+    [GetLocalGridsResponse]: stripLocalGridResponses,
+    [StoreDataRequest]: stripStoreDataRequest,
+    [StoreImageRequest]: stripStoreImageRequest,
+    [RecordSignalTicksRequest]: stripRecordSignalTick,
+    [RecordDataBlobsRequest]: stripRecordDataBlob,
   };
 }
 
@@ -85,13 +102,13 @@ function stripGetImageResponse(protoMessage) {
 }
 
 function stripLocalGridResponses(protoMessage) {
-  for (const gridResp in protoMessage.getLocalGridResponses()) {
-    gridResp.clearLocalGridResponsesList();
+  for (const gridResp of protoMessage.getLocalGridResponsesList()) {
+    gridResp.getLocalGrid().setData('');
   }
 }
 
 function stripStoreImageRequest(protoMessage) {
-  protoMessage.clearImage();
+  protoMessage.getImage().getImage().setData('');
 }
 
 function stripStoreDataRequest(protoMessage) {
@@ -110,13 +127,8 @@ function stripRecordDataBlob(protoMessage) {
   }
 }
 
-function stripLogAnnotation(protoMessage) {
-  for (const blob in protoMessage.getAnnotations().getBlobData()) {
-    blob.clearAnnotations();
-  }
-}
-
 module.exports = {
   ResponseContext,
   populateResponseHeader,
+  stripLargeBytesFields,
 };
