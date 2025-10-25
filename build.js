@@ -5,7 +5,7 @@ const { platform } = require('node:os');
 const { join, resolve } = require('node:path');
 const { emitWarning } = require('node:process');
 
-const version = '5.0.1';
+const version = '5.0.1.2';
 
 const paths = [
   `../spot-sdk-py/spot-sdk-${version}/protos`,
