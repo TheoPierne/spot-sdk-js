@@ -2,7 +2,8 @@
 
 const { writeFileSync } = require('node:fs');
 const process = require('node:process');
-const fetch = require('node-fetch');
+
+const timeRangePb = require('../bosdyn/api/time_range_pb');
 
 const {
   TimeSyncEndpoint,
@@ -43,10 +44,15 @@ function _httpHeaders(robot) {
   return { Authorization: `Bearer ${robot.user_token}` };
 }
 
+/**
+ * 
+ * @param {timeRangePb.TimeRange} timeRange 
+ * @returns {{from_sec: string, to_sec: string}}
+ */
 function _requestTimespanFromTimeRange(timeRange) {
   let ret = {};
-  if ('start' in timeRange) ret.from_sec = `${timeRange.start.seconds}`;
-  if ('end' in timeRange) ret.to_sec = `${timeRange.end.seconds}`;
+  if (timeRange.hasStart()) ret.from_sec = `${timeRange.getStart().getSeconds()}`;
+  if (timeRange.hasEnd()) ret.to_sec = `${timeRange.getEnd().getSeconds()}`;
   return ret;
 }
 
@@ -70,17 +76,17 @@ async function downloadData(
   messageType = null,
   grpcService = null,
 ) {
-  let time_sync_endpoint;
+  let timeSyncEndpoint;
   if (!robotTime) {
     let timeSyncClient = await robot.ensureClient(TimeSyncClient.defaultServiceName);
-    time_sync_endpoint = new TimeSyncEndpoint(timeSyncClient);
-    if (!time_sync_endpoint.establish_timesync()) throw new NotEstablishedError('time sync not established');
+    timeSyncEndpoint = new TimeSyncEndpoint(timeSyncClient);
+    if (!(await timeSyncEndpoint.establishTimesync())) throw new NotEstablishedError('time sync not established');
   }
 
   const getParams =
     startNsec || endNsec
-      ? _requestTimespanFromNanoseconds(startNsec, endNsec, time_sync_endpoint)
-      : _requestTimespanFromSpec(timespanSpec, time_sync_endpoint);
+      ? _requestTimespanFromNanoseconds(startNsec, endNsec, timeSyncEndpoint)
+      : _requestTimespanFromSpec(timespanSpec, timeSyncEndpoint);
 
   if (channel) getParams.channel = channel;
   if (messageType) getParams.type = messageType;
@@ -88,32 +94,29 @@ async function downloadData(
 
   const url = _bddfUrl(hostname, getParams);
 
-  const options = {
+  const res = await fetch(url, {
     method: 'GET',
     headers: _httpHeaders(robot),
-  };
+  });
+  
+  if (!res.ok) {
+    console.error(`${url} response: ${res.status}`);
+    return null;
+  }
+  
+  const buf = await res.arrayBuffer();
 
-  let outfile = '';
-  // Let data = Buffer.allocUnsafe(REQUEST_CHUNK_SIZE);
-
-  fetch(url, options)
-    .then(res => res.buffer())
-    .then(resBuf => {
-      if (!resBuf.ok) {
-        console.error(`${url} response: ${resBuf.status}`);
-        return null;
-      }
-
-      outfile = outputFilename ? outputFilename : _outputFilename(resBuf);
-      return writeFileSync(outfile, resBuf);
-    })
-    .catch(err => {
-      console.error(err);
-    });
-
+  const outfile = outputFilename ? outputFilename : _outputFilename(res);
+  
+  writeFileSync(outfile, buf);
+  
   return outfile;
 }
 
+/**
+ * @param {Response} response 
+ * @returns 
+ */
 function _outputFilename(response) {
   let content = response.headers.get('Content-Disposition');
   if (content.length < 2) {
@@ -162,7 +165,7 @@ function main() {
     console.error(e);
   }
 
-  let output_filename = downloadData(
+  const outputFilename = downloadData(
     robot,
     options.hostname,
     options.timespan,
@@ -175,9 +178,9 @@ function main() {
     options.service,
   );
 
-  if (!output_filename) return true;
+  if (!outputFilename) return true;
 
-  console.info(`Wrote '${output_filename}'.`);
+  console.info(`Wrote '${outputFilename}'.`);
   return false;
 }
 
