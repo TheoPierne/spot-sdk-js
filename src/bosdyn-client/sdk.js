@@ -5,13 +5,14 @@ const os = require('node:os');
 const path = require('node:path');
 const process = require('node:process');
 
-require('dotenv').config({ path: path.resolve(`${__dirname}/../.env`) });
+require('dotenv').config({ path: path.resolve(`${__dirname}/../../.env`), quiet: true });
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 const expandenv = require('expandenv');
 
 const { ArmSurfaceContactClient } = require('./arm_surface_contact');
+const { AudioVisualClient } = require('./audio_visual');
 const { AuthClient } = require('./auth');
 const { AutoReturnClient } = require('./auto_return');
 const { AutowalkClient } = require('./autowalk');
@@ -90,6 +91,7 @@ function generateClientName(prefix = '') {
 const _DEFAULT_SERVICE_CLIENTS = [
   AggregatorClient,
   ArmSurfaceContactClient,
+  AudioVisualClient,
   AuthClient,
   AutowalkClient,
   AutoReturnClient,
