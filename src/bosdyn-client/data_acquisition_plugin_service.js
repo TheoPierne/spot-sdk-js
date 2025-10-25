@@ -5,7 +5,7 @@ const { Any } = require('google-protobuf/google/protobuf/any_pb');
 const { DataAcquisitionStoreClient } = require('./data_acquisition_store');
 const { DataBufferClient } = require('./data_buffer');
 const { ResponseContext } = require('./server_util');
-const { populate_response_header } = require('./util');
+const { populateResponseHeader } = require('./server_util');
 
 const dataAcquisitionPb = require('../bosdyn/api/data_acquisition_pb');
 const { DataAcquisitionPluginServiceService } = require('../bosdyn/api/data_acquisition_plugin_service_grpc_pb');
@@ -13,12 +13,7 @@ const headerPb = require('../bosdyn/api/header_pb');
 
 const kDefaultRequestExpiration = 30_000;
 
-class RequestCancelledError extends Error {
-  constructor(msg) {
-    super(msg);
-    this.name = 'RequestCancelledError';
-  }
-}
+class RequestCancelledError extends Error {}
 
 /**
  * Helper to simplify creating a DataError to send to RequestState.add_errors.
@@ -339,7 +334,7 @@ class DataAcquisitionPluginService extends DataAcquisitionPluginServiceService {
         if (!this.acquireResponseFn(request, response)) return response;
       } catch (e) {
         this.logger.error('[DATA ACQUISITION PLUGIN SERVICE] Failed during call to user acquire response function');
-        populate_response_header(response, request, headerPb.CommonError.Code.CODE_INTERNAL_SERVER_ERROR, e.toString());
+        populateResponseHeader(response, request, headerPb.CommonError.Code.CODE_INTERNAL_SERVER_ERROR, e.toString());
         return response;
       }
     }
@@ -353,7 +348,7 @@ class DataAcquisitionPluginService extends DataAcquisitionPluginServiceService {
     );
     this.executor.submit(this._dataCollectionWrapper, response.getRequestId(), request, state);
     response.setStatus(dataAcquisitionPb.AcquireDataResponse.Status.STATUS_OK);
-    populate_response_header(response, request);
+    populateResponseHeader(response, request);
     return response;
   }
 
@@ -365,7 +360,7 @@ class DataAcquisitionPluginService extends DataAcquisitionPluginServiceService {
     } catch (e) {
       response.setStatus(response.STATUS_REQUEST_ID_DOES_NOT_EXIST);
     }
-    populate_response_header(response, request);
+    populateResponseHeader(response, request);
     return response;
   }
 
@@ -375,7 +370,7 @@ class DataAcquisitionPluginService extends DataAcquisitionPluginServiceService {
     ResponseContext(response, request, this.data_buffer_client);
     capabilities.setDataSourcesList(this.capabilities);
     response.setCapabilities(capabilities);
-    populate_response_header(response, request);
+    populateResponseHeader(response, request);
     return response;
   }
 
@@ -391,7 +386,7 @@ class DataAcquisitionPluginService extends DataAcquisitionPluginServiceService {
       response.setStatus(dataAcquisitionPb.CancelAcquisitionResponse.Status.STATUS_REQUEST_ID_DOES_NOT_EXIST);
     }
     if (!isCatch) response.setStatus(dataAcquisitionPb.CancelAcquisitionResponse.Status.STATUS_OK);
-    populate_response_header(response, request);
+    populateResponseHeader(response, request);
     return response;
   }
 }
