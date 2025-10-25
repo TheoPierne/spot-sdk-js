@@ -251,13 +251,18 @@ function addEdgeToTree(frameTreeSnapshot, parentTformChild, parentFrameName, chi
  * @returns {string[]}
  */
 function getFrameNames(frameTreeSnapshot) {
-  const frameNames = [];
-  for (const childFrame of frameTreeSnapshot.getChildToParentEdgeMapMap().entries()) {
-    if (!frameNames.includes(childFrame)) frameNames.push(childFrame);
-    const parentFrame = frameTreeSnapshot.getChildToParentEdgeMapMap().get(childFrame).getParentFrameName();
-    if (!frameNames.includes(parentFrame)) frameNames.push(parentFrame);
+  const frameNames = new Set();
+  const map = frameTreeSnapshot.getChildToParentEdgeMapMap();
+  for (const [childFrame, parentEdge] of map.entries()) {
+    if (childFrame) {
+      frameNames.add(childFrame);
+    }
+    const parentFrame = parentEdge.getParentFrameName();
+    if (parentFrame) {
+      frameNames.add(parentFrame);
+    }
   }
-  return frameNames.map(x => x !== '');
+  return Array.from(frameNames);
 }
 
 /**
