@@ -5,7 +5,7 @@ const process = require('node:process');
 
 const { ArgumentParser } = require('argparse');
 
-const world_object_pb = require('../../src/bosdyn/api/world_object_pb');
+const { WorldObjectType } = require('../../src/bosdyn/api/world_object_pb');
 const util = require('../../src/bosdyn-client/util');
 const { WorldObjectClient } = require('../../src/bosdyn-client/world_object');
 const { createStandardSdk } = require('../../src/index');
@@ -42,11 +42,22 @@ async function main(args = null) {
   console.groupEnd();
 
   // Get all fiducial objects (an object of a specific type).
-  const requestFiducials = [world_object_pb.WorldObjectType.WORLD_OBJECT_APRILTAG];
+  const requestFiducials = [WorldObjectType.WORLD_OBJECT_APRILTAG];
   const fiducialObjects = (await worldObjectClient.listWorldObjects(requestFiducials)).getWorldObjectsList();
   console.log(
     `Fiducial objects: \n${JSON.stringify(
       fiducialObjects.map(e => e.toObject()),
+      null,
+      1,
+    )}`,
+  );
+  
+  // Get all entity objects (an object of a specific type).
+  const requestEntities = [WorldObjectType.WORLD_OBJECT_TRACKED_ENTITY];
+  const entitiesObjects = (await worldObjectClient.listWorldObjects(requestEntities)).getWorldObjectsList();
+  console.log(
+    `Entities objects: \n${JSON.stringify(
+      entitiesObjects.map(e => e.toObject()),
       null,
       1,
     )}`,
