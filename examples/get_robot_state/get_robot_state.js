@@ -10,7 +10,7 @@ const util = require('../../src/bosdyn-client/util');
 const { createStandardSdk } = require('../../src/index');
 
 async function main() {
-  const commands = ['state', 'hardware', 'metrics'];
+  const commands = ['state', 'hardware', 'metrics', 'joints', 'frame_tree'];
 
   const parser = new ArgumentParser();
   util.addCommonArguments(parser);
@@ -33,6 +33,12 @@ async function main() {
   } else if (options.command === 'metrics') {
     const rep = await robotStateClient.getRobotMetrics();
     console.log(rep.toObject());
+  } else if (options.command === 'joints') {
+    const robotState = await robotStateClient.getRobotState();
+    console.log(robotState.getKinematicState().getJointStatesList().map(e => e.toObject()));
+  } else if (options.command === 'frame_tree') {
+    const robotState = await robotStateClient.getRobotState();
+    console.log(robotState.getKinematicState().getTransformsSnapshot().toObject());
   }
 }
 
