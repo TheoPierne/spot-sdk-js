@@ -1,6 +1,6 @@
 'use strict';
 
-const headerPb = require('../bosdyn/api/header_pb');
+const { RequestHeader } = require('../bosdyn/api/header_pb');
 const { nowTimestamp } = require('../bosdyn-core/util');
 
 /**
@@ -16,12 +16,12 @@ class AddRequestHeader {
 
   /**
    * Build a protobuf RequestHeader
-   * @returns {headerPb.RequestHeader}
+   * @returns {RequestHeader}
    * @private
    */
   _creatHeader() {
     const nowTimestampProto = nowTimestamp();
-    const header = new headerPb.RequestHeader()
+    const header = new RequestHeader()
       .setRequestTimestamp(nowTimestampProto)
       .setClientName(this.getClientName());
     return header;
