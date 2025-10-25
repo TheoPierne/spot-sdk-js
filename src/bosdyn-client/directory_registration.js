@@ -1,9 +1,8 @@
 'use strict';
 
-const { setInterval, clearInterval } = require('node:timers');
-
 const { BaseClient, errorFactory, handleCommonHeaderErrors, handleUnsetStatusError } = require('./common');
 const { ResponseError, TimedOutError, RetryableUnavailableError } = require('./exceptions');
+const { ErrorCallbackResult } = require('./error_callback_result');
 const { LoggerUtil } = require('./loggerUtil');
 const { DefaultDict } = require('./util');
 
@@ -226,33 +225,62 @@ class DirectoryRegistrationKeepAlive {
    * @param {Console} [options.logger=console] Logger object for logging messages. Defaults to `console`.
    * @param {number|null} [options.rpcTimeoutSeconds=null] Timeout in seconds for RPC requests. `null` means no timeout.
    * @param {number} [options.rpcIntervalSeconds=30] Interval in seconds for periodic service registrations.
+   * @param {number} [options.initialRetrySeconds=1] Initial number of seconds to wait before retrying a failed registration request. Defaults to 1 second.
    */
-  constructor(dirRegClient, { logger = null, rpcTimeoutSeconds = null, rpcIntervalSeconds = 30 } = {}) {
+  constructor(
+    dirRegClient,
+    { logger = null, rpcTimeoutSeconds = null, rpcIntervalSeconds = 30, initialRetrySeconds = 1 } = {}
+  ) {
+    /** @type {string|null} */
     this.authority = null;
+    /** @type {string|null} */
     this.directoryName = null;
+    /** @type {string|null} */
     this.host = null;
-    this.logger = logger || LoggerUtil.getLogger('DirectoryRegistrationKeepAlive');
+    /** @type {string|null} */
     this.port = null;
+    /** @type {string|null} */
     this.serviceType = null;
+    this.logger = logger || LoggerUtil.getLogger('DirectoryRegistrationKeepAlive');
 
     /**
      * Client to the directory registration service.
      * @type {DirectoryRegistrationClient}
      */
     this.dirRegClient = dirRegClient;
+    this.reregistrationErrorCallback = null;
 
     this._rpcTimeout = rpcTimeoutSeconds;
     this._reregisterPeriod = rpcIntervalSeconds;
-    this._reregisterInterval = null;
+    this._initialRetrySeconds = initialRetrySeconds;
 
-    this.startPeriodicReregister();
+    this._running = false;
+    this._loopPromise = null;
+    this._abortController = null;
   }
 
   async [Symbol.asyncDispose]() {
     this.shutdown();
-    await this.unregister();
+    try {
+      await this.unregister();
+    } catch (_) { /* ignore */ }
   }
 
+  /**
+   * Register (optionally reset) the service, then start the periodic loop.
+   *
+   * @param {string} directoryName Unique name in the directory.
+   * @param {string} serviceType Service type.
+   * @param {string} authority gRPC authority/scope.
+   * @param {string} host Service host (IP or name).
+   * @param {number} port Service port.
+   * @param {number|null} [livenessTimeoutSecs=null] Directory liveness TTL. Defaults to 2.5 × `rpcIntervalSeconds`.
+   * @param {boolean} [userTokenRequired=true] Whether a user token is required for this service.
+   * @param {boolean} [resetService=true] Fully reset the registration before starting the loop.
+   * @returns {Promise<this>}
+   * @throws {Error} If already started.
+   * @throws {Error} RpcError if communication with the robot fails.
+   */
   async start(
     directoryName,
     serviceType,
@@ -263,6 +291,10 @@ class DirectoryRegistrationKeepAlive {
     userTokenRequired = true,
     resetService = true,
   ) {
+    if (this._running) {
+      throw new Error('DirectoryRegistrationKeepAlive already started.');
+    }
+
     if (livenessTimeoutSecs === null) {
       livenessTimeoutSecs = this._reregisterPeriod * 2.5;
     }
@@ -305,6 +337,7 @@ class DirectoryRegistrationKeepAlive {
         }
       }
     }
+
     this.logger.info(`${directoryName} service registered/updated.`);
 
     this.authority = authority;
@@ -315,30 +348,77 @@ class DirectoryRegistrationKeepAlive {
     this.livenessTimeoutSecs = livenessTimeoutSecs;
     this.userTokenRequired = userTokenRequired;
 
-    this.startPeriodicReregister();
+    this._running = true;
+    this._abortController = new AbortController();
+    this._loopPromise = this._periodicReregisterLoop(this._abortController.signal).catch(err => {
+      if (this._running) this.logger.error(`Reregistration loop crashed: ${err}`);
+      this._running = false;
+    });
   }
 
+  /**
+   * Whether the periodic loop is still running.
+   * @returns {boolean}
+   */
   isAlive() {
-    return this._reregisterInterval !== null;
+    return this._running;
   }
 
+  /**
+   * Stop the re-registration loop (idempotent).
+   * Does NOT automatically call `unregister()`—use it separately if needed.
+   * @returns {void}
+   */
   shutdown() {
+    if (!this._running) return;
     this.logger.info(`Shutting down ${this.directoryName} keep alive`);
-    if (this._reregisterInterval) {
-      clearInterval(this._reregisterInterval);
-      this._reregisterInterval = null;
-    }
+    this._running = false;
+    if (this._abortController) this._abortController.abort();
   }
 
+  /**
+   * Unregister the service from the directory. First awaits the loop to finish cleanly.
+   * @returns {Promise<void>}
+   */
   async unregister() {
     this.logger.info(`Unregistering ${this.directoryName} from directory`);
-    await this.dirRegClient.unregister(this.directoryName);
+
+    const p = this._loopPromise;
+    this.shutdown();
+
+    if (p) {
+      try {
+        await p;
+      } catch (_) { /* ignore */ }
+    }
+
+    await this.dirRegClient.unregister(this.directoryName, { timeout: this._rpcTimeout });
   }
 
-  startPeriodicReregister() {
+  /**
+   * Main re-registration loop: handles immediate retry, exponential backoff, and normal cadence.
+   * @private
+   * @param {AbortSignal} abortSignal Cancellation signal to stop the loop.
+   * @returns {Promise<void>}
+   */
+  async _periodicReregisterLoop(abortSignal) {
+    let retryInterval = this._initialRetrySeconds;
+    let waitTime = this._reregisterInterval;
+
     this.logger.info(`Starting directory registration loop for ${this.directoryName}`);
 
-    this._reregisterInterval = setInterval(async () => {
+    while (!abortSignal.aborted) {
+      if (waitTime > 0) {
+        try {
+          await this._sleep(waitTime * 1000, abortSignal);
+        } catch (_) {
+          break;
+        }
+      }
+
+      const execStart = Date.now();
+      let action = ErrorCallbackResult.RESUME_NORMAL_OPERATION;
+
       try {
         await this.dirRegClient.register(
           this.directoryName,
@@ -348,19 +428,60 @@ class DirectoryRegistrationKeepAlive {
           this.port,
           this.userTokenRequired,
           this.livenessTimeoutSecs,
+          { timeout: this._rpcTimeout }
         );
-      } catch (error) {
-        if (error instanceof ServiceAlreadyExistsError) {
+      } catch (err) {
+        if (err instanceof ServiceAlreadyExistsError) {
           // Ignore already registered errors.
-        } else if (error instanceof RetryableUnavailableError) {
+        } else if (err instanceof RetryableUnavailableError) {
           // Ignore transient availability errors.
-        } else if (error instanceof TimedOutError) {
-          this.logger.warn(`Timed out, timeout set to "${this.rpcTimeout}"`);
+        } else if (err instanceof TimedOutError) {
+          this.logger.warn(`Timed out, timeout set to "${this._rpcTimeout}"`);
         } else {
-          this.logger.error(`Caught general exception: ${error.message}`);
+          this.logger.error(`Reregistration failed: ${err?.stack || err}`);
+          if (this.reregistrationErrorCallback) {
+            try {
+              action = await this.reregistrationErrorCallback(err);
+            } catch (cbErr) {
+              this.logger.error(`Exception in error callback: ${cbErr?.stack || cbErr}`);
+            }
+          }
         }
       }
-    }, this._reregisterPeriod * 1000).unref();
+      
+      const elapsed = (Date.now() - execStart) / 1000;
+      
+      if (action === ErrorCallbackResult.RETRY_IMMEDIATELY) {
+        waitTime = 0;
+      } else if (action === ErrorCallbackResult.ABORT) {
+        break;
+      } else if (action === ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF) {
+        waitTime = Math.max(0, retryInterval - elapsed);
+        retryInterval = Math.min(2 * retryInterval, this._reregisterPeriod);
+      } else {
+        retryInterval = this._initialRetrySeconds;
+        waitTime = Math.max(0, this._reregisterPeriod - elapsed);
+      }
+    }
+  }
+  
+  /**
+   * Abortable sleep.
+   * @private
+   * @param {number} ms Duration to wait in milliseconds.
+   * @param {AbortSignal} signal Cancellation signal.
+   * @returns {Promise<void>}
+   */
+  _sleep(ms, signal) {
+    return new Promise((resolve, reject) => {
+      if (signal.aborted) return reject(new Error('aboterd'));
+      const t = setTimeout(resolve, ms);
+      const onAbort = () => {
+        clearTimeout(t);
+        reject(new Error('aborted'));
+      };
+      signal.addEventListener('abort', onAbort, { once: true });
+    });
   }
 }
 
