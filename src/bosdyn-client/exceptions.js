@@ -17,7 +17,7 @@ class ResponseError extends Error {
     } else {
       super('');
     }
-    this.response = response.toObject();
+    this.response = response;
     this.name = this.constructor.name;
     Error.captureStackTrace?.(this, ResponseError);
   }
