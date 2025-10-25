@@ -3,6 +3,7 @@
 const assert = require('node:assert');
 const { setTimeout: sleep } = require('node:timers/promise');
 
+const { DataBufferClient } = require('./data_buffer');
 const { FaultClient, ServiceFaultDoesNotExistError, ServiceFaultAlreadyExistsError } = require('./fault');
 const { createValueValidator } = require('./service_customization_helpers');
 const { populateResponseHeader } = require('./util');
@@ -411,6 +412,7 @@ class CameraBaseImageServicer extends imageServiceGrpcPb.ImageServiceClient {
     logger = null,
     useBackgroundCaptureThread = true,
     backgroundCaptureParams = null,
+    logImages = false,
   ) {
     super();
 
@@ -419,10 +421,10 @@ class CameraBaseImageServicer extends imageServiceGrpcPb.ImageServiceClient {
     this.serviceName = serviceName;
     /** @type {Object<string, VisualImageSource>} */
     this.imageSourcesMapped = {};
-    this.#init(imageSources, useBackgroundCaptureThread, backgroundCaptureParams);
+    this.#init(imageSources, useBackgroundCaptureThread, backgroundCaptureParams, logImages);
   }
 
-  async #init(imageSources, useBackgroundCaptureThread, backgroundCaptureParams) {
+  async #init(imageSources, useBackgroundCaptureThread, backgroundCaptureParams, logImages) {
     this.faultClient = await this.bosdynSdkRobot.ensureClient(FaultClient.defaultServiceName);
     await (await this.bosdynSdkRobot.timeSync).waitForSync();
 
@@ -432,6 +434,12 @@ class CameraBaseImageServicer extends imageServiceGrpcPb.ImageServiceClient {
       await source.initializeFaults(this.faultClient, this.serviceName);
       if (useBackgroundCaptureThread) source.createCaptureThread(backgroundCaptureParams);
       this.imageSourcesMapped[source.getImageSourceName()] = source;
+    }
+    
+    if (logImages) {
+      this.dataBufferClient = await this.bosdynSdkRobot.ensureClient(DataBufferClient.defaultServiceName);
+    } else {
+      this.dataBufferClient = null;
     }
   }
 
