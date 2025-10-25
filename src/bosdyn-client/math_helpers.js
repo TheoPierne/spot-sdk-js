@@ -428,6 +428,14 @@ class SE3Pose {
     this.z = z;
     this.rot = rot instanceof geometryPb.Quaternion ? Quat.fromProto(rot) : rot;
   }
+  
+  [Symbol.iterator]() {
+    const arr = [this.x, this.y, this.z, this.rot.w, this.rot.x, this.rot.y, this.rot.z];
+    let i = 0;
+    return {
+      next: () => (i < arr.length ? { value: arr[i++], done: false } : { done: true }),
+    };
+  }
 
   toString() {
     return `position -- X: ${this.x} Y: ${this.z} Z: ${this.z} rotation -- ${this.rot}`;
@@ -472,18 +480,34 @@ class SE3Pose {
     const [outX, outY, outZ] = this.rot.transformPoint(x, y, z);
     return [outX + this.x, outY + this.y, outZ + this.z];
   }
+  
+  transformVec3(vec3) {
+    const [outX, outY, outZ] = this.rot.transformPoint(vec3.x, vec3.y, vec3.z);
+    return new geometryPb.Vec3().setX(outX + this.x).setY(outY + this.y).setZ(outZ + this.z);
+  }
 
   transformCloud(points) {
     return SE3Pose.transformCloudFromMatrix(this.toMatrix(), points);
   }
 
   static transformCloudFromMatrix(transform, points) {
-    // !!!!!!!! Code peut être faux à verifier en fonction du code python !!!!!!!!
-    const rot = transform.get(0, 3);
-    const trans = transform.get(3);
-    return dot(points, rot.T).concat(trans);
+    const T = Array.isArray(transform) ? transform : transform.tolist();
+    const rot = [
+      [T[0][0], T[0][1], T[0][2]],
+      [T[1][0], T[1][1], T[1][2]],
+      [T[2][0], T[2][1], T[2][2]],
+    ];
+    const trans = [T[0][3], T[1][3], T[2][3]];
+
+    const isNd = !!(points && points.shape && points.get);
+    const out = applyTransformToPoints(rot, trans, points, isNd);
+    return array(out);
   }
 
+  /**
+   * Returns the 4x4 matrix to transform a 3D point (in generalized coordinates).
+   * @returns {NdArray}
+   */
   toMatrix() {
     const ret = identity(4);
     const matrix = this.rot.toMatrix();
@@ -503,7 +527,23 @@ class SE3Pose {
     ret.set(2, 3, this.z);
     return ret;
   }
+  
+  /**
+   * Calculates the Euclidean norm (magnitude) of the translation component pose.
+   * @returns {number}
+   */
+  translationNorm() {
+    return Math.hypot(this.x, this.y, this.z);
+  }
 
+  /**
+   * Computes the multiplication between the current math_helpers.SE3Pose and the input se3pose.
+   * 
+   * For example, if the 'this' SE3Pose represents a_tform_b and the input se3pose represents b_tform_c,
+   * then the output will represent the transform a_tform_c.
+   * @param {SE3Pose} other 
+   * @returns {SE3Pose}
+   */
   mult(other) {
     if (other instanceof Vec3) {
       const [x, y, z] = this.transformPoint(other.x, other.y, other.z);
@@ -929,6 +969,15 @@ function skewMatrix2d(vec2Proto) {
   return array([[vec2Proto.getY(), -vec2Proto.getX()]]);
 }
 
+/**
+ * Converts a geometryPb.Matrix or geometryPb.Matrixf to a ndarray.
+ * @param {geometryPb.Matrix|geometryPb.Matrixf} proto 
+ * @returns {array}
+ */
+function matrixFromProto(proto) {
+  return array(proto.getValuesList()).reshape(proto.getRows(), proto.getCols());
+}
+
 function transformSe2velocity(aAdjointBMatrix, se2VelocityInB) {
   let se2VelocityInBVector;
   if (se2VelocityInB instanceof geometryPb.SE2Velocity) {
@@ -989,6 +1038,7 @@ module.exports = {
   radiansToDegrees,
   skewMatrix3d,
   skewMatrix2d,
+  matrixFromProto,
   transformSe2velocity,
   transformSe3velocity,
   quatToEulerZYX,
