@@ -11,6 +11,7 @@ class PointCloudResponseError extends ResponseError {}
 class UnknownPointCloudSourceError extends PointCloudResponseError {}
 class SourceDataError extends PointCloudResponseError {}
 class PointCloudDataError extends PointCloudResponseError {}
+class PointCloudTypeError extends PointCloudResponseError {}
 
 const _STATUS_TO_ERROR = DefaultDict(() => [PointCloudResponseError, null]);
 _STATUS_TO_ERROR.set(pointCloudProtos.PointCloudResponse.Status.STATUS_OK, [null, null]);
@@ -29,6 +30,10 @@ _STATUS_TO_ERROR.set(pointCloudProtos.PointCloudResponse.Status.STATUS_UNKNOWN, 
 _STATUS_TO_ERROR.set(pointCloudProtos.PointCloudResponse.Status.STATUS_POINT_CLOUD_DATA_ERROR, [
   PointCloudDataError,
   'System cannot generate point cloud data at this time.',
+]);
+_STATUS_TO_ERROR.set(pointCloudProtos.PointCloudResponse.Status.STATUS_UNSUPPORTED_CLOUD_TYPE, [
+  PointCloudTypeError,
+  'System cannot generate point cloud with the request cloud_type.',
 ]);
 
 const _errorFromResponse = handleCommonHeaderErrors(response => {
