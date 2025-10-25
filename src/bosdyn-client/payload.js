@@ -28,7 +28,7 @@ class PayloadClient extends BaseClient {
    */
   listPayloads(args) {
     const req = new payloadPb.ListPayloadsRequest();
-    return this.call(this._stub.listPayloads, req, _getEntryValue, commonHeaderErrors, args);
+    return this.call(this._stub.listPayloads, req, _getEntryValue, commonHeaderErrors, false, args);
   }
 }
 

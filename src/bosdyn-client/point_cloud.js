@@ -65,7 +65,7 @@ class PointCloudClient extends BaseClient {
    */
   listPointCloudSources(args) {
     const req = PointCloudClient._getListPointCloudSourceRequest();
-    return this.call(this._stub.listPointCloudSources, req, _listPointCloudSourcesValue, commonHeaderErrors, args);
+    return this.call(this._stub.listPointCloudSources, req, _listPointCloudSourcesValue, commonHeaderErrors, false, args);
   }
 
   /**
@@ -101,7 +101,7 @@ class PointCloudClient extends BaseClient {
    */
   getPointCloud(pointCloudRequests, args) {
     const req = PointCloudClient._getPointCloudRequest(pointCloudRequests);
-    return this.call(this._stub.getPointCloud, req, _getPointCloudValue, _errorFromResponse, args);
+    return this.call(this._stub.getPointCloud, req, _getPointCloudValue, _errorFromResponse, true, args);
   }
 
   static _getPointCloudRequest(point_cloud_requests) {

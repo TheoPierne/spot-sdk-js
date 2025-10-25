@@ -36,13 +36,20 @@ class SafetyStopIncompatibleHardwareError extends PowerResponseError {}
 class SafetyStopFailedError extends PowerResponseError {}
 class SafetyStopUnknownStopTypeError extends PowerResponseError {}
 
-class PowerError extends Error {
-  constructor(msg) {
-    super(msg);
-    this.name = this.constructor.name;
-  }
-}
+class PowerError extends Error {}
 class CommandTimedOutError extends PowerError {}
+
+/**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
+ * @typedef {import('./robot_command').RobotCommandClient} RobotCommandClient
+ */
+
+/**
+ * @typedef {import('./robot_state').RobotStateClient} RobotStateClient
+ */
 
 /**
  * A client for enabling / disabling robot motor power.
@@ -59,6 +66,9 @@ class PowerClient extends BaseClient {
     super(PowerServiceClient);
   }
 
+  /**
+   * @param {Robot} other 
+   */
   updateFrom(other) {
     super.updateFrom(other);
     if (this.leaseWallet) addLeaseWalletProcessors(this, this.leaseWallet);
@@ -73,7 +83,7 @@ class PowerClient extends BaseClient {
    */
   powerCommand(request, lease = null, args) {
     const req = PowerClient._powerCommandRequest(lease, request);
-    return this.call(this._stub.powerCommand, req, null, _powerCommandErrorFromResponse, args);
+    return this.call(this._stub.powerCommand, req, null, _powerCommandErrorFromResponse, false, args);
   }
 
   /**
@@ -89,6 +99,7 @@ class PowerClient extends BaseClient {
       req,
       _powerStatusFromResponse,
       _powerFeedbackErrorFromResponse,
+      false,
       args,
     );
   }
@@ -103,7 +114,7 @@ class PowerClient extends BaseClient {
    */
   fanPowerCommand(percentPower, duration, lease = null, args) {
     const req = PowerClient._fanPowerCommandRequest(lease, percentPower, duration);
-    return this.call(this._stub.fanPowerCommand, req, null, _fanPowerCommandErrorFromResponse, args);
+    return this.call(this._stub.fanPowerCommand, req, null, _fanPowerCommandErrorFromResponse, false, args);
   }
 
   /**
@@ -114,7 +125,7 @@ class PowerClient extends BaseClient {
    */
   fanPowerCommandFeedback(commandId, args) {
     const req = PowerClient._fanPowerCommandFeedbackRequest(commandId);
-    return this.call(this._stub.fanPowerCommandFeedback, req, null, _fanPowerFeedbackErrorFromResponse, args);
+    return this.call(this._stub.fanPowerCommandFeedback, req, null, _fanPowerFeedbackErrorFromResponse, false, args);
   }
 
   /**
@@ -126,7 +137,7 @@ class PowerClient extends BaseClient {
    */
   resetSafetyStop(safetyStopType, lease = null, args) {
     const req = PowerClient._resetSafetyStopRequest(lease, safetyStopType);
-    return this.call(this._stub.ResetSafetyStop, req, null, _resetSafetyStopErrorFromResponse, args);
+    return this.call(this._stub.ResetSafetyStop, req, null, _resetSafetyStopErrorFromResponse, false, args);
   }
 
   static _powerCommandRequest(lease, request) {

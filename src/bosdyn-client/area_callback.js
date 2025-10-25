@@ -28,23 +28,23 @@ class AreaCallbackClient extends BaseClient {
 
   areaCallbackInformation(request = null, args) {
     request = request || new areaCallbackPb.AreaCallbackInformationRequest();
-    return this.call(this._stub.areaCallbackInformation, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.areaCallbackInformation, request, null, commonHeaderErrors, false, args);
   }
 
   beginCallback(request, args) {
-    return this.call(this._stub.beginCallback, request, null, _beginCallbackError, args);
+    return this.call(this._stub.beginCallback, request, null, _beginCallbackError, false, args);
   }
 
   beginControll(request, args) {
-    return this.call(this._stub.beginControl, request, null, _beginControlError, args);
+    return this.call(this._stub.beginControl, request, null, _beginControlError, false, args);
   }
 
   updateCallback(request, args) {
-    return this.call(this._stub.updateCallback, request, null, _updateCallbackError, args);
+    return this.call(this._stub.updateCallback, request, null, _updateCallbackError, false, args);
   }
 
   endCallback(request, args) {
-    return this.call(this._stub.endCallback, request, null, _endCallbackError, args);
+    return this.call(this._stub.endCallback, request, null, _endCallbackError, false, args);
   }
 }
 

@@ -58,6 +58,7 @@ class EstopClient extends BaseClient {
       req,
       _newEndpointFromRegisterResponse,
       _registerEndpointErrorFromResponse,
+      false,
       args,
     );
   }
@@ -69,9 +70,9 @@ class EstopClient extends BaseClient {
    * @param {Object} args Passed to underlying RPC.
    * @returns {Promise<estopPb.DeregisterEstopEndpointResponse>}
    */
-  deRegister(targetConfigId, endpoint, args) {
+  deregister(targetConfigId, endpoint, args) {
     const req = EstopClient._buildDeregisterRequest(targetConfigId, endpoint);
-    return this.call(this._stub.deregisterEstopEndpoint, req, null, _deregisterEndpointErrorFromResponse, args);
+    return this.call(this._stub.deregisterEstopEndpoint, req, null, _deregisterEndpointErrorFromResponse, false, args);
   }
 
   /**
@@ -85,6 +86,7 @@ class EstopClient extends BaseClient {
       new estopPb.GetEstopConfigRequest(),
       _activeConfigFromConfigResponse,
       commonHeaderErrors,
+      false,
       args,
     );
   }
@@ -92,17 +94,18 @@ class EstopClient extends BaseClient {
   /**
    * Change the estop configuration of the robot.
    * @param {estopPb.EstopConfig} config New configuration to set.
-   * @param {string} target_config_id The identification of the current configuration on the robot.
+   * @param {string} targetConfigId The identification of the current configuration on the robot.
    * @param {Object} args Passed to underlying RPC.
    * @returns {Promise<estopPb.EstopConfig>}
    */
-  setConfig(config, target_config_id, args) {
-    const req = new estopPb.SetEstopConfigRequest().setConfig(config).setTargetConfigId(target_config_id);
+  setConfig(config, targetConfigId, args) {
+    const req = new estopPb.SetEstopConfigRequest().setConfig(config).setTargetConfigId(targetConfigId);
     return this.call(
       this._stub.setEstopConfig,
       req,
       _activeConfigFromConfigResponse,
       _setConfigErrorFromResponse,
+      false,
       args,
     );
   }
@@ -118,6 +121,7 @@ class EstopClient extends BaseClient {
       new estopPb.GetEstopSystemStatusRequest(),
       _estopSysStatusFromResponse,
       commonHeaderErrors,
+      false,
       args,
     );
   }
@@ -137,7 +141,7 @@ class EstopClient extends BaseClient {
   checkIn(stopLevel, endpoint, challenge, response, suppressIncorrect = false, args) {
     const req = EstopClient._buildCheckInRequest(stopLevel, endpoint, challenge, response);
     const errFromResp = EstopClient._chooseCheckInErrFunc(suppressIncorrect);
-    return this.call(this._stub.estopCheckIn, req, _challengeFromCheckInResponse, errFromResp, args);
+    return this.call(this._stub.estopCheckIn, req, _challengeFromCheckInResponse, errFromResp, false, args);
   }
 
   /**

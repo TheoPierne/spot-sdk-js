@@ -172,7 +172,7 @@ class KeepaliveClient extends BaseClient {
    */
   modifyPolicy(toAdd = null, policyIdsToRemove = null, args) {
     const request = this._modifyPolicyRequest(toAdd, policyIdsToRemove);
-    return this.call(this._stub.modifyPolicy, request, null, modifyPolicyError, args);
+    return this.call(this._stub.modifyPolicy, request, null, modifyPolicyError, false, args);
   }
 
   /**
@@ -183,7 +183,7 @@ class KeepaliveClient extends BaseClient {
    */
   checkIn(policyId, args) {
     const request = this._checkInRequest(policyId);
-    return this.call(this._stub.checkIn, request, null, checkInError, args);
+    return this.call(this._stub.checkIn, request, null, checkInError, false, args);
   }
 
   /**
@@ -193,7 +193,7 @@ class KeepaliveClient extends BaseClient {
    */
   getStatus(args) {
     const request = new keepalivePb.GetStatusRequest();
-    return this.call(this._stub.getStatus, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.getStatus, request, null, commonHeaderErrors, false, args);
   }
 
   _modifyPolicyRequest(toAdd, policyIdsToRemove) {

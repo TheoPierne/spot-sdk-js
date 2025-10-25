@@ -52,7 +52,7 @@ class DataAcquisitionPluginClient extends BaseClient {
       .setAcquisitionRequests(acquisitionRequests)
       .setActionId(actionId)
       .setDataIdList(dataIdentifiers);
-    return this.call(this._stub.acquirePluginData, request, null, acquireDataError, args);
+    return this.call(this._stub.acquirePluginData, request, null, acquireDataError, false, args);
   }
 
   /**

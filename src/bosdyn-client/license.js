@@ -9,6 +9,10 @@ function _getEntryValue(response) {
 }
 
 /**
+ * @typedef {import('google-protobuf').Map} JspbMap
+ */
+
+/**
  * Client to acquire robot license.
  * @extends {BaseClient<LicenseServiceClient>}
  */
@@ -27,14 +31,14 @@ class LicenseClient extends BaseClient {
    */
   getLicenseInfo(args) {
     const req = new licensePb.GetLicenseInfoRequest();
-    return this.call(this._stub.getLicenseInfo, req, _getEntryValue, commonHeaderErrors, args);
+    return this.call(this._stub.getLicenseInfo, req, _getEntryValue, commonHeaderErrors, false, args);
   }
 
   /**
    * Check if the installed license allow a list of feature codes.
    * @param {string[]} featureList Features code.
    * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Map<string,boolean>}
+   * @returns {Promise<JspbMap>}
    */
   getFeatureEnabled(featureList = [], args) {
     const req = new licensePb.GetFeatureEnabledRequest().setFeatureCodesList(featureList);
@@ -44,6 +48,7 @@ class LicenseClient extends BaseClient {
       req,
       response => response.getFeatureEnabledMap(),
       commonHeaderErrors,
+      false,
       args,
     );
   }

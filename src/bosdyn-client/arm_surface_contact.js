@@ -75,7 +75,7 @@ class ArmSurfaceContactClient extends BaseClient {
    */
   armSurfaceContactCommand(request, args) {
     this._updateCommandTimestamps(request);
-    return this.call(this._stub.armSurfaceContact, request, null, null, args);
+    return this.call(this._stub.armSurfaceContact, request, null, null, true, args);
   }
 }
 

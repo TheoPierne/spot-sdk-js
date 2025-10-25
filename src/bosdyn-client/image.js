@@ -95,7 +95,7 @@ class ImageClient extends BaseClient {
    */
   listImageSources(args) {
     const req = ImageClient._getListImageSourceRequest();
-    return this.call(this._stub.listImageSources, req, _listImageSourcesValue, commonHeaderErrors, args);
+    return this.call(this._stub.listImageSources, req, _listImageSourcesValue, commonHeaderErrors, false, args);
   }
 
   /**
@@ -120,7 +120,7 @@ class ImageClient extends BaseClient {
    */
   getImage(imageRequests, args) {
     const req = ImageClient._getImageRequest(imageRequests);
-    return this.call(this._stub.getImage, req, _getImageValue, _errorFromResponse, args);
+    return this.call(this._stub.getImage, req, _getImageValue, _errorFromResponse, false, args);
   }
 
   static _getImageRequest(imageRequests) {

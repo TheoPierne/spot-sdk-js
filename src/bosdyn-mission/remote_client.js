@@ -66,7 +66,7 @@ class RemoteClient extends BaseClient {
    */
   establishSession(leases = [], inputs = null, leaseResources = DEFAULT_RESOURCES, args) {
     const req = this._buildEstablishSessionRequest(inputs, leases, leaseResources);
-    return this.call(this._stub.establishSession, req, _sessionIdFromResponse, _establishErrorFromResponse, args);
+    return this.call(this._stub.establishSession, req, _sessionIdFromResponse, _establishErrorFromResponse, false, args);
   }
 
   /**
@@ -86,7 +86,7 @@ class RemoteClient extends BaseClient {
    */
   tick(sessionId, leases, inputs, leaseResources = DEFAULT_RESOURCES, groupName = null, params = null, args) {
     const req = this._buildTickRequest(inputs, leases, sessionId, leaseResources, groupName, params);
-    return this.call(this._stub.tick, req, null, _tickErrorFromResponse, args);
+    return this.call(this._stub.tick, req, null, _tickErrorFromResponse, false, args);
   }
 
   /**
@@ -97,7 +97,7 @@ class RemoteClient extends BaseClient {
    */
   stop(sessionId, args) {
     const req = new remotePb.StopRequest().setSessionId(sessionId);
-    return this.call(this._stub.stop, req, null, _stopErrorFromResponse, args);
+    return this.call(this._stub.stop, req, null, _stopErrorFromResponse, false, args);
   }
 
   /**
@@ -108,7 +108,7 @@ class RemoteClient extends BaseClient {
    */
   teardownSession(sessionId, args) {
     const req = new remotePb.TeardownSessionRequest().setSessionId(sessionId);
-    return this.call(this._stub.teardownSession, req, null, _teardownErrorFromResponse, args);
+    return this.call(this._stub.teardownSession, req, null, _teardownErrorFromResponse, false, args);
   }
 
   /**
@@ -118,7 +118,7 @@ class RemoteClient extends BaseClient {
    */
   getServiceInfo(args) {
     const request = new remotePb.GetRemoteMissionServiceInfoRequest();
-    return this.call(this._stub.getRemoteMissionServiceInfo, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.getRemoteMissionServiceInfo, request, null, commonHeaderErrors, false, args);
   }
 
   _buildEstablishSessionRequest(inputs, leases, leaseResources) {

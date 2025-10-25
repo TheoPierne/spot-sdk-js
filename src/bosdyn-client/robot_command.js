@@ -267,6 +267,14 @@ function _editProto(proto, editTree, editFn) {
 }
 
 /**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
+ * @typedef {import('./time_sync').TimeSyncEndpoint} TimeSyncEndpoint
+ */
+
+/**
  * Client for calling RobotCommand services.
  * @extends {BaseClient<RobotCommandServiceClient>}
  */
@@ -329,7 +337,7 @@ class RobotCommandClient extends BaseClient {
   robotCommand(command, endTimeSecs = null, timesyncEndpoint = null, lease = null, args) {
     const req = this._getRobotCommandRequest(lease, command);
     this._updateCommandTimestamps(req.getCommand(), endTimeSecs, timesyncEndpoint);
-    return this.call(this._stub.robotCommand, req, _robotCommandValue, _robotCommandError, args);
+    return this.call(this._stub.robotCommand, req, _robotCommandValue, _robotCommandError, false, args);
   }
 
   /**
@@ -341,7 +349,7 @@ class RobotCommandClient extends BaseClient {
    */
   robotCommandFeedback(robotCommandId, args) {
     const req = this._getRobotCommandFeedbackRequest(robotCommandId);
-    return this.call(this._stub.robotCommandFeedback, req, null, _robotCommandFeedbackError, args);
+    return this.call(this._stub.robotCommandFeedback, req, null, _robotCommandFeedbackError, false, args);
   }
 
   /**
@@ -353,7 +361,7 @@ class RobotCommandClient extends BaseClient {
    */
   clearBehaviorFault(behaviorFaultId, lease = null, args) {
     const req = this._getClearBehaviorFaultRequest(lease, behaviorFaultId);
-    return this.call(this._stub.clearBehaviorFault, req, _clearBehaviorFaultValue, _clearBehaviorFaultError, args);
+    return this.call(this._stub.clearBehaviorFault, req, _clearBehaviorFaultValue, _clearBehaviorFaultError, false, args);
   }
 
   _getRobotCommandRequest(lease, command) {
@@ -367,7 +375,7 @@ class RobotCommandClient extends BaseClient {
    * Set or convert fields of the command proto that need timestamps in the robot's clock.
    * @param {*} command Command message to update.
    * @param {*} endTimeSecs Command end time in seconds.
-   * @param {*} timesyncEndpoint Timesync endpoint.
+   * @param {TimeSyncEndpoint} timesyncEndpoint Timesync endpoint.
    */
   _updateCommandTimestamps(command, endTimeSecs, timesyncEndpoint) {
     const converter = new _TimeConverter(this, timesyncEndpoint);
@@ -420,7 +428,7 @@ class RobotCommandStreamingClient extends BaseClient {
   }
 
   sendJointControlCommands(commandArray) {
-    return this.call(this._stub.jointControlStream, commandArray, null, null, {});
+    return this.call(this._stub.jointControlStream, commandArray, null, null, false, {});
   }
 }
 

@@ -53,7 +53,7 @@ class TimeSyncClient extends BaseClient {
    */
   getTimeSyncUpdate(previousRoundTrip, clockIdentifier, args) {
     const req = this._getTimeSyncUpdateRequest(previousRoundTrip, clockIdentifier);
-    return this.call(this._stub.timeSyncUpdate, req, null, commonHeaderErrors, args);
+    return this.call(this._stub.timeSyncUpdate, req, null, commonHeaderErrors, false, args);
   }
 
   /**

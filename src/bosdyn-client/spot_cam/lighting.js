@@ -35,6 +35,7 @@ class LightingClient extends BaseClient {
       request,
       this._getLedBrightnessFromResponse,
       _lightingErrorFromResponse,
+      false,
       args,
     );
   }
@@ -58,6 +59,7 @@ class LightingClient extends BaseClient {
       request,
       this._setLedBrightnessFromResponse,
       _lightingErrorFromResponse,
+      false,
       args,
     );
   }

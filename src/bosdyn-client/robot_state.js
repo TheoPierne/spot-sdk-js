@@ -27,7 +27,7 @@ class RobotStateClient extends BaseClient {
    */
   getRobotState(args) {
     const req = RobotStateClient._getRobotStateRequest();
-    return this.call(this._stub.getRobotState, req, _getRobotStateValue, commonHeaderErrors, args);
+    return this.call(this._stub.getRobotState, req, _getRobotStateValue, commonHeaderErrors, false, args);
   }
 
   /**
@@ -38,7 +38,7 @@ class RobotStateClient extends BaseClient {
    */
   getRobotMetrics(args) {
     const req = RobotStateClient._getRobotMetricsRequest();
-    return this.call(this._stub.getRobotMetrics, req, _getRobotMetricsValue, commonHeaderErrors, args);
+    return this.call(this._stub.getRobotMetrics, req, _getRobotMetricsValue, commonHeaderErrors, false, args);
   }
 
   /**
@@ -55,6 +55,7 @@ class RobotStateClient extends BaseClient {
       req,
       _getRobotHardwareConfigurationValue,
       commonHeaderErrors,
+      false,
       args,
     );
   }
@@ -69,7 +70,7 @@ class RobotStateClient extends BaseClient {
    */
   getRobotLinkModel(linkName, args) {
     const req = RobotStateClient._getRobotLinkModelRequest(linkName);
-    return this.call(this._stub.getRobotLinkModel, req, _getRobotLinkModelValue, commonHeaderErrors, args);
+    return this.call(this._stub.getRobotLinkModel, req, _getRobotLinkModelValue, commonHeaderErrors, false, args);
   }
 
   /**

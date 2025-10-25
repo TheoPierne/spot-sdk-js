@@ -28,6 +28,7 @@ class HealthClient extends BaseClient {
       request,
       this._clearBitEventsFromResponse,
       _healthErrorFromResponse,
+      false,
       args,
     );
   }
@@ -39,7 +40,7 @@ class HealthClient extends BaseClient {
    */
   getBitStatus(args) {
     const request = new healthPb.GetBITStatusRequest();
-    return this.call(this._stub.getBITStatus, request, this._getBitStatusFromResponse, _healthErrorFromResponse, args);
+    return this.call(this._stub.getBITStatus, request, this._getBitStatusFromResponse, _healthErrorFromResponse, false, args);
   }
 
   /**
@@ -54,6 +55,7 @@ class HealthClient extends BaseClient {
       request,
       this._getTemperatureFromResponse,
       _healthErrorFromResponse,
+      false,
       args,
     );
   }
@@ -65,7 +67,7 @@ class HealthClient extends BaseClient {
    */
   getSystemLog(args) {
     const request = new healthPb.GetSystemLogRequest();
-    return this.call(this._stub.getSystemLog, request, this._getSystemLogFromResponse, _healthErrorFromResponse, args);
+    return this.call(this._stub.getSystemLog, request, this._getSystemLogFromResponse, _healthErrorFromResponse, false, args);
   }
 
   _clearBitEventsFromResponse() {

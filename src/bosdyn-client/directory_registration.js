@@ -58,7 +58,7 @@ class DirectoryRegistrationClient extends BaseClient {
       .setEndpoint(endpoint)
       .setServiceEntry(serviceEntry);
 
-    return this.call(this._stub.registerService, req, null, _directoryRegisterError, args);
+    return this.call(this._stub.registerService, req, null, _directoryRegisterError, false, args);
   }
 
   /**
@@ -90,7 +90,7 @@ class DirectoryRegistrationClient extends BaseClient {
 
     const req = new directoryRegistrationPb.UpdateServiceRequest().setEndpoint(endpoint).setServiceEntry(serviceEntry);
 
-    return this.call(this._stub.updateService, req, null, _directoryUpdateError, args);
+    return this.call(this._stub.updateService, req, null, _directoryUpdateError, false, args);
   }
 
   /**
@@ -101,7 +101,7 @@ class DirectoryRegistrationClient extends BaseClient {
    */
   unregister(name, args) {
     const req = new directoryRegistrationPb.UnregisterServiceRequest().setServiceName(name);
-    return this.call(this._stub.unregisterService, req, null, _directoryUnregisterError, args);
+    return this.call(this._stub.unregisterService, req, null, _directoryUnregisterError, false, args);
   }
 }
 

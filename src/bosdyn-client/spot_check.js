@@ -66,7 +66,7 @@ class SpotCheckClient extends BaseClient {
    * @returns {Promise<spotCheckPb.SpotCheckCommandResponse>}
    */
   spotCheckCommand(request, args) {
-    return this.call(this._stub.spotCheckCommand, request, null, _spotcheckCommandErrorFromResponse, args);
+    return this.call(this._stub.spotCheckCommand, request, null, _spotcheckCommandErrorFromResponse, true, args);
   }
 
   /**
@@ -76,7 +76,7 @@ class SpotCheckClient extends BaseClient {
    * @returns {Promise<spotCheckPb.SpotCheckFeedbackResponse>}
    */
   spotCheckFeedback(request, args) {
-    return this.call(this._stub.spotCheckFeedback, request, null, _spotcheckFeedbackErrorFromResponse, args);
+    return this.call(this._stub.spotCheckFeedback, request, null, _spotcheckFeedbackErrorFromResponse, true, args);
   }
 
   /**
@@ -86,7 +86,7 @@ class SpotCheckClient extends BaseClient {
    * @returns {Promise<spotCheckPb.CameraCalibrationCommandResponse>}
    */
   cameraCalibrationCommand(request, args) {
-    return this.call(this._stub.cameraCalibrationCommand, request, null, _calibrationCommandErrorFromResponse, args);
+    return this.call(this._stub.cameraCalibrationCommand, request, null, _calibrationCommandErrorFromResponse, true, args);
   }
 
   /**
@@ -96,7 +96,7 @@ class SpotCheckClient extends BaseClient {
    * @returns {Promise<spotCheckPb.CameraCalibrationFeedbackResponse>}
    */
   cameraCalibrationFeedback(request, args) {
-    return this.call(this._stub.cameraCalibrationFeedback, request, null, _calibrationFeedbackErrorFromResponse, args);
+    return this.call(this._stub.cameraCalibrationFeedback, request, null, _calibrationFeedbackErrorFromResponse, true, args);
   }
 }
 

@@ -29,6 +29,7 @@ class PowerClient extends BaseClient {
       request,
       this._getPowerStatusFromResponse,
       _powerErrorFromResponse,
+      false,
       args,
     );
   }
@@ -52,6 +53,7 @@ class PowerClient extends BaseClient {
       request,
       this._setPowerStatusFromResponse,
       _powerErrorFromResponse,
+      false,
       args,
     );
   }
@@ -70,7 +72,7 @@ class PowerClient extends BaseClient {
    */
   cyclePower(ptz = null, aux1 = null, aux2 = null, externalMic = null, args) {
     const request = this._buildCyclePowerRequest(ptz, aux1, aux2, externalMic);
-    return this.call(this._stub.cyclePower, request, this._cyclePowerFromResponse, _powerErrorFromResponse, args);
+    return this.call(this._stub.cyclePower, request, this._cyclePowerFromResponse, _powerErrorFromResponse, false, args);
   }
 
   _buildSetPowerStatusRequest(ptz, aux1, aux2, externalMic) {

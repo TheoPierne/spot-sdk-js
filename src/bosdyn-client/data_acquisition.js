@@ -101,7 +101,7 @@ class DataAcquisitionClient extends BaseClient {
       request.setMinTimeout(secondsToDuration(minTimeout));
     }
 
-    return this.call(this._stub.acquireData, request, getRequestId, acquireDataError, args);
+    return this.call(this._stub.acquireData, request, getRequestId, acquireDataError, false, args);
   }
 
   /**
@@ -111,7 +111,7 @@ class DataAcquisitionClient extends BaseClient {
    * @returns {Promise<dataAcquisitionPb.AcquireDataResponse>}
    */
   acquireDataFromRequest(request, args) {
-    return this.call(this._stub.acquireData, request, null, acquireDataError, args);
+    return this.call(this._stub.acquireData, request, null, acquireDataError, true, args);
   }
 
   /**
@@ -125,7 +125,7 @@ class DataAcquisitionClient extends BaseClient {
    */
   getStatus(requestId, args) {
     const request = new dataAcquisitionPb.GetStatusRequest().setRequestId(requestId);
-    return this.call(this._stub.getStatus, request, null, _getStatusError, args);
+    return this.call(this._stub.getStatus, request, null, _getStatusError, false, args);
   }
 
   /**
@@ -138,7 +138,7 @@ class DataAcquisitionClient extends BaseClient {
    */
   getServiceInfo(args) {
     const request = new dataAcquisitionPb.GetServiceInfoRequest();
-    return this.call(this._stub.getServiceInfo, request, _getServiceInfoCapabilities, commonHeaderErrors, args);
+    return this.call(this._stub.getServiceInfo, request, _getServiceInfoCapabilities, commonHeaderErrors, false, args);
   }
 
   /**
@@ -153,7 +153,7 @@ class DataAcquisitionClient extends BaseClient {
    */
   cancelAcquisition(requestId, args) {
     const request = new dataAcquisitionPb.CancelAcquisitionRequest().setRequestId(requestId);
-    return this.call(this._stub.cancelAcquisition, request, null, _cancelAcquisitionError, args);
+    return this.call(this._stub.cancelAcquisition, request, null, _cancelAcquisitionError, false, args);
   }
 
   /**
@@ -162,7 +162,7 @@ class DataAcquisitionClient extends BaseClient {
    * @returns {Promise<dataAcquisitionPb.LiveDataResponse>}
    */
   getLiveData(request) {
-    return this.call(this._stub.getLiveData, request, null, _getLiveDataError);
+    return this.call(this._stub.getLiveData, request, null, _getLiveDataError, true);
   }
 }
 

@@ -56,7 +56,7 @@ class NetworkComputeBridgeClient extends BaseClient {
    * the set of all models.
    */
   listAvailableModelsCommand(listRequest, args) {
-    return this.call(this._stub.listAvailableModels, listRequest, null, _listAvailableModelsError, args);
+    return this.call(this._stub.listAvailableModels, listRequest, null, _listAvailableModelsError, false, args);
   }
 
   /**
@@ -75,7 +75,7 @@ class NetworkComputeBridgeClient extends BaseClient {
    * image as requested.
    */
   networkComputeBridgeCommand(networkComputeRequest, args) {
-    return this.call(this._stub.networkCompute, networkComputeRequest, null, _networkComputeError, args);
+    return this.call(this._stub.networkCompute, networkComputeRequest, null, _networkComputeError, true, args);
   }
 }
 

@@ -21,6 +21,10 @@ function _getToken(response) {
 }
 
 /**
+ * @typedef {import('../bosdyn/api/payload_pb').Payload} Payload
+ */
+
+/**
  * A client registering payload configs onto the robot.
  * @extends {BaseClient<PayloadRegistrationServiceClient>}
  */
@@ -34,7 +38,7 @@ class PayloadRegistrationClient extends BaseClient {
 
   /**
    * Register a payload to the robot.
-   * @param {*} payload The payload protobuf message to register.
+   * @param {Payload} payload The payload protobuf message to register.
    * @param {string} secret Unique string to verify payload.
    * @param {Object} args Extra arguments for controlling RPC details.
    * @returns {Promise<payloadRegistrationProtos.RegisterPayloadResponse>}
@@ -42,7 +46,7 @@ class PayloadRegistrationClient extends BaseClient {
   registerPayload(payload, secret, args) {
     const req = new payloadRegistrationProtos.RegisterPayloadRequest().setPayload(payload);
     if (secret) req.setPayloadSecret(secret);
-    return this.call(this._stub.registerPayload, req, null, _payloadRegistrationError, args);
+    return this.call(this._stub.registerPayload, req, null, _payloadRegistrationError, false, args);
   }
 
   /**
@@ -58,7 +62,7 @@ class PayloadRegistrationClient extends BaseClient {
       .setPayloadGuid(guid)
       .setPayloadSecret(secret)
       .setUpdatedVersion(updatedVersion);
-    return this.call(this._stub.updatePayloadVersion, req, null, _updatePayloadVersionError, args);
+    return this.call(this._stub.updatePayloadVersion, req, null, _updatePayloadVersionError, false, args);
   }
 
   /**
@@ -75,7 +79,7 @@ class PayloadRegistrationClient extends BaseClient {
       .setPayloadGuid(guid)
       .setPayloadSecret(secret)
       .setPayloadCredentials(payloadCredentials);
-    return this.call(this._stub.getPayloadAuthToken, req, _getToken, _getPayloadAuthTokenError, args);
+    return this.call(this._stub.getPayloadAuthToken, req, _getToken, _getPayloadAuthTokenError, false, args);
   }
 
   /**
@@ -90,7 +94,7 @@ class PayloadRegistrationClient extends BaseClient {
     const request = new payloadRegistrationProtos.UpdatePayloadAttachedRequest()
       .setPayloadCredentials(payloadCredentials)
       .setRequest(payloadRegistrationProtos.UpdatePayloadAttachedRequest.Request.REQUEST_ATTACH);
-    return this.call(this._stub.updatePayloadAttached, request, null, _updatePayloadAttachedError, args);
+    return this.call(this._stub.updatePayloadAttached, request, null, _updatePayloadAttachedError, false, args);
   }
 
   /**
@@ -105,7 +109,7 @@ class PayloadRegistrationClient extends BaseClient {
     const request = new payloadRegistrationProtos.UpdatePayloadAttachedRequest()
       .setPayloadCredentials(payloadCredentials)
       .setRequest(payloadRegistrationProtos.UpdatePayloadAttachedRequest.Request.REQUEST_DETACH);
-    return this.call(this._stub.updatePayloadAttached, request, null, _updatePayloadAttachedError, args);
+    return this.call(this._stub.updatePayloadAttached, request, null, _updatePayloadAttachedError, false, args);
   }
 }
 

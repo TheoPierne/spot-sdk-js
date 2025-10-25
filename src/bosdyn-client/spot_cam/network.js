@@ -32,6 +32,7 @@ class NetworkClient extends BaseClient {
       request,
       this._iceServersFromResponse,
       _iceNetworkErrorFromResponse,
+      false,
       args,
     );
   }
@@ -44,7 +45,7 @@ class NetworkClient extends BaseClient {
    */
   setICEConfiguration(iceServers, args) {
     const request = new networkPb.SetICEConfigurationRequest().setServersList(iceServers);
-    return this.call(this._stub.setICEConfiguration, request, null, _iceNetworkErrorFromResponse, args);
+    return this.call(this._stub.setICEConfiguration, request, null, _iceNetworkErrorFromResponse, false, args);
   }
 
   _iceServersFromResponse(response) {

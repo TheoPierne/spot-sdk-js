@@ -172,6 +172,7 @@ class MapProcessingServiceClient extends BaseClient {
       request,
       _getStreamedTopologyResponse,
       _processTopologyStreamedErrors,
+      false,
       args,
     );
   }
@@ -212,6 +213,7 @@ class MapProcessingServiceClient extends BaseClient {
       request,
       _getStreamedAnchoringResponse,
       _processAnchoringStreamedErrors,
+      false,
       args,
     );
   }

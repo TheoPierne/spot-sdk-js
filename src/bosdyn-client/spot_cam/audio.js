@@ -27,7 +27,7 @@ class AudioClient extends BaseClient {
    */
   listSounds(args) {
     const request = new audioPb.ListSoundsRequest();
-    return this.call(this._stub.listSounds, request, this._listSoundsFromResponse, _audioErrorFromResponse, args);
+    return this.call(this._stub.listSounds, request, this._listSoundsFromResponse, _audioErrorFromResponse, false, args);
   }
 
   /**
@@ -38,7 +38,7 @@ class AudioClient extends BaseClient {
    */
   setVolume(percentage, args) {
     const request = new audioPb.SetVolumeRequest().setVolume(percentage);
-    return this.call(this._stub.setVolume, request, this._setVolumeFromResponse, _audioErrorFromResponse, args);
+    return this.call(this._stub.setVolume, request, this._setVolumeFromResponse, _audioErrorFromResponse, false, args);
   }
 
   /**
@@ -48,7 +48,7 @@ class AudioClient extends BaseClient {
    */
   getVolume(args) {
     const request = new audioPb.GetVolumeRequest();
-    return this.call(this._stub.getVolume, request, this._getVolumeFromResponse, _audioErrorFromResponse, args);
+    return this.call(this._stub.getVolume, request, this._getVolumeFromResponse, _audioErrorFromResponse, false, args);
   }
 
   /**
@@ -64,7 +64,7 @@ class AudioClient extends BaseClient {
       const fv = new wrappersPb.FloatValue().setValue(gain);
       request.setGain(fv);
     }
-    return this.call(this._stub.playSound, request, this._playSoundFromResponse, _audioErrorFromResponse, args);
+    return this.call(this._stub.playSound, request, this._playSoundFromResponse, _audioErrorFromResponse, false, args);
   }
 
   /**
@@ -75,7 +75,7 @@ class AudioClient extends BaseClient {
    */
   deleteSound(sound, args) {
     const request = new audioPb.DeleteSoundRequest().setSound(sound);
-    return this.call(this._stub.deleteSound, request, this._deleteSoundFromResponse, _audioErrorFromResponse, args);
+    return this.call(this._stub.deleteSound, request, this._deleteSoundFromResponse, _audioErrorFromResponse, false, args);
   }
 
   /**
@@ -109,6 +109,7 @@ class AudioClient extends BaseClient {
       yieldRequests(data),
       this._loadSoundFromResponse,
       _audioErrorFromResponse,
+      false,
       args,
     );
   }
@@ -121,7 +122,7 @@ class AudioClient extends BaseClient {
    */
   setAudioCaptureChannel(channel, args) {
     const request = new audioPb.SetAudioCaptureChannelRequest().setChannel(channel);
-    return this.call(this._stub.setAudioCaptureChannel, request, null, _audioErrorFromResponse, args);
+    return this.call(this._stub.setAudioCaptureChannel, request, null, _audioErrorFromResponse, false, args);
   }
 
   /**
@@ -136,6 +137,7 @@ class AudioClient extends BaseClient {
       request,
       this._getAudioCaptureChannelFromResponse,
       _audioErrorFromResponse,
+      false,
       args,
     );
   }
@@ -149,7 +151,7 @@ class AudioClient extends BaseClient {
    */
   setAudioCaptureGain(channel, gain, args) {
     const request = new audioPb.SetAudioCaptureGainRequest().setChannel(channel).setGain(gain);
-    return this.call(this._stub.setAudioCaptureGain, request, null, _audioErrorFromResponse, args);
+    return this.call(this._stub.setAudioCaptureGain, request, null, _audioErrorFromResponse, false, args);
   }
 
   /**
@@ -165,6 +167,7 @@ class AudioClient extends BaseClient {
       request,
       this._getAudioCaptureGainFromResponse,
       _audioErrorFromResponse,
+      false,
       args,
     );
   }

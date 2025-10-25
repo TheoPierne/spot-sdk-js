@@ -24,6 +24,14 @@ const navPb = require('../bosdyn/api/graph_nav/nav_pb');
 const leasePb = require('../bosdyn/api/lease_pb');
 
 /**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
+ * @typedef {import('./time_sync').TimeSyncEndpoint} TimeSyncEndpoint
+ */
+
+/**
  * Client to the GraphNav service.
  * @extends {BaseClient<GraphNavServiceClient>}
  */
@@ -33,12 +41,16 @@ class GraphNavClient extends BaseClient {
 
   constructor() {
     super(GraphNavServiceClient);
+    /** @type {TimeSyncEndpoint|null} */
     this._timesyncEndpoint = null;
     // In bytes = 1Mb
     this._dataChunkSize = 1024 * 1024;
     this._useStreamingGraphUpload = true;
   }
 
+  /**
+   * @param {Robot} other 
+   */
   async updateFrom(other) {
     super.updateFrom(other);
     if (this.leaseWallet) addLeaseWalletProcessors(this, this.leaseWallet);
@@ -96,7 +108,7 @@ class GraphNavClient extends BaseClient {
       refineWithVisualFeatures,
       verifyVisualFeaturesQuality,
     );
-    return this.call(this._stub.setLocalization, req, _getResponse, _setLocalizationError, args);
+    return this.call(this._stub.setLocalization, req, _getResponse, _setLocalizationError, false, args);
   }
 
   /**
@@ -146,7 +158,7 @@ class GraphNavClient extends BaseClient {
       refineWithVisualFeatures,
       verifyVisualFeaturesQuality,
     );
-    return this.call(this._stub.setLocalization, req, _localizationFromResponse, _setLocalizationError, args);
+    return this.call(this._stub.setLocalization, req, _localizationFromResponse, _setLocalizationError, false, args);
   }
 
   /**
@@ -174,7 +186,7 @@ class GraphNavClient extends BaseClient {
       requestLiveWorldObjects,
       requestLiveRobotState,
     );
-    return this.call(this._stub.getLocalizationState, req, null, commonHeaderErrors, args);
+    return this.call(this._stub.getLocalizationState, req, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -217,7 +229,7 @@ class GraphNavClient extends BaseClient {
       commandId,
       destinationWaypointTformBodyGoal,
     );
-    return this.call(this._stub.navigateRoute, request, _commandIdFromNavigateRouteResponse, _navigateRouteError, args);
+    return this.call(this._stub.navigateRoute, request, _commandIdFromNavigateRouteResponse, _navigateRouteError, false, args);
   }
 
   /**
@@ -260,7 +272,7 @@ class GraphNavClient extends BaseClient {
       commandId,
       destinationWaypointTformBodyGoal,
     );
-    return this.call(this._stub.navigateRoute, request, null, _navigateRouteError, args);
+    return this.call(this._stub.navigateRoute, request, null, _navigateRouteError, false, args);
   }
 
   /**
@@ -306,7 +318,7 @@ class GraphNavClient extends BaseClient {
       destinationWaypointTformBodyGoal,
       routeBlockedBehavior,
     );
-    return this.call(this._stub.navigateTo, request, _commandIdFromNavigateRouteResponse, _navigateToError, args);
+    return this.call(this._stub.navigateTo, request, _commandIdFromNavigateRouteResponse, _navigateToError, false, args);
   }
 
   /**
@@ -357,17 +369,17 @@ class GraphNavClient extends BaseClient {
       routeBlockedBehavior,
     );
 
-    return this.call(this._stub.navigateTo, request, null, _navigateToError, args);
+    return this.call(this._stub.navigateTo, request, null, _navigateToError, false, args);
   }
 
   /**
    * Navigate to a pose in seed frame along a route chosen by the GraphNav service.
    * @param {geometryPb.SE3Pose} seedTformGoal SE3Pose protobuf of the goal pose in seed frame.
    * @param {number} cmdDuration Number of seconds the command can run for.
-   * @param {*} routeParams API RouteGenParams for the route.
-   * @param {*} travelParams API TravelParams for the route.
+   * @param {?graphNavPb.RouteGenParams} routeParams API RouteGenParams for the route.
+   * @param {?graphNavPb.TravelParams} travelParams API TravelParams for the route.
    * @param {*} leases Leases to show ownership of necessary resources. Will use the client's leases by default.
-   * @param {*} timesyncEndpoint Use this endpoint for timesync fields. Will use the client's endpoint by default.
+   * @param {?TimeSyncEndpoint} timesyncEndpoint Use this endpoint for timesync fields. Will use the client's endpoint by default.
    * @param {*} goalWaypointRtSeedEwrtSeedTolerance Vec3 protobuf of the tolerances for goal waypoint selection.
    * @param {*} commandId If not null, this continues an existing navigate_to command with the given ID. If null,
    * a new command_id will be used.
@@ -412,6 +424,7 @@ class GraphNavClient extends BaseClient {
       request,
       _commandIdFromNavigateRouteResponse,
       _navigateToAnchorError,
+      false,
       args,
     );
   }
@@ -425,7 +438,7 @@ class GraphNavClient extends BaseClient {
    */
   navigationFeedback(commandId = 0, args) {
     const request = new graphNavPb.NavigationFeedbackRequest().setCommandId(commandId);
-    return this.call(this._stub.navigationFeedback, request, _getResponse, _navigateFeedbackError, args);
+    return this.call(this._stub.navigationFeedback, request, _getResponse, _navigateFeedbackError, false, args);
   }
 
   /**
@@ -437,7 +450,7 @@ class GraphNavClient extends BaseClient {
    */
   clearGraph(lease = null, args) {
     const request = GraphNavClient._buildClearGraphRequest(lease);
-    return this.call(this._stub.clearGraph, request, null, _clearGraphError, args);
+    return this.call(this._stub.clearGraph, request, null, _clearGraphError, false, args);
   }
 
   /**
@@ -470,7 +483,7 @@ class GraphNavClient extends BaseClient {
         }
       }
     }
-    return this.call(this._stub.uploadGraph, request, _getResponse, _uploadGraphError, args);
+    return this.call(this._stub.uploadGraph, request, _getResponse, _uploadGraphError, false, args);
   }
 
   /**
@@ -485,7 +498,7 @@ class GraphNavClient extends BaseClient {
   uploadWaypointSnapshot(waypointSnapshot, lease = null, args) {
     const serialized = waypointSnapshot.serializeBinary();
     const request = GraphNavClient._dataChunkIteratorUploadWaypointSnapshot(serialized, lease, this._dataChunkSize);
-    return this.call(this._stub.uploadWaypointSnapshot, request, null, _uploadWaypointSnapshotError, args);
+    return this.call(this._stub.uploadWaypointSnapshot, request, null, _uploadWaypointSnapshotError, true, args);
   }
 
   /**
@@ -500,7 +513,7 @@ class GraphNavClient extends BaseClient {
   uploadEdgeSnapshot(edgeSnapshot, lease = null, args) {
     const serialized = edgeSnapshot.serializeBinary();
     const request = GraphNavClient._dataChunkIteratorUploadEdgeSnapshot(serialized, lease, this._dataChunkSize);
-    return this.call(this._stub.uploadEdgeSnapshot, request, null, handleCommonHeaderErrors(commonLeaseErrors), args);
+    return this.call(this._stub.uploadEdgeSnapshot, request, null, handleCommonHeaderErrors(commonLeaseErrors), true, args);
   }
 
   /**
@@ -527,7 +540,7 @@ class GraphNavClient extends BaseClient {
       }
     }
 
-    return this.call(this._stub.downloadGraph, request, _getGraph, commonHeaderErrors, args);
+    return this.call(this._stub.downloadGraph, request, _getGraph, commonHeaderErrors, false, args);
   }
 
   /**
@@ -549,6 +562,7 @@ class GraphNavClient extends BaseClient {
       request,
       _getStreamedWaypointSnapshot,
       _downloadWaypointSnapshotStreamErrors,
+      false,
       args,
     );
   }
@@ -566,6 +580,7 @@ class GraphNavClient extends BaseClient {
       request,
       _getStreamedEdgeSnapshot,
       _downloadEdgeSnapshotStreamErrors,
+      false,
       args,
     );
   }

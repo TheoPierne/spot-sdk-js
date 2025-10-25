@@ -44,6 +44,14 @@ function popObject(obj, key, defaultVal) {
  */
 
 /**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
+ * @typedef {import('./lease').LeaseWallet} LeaseWallet
+ */
+
+/**
  * Return an exception based on common response header. None if no error.
  * @param {JspbMessage} response The response from spot
  * @returns {ResponseError|InvalidRequestError|InternalServerError|UnsetStatusError|null}
@@ -395,7 +403,7 @@ class BaseClient {
 
   /**
    * Adopt key objects like processors, logger, and wallet from other.
-   * @param {BaseClient} other Update object form another service.
+   * @param {Robot} other Update object form another service.
    */
   updateFrom(other) {
     this.requestProcessors = this.requestProcessors.concat(other.requestProcessors);
@@ -406,10 +414,10 @@ class BaseClient {
     this.executor = other.executor;
   }
 
-  updateRequestIterator(requestIterator, logger, rpcMethod, isBlocking) {
+  updateRequestIterator(requestIterator, logger, rpcMethod, isBlocking, copyRequest = true) {
     const a = [];
     for (let request of requestIterator) {
-      request = this._applyRequestProcessors(request.clone());
+      request = this._applyRequestProcessors(request, copyRequest);
       if (isBlocking) {
         logger.debug(`blocking request: ${rpcMethod.path} ${JSON.stringify(request?.toObject())}`);
       } else {
@@ -495,14 +503,14 @@ class BaseClient {
     });
   }
 
-  async call(rpcMethod, request, valueFromResponse = null, errorFromResponse = null, args = {}) {
+  async call(rpcMethod, request, valueFromResponse = null, errorFromResponse = null, copyRequest = true, args = {}) {
     const logger = this._getLogger(rpcMethod);
     const path = rpcMethod.path;
 
     if (rpcMethod.requestStream) {
-      request = this.updateRequestIterator(request, logger, rpcMethod, true);
+      request = this.updateRequestIterator(request, logger, rpcMethod, true, copyRequest);
     } else {
-      request = this._applyRequestProcessors(request.clone());
+      request = this._applyRequestProcessors(request, copyRequest);
       logger.debug(`blocking request: ${path} ${JSON.stringify(request?.toObject())}`);
     }
 
@@ -516,8 +524,6 @@ class BaseClient {
         args,
       );
     } catch (err) {
-      // console.log('Pensez à retirer le log du catch');
-      // console.log(err);
       throw translateException(err);
     }
 

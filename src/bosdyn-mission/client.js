@@ -138,7 +138,7 @@ class MissionClient extends BaseClient {
       return Promise.reject(err);
     }
 
-    return this.call(this._stub.getState, req, _getStateValue, commonHeaderErrors, args);
+    return this.call(this._stub.getState, req, _getStateValue, commonHeaderErrors, false, args);
   }
 
   /**
@@ -155,7 +155,7 @@ class MissionClient extends BaseClient {
       req.setCustomParams(customParams);
     }
 
-    return this.call(this._stub.answerQuestion, req, null, _answerQuestionErrorFromResponse, args);
+    return this.call(this._stub.answerQuestion, req, null, _answerQuestionErrorFromResponse, false, args);
   }
 
   /**
@@ -167,7 +167,7 @@ class MissionClient extends BaseClient {
    */
   loadMission(root, leases = [], args) {
     const req = this._loadMissionRequest(root, leases);
-    return this.call(this._stub.loadMission, req, null, _loadMissionErrorFromResponse, args);
+    return this.call(this._stub.loadMission, req, null, _loadMissionErrorFromResponse, false, args);
   }
 
   /**
@@ -186,6 +186,7 @@ class MissionClient extends BaseClient {
       [...chunkMessage(req, dataChunkByteSize)],
       null,
       _loadMissionErrorFromResponse,
+      false,
       args,
     );
   }
@@ -203,7 +204,7 @@ class MissionClient extends BaseClient {
    */
   playMission(pauseTimeSecs, leases = [], settings = null, args) {
     const req = this._playMissionRequest(pauseTimeSecs, leases, settings);
-    return this.call(this._stub.playMission, req, null, _playMissionErrorFromResponse, args);
+    return this.call(this._stub.playMission, req, null, _playMissionErrorFromResponse, false, args);
   }
 
   /**
@@ -219,7 +220,7 @@ class MissionClient extends BaseClient {
    */
   restartMission(pauseTimeSecs, leases = [], settings = null, args) {
     const req = this._restartMissionRequest(pauseTimeSecs, leases, settings);
-    return this.call(this._stub.restartMission, req, null, _restartMissionErrorFromResponse, args);
+    return this.call(this._stub.restartMission, req, null, _restartMissionErrorFromResponse, false, args);
   }
 
   /**
@@ -229,7 +230,7 @@ class MissionClient extends BaseClient {
    */
   pauseMission(args) {
     const req = new missionPb.PauseMissionRequest();
-    return this.call(this._stub.pauseMission, req, null, _pauseMissionErrorFromResponse, args);
+    return this.call(this._stub.pauseMission, req, null, _pauseMissionErrorFromResponse, false, args);
   }
 
   /**
@@ -239,7 +240,7 @@ class MissionClient extends BaseClient {
    */
   stopMission(args) {
     const req = new missionPb.StopMissionRequest();
-    return this.call(this._stub.StopMission, req, null, _stopMissionErrorFromResponse, args);
+    return this.call(this._stub.StopMission, req, null, _stopMissionErrorFromResponse, false, args);
   }
 
   /**
@@ -253,7 +254,7 @@ class MissionClient extends BaseClient {
     try {
       return this._getInfoAsChunksCall(req, args);
     } catch (err) {
-      return this.call(this._stub.getInfo, req, _getInfoValue, commonHeaderErrors, args);
+      return this.call(this._stub.getInfo, req, _getInfoValue, commonHeaderErrors, false, args);
     }
   }
 
@@ -265,7 +266,7 @@ class MissionClient extends BaseClient {
    * @private
    */
   _getInfoAsChunksCall(req, args) {
-    return this.call(this._stub.getInfoAsChunks, req, _getInfoValue, commonHeaderErrors, args);
+    return this.call(this._stub.getInfoAsChunks, req, _getInfoValue, commonHeaderErrors, false, args);
   }
 
   /**
@@ -279,7 +280,7 @@ class MissionClient extends BaseClient {
     try {
       return this._getMissionAsChunksCall(req, args);
     } catch (err) {
-      return this.call(this._stub.getMission, req, null, commonHeaderErrors, args);
+      return this.call(this._stub.getMission, req, null, commonHeaderErrors, false, args);
     }
   }
 
@@ -291,7 +292,7 @@ class MissionClient extends BaseClient {
    * @private
    */
   _getMissionAsChunksCall(req, args) {
-    return this.call(this._stub.getMissionAsChunks, req, null, commonHeaderErrors, args);
+    return this.call(this._stub.getMissionAsChunks, req, null, commonHeaderErrors, false, args);
   }
 
   _getStateRequest(upperTickBound, lowerTickBound, pastTicks) {

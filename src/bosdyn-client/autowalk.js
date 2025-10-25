@@ -54,6 +54,7 @@ class AutowalkClient extends BaseClient {
       [...chunkMessage(req, dataChunkTypeByte)],
       null,
       _compileAutowalkErrorFromResponse,
+      false,
       args,
     );
   }
@@ -79,6 +80,7 @@ class AutowalkClient extends BaseClient {
       [...chunkMessage(req, dataChunkByteSize)],
       null,
       _loadAutowalkErrorFromResponse,
+      false,
       args,
     );
   }

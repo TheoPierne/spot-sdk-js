@@ -140,7 +140,7 @@ class DataBufferClient extends BaseClient {
     for (const inTextMsg of textMessages) {
       request.addTextMessages(inTextMsg);
     }
-    return this.call(this._stub.recordTextMessages, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.recordTextMessages, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -157,7 +157,7 @@ class DataBufferClient extends BaseClient {
     const operatorComment = new dataBufferProtos.OperatorComment().setMessage(msg).setTimestamp(robotTimestamp);
     request.addOperatorComments(operatorComment);
 
-    return this.call(this._stub.recordOperatorComments, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.recordOperatorComments, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -184,7 +184,7 @@ class DataBufferClient extends BaseClient {
       .setData(data);
     request.addBlobData(dataBlob);
 
-    return this.call(this._stub.recordDataBlobs, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.recordDataBlobs, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -223,7 +223,7 @@ class DataBufferClient extends BaseClient {
       request.addEvents(event);
     }
 
-    return this.call(this._stub.recordEvents, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.recordEvents, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -238,7 +238,7 @@ class DataBufferClient extends BaseClient {
     const tickSchema = new dataBufferProtos.SignalSchema().setVarsList(variables).setSchemaName(schemaName);
     const request = new dataBufferProtos.RegisterSignalSchemaRequest().setSchema(tickSchema);
     const valueFromResponse = partial(this._saveSchemaId.bind(this), tickSchema);
-    return this.call(this._stub.registerSignalSchema, request, valueFromResponse, commonHeaderErrors, args);
+    return this.call(this._stub.registerSignalSchema, request, valueFromResponse, commonHeaderErrors, false, args);
   }
 
   /**
@@ -270,7 +270,7 @@ class DataBufferClient extends BaseClient {
       .setEncoding(encoding)
       .setData(data);
     request.addTickData(tickData);
-    return this.call(this._stub.recordSignalTicks, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.recordSignalTicks, request, null, commonHeaderErrors, false, args);
   }
 
   /**

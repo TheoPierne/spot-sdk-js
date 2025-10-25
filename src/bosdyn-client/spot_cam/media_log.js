@@ -26,7 +26,7 @@ class MediaLogClient extends BaseClient {
    */
   delete(logpoint, args) {
     const request = new loggingPb.DeleteRequest().setPoint(logpoint);
-    return this.call(this._stub.delete, request, this._deleteFromResponse, _mediaLogErrorFromResponse, args);
+    return this.call(this._stub.delete, request, this._deleteFromResponse, _mediaLogErrorFromResponse, false, args);
   }
 
   /**
@@ -48,7 +48,7 @@ class MediaLogClient extends BaseClient {
       .setEnableShock(shock)
       .setEnableSystemStat(systemStats);
 
-    return this.call(this._stub.enableDebug, request, this._enableDebugFromResponse, _mediaLogErrorFromResponse, args);
+    return this.call(this._stub.enableDebug, request, this._enableDebugFromResponse, _mediaLogErrorFromResponse, false, args);
   }
 
   /**
@@ -59,7 +59,7 @@ class MediaLogClient extends BaseClient {
    */
   getStatus(logpoint, args) {
     const request = new loggingPb.GetStatusRequest().setPoint(logpoint);
-    return this.call(this._stub.getStatus, request, this._getStatusFromResponse, _mediaLogErrorFromResponse, args);
+    return this.call(this._stub.getStatus, request, this._getStatusFromResponse, _mediaLogErrorFromResponse, false, args);
   }
 
   /**
@@ -69,7 +69,7 @@ class MediaLogClient extends BaseClient {
    */
   listCameras(args) {
     const request = new loggingPb.ListCamerasRequest();
-    return this.call(this._stub.listCameras, request, this._listCamerasFromResponse, _mediaLogErrorFromResponse, args);
+    return this.call(this._stub.listCameras, request, this._listCamerasFromResponse, _mediaLogErrorFromResponse, false, args);
   }
 
   /**
@@ -84,6 +84,7 @@ class MediaLogClient extends BaseClient {
       request,
       this._listLogpointsFromResponse,
       _mediaLogErrorFromResponse,
+      false,
       args,
     );
   }
@@ -96,7 +97,7 @@ class MediaLogClient extends BaseClient {
    */
   retrieve(logpoint, args) {
     const request = new loggingPb.RetrieveRequest().setPoint(logpoint);
-    return this.call(this._stub.retrieve, request, this._retrieveFromResponse, _mediaLogErrorFromResponse, args);
+    return this.call(this._stub.retrieve, request, this._retrieveFromResponse, _mediaLogErrorFromResponse, false, args);
   }
 
   /**
@@ -107,29 +108,7 @@ class MediaLogClient extends BaseClient {
    */
   retrieveRawData(logpoint, args) {
     const request = new loggingPb.RetrieveRawDataRequest().setPoint(logpoint);
-    return this.call(this._stub.retrieveRawData, request, this._retrieveFromResponse, _mediaLogErrorFromResponse, args);
-  }
-
-  /**
-   * Set password for Spot CAM filesystem.
-   * @param {string} passphrase The new passphrase
-   * @param {Object} [args] Extra arguments for controlling RPC details
-   * @returns {Promise<void>}
-   * @deprecated
-   */
-  setPassphrase(passphrase, args) {
-    process.emitWarning(
-      'Spot CAM encryption has been removed as a result of the switch to NTFS.',
-      '[DeprecationWarning]',
-    );
-    const request = new loggingPb.SetPassphraseRequest().setPassphrase(passphrase);
-    return this.call(
-      this._stub.setPassphrase,
-      request,
-      this._setPassphraseFromResponse,
-      _mediaLogErrorFromResponse,
-      args,
-    );
+    return this.call(this._stub.retrieveRawData, request, this._retrieveFromResponse, _mediaLogErrorFromResponse, false, args);
   }
 
   /**
@@ -143,7 +122,7 @@ class MediaLogClient extends BaseClient {
   store(camera, recordType, tag = null, args) {
     // eslint-disable-next-line
     const request = new loggingPb.StoreRequest().setCamera(camera).setType(recordType).setTag(tag);
-    return this.call(this._stub.store, request, this._storeFromResponse, _mediaLogErrorFromResponse, args);
+    return this.call(this._stub.store, request, this._storeFromResponse, _mediaLogErrorFromResponse, false, args);
   }
 
   /**
@@ -154,7 +133,7 @@ class MediaLogClient extends BaseClient {
    */
   tag(logpoint, args) {
     const request = new loggingPb.TagRequest().setPoint(logpoint);
-    return this.call(this._stub.tag, request, this._tagFromResponse, _mediaLogErrorFromResponse, args);
+    return this.call(this._stub.tag, request, this._tagFromResponse, _mediaLogErrorFromResponse, false, args);
   }
 
   _deleteFromResponse() {

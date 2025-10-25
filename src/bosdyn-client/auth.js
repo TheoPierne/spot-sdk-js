@@ -3,7 +3,7 @@
 const { BaseClient, errorFactory, handleCommonHeaderErrors, handleUnsetStatusError } = require('./common');
 const { ResponseError } = require('./exceptions');
 const { DefaultDict } = require('./util');
-const authPb = require('../bosdyn/api/auth_pb');
+const { GetAuthTokenRequest, GetAuthTokenResponse } = require('../bosdyn/api/auth_pb');
 const { AuthServiceClient } = require('../bosdyn/api/auth_service_grpc_pb');
 
 class AuthResponseError extends ResponseError {}
@@ -12,23 +12,23 @@ class InvalidTokenError extends AuthResponseError {}
 class TemporarilyLockedOutError extends AuthResponseError {}
 
 const _STATUS_TO_ERROR = DefaultDict(() => [ResponseError, null]);
-_STATUS_TO_ERROR.set(authPb.GetAuthTokenResponse.Status.STATUS_OK, [null, null]);
-_STATUS_TO_ERROR.set(authPb.GetAuthTokenResponse.Status.STATUS_INVALID_LOGIN, [
+_STATUS_TO_ERROR.set(GetAuthTokenResponse.Status.STATUS_OK, [null, null]);
+_STATUS_TO_ERROR.set(GetAuthTokenResponse.Status.STATUS_INVALID_LOGIN, [
   InvalidLoginError,
   'Provided username/password is invalid.',
 ]);
-_STATUS_TO_ERROR.set(authPb.GetAuthTokenResponse.Status.STATUS_INVALID_TOKEN, [
+_STATUS_TO_ERROR.set(GetAuthTokenResponse.Status.STATUS_INVALID_TOKEN, [
   InvalidTokenError,
   'Provided user token is invalid or cannot be re-minted.',
 ]);
-_STATUS_TO_ERROR.set(authPb.GetAuthTokenResponse.Status.STATUS_TEMPORARILY_LOCKED_OUT, [
+_STATUS_TO_ERROR.set(GetAuthTokenResponse.Status.STATUS_TEMPORARILY_LOCKED_OUT, [
   TemporarilyLockedOutError,
   'User is temporarily locked out of authentication.',
 ]);
 
 const _errorFromResponse = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(response, response.getStatus(), Object.keys(authPb.GetAuthTokenResponse.Status), _STATUS_TO_ERROR),
+    errorFactory(response, response.getStatus(), Object.keys(GetAuthTokenResponse.Status), _STATUS_TO_ERROR),
   ),
 );
 
@@ -37,11 +37,11 @@ function _tokenFromResponse(response) {
 }
 
 function _buildAuthRequest(username, password) {
-  return new authPb.GetAuthTokenRequest().setUsername(username).setPassword(password);
+  return new GetAuthTokenRequest().setUsername(username).setPassword(password);
 }
 
 function _buildAuthTokenRequest(token) {
-  return new authPb.GetAuthTokenRequest().setToken(token);
+  return new GetAuthTokenRequest().setToken(token);
 }
 
 /**
@@ -70,7 +70,7 @@ class AuthClient extends BaseClient {
    */
   auth(username, password, args) {
     const req = _buildAuthRequest(username, password);
-    return this.call(this._stub.getAuthToken, req, _tokenFromResponse, _errorFromResponse, args);
+    return this.call(this._stub.getAuthToken, req, _tokenFromResponse, _errorFromResponse, false, args);
   }
 
   /**
@@ -84,7 +84,7 @@ class AuthClient extends BaseClient {
    */
   authWithToken(token, args) {
     const req = _buildAuthTokenRequest(token);
-    return this.call(this._stub.getAuthToken, req, _tokenFromResponse, _errorFromResponse, args);
+    return this.call(this._stub.getAuthToken, req, _tokenFromResponse, _errorFromResponse, false, args);
   }
 }
 

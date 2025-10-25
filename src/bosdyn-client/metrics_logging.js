@@ -28,7 +28,7 @@ class MetricsLoggingClient extends BaseClient {
    */
   getMetrics(keys = null, includeEvents = false, args) {
     const req = new metricsLoggingRobotPb.GetMetricsRequest().setKeysList(keys).setIncludeEvents(includeEvents);
-    return this.call(this._stub.getMetrics, req, null, _getMetricsErrorFromResponse, args);
+    return this.call(this._stub.getMetrics, req, null, _getMetricsErrorFromResponse, false, args);
   }
 
   /**
@@ -43,6 +43,7 @@ class MetricsLoggingClient extends BaseClient {
       req,
       this._storeSequenceRangeFromResponse,
       commonHeaderErrors,
+      false,
       args,
     );
   }
@@ -61,6 +62,7 @@ class MetricsLoggingClient extends BaseClient {
       req,
       this._getAbsoluteMetricSnapshotFromResponse,
       commonHeaderErrors,
+      false,
       args,
     );
   }

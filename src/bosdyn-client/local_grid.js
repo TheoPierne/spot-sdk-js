@@ -29,6 +29,7 @@ class LocalGridClient extends BaseClient {
       request,
       res => res.getLocalGridTypeList(),
       commonHeaderErrors,
+      false,
       args,
     );
   }
@@ -52,6 +53,7 @@ class LocalGridClient extends BaseClient {
       request,
       res => res.getLocalGridResponsesList(),
       commonHeaderErrors,
+      false,
       args,
     );
   }

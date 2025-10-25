@@ -35,7 +35,7 @@ class AutoReturnClient extends BaseClient {
    */
   configure(params, leases, clearBuffer = false, args) {
     const request = this._configureRequest(params, leases, clearBuffer);
-    return this.call(this._stub.configure, request, null, configureError, args);
+    return this.call(this._stub.configure, request, null, configureError, false, args);
   }
 
   /**
@@ -46,7 +46,7 @@ class AutoReturnClient extends BaseClient {
    */
   getConfiguration(args) {
     const request = new autoReturnPb.GetConfigurationRequest();
-    return this.call(this._stub.getConfiguration, request, null, null, args);
+    return this.call(this._stub.getConfiguration, request, null, null, false, args);
   }
 
   /**
@@ -60,7 +60,7 @@ class AutoReturnClient extends BaseClient {
    */
   start(params = null, leases = [], args) {
     const request = this._startRequest(params, leases);
-    return this.call(this._stub.start, request, null, startError, args);
+    return this.call(this._stub.start, request, null, startError, false, args);
   }
 
   /**

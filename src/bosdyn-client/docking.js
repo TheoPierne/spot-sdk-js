@@ -36,6 +36,9 @@ class DockingClient extends BaseClient {
     super(DockingServiceClient);
   }
 
+  /**
+   * @param {Robot} other 
+   */
   updateFrom(other) {
     super.updateFrom(other);
     if (this.leaseWallet) addLeaseWalletProcessors(this, this.leaseWallet);
@@ -43,12 +46,12 @@ class DockingClient extends BaseClient {
 
   /**
    * Issue a DockingCommandRequest to the robot.
-   * @param  {number} stationId The ID of the docking station to dock at.
-   * @param  {string} clockIdentifier Identifier provided by the time sync service.
-   * @param  {google.protobuf.Timestamp} endTime Expiry time of the command in robot time.
-   * @param  {dockingPb.PrepPoseBehavior} [prepPoseBehavior=null] How and if to use the pre-dock pose.
-   * @param  {Lease} [lease=null] Leave empty to have the lease filled in by the LeaseWallet
-   * @param  {Object} [args] Extra arguments for controlling RPC details.
+   * @param {number} stationId The ID of the docking station to dock at.
+   * @param {string} clockIdentifier Identifier provided by the time sync service.
+   * @param {Timestamp} endTime Expiry time of the command in robot time.
+   * @param {dockingPb.PrepPoseBehavior} [prepPoseBehavior=null] How and if to use the pre-dock pose.
+   * @param {Lease} [lease=null] Leave empty to have the lease filled in by the LeaseWallet
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<number>}
    */
   dockingCommand(stationId, clockIdentifier, endTime, prepPoseBehavior = null, lease = null, args) {
@@ -58,6 +61,7 @@ class DockingClient extends BaseClient {
       req,
       this._dockingIdFromResponse,
       _dockingCommandErrorFromResponse,
+      false,
       args,
     );
   }
@@ -66,7 +70,7 @@ class DockingClient extends BaseClient {
    * Identical to dockingCommand(), except will return the full DockingCommandResponse.
    * @param {number} stationId The ID of the docking station to dock at.
    * @param {string} clockIdentifier Identifier provided by the time sync service.
-   * @param {google.protobuf.Timestamp} endTime Expiry time of the command in robot time.
+   * @param {Timestamp} endTime Expiry time of the command in robot time.
    * @param {dockingPb.PrepPoseBehavior} [prepPoseBehavior=null] How and if to use the pre-dock pose.
    * @param {Lease} [lease=null] Leave empty to have the lease filled in by the LeaseWallet
    * @param {boolean} requireFiducial Whether to require fiducial.
@@ -90,36 +94,26 @@ class DockingClient extends BaseClient {
       prepPoseBehavior,
       requireFiducial,
     );
-    return this.call(this._stub.dockingCommand, req, null, _dockingCommandErrorFromResponse, args);
+    return this.call(this._stub.dockingCommand, req, null, _dockingCommandErrorFromResponse, false, args);
   }
 
   /**
    * Check the status of a previously issued docking command.
-   * @param  {number} commandId The ID returned from a previous docking_command call.
-   * @param  {google.protobuf.Timestamp} endTime Expiry time of the command in robot time.
-   * @param  {Object} [args] Extra arguments for controlling RPC details.
+   * @param {number} commandId The ID returned from a previous docking_command call.
+   * @param {Timestamp} endTime Expiry time of the command in robot time.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dockingPb.DockingCommandFeedbackResponse>}
    */
   dockingCommandFeedbackFull(commandId, endTime = null, args) {
     const req = this._dockingCommandFeedbackRequest(commandId, endTime);
-    return this.call(this._stub.dockingCommandFeedback, req, null, commonHeaderErrors, args);
+    return this.call(this._stub.dockingCommandFeedback, req, null, commonHeaderErrors, false, args);
   }
 
-  dockingCommandFeedback(commandId, args) {
-    process.emitWarning(
-      'This function can raise LeaseErrors when the feedback was successfully retrieved.',
-      'Use dockingCommandFeedbackFull instead.',
-    );
-    const req = this._docking_command_feedback_request(commandId);
-    return this.call(
-      this._stub.dockingCommandFeedback,
-      req,
-      this._dockingStatusFromResponse,
-      _dockingFeedbackErrorFromResponse,
-      args,
-    );
-  }
-
+  /**
+   * Get the docking config stored on the robot.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<dockingPb.ConfigRange>}
+   */
   getDockingConfig(args) {
     const req = new dockingPb.GetDockingConfigRequest();
     return this.call(
@@ -127,10 +121,16 @@ class DockingClient extends BaseClient {
       req,
       this._dockingConfigFromResponse,
       _dockingGetConfigErrorFromResponse,
+      false,
       args,
     );
   }
 
+  /**
+   * Get docking state from the robot.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<dockingPb.DockState>}
+   */
   getDockingState(args) {
     const req = new dockingPb.GetDockingStateRequest();
     return this.call(
@@ -138,6 +138,7 @@ class DockingClient extends BaseClient {
       req,
       this._dockingStateFromResponse,
       _dockingGetStateErrorFromResponse,
+      false,
       args,
     );
   }

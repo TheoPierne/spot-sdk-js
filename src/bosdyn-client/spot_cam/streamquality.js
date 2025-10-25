@@ -63,6 +63,7 @@ class StreamQualityClient extends BaseClient {
       request,
       this._paramsFromResponse,
       _streamqualityErrorFromResponse,
+      false,
       args,
     );
   }
@@ -79,6 +80,7 @@ class StreamQualityClient extends BaseClient {
       request,
       this._paramsFromResponse,
       _streamqualityErrorFromResponse,
+      false,
       args,
     );
   }
@@ -91,7 +93,7 @@ class StreamQualityClient extends BaseClient {
    */
   enableCongestionControl(enable = true, args) {
     const request = new streamqualityPb.EnableCongestionControlRequest().setEnableCongestionControl(enable);
-    return this.call(this._stub.enableCongestionControl, request, null, _streamqualityErrorFromResponse, args);
+    return this.call(this._stub.enableCongestionControl, request, null, _streamqualityErrorFromResponse, false, args);
   }
 
   _buildSetStreamParamsRequest(

@@ -5,6 +5,10 @@ const { addLeaseWalletProcessors } = require('./lease');
 const { ManipulationApiServiceClient } = require('../bosdyn/api/manipulation_api_service_grpc_pb');
 
 /**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
  * Client for the ManipulationAPI service.
  * @extends {BaseClient<ManipulationApiServiceClient>}
  */
@@ -18,7 +22,7 @@ class ManipulationApiClient extends BaseClient {
 
   /**
    * Update instance from another object.
-   * @param {BaseClient} other The object where to copy from.
+   * @param {Robot} other The object where to copy from.
    * @returns {void}
    */
   updateFrom(other) {
@@ -40,6 +44,7 @@ class ManipulationApiClient extends BaseClient {
       manipulationApiRequest,
       null,
       _manipulationApiCommandErrorFromResponse,
+      true,
       args,
     );
   }
@@ -58,6 +63,7 @@ class ManipulationApiClient extends BaseClient {
       manipulationApiFeedbackRequest,
       null,
       _manipulationApiFeedbackErrorFromResponse,
+      true,
       args,
     );
   }
@@ -75,6 +81,7 @@ class ManipulationApiClient extends BaseClient {
       graspOverrideRequest,
       null,
       _graspOverrideCommandErrorFromResponse,
+      true,
       args,
     );
   }

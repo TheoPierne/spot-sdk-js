@@ -60,7 +60,7 @@ class RayCastClient extends BaseClient {
    */
   raycast(rayOrigin, rayDirection, raycastTypes, minDistance = 0, frameName = null, args) {
     const req = this._raycastRequest(rayOrigin, rayDirection, raycastTypes, minDistance, frameName);
-    return this.call(this._stub.raycast, req, null, _errorFromResponse, args);
+    return this.call(this._stub.raycast, req, null, _errorFromResponse, false, args);
   }
 
   _raycastRequest(rayOrigin, rayDirection, raycastTypes, minDistance, frameName) {

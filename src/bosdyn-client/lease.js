@@ -491,7 +491,7 @@ class LeaseClient extends BaseClient {
    */
   acquire(resource = _RESOURCE_BODY, args) {
     const req = LeaseClient._makeAcquireRequest(resource);
-    return this.call(this._stub.acquireLease, req, this._handleAcquireSuccess.bind(this), _handleAcquireErrors, args);
+    return this.call(this._stub.acquireLease, req, this._handleAcquireSuccess.bind(this), _handleAcquireErrors, false, args);
   }
 
   /**
@@ -504,7 +504,7 @@ class LeaseClient extends BaseClient {
    */
   take(resource = _RESOURCE_BODY, args) {
     const req = LeaseClient._makeTakeRequest(resource);
-    return this.call(this._stub.takeLease, req, this._handleAcquireSuccess.bind(this), _handleTakeErrors, args);
+    return this.call(this._stub.takeLease, req, this._handleAcquireSuccess.bind(this), _handleTakeErrors, false, args);
   }
 
   /**
@@ -519,7 +519,7 @@ class LeaseClient extends BaseClient {
   returnLease(lease, args) {
     if (this.leaseWallet) this.leaseWallet.remove(lease);
     const req = LeaseClient._makeReturnRequest(lease);
-    return this.call(this._stub.returnLease, req, null, _handleReturnErrors, args);
+    return this.call(this._stub.returnLease, req, null, _handleReturnErrors, false, args);
   }
 
   /**
@@ -532,7 +532,7 @@ class LeaseClient extends BaseClient {
    */
   retainLease(lease, args) {
     const req = LeaseClient._makeRetainRequest(lease);
-    return this.call(this._stub.retainLease, req, null, commonLeaseErrors, args);
+    return this.call(this._stub.retainLease, req, null, commonLeaseErrors, false, args);
   }
 
   /**
@@ -547,7 +547,7 @@ class LeaseClient extends BaseClient {
    */
   listLeases(includeFullLeaseInfo = false, args) {
     const req = LeaseClient._makeListLeasesRequest(includeFullLeaseInfo);
-    return this.call(this._stub.listLeases, req, this._listLeasesSuccess, commonHeaderErrors, args);
+    return this.call(this._stub.listLeases, req, this._listLeasesSuccess, commonHeaderErrors, false, args);
   }
 
   /**
@@ -560,7 +560,7 @@ class LeaseClient extends BaseClient {
    */
   listLeasesFull(includeFullLeaseInfo = false, args) {
     const req = LeaseClient._makeListLeasesRequest(includeFullLeaseInfo);
-    return this.call(this._stub.listLeases, req, null, commonHeaderErrors, args);
+    return this.call(this._stub.listLeases, req, null, commonHeaderErrors, false, args);
   }
 
   static _makeAcquireRequest(resource) {

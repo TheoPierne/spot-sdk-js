@@ -2,36 +2,31 @@
 
 const { BaseClient, commonHeaderErrors } = require('./common');
 const dataIndexProtos = require('../bosdyn/api/data_index_pb');
-const dataService = require('../bosdyn/api/data_service_grpc_pb');
+const { DataServiceClient: DataServiceClientStub } = require('../bosdyn/api/data_service_grpc_pb');
 
-class InvalidArgument extends Error {
-  constructor(msg) {
-    super(msg);
-    this.name = 'InvalidArgument';
-  }
-}
+class InvalidArgument extends Error {}
+
+/**
+ * @typedef {import('./robot').Robot} Robot
+ */
 
 /**
  * Client for adding to robot data buffer.
- * @extends {BaseClient<dataService.DataServiceClient>}
+ * @extends {BaseClient<DataServiceClientStub>}
  */
 class DataServiceClient extends BaseClient {
   static defaultServiceName = 'data';
   static serviceType = 'bosdyn.api.DataService';
 
-  /**
-   * Create an instance of DataServiceClient's class.
-   * @param {?string} name Class name.
-   */
-  constructor(name = null) {
-    super(dataService.DataServiceClient, name);
+  constructor() {
+    super(DataServiceClientStub);
     this.logTickSchemas = {};
     this._timesyncEndpoint = null;
   }
 
   /**
    * Update instance from another object.
-   * @param {BaseClient} other The object where to copy from.
+   * @param {Robot} other The object where to copy from.
    * @returns {Promise<void>}
    */
   async updateFrom(other) {
@@ -52,7 +47,7 @@ class DataServiceClient extends BaseClient {
    */
   getDataIndex(query, args) {
     const request = new dataIndexProtos.GetDataIndexRequest().setDataQuery(query);
-    return this.call(this._stub.getDataIndex, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.getDataIndex, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -64,7 +59,7 @@ class DataServiceClient extends BaseClient {
    */
   getDataPages(timeRange, args) {
     const request = new dataIndexProtos.GetDataPagesRequest().setTimeRange(timeRange);
-    return this.call(this._stub.getDataPages, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.getDataPages, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -75,7 +70,7 @@ class DataServiceClient extends BaseClient {
    */
   deleteDataPages(timeRange, pageIds, args) {
     const request = new dataIndexProtos.DeleteDataPagesRequest().setTimeRange(timeRange).setPageIdsList(pageIds);
-    return this.call(this._stub.deleteDataPages, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.deleteDataPages, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -87,7 +82,7 @@ class DataServiceClient extends BaseClient {
    */
   getEventsComments(query, args) {
     const request = new dataIndexProtos.GetEventsCommentsRequest().setEventCommentRequest(query);
-    return this.call(this._stub.getEventsComments, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.getEventsComments, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -99,7 +94,7 @@ class DataServiceClient extends BaseClient {
    */
   getDataBufferStatus(getBlobSpecs = false, args) {
     const request = new dataIndexProtos.GetDataBufferStatusRequest().setGetBlobSpecs(getBlobSpecs);
-    return this.call(this._stub.getDataBufferStatus, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.getDataBufferStatus, request, null, commonHeaderErrors, false, args);
   }
 }
 

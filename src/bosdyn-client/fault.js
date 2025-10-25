@@ -35,7 +35,7 @@ class FaultClient extends BaseClient {
    */
   triggerServiceFault(serviceFault, args) {
     const req = new serviceFaultPb.TriggerServiceFaultRequest().setFault(serviceFault);
-    return this.call(this._stub.triggerServiceFault, req, null, _triggerServiceFaultError, args);
+    return this.call(this._stub.triggerServiceFault, req, null, _triggerServiceFaultError, false, args);
   }
 
   /**
@@ -54,7 +54,7 @@ class FaultClient extends BaseClient {
       .setFaultId(serviceFaultId)
       .setClearAllServiceFaults(clearAllServiceFaults)
       .setClearAllPayloadFaults(clearAllPayloadFaults);
-    return this.call(this._stub.clearServiceFault, req, null, _clearServiceFaultError, args);
+    return this.call(this._stub.clearServiceFault, req, null, _clearServiceFaultError, false, args);
   }
 }
 

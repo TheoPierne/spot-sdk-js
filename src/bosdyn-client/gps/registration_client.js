@@ -24,7 +24,7 @@ class RegistrationClient extends BaseClient {
    */
   getLocation(args) {
     const req = new registrationPb.GetLocationRequest();
-    return this.call(this._stub.getLocation, req, null, _getLocationError, args);
+    return this.call(this._stub.getLocation, req, null, _getLocationError, false, args);
   }
 
   /**
@@ -34,7 +34,7 @@ class RegistrationClient extends BaseClient {
    */
   resetRegistration(args) {
     const req = new registrationPb.ResetRegistrationRequest();
-    return this.call(this._stub.resetRegistration, req, null, _getLocationError, args);
+    return this.call(this._stub.resetRegistration, req, null, _getLocationError, false, args);
   }
 }
 

@@ -27,7 +27,7 @@ class PtzClient extends BaseClient {
    */
   listPtz(args) {
     const request = new ptzPb.ListPtzRequest();
-    return this.call(this._stub.listPtz, request, this._list_ptz_from_response, this._ptz_error_from_response, args);
+    return this.call(this._stub.listPtz, request, this._listPtzFromResponse, commonHeaderErrors, false, args);
   }
 
   /**
@@ -38,7 +38,7 @@ class PtzClient extends BaseClient {
    */
   getPtzPosition(ptzDesc, args) {
     const request = new ptzPb.GetPtzPositionRequest().setPtz(ptzDesc);
-    return this.call(this._stub.getPtzPosition, request, this._getPtzPositionFromResponse, commonHeaderErrors, args);
+    return this.call(this._stub.getPtzPosition, request, this._getPtzPositionFromResponse, commonHeaderErrors, false, args);
   }
 
   /**
@@ -49,7 +49,7 @@ class PtzClient extends BaseClient {
    */
   getPtzVelocity(ptzDesc, args) {
     const request = new ptzPb.GetPtzVelocityRequest().setPtz(ptzDesc);
-    return this.call(this._stub.getPtzVelocity, request, this._getPtzVelocityFromResponse, commonHeaderErrors, args);
+    return this.call(this._stub.getPtzVelocity, request, this._getPtzVelocityFromResponse, commonHeaderErrors, false, args);
   }
 
   /**
@@ -68,7 +68,7 @@ class PtzClient extends BaseClient {
       .setTilt(new FloatValue().setValue(tilt))
       .setZoom(new FloatValue().setValue(zoom));
     const request = new ptzPb.SetPtzPositionRequest().setPosition(ptzPosition);
-    return this.call(this._stub.setPtzPosition, request, this._setPtzPositionFromResponse, commonHeaderErrors, args);
+    return this.call(this._stub.setPtzPosition, request, this._setPtzPositionFromResponse, commonHeaderErrors, false, args);
   }
 
   /**
@@ -87,7 +87,7 @@ class PtzClient extends BaseClient {
       .setTilt(new FloatValue().setValue(tilt))
       .setZoom(new FloatValue().setValue(zoom));
     const request = new ptzPb.SetPtzVelocityRequest().setVelocity(ptzVelocity);
-    return this.call(this._stub.setPtzVelocity, request, this._setPtzVelocityFromResponse, commonHeaderErrors, args);
+    return this.call(this._stub.setPtzVelocity, request, this._setPtzVelocityFromResponse, commonHeaderErrors, false, args);
   }
 
   /**
@@ -97,7 +97,7 @@ class PtzClient extends BaseClient {
    */
   initializeLens(args) {
     const request = new ptzPb.InitializeLensRequest();
-    return this.call(this._stub.initializeLens, request, this._initializeLensFromResponse, commonHeaderErrors, args);
+    return this.call(this._stub.initializeLens, request, this._initializeLensFromResponse, commonHeaderErrors, false, args);
   }
 
   /**
@@ -112,6 +112,7 @@ class PtzClient extends BaseClient {
       request,
       this._getPtzFocusStateFromResponse,
       commonHeaderErrors,
+      false,
       args,
     );
   }
@@ -147,11 +148,12 @@ class PtzClient extends BaseClient {
       request,
       this._setPtzFocusStateFromResponse,
       commonHeaderErrors,
+      false,
       args,
     );
   }
 
-  _list_ptz_from_response(response) {
+  _listPtzFromResponse(response) {
     return response.getPtzsList();
   }
 

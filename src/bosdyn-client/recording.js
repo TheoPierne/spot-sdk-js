@@ -50,7 +50,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
    */
   startRecording(lease = null, recordingEnvironment = null, requireFiducials = null, args) {
     const request = this._buildStartRecordingRequest(lease, recordingEnvironment, requireFiducials);
-    return this.call(this._stub.startRecording, request, _getStatus, _startRecordingError, args);
+    return this.call(this._stub.startRecording, request, _getStatus, _startRecordingError, false, args);
   }
 
   /**
@@ -65,7 +65,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
    */
   startRecordingFull(lease = null, recordingEnvironment = null, requireFiducials = null, args) {
     const request = this._buildStartRecordingRequest(lease, recordingEnvironment, requireFiducials);
-    return this.call(this._stub.startRecording, request, _getResponse, _startRecordingError, args);
+    return this.call(this._stub.startRecording, request, _getResponse, _startRecordingError, false, args);
   }
 
   /**
@@ -77,7 +77,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
    */
   stopRecording(lease = null, args) {
     const request = this._buildStopRecordingRequest(lease);
-    return this.call(this._stub.stopRecording, request, _getStatus, _stopRecordingError, args);
+    return this.call(this._stub.stopRecording, request, _getStatus, _stopRecordingError, false, args);
   }
 
   /**
@@ -87,7 +87,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
    */
   getRecordStatus(args) {
     const request = this._buildGetRecordStatusRequest();
-    return this.call(this._stub.getRecordStatus, request, _getResponse, commonHeaderErrors, args);
+    return this.call(this._stub.getRecordStatus, request, _getResponse, commonHeaderErrors, false, args);
   }
 
   /**
@@ -101,7 +101,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
    */
   setRecordingEnvironment(lease = null, recordingEnvironment = null, args) {
     const request = this._buildSetRecordingEnvironmentRequest(lease, recordingEnvironment);
-    return this.call(this._stub.setRecordingEnvironment, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.setRecordingEnvironment, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -116,7 +116,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
    */
   createWaypoint(lease = null, waypointName = null, recordingEnvironment = null, args) {
     const request = this._buildCreateWaypointRequest(waypointName, recordingEnvironment, lease);
-    return this.call(this._stub.createWaypoint, request, _getResponse, _createWaypointError, args);
+    return this.call(this._stub.createWaypoint, request, _getResponse, _createWaypointError, false, args);
   }
 
   /**
@@ -130,7 +130,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
    */
   createEdge(lease = null, edge = null, args) {
     const request = this._buildCreateEdgeRequest(edge, lease);
-    return this.call(this._stub.createEdge, request, _getStatus, _createEdgeError, args);
+    return this.call(this._stub.createEdge, request, _getStatus, _createEdgeError, false, args);
   }
 
   _buildStartRecordingRequest(lease, recordingEnv, requireFiducials) {

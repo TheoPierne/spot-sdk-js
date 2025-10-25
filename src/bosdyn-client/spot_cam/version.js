@@ -28,6 +28,7 @@ class VersionClient extends BaseClient {
       request,
       this._getSoftwareVersionFromResponse,
       _versionErrorFromResponse,
+      false,
       args,
     );
   }
@@ -39,7 +40,7 @@ class VersionClient extends BaseClient {
    */
   getSoftwareVersionFull(args) {
     const request = new versionPb.GetSoftwareVersionRequest();
-    return this.call(this._stub.getSoftwareVersion, request, null, _versionErrorFromResponse, args);
+    return this.call(this._stub.getSoftwareVersion, request, null, _versionErrorFromResponse, false, args);
   }
 
   _getSoftwareVersionFromResponse(response) {

@@ -15,6 +15,10 @@ const dataChunkPb = require('../bosdyn/api/data_chunk_pb');
 const DEFAULT_CHUNK_SIZE_BYTES = DEFAULT_MAX_MESSAGE_LENGTH - DEFAULT_HEADER_BUFFER_LENGTH;
 
 /**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
  * A client for triggering data acquisition store methods.
  * @extends {BaseClient<DataAcquisitionStoreServiceClient>}
  */
@@ -29,7 +33,7 @@ class DataAcquisitionStoreClient extends BaseClient {
 
   /**
    * Update instance from another object.
-   * @param {Object} other The object where to copy from.
+   * @param {Robot} other The object where to copy from.
    * @returns {Promise<void>}
    */
   async updateFrom(other) {
@@ -50,7 +54,7 @@ class DataAcquisitionStoreClient extends BaseClient {
    */
   listCaptureActions(query, args) {
     const request = new dataAcquisitionStore.ListCaptureActionsRequest().setQuery(query);
-    return this.call(this._stub.listCaptureActions, request, _getActionIds, commonHeaderErrors, args);
+    return this.call(this._stub.listCaptureActions, request, _getActionIds, commonHeaderErrors, false, args);
   }
 
   /**
@@ -61,7 +65,7 @@ class DataAcquisitionStoreClient extends BaseClient {
    */
   listStoredImages(query, args) {
     const request = new dataAcquisitionStore.ListStoredImagesRequest().setQuery(query);
-    return this.call(this._stub.listStoredImages, request, _getDataIds, commonHeaderErrors, args);
+    return this.call(this._stub.listStoredImages, request, _getDataIds, commonHeaderErrors, false, args);
   }
 
   /**
@@ -72,7 +76,7 @@ class DataAcquisitionStoreClient extends BaseClient {
    */
   listStoredMetadata(query, args) {
     const request = new dataAcquisitionStore.ListStoredMetadataRequest().setQuery(query);
-    return this.call(this._stub.listStoredMetadata, request, _getDataIds, commonHeaderErrors, args);
+    return this.call(this._stub.listStoredMetadata, request, _getDataIds, commonHeaderErrors, false, args);
   }
 
   /**
@@ -83,7 +87,7 @@ class DataAcquisitionStoreClient extends BaseClient {
    */
   listStoredData(query, args) {
     const request = new dataAcquisitionStore.ListStoredDataRequest().setQuery(query);
-    return this.call(this._stub.listStoredData, request, _getDataIds, commonHeaderErrors, args);
+    return this.call(this._stub.listStoredData, request, _getDataIds, commonHeaderErrors, false, args);
   }
 
   /**
@@ -95,7 +99,7 @@ class DataAcquisitionStoreClient extends BaseClient {
    */
   storeImage(image, dataId, args) {
     const request = new dataAcquisitionStore.StoreImageRequest().setImage(image).setDataId(dataId);
-    return this.call(this._stub.storeImage, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.storeImage, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -110,7 +114,7 @@ class DataAcquisitionStoreClient extends BaseClient {
    */
   storeMetadata(associatedMetadata, dataId, args) {
     const request = new dataAcquisitionStore.StoreMetadataRequest().setMetadata(associatedMetadata).setDataId(dataId);
-    return this.call(this._stub.storeMetadata, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.storeMetadata, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -126,7 +130,7 @@ class DataAcquisitionStoreClient extends BaseClient {
     const request = new dataAcquisitionStore.StoreAlertDataRequest()
       .setAlertDate(associatedAlertData)
       .setDataId(dataId);
-    return this.call(this._stub.storeAlertData, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.storeAlertData, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -142,7 +146,7 @@ class DataAcquisitionStoreClient extends BaseClient {
       .setData(data)
       .setDataId(dataId)
       .setFileExtension(fileExtension);
-    return this.call(this._stub.storeData, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.storeData, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -158,8 +162,9 @@ class DataAcquisitionStoreClient extends BaseClient {
     return this.call(
       this._stub.storeDataStream,
       _iterateDataChunks(data, dataId, fileExtension),
-      commonHeaderErrors,
       null,
+      commonHeaderErrors,
+      false,
       args,
     );
   }
@@ -177,8 +182,9 @@ class DataAcquisitionStoreClient extends BaseClient {
     return this.call(
       this._stub.storeDataStream,
       _iterateStoreFile(file, dataId, fileExtension),
-      commonHeaderErrors,
       null,
+      commonHeaderErrors,
+      false,
       args,
     );
   }
@@ -192,7 +198,7 @@ class DataAcquisitionStoreClient extends BaseClient {
   queryStoredCaptures(query = null, args) {
     const request = new dataAcquisitionStore.QueryStoredCapturesRequest().setQuery(query);
     this._applyRequestProcessors(request);
-    return this.call(this._stub.queryStoredCaptures, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.queryStoredCaptures, request, null, commonHeaderErrors, false, args);
   }
 
   /**
@@ -202,7 +208,7 @@ class DataAcquisitionStoreClient extends BaseClient {
    */
   queryMaxCaptureId(args) {
     const request = new dataAcquisitionStore.QueryMaxCaptureIdRequest();
-    return this.call(this._stub.queryMaxCaptureId, request, _getMaxCaptureId, commonHeaderErrors, args);
+    return this.call(this._stub.queryMaxCaptureId, request, _getMaxCaptureId, commonHeaderErrors, false, args);
   }
 }
 

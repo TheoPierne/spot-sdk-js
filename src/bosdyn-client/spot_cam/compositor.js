@@ -24,7 +24,7 @@ class CompositorClient extends BaseClient {
    */
   setScreen(name, args) {
     const request = new compositorPb.SetScreenRequest().setName(name);
-    return this.call(this._stub.setScreen, request, this._nameFromResponse, _compositorErrorFromResponse, args);
+    return this.call(this._stub.setScreen, request, this._nameFromResponse, _compositorErrorFromResponse, false, args);
   }
 
   /**
@@ -34,7 +34,7 @@ class CompositorClient extends BaseClient {
    */
   getScreen(args) {
     const request = new compositorPb.GetScreenRequest();
-    return this.call(this._stub.getScreen, request, this._nameFromResponse, _compositorErrorFromResponse, args);
+    return this.call(this._stub.getScreen, request, this._nameFromResponse, _compositorErrorFromResponse, false, args);
   }
 
   /**
@@ -44,7 +44,7 @@ class CompositorClient extends BaseClient {
    */
   listScreens(args) {
     const request = new compositorPb.ListScreensRequest();
-    return this.call(this._stub.listScreens, request, this._screensFromResponse, _compositorErrorFromResponse, args);
+    return this.call(this._stub.listScreens, request, this._screensFromResponse, _compositorErrorFromResponse, false, args);
   }
 
   /**
@@ -59,6 +59,7 @@ class CompositorClient extends BaseClient {
       request,
       this._streamsFromResponse,
       _compositorErrorFromResponse,
+      false,
       args,
     );
   }
@@ -77,7 +78,7 @@ class CompositorClient extends BaseClient {
     const scale = new compositorPb.IrColorMap.ScalingPair().setMin(minTemp).setMax(maxTemp);
     const irColormap = new compositorPb.IrColorMap().setColormap(colormap).setScale(scale).setAutoScale(autoScale);
     const request = new compositorPb.SetIrColormapRequest().setMap(irColormap);
-    return this.call(this._stub.setIrColormap, request, this._returnResponse, _compositorErrorFromResponse, args);
+    return this.call(this._stub.setIrColormap, request, this._returnResponse, _compositorErrorFromResponse, false, args);
   }
 
   /**
@@ -87,7 +88,7 @@ class CompositorClient extends BaseClient {
    */
   getIrColormap(args) {
     const request = new compositorPb.GetIrColormapRequest();
-    return this.call(this._stub.getIrColormap, request, this._colormapFromResponse, _compositorErrorFromResponse, args);
+    return this.call(this._stub.getIrColormap, request, this._colormapFromResponse, _compositorErrorFromResponse, false, args);
   }
 
   /**
@@ -107,7 +108,7 @@ class CompositorClient extends BaseClient {
       .setMeter([coords])
       .setUnit(unit);
     const request = new compositorPb.SetIrMeterOverlayRequest().setOverlay(overlay);
-    return this.call(this._stub.SetIrMeterOverlay, request, this._returnResponse, _compositorErrorFromResponse, args);
+    return this.call(this._stub.SetIrMeterOverlay, request, this._returnResponse, _compositorErrorFromResponse, false, args);
   }
 
   /**
@@ -125,7 +126,7 @@ class CompositorClient extends BaseClient {
     );
     const overlay = new compositorPb.IrMeterOverlay().setEnable(enable).setMeter(coords_proto).setUnit(unit);
     const request = new compositorPb.SetIrMeterOverlayRequest().setOverlay(overlay);
-    return this.call(this._stub.SetIrMeterOverlay, request, this._returnResponse, _compositorErrorFromResponse, args);
+    return this.call(this._stub.SetIrMeterOverlay, request, this._returnResponse, _compositorErrorFromResponse, false, args);
   }
 
   /**
@@ -135,7 +136,7 @@ class CompositorClient extends BaseClient {
    */
   getIrMeterOverlay(args) {
     const request = new compositorPb.GetIrMeterOverlayRequest();
-    return this.call(this._stub.GetIrMeterOverlay, request, this._returnResponse, _compositorErrorFromResponse, args);
+    return this.call(this._stub.GetIrMeterOverlay, request, this._returnResponse, _compositorErrorFromResponse, false, args);
   }
 
   _returnResponse(response) {

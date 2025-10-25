@@ -22,7 +22,7 @@ class InverseKinematicsClient extends BaseClient {
    * @returns {Promise<any>}
    */
   inverseKinematics(request, args) {
-    return this.call(this._stub.inverseKinematics, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.inverseKinematics, request, null, commonHeaderErrors, true, args);
   }
 }
 

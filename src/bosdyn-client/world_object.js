@@ -10,6 +10,10 @@ const { WorldObjectServiceClient } = require('../bosdyn/api/world_object_service
 const { nowTimestamp } = require('../bosdyn-core/util');
 
 /**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
  * Client for World Object service.
  * @extends {BaseClient<WorldObjectServiceClient>}
  */
@@ -68,7 +72,7 @@ class WorldObjectClient extends BaseClient {
     const req = new worldObjectPb.ListWorldObjectRequest()
       .setObjectTypeList(objectType)
       .setTimestampFilter(timeStartPoint);
-    return this.call(this._stub.listWorldObjects, req, _getWorldObjectValue, commonHeaderErrors, args);
+    return this.call(this._stub.listWorldObjects, req, _getWorldObjectValue, commonHeaderErrors, false, args);
   }
 
   /**
@@ -89,7 +93,7 @@ class WorldObjectClient extends BaseClient {
         .getObject()
         .setAcquisitionTime(this._updateTimestampFilter(clientTimestamp, this.timesyncEndpoint));
     }
-    return this.call(this._stub.mutateWorldObjects, mutationReq, _getStatus, commonHeaderErrors, args);
+    return this.call(this._stub.mutateWorldObjects, mutationReq, _getStatus, commonHeaderErrors, true, args);
   }
 
   /**

@@ -27,7 +27,7 @@ class RobotIdClient extends BaseClient {
    */
   getId(args) {
     const req = new robotIdPb.RobotIdRequest();
-    return this.call(this._stub.getRobotId, req, _getEntryValue, commonHeaderErrors, args);
+    return this.call(this._stub.getRobotId, req, _getEntryValue, commonHeaderErrors, false, args);
   }
 }
 

@@ -28,7 +28,7 @@ class IREnableDisableServiceClient extends BaseClient {
     const req = enable ? REQUEST_ON : REQUEST_OFF;
     const request = new irEnableDisablePb.IREnableDisableRequest().setRequest(req);
 
-    return this.call(this._stub.iREnableDisable, request, null, commonHeaderErrors, args);
+    return this.call(this._stub.iREnableDisable, request, null, commonHeaderErrors, false, args);
   }
 }
 

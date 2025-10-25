@@ -62,7 +62,7 @@ class DirectoryClient extends BaseClient {
    */
   list(args) {
     const req = new directoryPb.ListServiceEntriesRequest();
-    return this.call(this._stub.listServiceEntries, req, _listValue, commonHeaderErrors, args);
+    return this.call(this._stub.listServiceEntries, req, _listValue, commonHeaderErrors, false, args);
   }
 
   /**
@@ -76,7 +76,7 @@ class DirectoryClient extends BaseClient {
    */
   getEntry(serviceName, args) {
     const req = new directoryPb.GetServiceEntryRequest().setServiceName(serviceName);
-    return this.call(this._stub.getServiceEntry, req, _getEntryValue, _errorFromResponse, args);
+    return this.call(this._stub.getServiceEntry, req, _getEntryValue, _errorFromResponse, false, args);
   }
 }
 

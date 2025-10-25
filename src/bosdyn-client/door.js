@@ -5,6 +5,10 @@ const { addLeaseWalletProcessors } = require('./lease');
 const { DoorServiceClient } = require('../bosdyn/api/spot/door_service_grpc_pb');
 
 /**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
  * Client for the door service.
  * @extends {BaseClient<DoorServiceClient>}
  */
@@ -22,7 +26,7 @@ class DoorClient extends BaseClient {
 
   /**
    * Update instance from another object.
-   * @param {Object} other The object where to copy from.
+   * @param {Robot} other The object where to copy from.
    * @returns {void}
    */
   updateFrom(other) {
@@ -40,7 +44,7 @@ class DoorClient extends BaseClient {
    * @throws {LeaseUseError} The lease for the request failed.
    */
   openDoor(request, args) {
-    return this.call(this._stub.openDoor, request, null, _openDoorErrorHandler, args);
+    return this.call(this._stub.openDoor, request, null, _openDoorErrorHandler, true, args);
   }
 
   /**
@@ -51,7 +55,7 @@ class DoorClient extends BaseClient {
    * @throws {RpcError} Problem communicating with the robot.
    */
   openDoorFeedback(request, args) {
-    return this.call(this._stub.openDoorFeedback, request, null, _openDoorFeedbackErrorHandler, args);
+    return this.call(this._stub.openDoorFeedback, request, null, _openDoorFeedbackErrorHandler, true, args);
   }
 }
 
