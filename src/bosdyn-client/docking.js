@@ -1,6 +1,5 @@
 'use strict';
 
-const process = require('node:process');
 const { setTimeout: sleep } = require('node:timers/promises');
 
 const {
@@ -19,7 +18,15 @@ const { DefaultDict } = require('./util');
 
 const dockingPb = require('../bosdyn/api/docking/docking_pb');
 const { DockingServiceClient } = require('../bosdyn/api/docking/docking_service_grpc_pb');
-const { nowSec } = require('../bosdyn-core/util');
+const { nowSec, secondsToTimestamp } = require('../bosdyn-core/util');
+
+/**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
+ * @typedef {import('google-protobuf/google/protobuf/timestamp_pb').Timestamp} Timestamp
+ */
 
 /**
  * A client for the docking service to help issue DockingCommand and get state.
@@ -170,7 +177,7 @@ class DockingClient extends BaseClient {
   }
 
   _dockingConfigFromResponse(response) {
-    return response.getDockConfigs();
+    return response.getDockConfigsList();
   }
 
   _dockingStateFromResponse(response) {
@@ -194,10 +201,6 @@ const _dockingCommandErrorFromResponse = handleCommonHeaderErrors(
   ),
 );
 
-const _dockingFeedbackErrorFromResponse = handleCommonHeaderErrors(
-  handleLeaseUseResultErrors(handleUnsetStatusError('STATUS_UNKNOWN')(() => null)),
-);
-
 const _dockingGetConfigErrorFromResponse = handleCommonHeaderErrors(() => null);
 
 const _dockingGetStateErrorFromResponse = handleCommonHeaderErrors(() => null);
@@ -207,7 +210,7 @@ const _dockingGetStateErrorFromResponse = handleCommonHeaderErrors(() => null);
  * @param  {Robot} robot The instance of the robot to control.
  * @param  {number} dockId The ID of the dock to dock at.
  * @param  {number} [numRetries=4] Optional, number of attempts.
- * @param  {number} [timeoutMsec=30_000] DD
+ * @param  {number} [timeoutMsec=30_000]
  * @returns {Promise<number>} The number of retries required
  */
 async function blockingDockRobot(robot, dockId, numRetries = 4, timeoutMsec = 30_000) {
@@ -221,7 +224,7 @@ async function blockingDockRobot(robot, dockId, numRetries = 4, timeoutMsec = 30
   while (attemptNumber < numRetries && !dockingSuccess) {
     attemptNumber += 1;
 
-    const converter = (await robot.timeSync).getRobotTimeConverter();
+    const converter = await (await robot.timeSync).getRobotTimeConverter();
     const startTime = converter.robotSecondsFromLocalSeconds(nowSec());
     const cmdEndTime = startTime + timeoutMsec;
     const cmdTimeout = cmdEndTime + 10_000;
@@ -232,11 +235,12 @@ async function blockingDockRobot(robot, dockId, numRetries = 4, timeoutMsec = 30
         : dockingPb.PrepPoseBehavior.PREP_POSE_SKIP_POSE;
 
     const timeSync = await robot.timeSync;
+    const endTime = secondsToTimestamp(cmdEndTime);
 
     const cmdId = await dockingClient.dockingCommand(
       dockId,
-      await timeSync.endpoint.clockIdentifier,
-      await timeSync.robotTimestampFromLocalSecs(cmdEndTime),
+      timeSync.endpoint.clockIdentifier,
+      endTime,
       prepPose,
     );
 
@@ -286,17 +290,18 @@ async function blockingGoToPrepPose(robot, dockId, timeout = 20_000) {
   /** @type {DockingClient} */
   const dockingClient = await robot.ensureClient(DockingClient.defaultServiceName);
 
-  const converter = (await robot.timeSync).getRobotTimeConverter();
+  const converter = await (await robot.timeSync).getRobotTimeConverter();
   const startTime = converter.robotSecondsFromLocalSeconds(nowSec());
   const cmdEndTime = startTime + timeout;
   const cmdTimeout = cmdEndTime + 10_000;
 
   const timeSync = await robot.timeSync;
+  const endTime = secondsToTimestamp(cmdEndTime);
 
   const cmdId = await dockingClient.dockingCommand(
     dockId,
-    await timeSync.endpoint.clockIdentifier,
-    await timeSync.robotTimestampFromLocalSecs(cmdEndTime),
+    timeSync.endpoint.clockIdentifier,
+    endTime,
     dockingPb.PrepPoseBehavior.PREP_POSE_ONLY_POSE,
   );
 
@@ -324,25 +329,26 @@ async function blockingGoToPrepPose(robot, dockId, timeout = 20_000) {
 
 /**
  * Blocking helper that undocks the robot from the currently docked dock.
- * @param  {Robot} robot The instance of the robot to control.
- * @param  {number} [timeout=20_000] Timeout in milliseconds
+ * @param {Robot} robot The instance of the robot to control.
+ * @param {number} [timeout=20_000] Timeout in milliseconds
  * @returns {Promise<void>}
  */
 async function blockingUndock(robot, timeout = 20_000) {
   /** @type {DockingClient} */
   const dockingClient = await robot.ensureClient(DockingClient.defaultServiceName);
 
-  const converter = (await robot.timeSync).getRobotTimeConverter();
+  const converter = await (await robot.timeSync).getRobotTimeConverter();
   const startTime = converter.robotSecondsFromLocalSeconds(nowSec());
   const cmdEndTime = startTime + timeout;
   const cmdTimeout = cmdEndTime + 10_000;
 
   const timeSync = await robot.timeSync;
+  const endTime = secondsToTimestamp(cmdEndTime);
 
   const cmdId = await dockingClient.dockingCommand(
     0,
-    await timeSync.endpoint.clockIdentifier,
-    await timeSync.robotTimestampFromLocalSecs(cmdEndTime),
+    timeSync.endpoint.clockIdentifier,
+    endTime,
     dockingPb.PrepPoseBehavior.PREP_POSE_UNDOCK,
   );
 
