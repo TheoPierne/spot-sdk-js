@@ -2,12 +2,12 @@
 
 const { Buffer } = require('node:buffer');
 const cv = require('@u4/opencv4nodejs');
-const { ImageClient } = require('../../bosdyn-client/image');
 
-const { LeaseClient, LeaseKeepAlive } = require('../../bosdyn-client/lease');
-const { RobotCommandClient, RobotCommandBuilder, blocking_stand } = require('../../bosdyn-client/robot_command');
-const { EulerZXY } = require('../../bosdyn-core/geometry');
-const client = require('../../index');
+const { ImageClient } = require('../../src/bosdyn-client/image');
+const { LeaseClient, LeaseKeepAlive } = require('../../src/bosdyn-client/lease');
+const { RobotCommandClient, RobotCommandBuilder, blockingStand } = require('../../src/bosdyn-client/robot_command');
+const { EulerZXY } = require('../../src/bosdyn-core/geometry');
+const { createStandardSdk } = require('../../src/index');
 
 class MyRobot {
   constructor() {
@@ -27,13 +27,13 @@ class MyRobot {
      * A handle to the lease for the robot connected
      * @type {LeaseClient}
      */
-    this._lease_client = null;
+    this._leaseClient = null;
 
     /**
      * A handle to the lease for the robot connected
      * @type {LeaseKeepAlive}
      */
-    this._lease_keep_alive = null;
+    this._leaseKeepAlive = null;
   }
 
   /**
@@ -42,15 +42,15 @@ class MyRobot {
    * @returns {Promise<void>}
    */
   async connect(config) {
-    const sdk_name = 'MySpot_sdk';
+    const sdkName = 'MySpot_sdk';
 
     // Util.setup_logging(config.verbose)
 
     // Create the SDK
-    this._sdk = client.sdk.create_standard_sdk(sdk_name);
+    this._sdk = createStandardSdk(sdkName);
 
     // Use the SDK to create a robot
-    this._robot = this._sdk.create_robot(config.hostname);
+    this._robot = this._sdk.createRobot(config.hostname);
     // Bosdyn.client.util.authenticate(self._robot); new version of auth
 
     // Old version of auth
@@ -59,35 +59,36 @@ class MyRobot {
 
   /**
    * Get an image from the front left camera
-   * @returns {Array}
+   * @returns {Promise<any>}
    */
-  async get_image() {
+  async getImage() {
     if (this._robot === null) return 0;
 
     // Get image data from robot
-    const image_client = await this._robot.ensure_client(ImageClient.default_service_name);
-    const image_response = await image_client.get_image_from_sources(['frontleft_fisheye_image']);
+    /** @type {ImageClient} */
+    const imageClient = await this._robot.ensureClient(ImageClient.defaultServiceName);
+    const imageResponse = await imageClient.getImageFromSources(['frontleft_fisheye_image']);
 
     // Convert the image data to a buffer
-    const data = Buffer.from(image_response[0].getShot().getImage().getData_asB64(), 'base64');
+    const data = Buffer.from(imageResponse[0].getShot().getImage().getData_asB64(), 'base64');
     const img = cv.imdecode(data);
 
     // Rotate the image so it alight better with the real world
     const angle = 90;
-    const rot_img = this._rotate_bound(img, angle);
-    return rot_img;
+    return this._rotateBound(img, angle);
   }
 
   /**
    * Ask Spot to stand up
    * @returns {Promise<void>}
    */
-  async stand_up() {
+  async standUp() {
     if (this._robot === null) return;
 
-    if (await this._prep_for_motion()) {
-      const command_client = await this._robot.ensure_client(RobotCommandClient.default_service_name);
-      await blocking_stand(command_client, 10_000);
+    if (await this._prepForMotion()) {
+      /** @type {RobotCommandClient} */
+      const commandClient = await this._robot.ensureClient(RobotCommandClient.defaultServiceName);
+      await blockingStand(commandClient, 10_000);
     }
   }
 
@@ -95,13 +96,14 @@ class MyRobot {
    * Ask Spot to sit down
    * @returns {Promise<void>}
    */
-  async sit_down() {
+  async sitDown() {
     if (this._robot === null) return;
 
-    if (await this._prep_for_motion()) {
-      const command_client = await this._robot.ensure_client(RobotCommandClient.default_service_name);
-      const cmd = RobotCommandBuilder.synchro_sit_command();
-      await command_client.robot_command(cmd);
+    if (await this._prepForMotion()) {
+      /** @type {RobotCommandClient} */
+      const commandClient = await this._robot.ensureClient(RobotCommandClient.defaultServiceName);
+      const cmd = RobotCommandBuilder.synchroSitCommand();
+      await commandClient.robotCommand(cmd);
     }
   }
 
@@ -115,45 +117,47 @@ class MyRobot {
   async orient(yaw = 0.0, pitch = 0.0, roll = 0.0) {
     if (this._robot === null) return;
 
-    if (await this._prep_for_motion()) {
+    if (await this._prepForMotion()) {
       const rotation = new EulerZXY(yaw, pitch, roll);
-      const command_client = await this._robot.ensure_client(RobotCommandClient.default_service_name);
-      const cmd = RobotCommandBuilder.synchro_stand_command(undefined, undefined, rotation);
-      await command_client.robot_command(cmd);
+      /** @type {RobotCommandClient} */
+      const commandClient = await this._robot.ensureClient(RobotCommandClient.defaultServiceName);
+      const cmd = RobotCommandBuilder.synchroStandCommand({ footprintRBody: rotation });
+      await commandClient.robotCommand(cmd);
     }
   }
 
   /**
    * Prepare the robot for motion
    * @returns {Promise<boolean>} true if robot is ready for motion command; false otherwise
+   * @private
    */
-  async _prep_for_motion() {
+  async _prepForMotion() {
     if (this._robot === null) return false;
 
     // Establish time sync with the robot
-    await (await this._robot.time_sync).wait_for_sync();
+    await (await this._robot.timeSync).waitForSync();
 
     // Verify the robot is not estopped
     console.assert(
-      !(await this._robot.is_estopped()),
+      !(await this._robot.isEstopped()),
       'Robot is estopped. Please use an external E-Stop client, such as the estop SDK example, to configure E-Stop.',
     );
 
     // Acquire a lease to indicate that we want to control the robot
-    if (this._lease_client === null) {
-      this._lease_client = await this._robot.ensure_client(LeaseClient.default_service_name);
-      await this._lease_client.acquire();
-      this._lease_keep_alive = new LeaseKeepAlive(this._lease_client);
-      await this._lease_keep_alive.init();
+    if (this._leaseClient === null) {
+      this._leaseClient = await this._robot.ensureClient(LeaseClient.defaultServiceName);
+      await this._leaseClient.acquire();
+      this._leaseKeepAlive = new LeaseKeepAlive(this._leaseClient);
+      await this._leaseKeepAlive.waitForInitialization();
     }
 
     // Power the motor on
-    if (await !this._robot.is_powered_on()) await this._robot.power_on(20_000);
+    if (await !this._robot.isPoweredOn()) await this._robot.powerOn(20_000);
 
-    return this._robot.is_powered_on();
+    return this._robot.isPoweredOn();
   }
 
-  _rotate_bound(image, angle) {
+  _rotateBound(image, angle) {
     const [h, w] = image.sizes;
     const [cX, cY] = [Math.round(w / 2), Math.round(h / 2)];
 

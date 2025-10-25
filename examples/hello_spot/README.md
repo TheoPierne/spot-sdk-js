@@ -34,5 +34,5 @@ npm install
 To run the example:
 
 ```
-node hello_spot.js --username USERNAME --password PASSWORD ROBOT_IP
+node hello_spot.js --username USERNAME --password PASSWORD ROBOT_HOSTNAME
 ```

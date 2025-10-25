@@ -20,11 +20,11 @@ const {
 } = require('@nodegui/nodegui');
 const argparse = require('argparse');
 
+const estop_pb = require('../../bosdyn/api/estop_pb');
 const { EstopEndpoint, EstopKeepAlive, EstopClient } = require('../../bosdyn-client/estop');
 const { LoggerUtil } = require('../../bosdyn-client/loggerUtil');
 
 const util = require('../../bosdyn-client/util');
-const estop_pb = require('../../bosdyn/api/estop_pb');
 const client = require('../../index');
 
 const STOP_BUTTON_STYLESHEET =
@@ -62,7 +62,8 @@ class EstopGui extends QMainWindow {
     // Configure UI.
     this.setCentralWidget(new QWidget());
     this.center_layout = new QBoxLayout(0);
-    this.center_layout.addWidget(this.centralWidget);
+    this.centralWidget().setLayout(this.center_layout);
+
     // This.center_layout.setAlignment(AlignmentFlag.AlignTop);
     this.center_layout.setSpacing(1);
     this.center_layout.setContentsMargins(1, 1, 1, 1);
@@ -235,11 +236,12 @@ function status_response_to_markup(status, my_id = null) {
  * @returns {Array<QApplication, EstopGui>}
  */
 function build_app(hostname, estop_client, timeout_sec) {
-  const qt_app = new QApplication(process.argv);
+  // Const qt_app = new QWidget();
+  const qt_app = QApplication.instance();
 
-  const icon_path = path.join(process.cwd(), 'resources', 'stop-sign.png');
-  // Const icon = new QIcon(icon_path);
-  // qt_app.setWindowIcon(icon);
+  /* Const icon_path = path.join(process.cwd(), 'resources', 'stop-sign.png');
+  const icon = new QIcon(icon_path);
+  qt_app.setWindowIcon(icon);*/
 
   // Setting the taskbar icon in windows. See https://stackoverflow.com/a/1552105
   if (process.platform === 'win32') {
@@ -259,8 +261,8 @@ function build_app(hostname, estop_client, timeout_sec) {
  */
 function run_app(qt_app, button_window) {
   button_window.show();
-  const retcode = qt_app.exec();
-  button_window.quit();
+  const retcode = 0; // Qt_app.exec();
+  // button_window.quit();
   return retcode;
 }
 
@@ -302,7 +304,7 @@ function build_and_run_app(hostname, estop_client, options) {
 }
 
 async function main(args = null) {
-  const parser = argparse.ArgumentParser();
+  const parser = new argparse.ArgumentParser();
   util.add_common_arguments(parser);
   parser.add_argument('-t', '--timeout', { default: 5, type: 'float', help: 'Timeout in seconds' });
   parser.add_argument('--no-on-top', {
@@ -328,7 +330,7 @@ async function main(args = null) {
   await robot.authenticate(options.username, options.password);
 
   // Create estop client for the robot
-  const estop_client = await robot.ensure_client(EstopClient.default_service_name);
+  const estop_client = await robot.ensureClient(EstopClient.defaultServiceName);
 
   // Process.exit(build_and_run_app(options.hostname, estop_client, options));
   build_and_run_app(options.hostname, estop_client, options);
