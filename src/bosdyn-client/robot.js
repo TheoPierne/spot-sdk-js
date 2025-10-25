@@ -29,6 +29,10 @@ const _DEFAULT_SECURE_CHANNEL_PORT = 443;
  * @typedef {import('@grpc/grpc-js').Channel} GrpcChannel
  */
 
+/**
+ * @typedef {import('../bosdyn/api/directory_pb').ServiceEntry} ServiceEntry
+ */
+
 class RobotError extends Error {
   constructor(msg) {
     super(msg);
@@ -422,10 +426,6 @@ class Robot {
   }
 
   /**
-   * @typedef {import('@grpc/grpc-js').Channel} GrpcChannel
-   */
-
-  /**
    * Verify the right information exists before calling the ensureSecureChannel method.
    * @param  {string}  serviceName Name of the service in the directory.
    * @param  {boolean} [secure=true] Create a secure channel or not.
@@ -541,7 +541,7 @@ class Robot {
    * @param {?PayloadRegistrationClient} payloadRegistrationClient Instance of PayloadRegistrationClient
    * @param {?number} timeout An optional timeout value for the operation.
    */
-  async authenticateFromPayloadCredentials(guid, secret, payloadRegistrationClient = null, timeout = null) {
+  async authenticateFromPayloadCredentials(guid, secret, payloadRegistrationClient = null, timeout = null, retryInterval = 1000) {
     let printedWarning = false;
 
     if (payloadRegistrationClient === null) {
@@ -562,7 +562,7 @@ class Robot {
           }
         }
       }
-      await sleep(100);
+      await sleep(retryInterval);
     }
     /* eslint-enable no-await-in-loop */
     this.updateUserToken(userToken);
@@ -605,7 +605,7 @@ class Robot {
 
   /**
    * Get all the available services on the robot.
-   * @returns {Promise<directoryPb.ServiceEntry[]>}
+   * @returns {Promise<ServiceEntry[]>}
    */
   async listServices() {
     /** @type {DirectoryClient} */
@@ -624,12 +624,11 @@ class Robot {
 
   /**
    * Alternate version of syncWithDirectory() that takes the list of services directly and does not perform any rpcs.
-   * @param {directoryPb.ServiceEntry[]} servicesList The services list to sync with.
+   * @param {ServiceEntry[]} servicesList The services list to sync with.
    * @returns {Object<string, string>}
    */
   syncWithServicesList(servicesList) {
     for (const service of servicesList) {
-      console.log(service.getName());
       this.authoritiesByName[service.getName()] = service.getAuthority();
       this.serviceTypeByName[service.getName()] = service.getType();
     }
@@ -643,7 +642,7 @@ class Robot {
    * @param {string} secret The secret key associated with the payload, used for authentication.
    * @param {?number} timeout An optional timeout value for the operation.
    */
-  async registerPayloadAndAuthenticate(payload, secret, timeout = null) {
+  async registerPayloadAndAuthenticate(payload, secret, timeout = null, authRetryInterval = 1000) {
     /** @type {PayloadRegistrationClient} */
     const payloadRegistrationClient = await this.ensureClient(PayloadRegistrationClient.defaultServiceName);
     try {
@@ -651,7 +650,7 @@ class Robot {
     } catch (e) {
       // Pass
     }
-    await this.authenticateFromPayloadCredentials(payload.getGuid(), secret, payloadRegistrationClient, timeout);
+    await this.authenticateFromPayloadCredentials(payload.getGuid(), secret, payloadRegistrationClient, timeout, authRetryInterval);
   }
 
   /**
