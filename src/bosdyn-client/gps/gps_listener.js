@@ -9,6 +9,7 @@ const { AggregatorClient } = require('./aggregator_client');
 const gpsPb = require('../../bosdyn/api/gps/gps_pb');
 const { ProxyConnectionError } = require('../exceptions');
 const { UnregisteredServiceNameError } = require('../robot');
+const { NtripClient } = require('./ntrip_client');
 
 class NMEAStreamReader {
   static LOG_THROTTLE_TIME = 2_000;
@@ -60,10 +61,26 @@ class GpsListener {
     this.logger = logger;
     this.robot = robot;
     this.timeConverter = timeConverter;
+    this.stream = stream
     this.reader = new NMEAStreamReader(logger, stream, bodyTformGps);
     this.gpsDevice = new gpsPb.GpsDevice();
     this.gpsDevice.setName(name);
     this.aggregatorClient = null;
+    this.ntripClient = null;
+  }
+  
+  runNtripClient(ntripParams) {
+    this.ntripClient = new NtripClient(this.stream, ntripParams, this.logger);
+    this.ntripClient.startStream();
+  }
+  
+  stopNtripClient() {
+    if (this.ntripClient === null) {
+      return;
+    }
+    
+    this.ntripClient.stopStream();
+    this.ntripClient = null;
   }
 
   async run() {
@@ -105,7 +122,7 @@ class GpsListener {
     let accumulatedData = [];
     let agg = null;
 
-    this.logger.info('Looping');
+    this.logger.info('Listening for GPS data.');
     try {
       for (;;) {
         let newData;
@@ -143,10 +160,24 @@ class GpsListener {
         } else {
           timePassedSinceLastRpc = Date.now() - timestampOfLastRpc;
         }
+        
+        if (this.ntripClient !== null) {
+          if (!this.ntripClient.isStreaming()) {
+            this.logger.info('Restarting NTRIP Client !');
+            this.ntripClient.startStream();
+          }
+          
+          const latestGga = this.reader.getLatestGga();
+          if (latestGga) {
+            this.ntripClient.handleNmeaGga(latestGga);
+          }
+        }        
       }
     } catch (err) {
       console.log();
       process.exit(0);
+    } finally {
+      this.stopNtripClient();
     }
   }
 }
