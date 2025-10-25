@@ -14,10 +14,14 @@ const parameterPb = require('../bosdyn/api/parameter_pb');
 class InvalidArgument extends Error {}
 
 /**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
  * Add an Event to the Data Buffer.
  * @param {Robot} robot A Robot object.
  * @param {string} eventType The type of event.
- * @param {Event.Level} level The relative importance of the event.
+ * @param {dataBufferProtos.Event.Level} level The relative importance of the event.
  * @param {string} description A human-readable description of the event.
  * @param {number|Date} startTimestampSecs Start of the event, in local time.
  * @param {number|Date} endTimestampSecs End of the event.  start_timestamp_secs is used if None.
@@ -37,15 +41,18 @@ async function logEvent(
   parameters = null,
   logPreserveHint = dataBufferProtos.Event.LogPreserveHint.LOG_PRESERVE_HINT_NORMAL,
 ) {
+  /** @type {DataBufferClient} */
   const dataBufferClient = await robot.ensureClient(DataBufferClient.defaultServiceName);
 
   if (!idStr) idStr = uuid1();
+  
+  const timeSync = await robot.timeSync;
 
-  await (await robot.timeSync).waitForSync();
-  const robotStartTimestamp = await (await robot.timeSync).robotTimestampFromLocalSecs(startTimestampSecs);
+  await timeSync.waitForSync();
+  const robotStartTimestamp = await timeSync.robotTimestampFromLocalSecs(startTimestampSecs);
   let robotEndTimestamp;
   if (endTimestampSecs) {
-    robotEndTimestamp = await (await robot.timeSync).robotTimestampFromLocalSecs(endTimestampSecs);
+    robotEndTimestamp = await timeSync.robotTimestampFromLocalSecs(endTimestampSecs);
   } else {
     robotEndTimestamp = robotStartTimestamp;
   }
@@ -61,7 +68,7 @@ async function logEvent(
   const event = new dataBufferProtos.Event()
     .setType(eventType)
     .setDescription(description)
-    .setSource(robot.client_name)
+    .setSource(robot.clientName)
     .setId(idStr)
     .setStartTime(robotStartTimestamp)
     .setEndTime(robotEndTimestamp)
@@ -120,6 +127,9 @@ class DataBufferClient extends BaseClient {
     this._timesyncEndpoint = null;
   }
 
+  /**
+   * @param {Robot} other 
+   */
   async updateFrom(other) {
     super.updateFrom(other);
     try {
@@ -281,8 +291,9 @@ class DataBufferClient extends BaseClient {
    * @private
    */
   _saveSchemaId(schema, response) {
-    this.logTickSchemas[response.getSchemaId()] = schema;
-    return response.getSchemaId();
+    const schemaId = response.getSchemaId();
+    this.logTickSchemas[schemaId] = schema;
+    return schemaId;
   }
 
   /**
