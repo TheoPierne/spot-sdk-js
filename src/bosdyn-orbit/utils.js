@@ -1,6 +1,8 @@
 'use strict';
 
 const process = require('node:process');
+const readline = require('node:readline');
+
 const { OrbitClient } = require('./client');
 
 const API_TOKEN_ENV_VAR = 'BOSDYN_ORBIT_CLIENT_API_TOKEN';
@@ -8,19 +10,31 @@ const DEFAULT_MAX_MESSAGE_AGE_MS = 5 * 60 * 1000;
 
 /**
  * Obtains an API token from an environment variable
- * @returns {string}
+ * @returns {Promise<string|null>}
  */
 function getApiToken() {
   const apiToken = process.env[API_TOKEN_ENV_VAR];
 
   if (!apiToken) {
-    throw new Error(
-      // eslint-disable-next-line max-len
-      `No API token found in environment variables. Please add your token in your environment variables with this key: "${API_TOKEN_ENV_VAR}"`,
-    );
+    if (process.stdin.isTTY) {
+      return new Promise((resolve) => {
+        const rl = readline.createInterface({
+          input: process.stdin,
+          output: process.stderr,
+          terminal: true,
+        });
+        
+        rl.question('API Token: ', (answer) => {
+          rl.close();
+          resolve(answer.trim());
+        });
+      });
+    } else {
+      return Promise.resolve(null);
+    }
   }
 
-  return apiToken;
+  return Promise.resolve(apiToken);
 }
 
 /**
