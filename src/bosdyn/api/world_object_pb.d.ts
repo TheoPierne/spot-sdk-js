@@ -46,6 +46,11 @@ export class WorldObject extends jspb.Message {
     getApriltagProperties(): AprilTagProperties | undefined;
     setApriltagProperties(value?: AprilTagProperties): WorldObject;
 
+    hasTrackedEntityProperties(): boolean;
+    clearTrackedEntityProperties(): void;
+    getTrackedEntityProperties(): TrackedEntityProperties | undefined;
+    setTrackedEntityProperties(value?: TrackedEntityProperties): WorldObject;
+
     hasNogoRegionProperties(): boolean;
     clearNogoRegionProperties(): void;
     getNogoRegionProperties(): NoGoRegionProperties | undefined;
@@ -105,6 +110,7 @@ export namespace WorldObject {
         objectLifetime?: google_protobuf_duration_pb.Duration.AsObject,
         drawablePropertiesList: Array<DrawableProperties.AsObject>,
         apriltagProperties?: AprilTagProperties.AsObject,
+        trackedEntityProperties?: TrackedEntityProperties.AsObject,
         nogoRegionProperties?: NoGoRegionProperties.AsObject,
         imageProperties?: ImageProperties.AsObject,
         dockProperties?: DockProperties.AsObject,
@@ -526,6 +532,88 @@ export namespace BoundingBoxProperties {
     }
 }
 
+export class TrackedEntityProperties extends jspb.Message { 
+    getEntityId(): number;
+    setEntityId(value: number): TrackedEntityProperties;
+    getEntityType(): TrackedEntityProperties.EntityType;
+    setEntityType(value: TrackedEntityProperties.EntityType): TrackedEntityProperties;
+    getFrame(): string;
+    setFrame(value: string): TrackedEntityProperties;
+
+    hasSizeInFrame(): boolean;
+    clearSizeInFrame(): void;
+    getSizeInFrame(): bosdyn_api_geometry_pb.Vec3 | undefined;
+    setSizeInFrame(value?: bosdyn_api_geometry_pb.Vec3): TrackedEntityProperties;
+    getVelocityFrame(): string;
+    setVelocityFrame(value: string): TrackedEntityProperties;
+
+    hasVelocity(): boolean;
+    clearVelocity(): void;
+    getVelocity(): bosdyn_api_geometry_pb.Vec3 | undefined;
+    setVelocity(value?: bosdyn_api_geometry_pb.Vec3): TrackedEntityProperties;
+    getLikelihoodExists(): number;
+    setLikelihoodExists(value: number): TrackedEntityProperties;
+
+    getTypeLikelihoodsMap(): jspb.Map<number, number>;
+    clearTypeLikelihoodsMap(): void;
+    getNumObservations(): number;
+    setNumObservations(value: number): TrackedEntityProperties;
+    getMaxObservedVelocity(): number;
+    setMaxObservedVelocity(value: number): TrackedEntityProperties;
+
+    hasWindowedAverageVelocity(): boolean;
+    clearWindowedAverageVelocity(): void;
+    getWindowedAverageVelocity(): bosdyn_api_geometry_pb.Vec3 | undefined;
+    setWindowedAverageVelocity(value?: bosdyn_api_geometry_pb.Vec3): TrackedEntityProperties;
+    getVelocityWindowSizeSeconds(): number;
+    setVelocityWindowSizeSeconds(value: number): TrackedEntityProperties;
+    getWindowedVelocityMagnitude(): number;
+    setWindowedVelocityMagnitude(value: number): TrackedEntityProperties;
+
+    hasDirectionInVision(): boolean;
+    clearDirectionInVision(): void;
+    getDirectionInVision(): bosdyn_api_geometry_pb.Vec3 | undefined;
+    setDirectionInVision(value?: bosdyn_api_geometry_pb.Vec3): TrackedEntityProperties;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): TrackedEntityProperties.AsObject;
+    static toObject(includeInstance: boolean, msg: TrackedEntityProperties): TrackedEntityProperties.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: TrackedEntityProperties, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TrackedEntityProperties;
+    static deserializeBinaryFromReader(message: TrackedEntityProperties, reader: jspb.BinaryReader): TrackedEntityProperties;
+}
+
+export namespace TrackedEntityProperties {
+    export type AsObject = {
+        entityId: number,
+        entityType: TrackedEntityProperties.EntityType,
+        frame: string,
+        sizeInFrame?: bosdyn_api_geometry_pb.Vec3.AsObject,
+        velocityFrame: string,
+        velocity?: bosdyn_api_geometry_pb.Vec3.AsObject,
+        likelihoodExists: number,
+
+        typeLikelihoodsMap: Array<[number, number]>,
+        numObservations: number,
+        maxObservedVelocity: number,
+        windowedAverageVelocity?: bosdyn_api_geometry_pb.Vec3.AsObject,
+        velocityWindowSizeSeconds: number,
+        windowedVelocityMagnitude: number,
+        directionInVision?: bosdyn_api_geometry_pb.Vec3.AsObject,
+    }
+
+    export enum EntityType {
+    ENTITY_TYPE_UNKNOWN = 0,
+    ENTITY_TYPE_3D_BLOB = 1,
+    ENTITY_TYPE_PERSON = 2,
+    ENTITY_TYPE_FORKLIFT = 3,
+    ENTITY_TYPE_SPOT = 4,
+    }
+
+}
+
 export class DrawableProperties extends jspb.Message { 
 
     hasColor(): boolean;
@@ -893,6 +981,7 @@ export enum WorldObjectType {
     WORLD_OBJECT_APRILTAG = 2,
     WORLD_OBJECT_IMAGE_COORDINATES = 5,
     WORLD_OBJECT_DOCK = 6,
+    WORLD_OBJECT_TRACKED_ENTITY = 7,
     WORLD_OBJECT_USER_NOGO = 8,
     WORLD_OBJECT_STAIRCASE = 9,
 }

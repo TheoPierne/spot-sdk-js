@@ -940,6 +940,153 @@ export namespace StopBehaviorResponse {
 
 }
 
+export class AddOrModifyBehaviorRequest extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.RequestHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.RequestHeader): AddOrModifyBehaviorRequest;
+    getName(): string;
+    setName(value: string): AddOrModifyBehaviorRequest;
+
+    hasBehavior(): boolean;
+    clearBehavior(): void;
+    getBehavior(): AudioVisualBehavior | undefined;
+    setBehavior(value?: AudioVisualBehavior): AddOrModifyBehaviorRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): AddOrModifyBehaviorRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: AddOrModifyBehaviorRequest): AddOrModifyBehaviorRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: AddOrModifyBehaviorRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): AddOrModifyBehaviorRequest;
+    static deserializeBinaryFromReader(message: AddOrModifyBehaviorRequest, reader: jspb.BinaryReader): AddOrModifyBehaviorRequest;
+}
+
+export namespace AddOrModifyBehaviorRequest {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.RequestHeader.AsObject,
+        name: string,
+        behavior?: AudioVisualBehavior.AsObject,
+    }
+}
+
+export class AddOrModifyBehaviorResponse extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.ResponseHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.ResponseHeader): AddOrModifyBehaviorResponse;
+    getStatus(): AddOrModifyBehaviorResponse.Status;
+    setStatus(value: AddOrModifyBehaviorResponse.Status): AddOrModifyBehaviorResponse;
+    clearDeprecatedInvalidFieldsList(): void;
+    getDeprecatedInvalidFieldsList(): Array<string>;
+    setDeprecatedInvalidFieldsList(value: Array<string>): AddOrModifyBehaviorResponse;
+    addDeprecatedInvalidFields(value: string, index?: number): string;
+    getErrorMessage(): string;
+    setErrorMessage(value: string): AddOrModifyBehaviorResponse;
+
+    hasLiveBehavior(): boolean;
+    clearLiveBehavior(): void;
+    getLiveBehavior(): LiveAudioVisualBehavior | undefined;
+    setLiveBehavior(value?: LiveAudioVisualBehavior): AddOrModifyBehaviorResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): AddOrModifyBehaviorResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: AddOrModifyBehaviorResponse): AddOrModifyBehaviorResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: AddOrModifyBehaviorResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): AddOrModifyBehaviorResponse;
+    static deserializeBinaryFromReader(message: AddOrModifyBehaviorResponse, reader: jspb.BinaryReader): AddOrModifyBehaviorResponse;
+}
+
+export namespace AddOrModifyBehaviorResponse {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.ResponseHeader.AsObject,
+        status: AddOrModifyBehaviorResponse.Status,
+        deprecatedInvalidFieldsList: Array<string>,
+        errorMessage: string,
+        liveBehavior?: LiveAudioVisualBehavior.AsObject,
+    }
+
+    export enum Status {
+    STATUS_UNKNOWN = 0,
+    STATUS_SUCCESS = 1,
+    STATUS_MODIFY_PERMANENT = 2,
+    STATUS_INVALID = 3,
+    }
+
+}
+
+export class DeleteBehaviorsRequest extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.RequestHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.RequestHeader): DeleteBehaviorsRequest;
+    clearBehaviorNamesList(): void;
+    getBehaviorNamesList(): Array<string>;
+    setBehaviorNamesList(value: Array<string>): DeleteBehaviorsRequest;
+    addBehaviorNames(value: string, index?: number): string;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): DeleteBehaviorsRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: DeleteBehaviorsRequest): DeleteBehaviorsRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: DeleteBehaviorsRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): DeleteBehaviorsRequest;
+    static deserializeBinaryFromReader(message: DeleteBehaviorsRequest, reader: jspb.BinaryReader): DeleteBehaviorsRequest;
+}
+
+export namespace DeleteBehaviorsRequest {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.RequestHeader.AsObject,
+        behaviorNamesList: Array<string>,
+    }
+}
+
+export class DeleteBehaviorsResponse extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.ResponseHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.ResponseHeader): DeleteBehaviorsResponse;
+    getStatus(): DeleteBehaviorsResponse.Status;
+    setStatus(value: DeleteBehaviorsResponse.Status): DeleteBehaviorsResponse;
+    clearDeletedBehaviorsList(): void;
+    getDeletedBehaviorsList(): Array<LiveAudioVisualBehavior>;
+    setDeletedBehaviorsList(value: Array<LiveAudioVisualBehavior>): DeleteBehaviorsResponse;
+    addDeletedBehaviors(value?: LiveAudioVisualBehavior, index?: number): LiveAudioVisualBehavior;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): DeleteBehaviorsResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: DeleteBehaviorsResponse): DeleteBehaviorsResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: DeleteBehaviorsResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): DeleteBehaviorsResponse;
+    static deserializeBinaryFromReader(message: DeleteBehaviorsResponse, reader: jspb.BinaryReader): DeleteBehaviorsResponse;
+}
+
+export namespace DeleteBehaviorsResponse {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.ResponseHeader.AsObject,
+        status: DeleteBehaviorsResponse.Status,
+        deletedBehaviorsList: Array<LiveAudioVisualBehavior.AsObject>,
+    }
+
+    export enum Status {
+    STATUS_UNKNOWN = 0,
+    STATUS_SUCCESS = 1,
+    STATUS_DOES_NOT_EXIST = 2,
+    STATUS_DELETE_PERMANENT = 3,
+    }
+
+}
+
 export class ListBehaviorsRequest extends jspb.Message { 
 
     hasHeader(): boolean;

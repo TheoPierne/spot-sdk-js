@@ -11,6 +11,50 @@
 var grpc = require('@grpc/grpc-js');
 var bosdyn_api_audio_visual_pb = require('../../bosdyn/api/audio_visual_pb.js');
 
+function serialize_bosdyn_api_AddOrModifyBehaviorRequest(arg) {
+  if (!(arg instanceof bosdyn_api_audio_visual_pb.AddOrModifyBehaviorRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.AddOrModifyBehaviorRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_AddOrModifyBehaviorRequest(buffer_arg) {
+  return bosdyn_api_audio_visual_pb.AddOrModifyBehaviorRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_AddOrModifyBehaviorResponse(arg) {
+  if (!(arg instanceof bosdyn_api_audio_visual_pb.AddOrModifyBehaviorResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.AddOrModifyBehaviorResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_AddOrModifyBehaviorResponse(buffer_arg) {
+  return bosdyn_api_audio_visual_pb.AddOrModifyBehaviorResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_DeleteBehaviorsRequest(arg) {
+  if (!(arg instanceof bosdyn_api_audio_visual_pb.DeleteBehaviorsRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.DeleteBehaviorsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_DeleteBehaviorsRequest(buffer_arg) {
+  return bosdyn_api_audio_visual_pb.DeleteBehaviorsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_DeleteBehaviorsResponse(arg) {
+  if (!(arg instanceof bosdyn_api_audio_visual_pb.DeleteBehaviorsResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.DeleteBehaviorsResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_DeleteBehaviorsResponse(buffer_arg) {
+  return bosdyn_api_audio_visual_pb.DeleteBehaviorsResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_bosdyn_api_GetSystemParamsRequest(arg) {
   if (!(arg instanceof bosdyn_api_audio_visual_pb.GetSystemParamsRequest)) {
     throw new Error('Expected argument of type bosdyn.api.GetSystemParamsRequest');
@@ -146,6 +190,33 @@ stopBehavior: {
     requestDeserialize: deserialize_bosdyn_api_StopBehaviorRequest,
     responseSerialize: serialize_bosdyn_api_StopBehaviorResponse,
     responseDeserialize: deserialize_bosdyn_api_StopBehaviorResponse,
+  },
+  // Add a new or modify an existing AudioVisualBehavior.
+// Before you consider adding your own AV behaviors, please consider that
+// the ‘solid lights on’ behavior can overheat the AV board if you leave
+// it on for too long with certain RGB values.
+addOrModifyBehavior: {
+    path: '/bosdyn.api.AudioVisualService/AddOrModifyBehavior',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_audio_visual_pb.AddOrModifyBehaviorRequest,
+    responseType: bosdyn_api_audio_visual_pb.AddOrModifyBehaviorResponse,
+    requestSerialize: serialize_bosdyn_api_AddOrModifyBehaviorRequest,
+    requestDeserialize: deserialize_bosdyn_api_AddOrModifyBehaviorRequest,
+    responseSerialize: serialize_bosdyn_api_AddOrModifyBehaviorResponse,
+    responseDeserialize: deserialize_bosdyn_api_AddOrModifyBehaviorResponse,
+  },
+  // Delete one or more AudioVisualBehaviors.
+deleteBehaviors: {
+    path: '/bosdyn.api.AudioVisualService/DeleteBehaviors',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_audio_visual_pb.DeleteBehaviorsRequest,
+    responseType: bosdyn_api_audio_visual_pb.DeleteBehaviorsResponse,
+    requestSerialize: serialize_bosdyn_api_DeleteBehaviorsRequest,
+    requestDeserialize: deserialize_bosdyn_api_DeleteBehaviorsRequest,
+    responseSerialize: serialize_bosdyn_api_DeleteBehaviorsResponse,
+    responseDeserialize: deserialize_bosdyn_api_DeleteBehaviorsResponse,
   },
   // List all AudioVisualBehaviors currently added to the AudioVisual Service.
 listBehaviors: {
