@@ -42,7 +42,7 @@
     "expandenv": "^1.0.0",
     "google-protobuf": "^3.21.2",
     "ip": "^1.1.8",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "luxon": "^3.4.0",
     "moment": "^2.29.4",
     "node-fetch": "^3.3.2",
