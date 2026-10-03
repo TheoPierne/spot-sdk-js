@@ -2,11 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-# 1.0.0 - 2026-10-03
+# 1.0.1 - 2026-10-03
 
 First stable release. The SDK follows the official Python SDK of Boston Dynamics (behavior and protobuf definitions
 of 5.2.0): each module was compared with its Python counterpart, function by function, and fixed or completed to
 behave the same way. The deliberate differences are described in the JSDoc.
+
+The version is 1.0.1 because npm does not allow 1.0.0 again: a beta was published under that number in 2021, then
+unpublished.
 
 ## Breaking Changes
 
