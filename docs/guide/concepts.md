@@ -81,7 +81,7 @@ lease or an E-Stop that does not check in on time is lost. Keep the event loop f
 [worker thread](https://nodejs.org/api/worker_threads.html).
 
 The helpers that run in the background have a `shutdown()` method that stops them: call it in a `finally` block.
-They also support `await using`, where the runtime supports it (Node.js 24 or later):
+They also support `await using`:
 
 ```js
 {

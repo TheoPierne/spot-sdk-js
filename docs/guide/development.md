@@ -24,9 +24,11 @@
 | `npm run test:typings` | Compiles `test/typings/usage.ts` in strict mode against the typings. |
 | `npm run build:docs` | Generates the typings, then the API reference (`docs/api/`) and `docs/changelog.md`. |
 | `npm run docs` | Serves the documentation on `http://localhost:3000`. |
+| `npm publish` | Runs the lint, the typings check and the tests first (`prepublishOnly`), then publishes `src/` and `typings/`. |
 | `npm run build` | Generates `src/bosdyn/` from the `.proto` files of the Spot SDK (`../spot-sdk-py/spot-sdk-5.2.0/protos`), with `grpc-tools`. |
 
-The CI runs the lint, the tests on Node.js 22 and 24, and checks that `typings/` is up to date.
+The CI runs the lint and the tests on Node.js 24, checks that `typings/` is up to date, and analyzes the code with
+CodeQL.
 
 ## Conventions
 

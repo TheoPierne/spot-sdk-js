@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# 1.0.0 - (unreleased)
+# 1.0.0 - 2026-10-03
 
 First stable release. The SDK follows the official Python SDK of Boston Dynamics (behavior and protobuf definitions
 of 5.2.0): each module was compared with its Python counterpart, function by function, and fixed or completed to
@@ -10,8 +10,8 @@ behave the same way. The deliberate differences are described in the JSDoc.
 
 ## Breaking Changes
 
-- Node.js 22 or later is required (`engines`), the oldest version still maintained and the one the CI tests with
-  Node.js 24. `engines` said 18, but the dependencies already required 20 (numjs) and even 22.22 (which).
+- Node.js 24 or later is required (`engines`), the version the CI tests. `engines` said 18, but the dependencies
+  already required 20 (numjs) and even 22.22 (which).
 - `src/bosdyn-client/loggerUtil.js` is renamed `logger_util.js`, like the other modules.
 - The loggers are at the `info` level by default (they were at `debug`), and write to stderr instead of stdout. The
   requests and responses of the RPCs are logged at the `debug` level only.
@@ -293,7 +293,8 @@ behave the same way. The deliberate differences are described in the JSDoc.
   ports.
 - Tooling: ESLint flat config with eslint-plugin-n, eslint-plugin-import and eslint-plugin-jsdoc, Prettier for the
   whole repository (`npm run lint`), `npm run build:typings` and `npm run test:typings`, LF line endings, and a CI
-  that runs the lint, the typings check and the tests on Node.js 22 and 24. tslint and dtslint are removed.
+  that runs the lint, the typings check and the tests on Node.js 24. `npm publish` runs the same checks first
+  (`prepublishOnly`). tslint and dtslint are removed.
 - `npm run docs` serves the documentation with docsify.
 - axios (Orbit) and sharp (images) are loaded when they are used, and the image viewers of the system are looked for
   at the first use of `image_util`: the package root loads every module in about the same time as before.

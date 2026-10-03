@@ -16,7 +16,7 @@ BDDF files, a command line and TypeScript typings.
 npm install spot-sdk-js
 ```
 
-Node.js 22 or later.
+Node.js 24 or later.
 
 ## Example
 

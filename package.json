@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "spot-sdk-js",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Develop applications and payloads for Spot using the unofficial Boston Dynamics Spot Node.js SDK.",
   "scripts": {
     "build": "node build.js",
@@ -11,6 +11,7 @@
     "lint:fix": "eslint . --fix",
     "test": "node test/run.js",
     "test:typings": "tsc -p test/typings/tsconfig.json",
+    "prepublishOnly": "npm run lint && npm run test:typings && npm test",
     "docs": "docsify serve docs",
     "count": "count-code-line -e /examples/*/node_modules,/typings,/test/node_modules,/docs"
   },
@@ -64,7 +65,7 @@
     "test": "test"
   },
   "author": "Théo Pierné <theo.pierne2@gmail.com>",
-  "license": "SEE LICENSE IN LICENSE FILE",
+  "license": "SEE LICENSE IN LICENSE",
   "keywords": [
     "spot",
     "boston dynamics",
@@ -117,6 +118,6 @@
     "typescript": "^6.0.3"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   }
 }

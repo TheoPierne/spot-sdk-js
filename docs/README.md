@@ -61,6 +61,6 @@ main().catch(error => {
 
 ## Status
 
-The SDK is not an official product of Boston Dynamics. It requires Node.js 22 or later. Its tests compare its
+The SDK is not an official product of Boston Dynamics. It requires Node.js 24 or later. Its tests compare its
 behavior with the Python SDK, and it can talk to a real robot or to a mock robot. Report the bugs and the
 differences with the Python SDK on [GitHub](https://github.com/TheoPierne/spot-sdk-js/issues).

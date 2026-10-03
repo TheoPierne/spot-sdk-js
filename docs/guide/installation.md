@@ -2,8 +2,8 @@
 
 ## Requirements
 
-- **Node.js 22 or later**, the oldest version of Node.js still maintained. The SDK is a CommonJS package; ES modules
-  import it too (see [TypeScript](/guide/typescript)).
+- **Node.js 24 or later**. The SDK is a CommonJS package; ES modules import it too (see
+  [TypeScript](/guide/typescript)).
 - A **Spot robot**, and a user of the robot (created in its admin console). By default, the robot is at
   `192.168.80.3` on its Wi-Fi access point, and at `10.0.0.3` on its Ethernet port.
 
