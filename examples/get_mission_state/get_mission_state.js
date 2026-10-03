@@ -11,14 +11,14 @@ const { createStandardSdk } = require('../../src/index');
 
 async function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
   const sdk = createStandardSdk('get_mission_state_example', [MissionClient]);
   const robot = sdk.createRobot(options.hostname);
 
-  await robot.authenticate(options.username, options.password);
+  await util.authenticate(robot);
   /** @type {MissionClient} */
   const clientMission = await robot.ensureClient(MissionClient.defaultServiceName);
 

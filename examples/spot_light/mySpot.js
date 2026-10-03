@@ -6,8 +6,14 @@ const cv = require('@u4/opencv4nodejs');
 const { ImageClient } = require('../../src/bosdyn-client/image');
 const { LeaseClient, LeaseKeepAlive } = require('../../src/bosdyn-client/lease');
 const { RobotCommandClient, RobotCommandBuilder, blockingStand } = require('../../src/bosdyn-client/robot_command');
+const { authenticate, setupLogging } = require('../../src/bosdyn-client/util');
 const { EulerZXY } = require('../../src/bosdyn-core/geometry');
 const { createStandardSdk } = require('../../src/index');
+
+/**
+ * @typedef {import('../../src/bosdyn-client/robot').Robot} Robot
+ * @typedef {import('../../src/bosdyn-client/sdk').Sdk} Sdk
+ */
 
 class MyRobot {
   constructor() {
@@ -34,6 +40,12 @@ class MyRobot {
      * @type {LeaseKeepAlive}
      */
     this._leaseKeepAlive = null;
+
+    /**
+     * The brightness from 0 to 255 that spot will respond to (--brightness_threshold, set by connect())
+     * @type {number}
+     */
+    this._brightnessThreshold = 250;
   }
 
   /**
@@ -44,17 +56,17 @@ class MyRobot {
   async connect(config) {
     const sdkName = 'MySpot_sdk';
 
-    // Util.setup_logging(config.verbose)
+    setupLogging(config.verbose);
 
     // Create the SDK
     this._sdk = createStandardSdk(sdkName);
 
     // Use the SDK to create a robot
     this._robot = this._sdk.createRobot(config.hostname);
-    // Bosdyn.client.util.authenticate(self._robot); new version of auth
+    await authenticate(this._robot);
 
-    // Old version of auth
-    await this._robot.authenticate(config.username, config.password);
+    // Set brightness_threshold
+    this._brightnessThreshold = config.brightness_threshold ?? this._brightnessThreshold;
   }
 
   /**
@@ -118,7 +130,8 @@ class MyRobot {
     if (this._robot === null) return;
 
     if (await this._prepForMotion()) {
-      const rotation = new EulerZXY(yaw, pitch, roll);
+      // EulerZXY takes (yaw, roll, pitch): the pitch and the roll were swapped.
+      const rotation = new EulerZXY(yaw, roll, pitch);
       /** @type {RobotCommandClient} */
       const commandClient = await this._robot.ensureClient(RobotCommandClient.defaultServiceName);
       const cmd = RobotCommandBuilder.synchroStandCommand({ footprintRBody: rotation });
@@ -169,8 +182,8 @@ class MyRobot {
     const sin = Math.abs(M.at(0, 1));
 
     // Compute the new bounding dimensions of the image
-    const nW = parseInt(h * sin + w * cos);
-    const nH = parseInt(h * cos + w * sin);
+    const nW = Math.trunc(h * sin + w * cos);
+    const nH = Math.trunc(h * cos + w * sin);
 
     // Adjust the rotation matrix to take into account translation
     M.set(0, 2, M.at(0, 2) + Math.round(nW / 2) - cX);

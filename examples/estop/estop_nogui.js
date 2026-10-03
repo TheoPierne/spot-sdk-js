@@ -6,58 +6,61 @@ const { setInterval } = require('node:timers');
 const argparse = require('argparse');
 const blessed = require('reblessed');
 
-const estop_pb = require('../../bosdyn/api/estop_pb');
-const robot_state_pb = require('../../bosdyn/api/robot_state_pb');
-const { EstopEndpoint, EstopKeepAlive, EstopClient, EndpointUnknownError } = require('../../bosdyn-client/estop');
-const { RobotStateClient } = require('../../bosdyn-client/robot_state');
-const util = require('../../bosdyn-client/util');
-const client = require('../../index');
+const robot_state_pb = require('../../src/bosdyn/api/robot_state_pb');
+const { EstopEndpoint, EstopKeepAlive, EstopClient, EndpointUnknownError } = require('../../src/bosdyn-client/estop');
+const { RobotStateClient } = require('../../src/bosdyn-client/robot_state');
+const util = require('../../src/bosdyn-client/util');
+const client = require('../../src/index');
 
 class EstopNoGui {
   constructor(robot_client, timeout_sec, name = null) {
-    const ep = new EstopEndpoint(robot_client, name, timeout_sec);
-    ep.force_simple_setup().then(() => {
-      this.estop_keep_alive = new EstopKeepAlive(ep);
-      this.estop_keep_alive.allow();
+    this.endpoint = new EstopEndpoint(robot_client, name, timeout_sec);
+    this.estop_keep_alive = null;
+  }
 
-      process.stdin.resume();
-      process.on('SIGINT', this.estop_keep_alive._end_periodic_check_in);
-    });
+  /**
+   * Force the robot to set up a single endpoint system, begin the periodic check-in and release the estop.
+   * Must be awaited before using the other methods.
+   */
+  async start() {
+    await this.endpoint.forceSimpleSetup();
+    this.estop_keep_alive = new EstopKeepAlive(this.endpoint);
+    await this.estop_keep_alive.allow();
   }
 
   stop() {
-    this.estop_keep_alive.stop();
+    return this.estop_keep_alive.stop();
   }
 
   allow() {
-    this.estop_keep_alive.allow();
+    return this.estop_keep_alive.allow();
   }
 
   settle_then_cut() {
-    this.estop_keep_alive.settle_then_cut();
+    return this.estop_keep_alive.settleThenCut();
   }
 }
 
 async function main(args = null) {
   const parser = new argparse.ArgumentParser();
-  util.add_common_arguments(parser);
+  util.addBaseArguments(parser);
   parser.add_argument('-t', '--timeout', { type: 'float', default: 5, help: 'Timeout in seconds' });
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
-  util.setup_logging(options.verbose);
+  util.setupLogging(options.verbose);
 
   // Create robot object
-  const sdk = client.sdk.create_standard_sdk('estop_nogui');
-  const robot = sdk.create_robot(options.hostname);
-  await robot.authenticate(options.username, options.password);
+  const sdk = client.createStandardSdk('estop_nogui');
+  const robot = sdk.createRobot(options.hostname);
+  await util.authenticate(robot);
 
   // Create estop client for the robot
   const estop_client = await robot.ensureClient(EstopClient.defaultServiceName);
 
-  // Create nogui estop
-  // Assuming timeout is in seconds.
-  const estop_nogui = new EstopNoGui(estop_client, options.timeout * 1000, 'Estop NoGUI');
+  // Create nogui estop. The estop timeout is in seconds, like the --timeout option.
+  const estop_nogui = new EstopNoGui(estop_client, options.timeout, 'Estop NoGUI');
+  await estop_nogui.start();
 
   // Create robot state client for the robot
   const state_client = await robot.ensureClient(RobotStateClient.defaultServiceName);
@@ -66,9 +69,9 @@ async function main(args = null) {
   const screen = blessed.screen({ fastCSR: true });
   screen.title = 'Bosdyn Spot EStop';
 
-  function cleanup_example(msg) {
+  function cleanup_example(_msg) {
     console.log('Exiting');
-    estop_nogui.estop_keep_alive.shutdown();
+    estop_nogui.estop_keep_alive?.shutdown();
 
     // Clean up and close blessed
     screen.destroy();
@@ -110,34 +113,26 @@ async function main(args = null) {
       clean_exit('Exit on user input');
     });
 
-    screen.key('space', () => {
-      try {
-        estop_nogui.stop();
-      } catch (e) {
-        if (e instanceof EndpointUnknownError) {
-          clean_exit('This estop endpoint no longer valid. Exiting...');
-        }
+    // The estop calls are async: their errors are rejections, a synchronous try/catch would miss them.
+    function on_estop_error(e) {
+      if (e instanceof EndpointUnknownError) {
+        clean_exit('This estop endpoint no longer valid. Exiting...');
+      } else {
+        box.setLine(8, `{red-fg}${e.message}{/red-fg}`);
+        screen.render();
       }
+    }
+
+    screen.key('space', () => {
+      estop_nogui.stop().catch(on_estop_error);
     });
 
     screen.key('r', () => {
-      try {
-        estop_nogui.allow();
-      } catch (e) {
-        if (e instanceof EndpointUnknownError) {
-          clean_exit('This estop endpoint no longer valid. Exiting...');
-        }
-      }
+      estop_nogui.allow().catch(on_estop_error);
     });
 
     screen.key('s', () => {
-      try {
-        estop_nogui.settle_then_cut();
-      } catch (e) {
-        if (e instanceof EndpointUnknownError) {
-          clean_exit('This estop endpoint no longer valid. Exiting...');
-        }
-      }
+      estop_nogui.settle_then_cut().catch(on_estop_error);
     });
 
     box.setLine(1, '[q] or [Ctrl-C]: Quit');
@@ -148,7 +143,15 @@ async function main(args = null) {
 
     setInterval(async () => {
       let estop_status = '{yellow-bg}{green-fg}NOT_STOPPED{/}';
-      const state = await state_client.get_robot_state();
+      let state;
+      try {
+        state = await state_client.getRobotState();
+      } catch (e) {
+        // An unhandled rejection would kill the process, and with it the estop check-ins.
+        box.setLine(6, `{red-fg}Robot state unavailable: ${e.message}{/red-fg}`);
+        screen.render();
+        return;
+      }
       const estop_states = state.getEstopStatesList();
       for (const estop_state of estop_states) {
         const state_str = Object.keys(robot_state_pb.EStopState.State)[estop_state.getState()];
@@ -165,8 +168,8 @@ async function main(args = null) {
       }
 
       // Display current estop status
-      if (!estop_nogui.estop_keep_alive.status_queue.empty()) {
-        const latest_status = estop_nogui.estop_keep_alive.status_queue.get()[1].trim();
+      if (!estop_nogui.estop_keep_alive.statusQueue.empty()) {
+        const latest_status = estop_nogui.estop_keep_alive.statusQueue.get()[1].trim();
         if (latest_status !== '') {
           // If you lose this estop endpoint, report it to user
           box.setLine(7, `{red-fg}${latest_status}{/red-fg}`);

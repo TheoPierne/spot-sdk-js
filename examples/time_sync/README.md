@@ -15,5 +15,5 @@ This example demonstrates how to use the timesync service to establish time sync
 To run the examples:
 
 ```sh {"id":"01J85K442H4HBCM6ZCJBVD8ATB"}
-node time_sync_client.js --username USERNAME --password PASSWORD ROBOT_IP
+node time_sync_client.js ROBOT_IP
 ```

@@ -15,7 +15,7 @@ const { createStandardSdk } = require('../../src/index');
 async function runDocking(config) {
   const sdk = createStandardSdk('DockingClient');
   const robot = sdk.createRobot(config.hostname);
-  await robot.authenticate(config.username, config.password);
+  await util.authenticate(robot);
 
   await (await robot.timeSync).waitForSync();
 
@@ -26,7 +26,8 @@ async function runDocking(config) {
 
   const features = await licenseClient.getFeatureEnabled([DockingClient.defaultServiceName]);
 
-  if (!features.has(DockingClient.defaultServiceName)) {
+  // The value of the feature, like Python: has() was true for a disabled feature.
+  if (!features.get(DockingClient.defaultServiceName)) {
     robot.logger.error('This robot is not licensed for docking.');
     process.exit(1);
   }
@@ -36,7 +37,7 @@ async function runDocking(config) {
 
   // To steal control away from another user to dock the robot, uncomment the line below.
   /* await leaseClient.take() */
-  // eslint-disable-next-line
+
   const leaseKeepAlive = new LeaseKeepAlive(leaseClient, { mustAcquire: true, returnAtExit: true });
   await leaseKeepAlive.waitForInitialization();
   await robot.powerOn();
@@ -62,7 +63,7 @@ async function runDocking(config) {
 
 async function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
   const group = parser.add_mutually_exclusive_group({ required: true });
   group.add_argument('--dock-id', { type: 'int', help: 'Docking station ID to dock at' });
   group.add_argument('--undock', { action: 'store_true', help: 'Undock, instead of docking.' });

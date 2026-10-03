@@ -13,14 +13,14 @@ async function main() {
   const commands = ['state', 'hardware', 'metrics', 'joints', 'frame_tree'];
 
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
   parser.add_argument('command', { choices: commands, help: 'Command to run' });
 
   const options = parser.parse_args();
 
   const sdk = createStandardSdk('RobotStateClient');
   const robot = sdk.createRobot(options.hostname);
-  await robot.authenticate(options.username, options.password);
+  await util.authenticate(robot);
   /** @type {RobotStateClient} */
   const robotStateClient = await robot.ensureClient(RobotStateClient.defaultServiceName);
 
@@ -35,7 +35,12 @@ async function main() {
     console.log(rep.toObject());
   } else if (options.command === 'joints') {
     const robotState = await robotStateClient.getRobotState();
-    console.log(robotState.getKinematicState().getJointStatesList().map(e => e.toObject()));
+    console.log(
+      robotState
+        .getKinematicState()
+        .getJointStatesList()
+        .map(e => e.toObject()),
+    );
   } else if (options.command === 'frame_tree') {
     const robotState = await robotStateClient.getRobotState();
     console.log(robotState.getKinematicState().getTransformsSnapshot().toObject());

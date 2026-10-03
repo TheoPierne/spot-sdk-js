@@ -17,77 +17,86 @@ const { RobotCommandClient, RobotCommandBuilder, blockingStand } = require('../.
 const { RobotStateClient } = require('../../src/bosdyn-client/robot_state');
 
 const util = require('../../src/bosdyn-client/util');
+const { nowSec } = require('../../src/bosdyn-core/util');
 
 const { createStandardSdk } = require('../../src/index');
 
 async function run(config) {
   const sdk = createStandardSdk('StanceClient');
   const robot = sdk.createRobot(config.hostname);
-  await robot.authenticate(config.username, config.password);
+  await util.authenticate(robot);
   await (await robot.timeSync).waitForSync();
 
   /** @type {LeaseClient} */
   const leaseClient = await robot.ensureClient(LeaseClient.defaultServiceName);
-  const leaseKeepAlive = new LeaseKeepAlive(leaseClient, { must_acquire: true, return_at_exit: true });
+  // camelCase options: must_acquire and return_at_exit were ignored (the lease was not returned).
+  const leaseKeepAlive = new LeaseKeepAlive(leaseClient, { mustAcquire: true, returnAtExit: true });
   await leaseKeepAlive.waitForInitialization();
+  // Ctrl-C (or an error) returns the lease, like the with block of Python.
+  process.once('SIGINT', () => {
+    leaseKeepAlive.shutdown().finally(() => process.exit(130));
+  });
 
-  /** @type {RobotCommandClient} */
-  const commandClient = await robot.ensureClient(RobotCommandClient.defaultServiceName);
-  /** @type {RobotStateClient} */
-  const robotStateClient = await robot.ensureClient(RobotStateClient.defaultServiceName);
-  const state = await robotStateClient.getRobotState();
+  try {
+    /** @type {RobotCommandClient} */
+    const commandClient = await robot.ensureClient(RobotCommandClient.defaultServiceName);
+    /** @type {RobotStateClient} */
+    const robotStateClient = await robot.ensureClient(RobotStateClient.defaultServiceName);
+    const state = await robotStateClient.getRobotState();
 
-  // This example ues the current body position, but you can specify any position.
-  // A common use is to specify it relative to something you know, like a fiducial.
-  const voTBody = getSe2ATformB(
-    state.getKinematicState().getTransformsSnapshot(),
-    VISION_FRAME_NAME,
-    GRAV_ALIGNED_BODY_FRAME_NAME,
-  );
+    // This example ues the current body position, but you can specify any position.
+    // A common use is to specify it relative to something you know, like a fiducial.
+    const voTBody = getSe2ATformB(
+      state.getKinematicState().getTransformsSnapshot(),
+      VISION_FRAME_NAME,
+      GRAV_ALIGNED_BODY_FRAME_NAME,
+    );
 
-  // Power On
-  await robot.powerOn();
-  console.assert(await robot.isPoweredOn(), 'Robot power on failed.');
+    // Power On
+    await robot.powerOn();
+    console.assert(await robot.isPoweredOn(), 'Robot power on failed.');
 
-  // Stand
-  await blockingStand(commandClient);
+    // Stand
+    await blockingStand(commandClient);
 
-  // #### Example stance offsets from body position. ####
-  const xOffset = config.x_offset;
-  const yOffset = config.y_offset;
+    // #### Example stance offsets from body position. ####
+    const xOffset = config.x_offset;
+    const yOffset = config.y_offset;
 
-  const posFlRtVision = voTBody.mult(new SE2Pose(xOffset, yOffset, 0));
-  const posFrRtVision = voTBody.mult(new SE2Pose(xOffset, -yOffset, 0));
-  const posHlRtVision = voTBody.mult(new SE2Pose(-xOffset, yOffset, 0));
-  const posHrRtVision = voTBody.mult(new SE2Pose(-xOffset, -yOffset, 0));
+    const posFlRtVision = voTBody.mult(new SE2Pose(xOffset, yOffset, 0));
+    const posFrRtVision = voTBody.mult(new SE2Pose(xOffset, -yOffset, 0));
+    const posHlRtVision = voTBody.mult(new SE2Pose(-xOffset, yOffset, 0));
+    const posHrRtVision = voTBody.mult(new SE2Pose(-xOffset, -yOffset, 0));
 
-  const stanceCmd = RobotCommandBuilder.stanceCommand(
-    VISION_FRAME_NAME,
-    posFlRtVision.position,
-    posFrRtVision.position,
-    posHlRtVision.position,
-    posHrRtVision.position,
-  );
+    const stanceCmd = RobotCommandBuilder.stanceCommand(
+      VISION_FRAME_NAME,
+      posFlRtVision.position,
+      posFrRtVision.position,
+      posHlRtVision.position,
+      posHrRtVision.position,
+    );
 
-  console.log('After stance adjustment, press Ctrl-C to sit Spot and turn off motors.');
+    console.log('After stance adjustment, press Ctrl-C to sit Spot and turn off motors.');
 
-  /* eslint-disable no-constant-condition, no-await-in-loop */
+    while (true) {
+      // Update end time
+      // In seconds (Date.now() + 5_000 was an end time 55 000 years away).
+      const time = await (await robot.timeSync).robotTimestampFromLocalSecs(nowSec() + 5);
 
-  while (true) {
-    // Update end time
-    const time = await (await robot.timeSync).robotTimestampFromLocalSecs(Date.now() + 5_000);
-    // eslint-disable-next-line
-    stanceCmd.getSynchronizedCommand().getMobilityCommand().getStanceRequest().setEndTime(time);
-    // Send the command
-    await commandClient.robotCommand(stanceCmd);
+      stanceCmd.getSynchronizedCommand().getMobilityCommand().getStanceRequest().setEndTime(time);
+      // Send the command
+      await commandClient.robotCommand(stanceCmd);
 
-    await sleep(1_000);
+      await sleep(1_000);
+    }
+  } finally {
+    await leaseKeepAlive.shutdown();
   }
 }
 
 function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
   parser.add_argument('--x-offset', { default: 0.3, type: 'float', help: 'Offset in X for Spot to step' });
   parser.add_argument('--y-offset', { default: 0.3, type: 'float', help: 'Offset in Y for Spot to step' });
 

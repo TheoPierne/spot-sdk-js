@@ -16,7 +16,7 @@ const { SE3Pose, Quat } = require('../../src/bosdyn-client/math_helpers');
 const { RobotCommandBuilder, RobotCommandClient, blockingStand } = require('../../src/bosdyn-client/robot_command');
 const { RobotStateClient } = require('../../src/bosdyn-client/robot_state');
 
-const { addCommonArguments } = require('../../src/bosdyn-client/util');
+const { addBaseArguments, authenticate, setupLogging } = require('../../src/bosdyn-client/util');
 const geometry = require('../../src/bosdyn-core/geometry');
 const imageUtil = require('../../src/bosdyn-core/image_util');
 const { secondsToDuration } = require('../../src/bosdyn-core/util');
@@ -24,16 +24,22 @@ const { secondsToDuration } = require('../../src/bosdyn-core/util');
 const { createStandardSdk } = require('../../src/index');
 
 async function helloSpot(config) {
+  // The SDK logs through winston. -v shows the debug messages, including every RPC.
+  setupLogging(config.verbose);
+
   const sdk = createStandardSdk('HelloSpotClient');
   const robot = sdk.createRobot(config.hostname);
 
-  await robot.authenticate(config.username, config.password);
+  await authenticate(robot);
 
+  // Establish time sync with the robot. This kicks off a background task to establish time sync.
+  // Time sync is required to issue commands to the robot. After starting time sync, wait until
+  // sync is established.
   await (await robot.timeSync).waitForSync();
 
-  const isEstopped = await robot.isEstopped();
-
-  if (!isEstopped) {
+  // Verify the robot is not estopped and that an external application has registered and holds
+  // an estop endpoint.
+  if (await robot.isEstopped()) {
     throw new Error(
       'Robot is estopped. Please use an external E-Stop client, such as the estop SDK example, to configure E-Stop.',
     );
@@ -51,7 +57,8 @@ async function helloSpot(config) {
     // powered at any point.
     robot.logger.info('Powering on robot... This may take several seconds.');
     await robot.powerOn(20_000);
-    console.assert(await robot.isPoweredOn(), 'Robot power on failed.');
+    // Like Python's assert: stop here if the robot is not powered on (console.assert only logs).
+    if (!(await robot.isPoweredOn())) throw new Error('Robot power on failed.');
     robot.logger.info('Robot powered on.');
 
     // Tell the robot to stand up. The command service is used to issue commands to a robot.
@@ -79,7 +86,7 @@ async function helloSpot(config) {
     // the robot's length, the Z axis points up aligned with gravity, and the Y
     // axis is the cross-product of the two.
     const footprintRBody = new geometry.EulerZXY(0.4, 0.0, 0.0);
-    let cmd = RobotCommandBuilder.synchroStandCommand(null, 0.0, footprintRBody);
+    let cmd = RobotCommandBuilder.synchroStandCommand({ footprintRBody });
     await commandClient.robotCommand(cmd);
     robot.logger.info('Robot standing twisted.');
     await sleep(3_000);
@@ -96,9 +103,9 @@ async function helloSpot(config) {
 
     // Specify a trajectory to shift the body forward followed by looking down, then return to nominal.
     // Define times (in seconds) for each point in the trajectory.
-    let t1 = 2.5;
-    let t2 = 5.0;
-    let t3 = 7.5;
+    const t1 = 2.5;
+    const t2 = 5.0;
+    const t3 = 7.5;
 
     // Specify the poses as transformations to the cached flat_body pose.
     const flatBodyTPose1 = new SE3Pose(0.075, 0, 0, new Quat());
@@ -153,19 +160,21 @@ async function helloSpot(config) {
     await robot.operatorComment(logComment);
     robot.logger.info(`Added comment "${logComment}" to robot log.`);
 
+    // Power the robot off. With cutImmediately false, a safe power off command is issued to the
+    // robot: it will attempt to sit before powering off.
     await robot.powerOff(false, 20_000);
-    console.assert(!(await robot.isPoweredOn()), 'Robot power off failed.');
+    if (await robot.isPoweredOn()) throw new Error('Robot power off failed.');
     robot.logger.info('Robot safely powered off.');
-  } catch (e) {
-    console.log(e);
   } finally {
+    // Like Python's `with LeaseKeepAlive(...)`: the lease is returned even if something failed,
+    // and the error is still reported by main().
     await leaseKeepAlive.shutdown();
   }
 }
 
 async function _maybeDisplayImage(image, displayTime = 3_000) {
   try {
-    await imageUtil.show(image.getData());
+    await imageUtil.show(image.getData_asU8());
     await sleep(displayTime);
   } catch (e) {
     console.warn('Exception thrown displaying image.', e);
@@ -176,7 +185,8 @@ async function _maybeSaveImage(image, pathFile) {
   let name = 'hello-spot-img.jpg';
 
   if (pathFile && existsSync(pathFile)) {
-    pathFile = path.join(process.cwd(), pathFile);
+    // Like os.path.join() in Python, an absolute path is kept (path.join() appended it to the working directory).
+    pathFile = path.resolve(process.cwd(), pathFile);
     name = path.join(pathFile, name);
     console.info(`Saving image to: ${name}`);
   } else {
@@ -184,8 +194,7 @@ async function _maybeSaveImage(image, pathFile) {
   }
 
   try {
-    await imageUtil.show(image.getData());
-    await imageUtil.save(image.getData(), name);
+    await imageUtil.save(image.getData_asU8(), name);
   } catch (e) {
     console.warn('Exception thrown saving image.', e);
   }
@@ -194,11 +203,11 @@ async function _maybeSaveImage(image, pathFile) {
 async function main(args = null) {
   const parser = new ArgumentParser();
 
-  addCommonArguments(parser);
+  addBaseArguments(parser);
 
   parser.add_argument('-s', '--save', {
     action: 'store_true',
-    help: 'Save the image captured by Spot to the working directory. To chose the save location, use --save_path instead.', // eslint-disable-line
+    help: 'Save the image captured by Spot to the working directory. To chose the save location, use --save_path instead.',
   });
   parser.add_argument('--save-path', {
     default: null,
@@ -215,7 +224,9 @@ if (require.main === module) {
   main()
     .then(() => process.exit(0))
     .catch(e => {
-      throw e;
+      // Like Python: report the error and exit with a failure code.
+      console.error('Hello, Spot! threw an exception:', e);
+      process.exit(1);
     });
 } else {
   module.exports = main;

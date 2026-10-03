@@ -4,7 +4,6 @@
 const { Buffer } = require('node:buffer');
 const process = require('node:process');
 
-const nj = require('@d4c/numjs').default;
 const cv = require('@u4/opencv4nodejs');
 const { ArgumentParser } = require('argparse');
 
@@ -30,32 +29,30 @@ function pixelFormatStringToEnum(enumString) {
   return image_pb.Image.PixelFormat[enumString];
 }
 
-function rotateBound(image, angle) {
-  const [h, w] = image.sizes;
-  const [cX, cY] = [Math.round(w / 2), Math.round(h / 2)];
-
-  // Grab the rotation matrix (applying the negative of the
-  // angle to rotate clockwise), then grab the sine and cosine
-  // (i.e., the rotation components of the matrix)
-  const M = cv.getRotationMatrix2D(new cv.Point2(cX, cY), -angle, 1.0);
-  const cos = Math.abs(M.at(0, 0));
-  const sin = Math.abs(M.at(0, 1));
-
-  // Compute the new bounding dimensions of the image
-  const nW = parseInt(h * sin + w * cos);
-  const nH = parseInt(h * cos + w * sin);
-
-  // Adjust the rotation matrix to take into account translation
-  M.set(0, 2, M.at(0, 2) + Math.round(nW / 2) - cX);
-  M.set(1, 2, M.at(1, 2) + Math.round(nH / 2) - cY);
-
-  // Perform the actual rotation and return the image
-  return image.warpAffine(M, new cv.Size(nW, nH));
+/**
+ * Rotate an image counterclockwise by an angle in degrees, into an image large enough to hold all of it, like
+ * ndimage.rotate() of scipy (same size, same center).
+ * @param {cv.Mat} img
+ * @param {number} angle
+ * @returns {cv.Mat}
+ */
+function rotate(img, angle) {
+  const radians = (angle * Math.PI) / 180;
+  const cos = Math.abs(Math.cos(radians));
+  const sin = Math.abs(Math.sin(radians));
+  const { rows, cols } = img;
+  const outRows = Math.trunc(rows * cos + cols * sin + 0.5);
+  const outCols = Math.trunc(rows * sin + cols * cos + 0.5);
+  // A positive angle of OpenCV turns counterclockwise too. The center of the image goes to the center of the output.
+  const matrix = cv.getRotationMatrix2D(new cv.Point2((cols - 1) / 2, (rows - 1) / 2), angle, 1);
+  matrix.set(0, 2, matrix.at(0, 2) + (outCols - cols) / 2);
+  matrix.set(1, 2, matrix.at(1, 2) + (outRows - rows) / 2);
+  return img.warpAffine(matrix, new cv.Size(outCols, outRows));
 }
 
 async function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
 
   parser.add_argument('--list', { help: 'list image sources', action: 'store_true' });
   parser.add_argument('--auto-rotate', { help: 'rotate right and front images to be upright', action: 'store_true' });
@@ -71,61 +68,87 @@ async function main(args = null) {
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
+  // Create robot object with an image client.
   const sdk = createStandardSdk('image_capture');
   const robot = sdk.createRobot(options.hostname);
-  await robot.authenticate(options.username, options.password);
+  await util.authenticate(robot);
   await robot.syncWithDirectory();
   await (await robot.timeSync).waitForSync();
 
   /** @type {ImageClient} */
   const imageClient = await robot.ensureClient(options.image_service);
 
+  // Raise exception if no actionable argument provided
   if (!options.list && !options.image_sources) {
     parser.error('Must provide actionable argument (list or image-sources).');
   }
 
+  // Optionally list image sources on robot.
   if (options.list) {
     const imageSources = await imageClient.listImageSources();
     console.log('Image sources:');
     for (const source of imageSources) {
       console.log(`\t${source.getName()}`);
     }
-    process.exit(0);
   }
 
+  // Optionally capture one or more images.
   if (options.image_sources) {
+    // Capture and save images to disk
     const pixelFormat = pixelFormatStringToEnum(options.pixel_format);
     const imageRequests = options.image_sources.map(x => buildImageRequest(x, undefined, undefined, pixelFormat));
     const imageResponses = await imageClient.getImage(imageRequests);
 
+    const { PixelFormat } = image_pb.Image;
     for (const image of imageResponses) {
-      let extension, dtype;
-
-      if (image.getShot().getImage().getPixelFormat() === image_pb.Image.PixelFormat.PIXEL_FORMAT_DEPTH_U16) {
-        dtype = 'uint16';
+      const shot = image.getShot().getImage();
+      // Assume a default of 1 byte encodings.
+      let numChannels = 1;
+      let bytesPerChannel = 1;
+      let extension;
+      if (shot.getPixelFormat() === PixelFormat.PIXEL_FORMAT_DEPTH_U16) {
+        bytesPerChannel = 2;
+        extension = '.png';
+      } else if (shot.getPixelFormat() === PixelFormat.PIXEL_FORMAT_GREYSCALE_U16) {
+        // Python reshapes it into 2 channels of 8 bits, which cv2.imwrite() refuses: one channel of 16 bits, in a PNG
+        // like the depth (a JPEG keeps 8 bits).
+        bytesPerChannel = 2;
         extension = '.png';
       } else {
-        dtype = 'uint8';
+        if (shot.getPixelFormat() === PixelFormat.PIXEL_FORMAT_RGB_U8) {
+          numChannels = 3;
+        } else if (shot.getPixelFormat() === PixelFormat.PIXEL_FORMAT_RGBA_U8) {
+          numChannels = 4;
+        }
         extension = '.jpg';
       }
 
-      const data = Buffer.from(image.getShot().getImage().getData_asB64(), 'base64');
-      let img = nj[dtype](Array.from(data));
-
-      img = Buffer.from(img.tolist());
-      img = cv.imdecode(img);
+      const data = Buffer.from(shot.getData_asU8());
+      const rows = shot.getRows();
+      const cols = shot.getCols();
+      const raw = shot.getFormat() === image_pb.Image.Format.FORMAT_RAW;
+      let img;
+      // Python reshapes the raw data into rows x cols x channels, and decodes it when the size does not match (the
+      // raw images, e.g. the depth, could not be decoded).
+      if (raw && data.length === rows * cols * numChannels * bytesPerChannel) {
+        const type = bytesPerChannel === 2 ? cv.CV_16UC1 : { 1: cv.CV_8UC1, 3: cv.CV_8UC3, 4: cv.CV_8UC4 }[numChannels];
+        img = new cv.Mat(data, rows, cols, type);
+      } else {
+        img = cv.imdecode(data, cv.IMREAD_UNCHANGED);
+      }
 
       if (options.auto_rotate) {
-        const rot = ROTATION_ANGLE[image.getSource().getName()];
-        img = rotateBound(img, rot);
+        // No rotation for the other sources, e.g. the depth (a KeyError in Python).
+        img = rotate(img, ROTATION_ANGLE[image.getSource().getName()] ?? 0);
       }
 
       // Save the image from the GetImage request to the current directory with the filename
       // matching that of the image source.
-      const imageSavedPath = image.getSource().getName().replace('/', '');
+      // Remove any slashes from the filename the image is saved at locally.
+      const imageSavedPath = image.getSource().getName().replaceAll('/', '');
       cv.imwrite(`${imageSavedPath}${extension}`, img);
 
-      console.log(`Save ${imageSavedPath}${extension} to ${__dirname}`);
+      console.log(`Save ${imageSavedPath}${extension} to ${process.cwd()}`);
     }
   }
 }

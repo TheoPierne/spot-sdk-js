@@ -16,5 +16,5 @@ enable/disable the robot's IR light emitters in the body and hand sensors.
 To run the example:
 
 ```
-node disable_ir_emission.js --username USERNAME --password PASSWORD ROBOT_IP (--enable | --disable)
+node disable_ir_emission.js ROBOT_IP (--enable | --disable)
 ```

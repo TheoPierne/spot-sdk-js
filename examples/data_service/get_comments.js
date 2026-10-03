@@ -13,7 +13,7 @@ const { createStandardSdk } = require('../../src/index');
 async function getComments(config) {
   const sdk = createStandardSdk('GetCommentsClient');
   const robot = sdk.createRobot(config.hostname);
-  await robot.authenticate(config.username, config.password);
+  await util.authenticate(robot);
   await (await robot.timeSync).waitForSync();
 
   /** @type {DataServiceClient} */
@@ -25,7 +25,7 @@ async function getComments(config) {
 
 function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 

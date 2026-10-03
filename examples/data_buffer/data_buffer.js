@@ -67,7 +67,7 @@ async function addEvent(robot) {
 
 async function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
   const subparsers = parser.add_subparsers({ help: 'commands', dest: 'command' });
   const operatorParser = subparsers.add_parser('operator', { help: 'add operator comment' });
   operatorParser.add_argument('message', { help: 'operator comment message' });
@@ -87,7 +87,7 @@ async function main(args = null) {
 
   const sdk = createStandardSdk('DataBufferClientExample');
   const robot = sdk.createRobot(options.hostname);
-  await robot.authenticate(options.username, options.password);
+  await util.authenticate(robot);
   await (await robot.timeSync).waitForSync();
 
   if (options.command === 'operator') {

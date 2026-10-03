@@ -11,7 +11,7 @@ const { createStandardSdk } = require('../../src/index');
 
 async function main(args = null) {
   const parser = new ArgumentParser();
-  util.add_common_arguments(parser);
+  util.addBaseArguments(parser);
 
   const group = parser.add_mutually_exclusive_group({ required: true });
   group.add_argument('--enable', { action: 'store_true', dest: 'enable', help: 'Enable IR emissions' });
@@ -22,7 +22,7 @@ async function main(args = null) {
   const sdk = createStandardSdk('ir_emission_test');
   const robot = sdk.createRobot(options.hostname);
 
-  await robot.authenticate(options.username, options.password);
+  await util.authenticate(robot);
   /** @type {IREnableDisableServiceClient} */
   const irEnableDisableClient = await robot.ensureClient(IREnableDisableServiceClient.defaultServiceName);
 

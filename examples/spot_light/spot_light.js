@@ -11,7 +11,12 @@ const util = require('../../src/bosdyn-client/util');
 
 async function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
+  parser.add_argument('--brightness_threshold', {
+    type: 'int',
+    default: 250,
+    help: 'the brightness from 0 to 255 that spot will respond to',
+  });
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
@@ -29,7 +34,6 @@ async function main(args = null) {
   // From follow, it will transition back to sit if light is not seen
   spotStates[2].nextState = spotStates[0];
 
-  /* eslint-disable */
   while (true) {
     const results = [];
     for (const state of spotStates) {
@@ -37,7 +41,6 @@ async function main(args = null) {
     }
     await Promise.all(results);
   }
-  /* eslint-enable */
 }
 
 if (require.main === module) {

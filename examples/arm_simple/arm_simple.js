@@ -24,7 +24,7 @@ const { createStandardSdk } = require('../../src/index');
 async function helloArm(config) {
   const sdk = createStandardSdk('HelloArmClient');
   const robot = sdk.createRobot(config.hostname);
-  await robot.authenticate(config.username, config.password);
+  await util.authenticate(robot);
   await (await robot.timeSync).waitForSync();
 
   console.assert(await robot.hasArm(), 'Robot requires an arm to run this example.');
@@ -81,8 +81,8 @@ async function helloArm(config) {
 
   let odomTHand = odomTFlatBody.mult(SE3Pose.fromProto(flatBodyTHand));
 
-  // Duration in milliseconds
-  const seconds = 2_000;
+  // Duration in seconds (2_000 was 2000 s: the arm moved for more than half an hour).
+  const seconds = 2;
 
   let armCommand = RobotCommandBuilder.armPoseCommand(
     odomTHand.x,
@@ -125,7 +125,8 @@ async function helloArm(config) {
     odomTHand.rot.y,
     odomTHand.rot.z,
     ODOM_FRAME_NAME,
-    seconds,
+    // An options object: a positional duration was ignored (5 s).
+    { seconds },
   );
 
   // Close the gripper
@@ -152,22 +153,20 @@ async function helloArm(config) {
 }
 
 async function blockUntilArmArrivesWithPrints(robot, commandClient, cmdId) {
-  /* eslint-disable no-await-in-loop */
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const feedbackResp = await commandClient.robotCommandFeedback(cmdId);
+    // Unset sub-messages read as the defaults, like Python (a TypeError before the first arm feedback).
     const armCartesianFeedback = feedbackResp
       .getFeedback()
-      .getSynchronizedFeedback()
-      .getArmCommandFeedback()
-      .getArmCartesianFeedback();
-    robot.logger.info(
-      // eslint-disable-next-line max-len
-      `Distance to go: ${armCartesianFeedback.getMeasuredPosDistanceToGoal()} meters, ${armCartesianFeedback.getMeasuredRotDistanceToGoal()} radians`,
-    );
+      ?.getSynchronizedFeedback()
+      ?.getArmCommandFeedback()
+      ?.getArmCartesianFeedback();
+    const posDistance = armCartesianFeedback?.getMeasuredPosDistanceToGoal() ?? 0;
+    const rotDistance = armCartesianFeedback?.getMeasuredRotDistanceToGoal() ?? 0;
+    robot.logger.info(`Distance to go: ${posDistance} meters, ${rotDistance} radians`);
 
     if (
-      armCartesianFeedback.getStatus() === armCommandPb.ArmCartesianCommand.Feedback.Status.STATUS_TRAJECTORY_COMPLETE
+      armCartesianFeedback?.getStatus() === armCommandPb.ArmCartesianCommand.Feedback.Status.STATUS_TRAJECTORY_COMPLETE
     ) {
       robot.logger.info('Move complete.');
       break;
@@ -178,7 +177,7 @@ async function blockUntilArmArrivesWithPrints(robot, commandClient, cmdId) {
 
 function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 

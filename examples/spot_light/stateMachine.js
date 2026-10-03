@@ -80,7 +80,7 @@ class StateMachine {
   _detectBlob(img, minArea = 2500) {
     // Binarize the image
     const greyImg = img.cvtColor(cv.COLOR_BGR2GRAY);
-    const binImg = greyImg.threshold(250, 255, cv.THRESH_BINARY);
+    const binImg = greyImg.threshold(this._robot._brightnessThreshold, 255, cv.THRESH_BINARY);
 
     // Noise removal
     const kernel = new cv.Mat(3, 3, cv.CV_8U, 1);
@@ -102,7 +102,7 @@ class StateMachine {
     // See if we found more than the background (background is always at 0)
     if (stats.sizes[0] > 1) {
       // Find the largest area
-      const statsArray = num.array(stats.getDataAsArray()).slice(1, 4).flatten().tolist(); // eslint-disable-line
+      const statsArray = num.array(stats.getDataAsArray()).slice(1, 4).flatten().tolist();
       const largest_label_idx = argMax(statsArray) + 1;
       // Make sure the blob is big enough
       if (stats.at(largest_label_idx, cv.CC_STAT_AREA) > minArea) {
@@ -123,9 +123,9 @@ class StateMachine {
     const imgCenterY = Math.round(imgWidth / 2);
 
     // The ROI is at the center of the image with half the width and height
-    const x1 = parseInt(imgCenterX * 0.5);
+    const x1 = Math.trunc(imgCenterX * 0.5);
     const x2 = x1 + imgCenterX;
-    const y1 = parseInt(imgCenterY * 0.5);
+    const y1 = Math.trunc(imgCenterY * 0.5);
     const y2 = y1 + imgCenterY;
 
     // Or x1 = imgCenterX / 2; && y1 = imgCenterY / 2;
@@ -193,7 +193,7 @@ class StateMachineFollow extends StateMachine {
 
       const roi = img.getRegion(new cv.Rect(x1, y1, x2, y2));
 
-      let [lightFound, imgWithKeypoints, pt] = this._detect_blob(roi, 3500);
+      const [lightFound, imgWithKeypoints, pt] = this._detect_blob(roi, 3500);
 
       if (!lightFound) {
         if (this._initPt !== null && this._lightCount > 50) {
@@ -212,8 +212,8 @@ class StateMachineFollow extends StateMachine {
         this._initPt = pt;
       }
 
-      const first = pt.map(e => parseInt(e));
-      const sec = this._initPt.map(e => parseInt(e));
+      const first = pt.map(e => Math.trunc(e));
+      const sec = this._initPt.map(e => Math.trunc(e));
 
       imgWithKeypoints.drawCircle(new cv.Point(first[0], first[1]), 10, new cv.Vec(255, 0, 0), -1);
       imgWithKeypoints.drawCircle(new cv.Point(sec[0], sec[1]), 10, new cv.Vec(0, 255, 0), -1);

@@ -1,31 +1,33 @@
 'use strict';
 
+// Provides a very visible button to click to stop the robot (run it with qode: npm run gui).
+
 const path = require('node:path');
 const process = require('node:process');
-const { setImmediate } = require('node:timers');
+const { clearInterval, setInterval } = require('node:timers');
 
 const {
   AlignmentFlag,
-  WindowType,
-  WindowState,
+  Direction,
+  QBoxLayout,
   QIcon,
   QLabel,
-  QWidget,
-  QPushButton,
-  QBoxLayout,
-  QMessageBox,
   QMainWindow,
-  QApplication,
+  QMessageBox,
+  QPushButton,
   QSizePolicyPolicy,
+  QWidget,
+  WidgetEventTypes,
+  WindowState,
+  WindowType,
 } = require('@nodegui/nodegui');
 const argparse = require('argparse');
 
-const estop_pb = require('../../bosdyn/api/estop_pb');
-const { EstopEndpoint, EstopKeepAlive, EstopClient } = require('../../bosdyn-client/estop');
-const { LoggerUtil } = require('../../bosdyn-client/loggerUtil');
-
-const util = require('../../bosdyn-client/util');
-const client = require('../../index');
+const estopPb = require('../../src/bosdyn/api/estop_pb');
+const { EstopClient, EstopEndpoint, EstopKeepAlive } = require('../../src/bosdyn-client/estop');
+const { LoggerUtil } = require('../../src/bosdyn-client/logger_util');
+const util = require('../../src/bosdyn-client/util');
+const { createStandardSdk } = require('../../src/index');
 
 const STOP_BUTTON_STYLESHEET =
   'background-color: red; font: bold 60px; border-width: 5px; border-radius:20px; padding: 60px';
@@ -34,124 +36,122 @@ const ERROR_LABEL_STYLESHEET = 'font: bold 15px';
 
 /**
  * The GUI for the estop Button. Provides software estop.
+ *
+ * Unlike Python, there is no thread: the status queue of the keep-alive is read by a timer, and the widgets are
+ * updated directly (the Qt signals of Python pass the updates from the threads to the GUI thread).
  * @extends {QMainWindow}
  */
 class EstopGui extends QMainWindow {
-  // Disable_signal = QtCore.pyqtSignal()
-  // checkin_status_signal = QtCore.pyqtSignal('QString')
-  // got_status_signal = QtCore.pyqtSignal('QString')
-
-  constructor(hostname, client, timeout_sec, name = null, unique_id = null) {
+  /**
+   * Use EstopGui.create(), which sets up the estop endpoint first.
+   * @param {string} hostname
+   * @param {EstopKeepAlive} estopKeepAlive
+   * @param {number} timeoutSec Timeout of the estop endpoint (seconds).
+   */
+  constructor(hostname, estopKeepAlive, timeoutSec) {
     super();
 
     this.logger = LoggerUtil.getLogger('Estop GUI');
 
-    /* This.disable_signal.connect(this.disable_buttons);
-		this.checkin_status_signal.connect(this.set_status_label);
-		this.got_status_signal.connect(this._launch_estop_status_dialog);*/
-    this.status_extant = false;
-    this.quitting = false; // Used to tell threads to shutdown
+    this.statusExtant = false;
+    // Used to tell the status timer to stop.
+    this.quitting = false;
 
-    // Force server to set up a single endpoint system
-    const ep = new EstopEndpoint(client, name, timeout_sec);
-    ep.force_simple_setup();
-
-    // Begin periodic check-in between keep-alive and robot
-    this.estop_keep_alive = new EstopKeepAlive(ep);
+    // Periodic check-in between keep-alive and robot
+    this.estopKeepAlive = estopKeepAlive;
+    this._statusMsg = '';
 
     // Configure UI.
     this.setCentralWidget(new QWidget());
-    this.center_layout = new QBoxLayout(0);
-    this.centralWidget().setLayout(this.center_layout);
+    this.centerLayout = new QBoxLayout(Direction.TopToBottom);
+    this.centralWidget().setLayout(this.centerLayout);
+    this.centerLayout.setSpacing(1);
+    this.centerLayout.setContentsMargins(1, 1, 1, 1);
 
-    // This.center_layout.setAlignment(AlignmentFlag.AlignTop);
-    this.center_layout.setSpacing(1);
-    this.center_layout.setContentsMargins(1, 1, 1, 1);
+    this.stopButton = new QPushButton(this);
+    this.stopButton.setText('STOP');
+    // A method bound to the GUI (the unbound stop of the keep-alive had no this).
+    this.stopButton.addEventListener('clicked', () => this._stop());
+    this.stopButton.setStyleSheet(STOP_BUTTON_STYLESHEET);
+    this.stopButton.setSizePolicy(QSizePolicyPolicy.Expanding, QSizePolicyPolicy.Expanding);
+    this.centerLayout.addWidget(this.stopButton);
 
-    this.stop_button = new QPushButton(this);
-    this.stop_button.setText('STOP');
-    this.stop_button.addEventListener('clicked', this.estop_keep_alive.stop);
-    this.stop_button.setStyleSheet(STOP_BUTTON_STYLESHEET);
-    this.stop_button.setSizePolicy(QSizePolicyPolicy.Expanding, QSizePolicyPolicy.Expanding);
-    this.center_layout.addWidget(this.stop_button);
+    this.statusLabel = new QLabel();
+    this.statusLabel.setText('Starting...');
+    this.statusLabel.setAlignment(AlignmentFlag.AlignCenter);
+    this.statusLabel.setStyleSheet(ERROR_LABEL_STYLESHEET);
+    this.centerLayout.addWidget(this.statusLabel);
 
-    this.status_label = new QLabel();
-    this.status_label.setText('Starting...');
-    this.status_label.setAlignment(AlignmentFlag.AlignCenter);
-    this.status_label.setStyleSheet(ERROR_LABEL_STYLESHEET);
-    this.center_layout.addWidget(this.status_label);
+    this.releaseButton = new QPushButton(this);
+    this.releaseButton.setText('Release');
+    this.releaseButton.addEventListener('clicked', () => this._allow());
+    this.releaseButton.setStyleSheet(RELEASE_BUTTON_STYLESHEET);
+    this.centerLayout.addWidget(this.releaseButton);
 
-    this.release_button = new QPushButton(this);
-    this.release_button.setText('Release');
-    this.release_button.addEventListener('clicked', this.estop_keep_alive.allow);
-    this.release_button.setStyleSheet(RELEASE_BUTTON_STYLESHEET);
-    this.center_layout.addWidget(this.release_button);
+    this.setWindowTitle(`E-Stop (${hostname} ${timeoutSec}sec)`);
 
-    this.setWindowTitle(`E-Stop (${hostname} - ${timeout_sec}sec)`);
+    // Begin monitoring the keep-alive status (a busy loop blocked the event loop, so no check-in was sent).
+    this._statusTimer = setInterval(() => this._checkKeepAliveStatus(), 100);
+  }
 
-    // Begin monitoring the keep-alive status
-    this.thread = setImmediate(this._check_keep_alive_status);
+  /**
+   * Force the server to set up a single endpoint system, begin the periodic check-in and build the GUI.
+   * @param {string} hostname
+   * @param {EstopClient} client
+   * @param {number} timeoutSec Timeout of the estop endpoint (seconds).
+   * @param {?string} [name=null] Name of the estop endpoint.
+   * @returns {Promise<EstopGui>}
+   */
+  static async create(hostname, client, timeoutSec, name = null) {
+    const ep = new EstopEndpoint(client, name, timeoutSec);
+    // Awaited before the check-ins (force_simple_setup() did not exist: a TypeError).
+    await ep.forceSimpleSetup();
+    return new EstopGui(hostname, new EstopKeepAlive(ep), timeoutSec);
   }
 
   /**
    * Make an rpc call to get the robot estop status.
    * @returns {Promise<void>}
    */
-  async do_status_rpc() {
-    let status,
-      markup = '',
-      isCatch = false;
+  async doStatusRpc() {
+    let markup;
     try {
-      status = await this.estop_keep_alive.client.get_status();
+      const status = await this.estopKeepAlive.client.getStatus();
+      markup = statusResponseToMarkup(status, this.estopKeepAlive.endpoint.uniqueId);
     } catch (e) {
-      isCatch = true;
       markup = 'Exception while getting status!';
+      this.logger.error(`${markup} ${e?.stack ?? e}`);
     }
-
-    if (!isCatch) {
-      markup = status_response_to_markup(status, this.estop_keep_alive.endpoint.unique_id);
-    }
-
-    this.got_status_signal.emit(markup);
+    this._launchEstopStatusDialog(markup);
   }
 
   /**
-   * Request and print the endpoint status.
-   * @returns {void}
+   * Asynchronously request and print the endpoint status.
    */
   status() {
-    if (this.status_extant) {
+    if (this.statusExtant) {
       this.logger.info('Ignoring duplicate request for status');
       return;
     }
 
-    this.status_extant = true;
+    this.statusExtant = true;
     this.logger.info('Getting estop system status');
-    setImmediate(this.do_status_rpc);
+    this.doStatusRpc();
   }
 
   /**
-   * Monitor estop keep alive status and display status in GUI via Qt signals.
-   * @returns {void}
+   * Display the statuses of the estop keep alive queued since the last call.
    */
-  _check_keep_alive_status() {
-    while (!this.quitting) {
-      // Wait for queue to be populated. After timeout, check if GUI is still running.
-      let status, msg;
-      try {
-        [status, msg] = [...this.estop_keep_alive.status_queue][0];
-        console.log(status, msg);
-        this.estop_keep_alive.status_queue.delete(status);
-      } catch (e) {
-        continue;
-      }
-
+  _checkKeepAliveStatus() {
+    const queue = this.estopKeepAlive.statusQueue;
+    while (!this.quitting && !queue.empty()) {
+      const [status, msg] = queue.get();
       if (status === EstopKeepAlive.KeepAliveStatus.OK) {
-        this.checkin_status_signal.emit(`OK! ${new Date()}`);
+        this.setStatusLabel(`OK! ${new Date().toTimeString().slice(0, 8)}`);
       } else if (status === EstopKeepAlive.KeepAliveStatus.ERROR) {
-        this.checkin_status_signal.emit(msg);
+        this.setStatusLabel(msg);
       } else if (status === EstopKeepAlive.KeepAliveStatus.DISABLED) {
-        this.disable_signal.emit(null);
+        this.disableButtons();
       } else {
         throw new Error(`Unknown estop keep alive status seen: ${status}.`);
       }
@@ -160,30 +160,31 @@ class EstopGui extends QMainWindow {
 
   /**
    * Disable the estop buttons.
-   * @returns {void}
    */
-  disable_buttons() {
-    this.stop_button.setEnabled(false);
-    this.release_button.setEnabled(false);
-    this.stop_button.setText('(disabled)');
-    this.release_button.setText('(disabled)');
+  disableButtons() {
+    this.stopButton.setEnabled(false);
+    this.releaseButton.setEnabled(false);
+    this.stopButton.setText('(disabled)');
+    this.releaseButton.setText('(disabled)');
   }
 
   /**
-   * Set status label.
-   * @param {string} status_msg Status of the label.
-   * @returns {void}
+   * @param {string} statusMsg
    */
-  set_status_label(status_msg = '') {
-    this.status_label.setText(status_msg);
+  setStatusLabel(statusMsg) {
+    this._statusMsg = statusMsg;
+    this._updateStatusLabel();
+  }
+
+  _updateStatusLabel() {
+    this.statusLabel.setText(`${levelString(this.estopKeepAlive.lastSetLevel)} ${this._statusMsg}`);
   }
 
   /**
-   * @param  {string} markup
-   * @returns {void}
+   * @param {string} markup
    */
-  _launch_estop_status_dialog(markup) {
-    this.status_extant = false;
+  _launchEstopStatusDialog(markup) {
+    this.statusExtant = false;
     const d = new QMessageBox();
     d.setWindowTitle('SW Estop Status');
     d.setText(markup);
@@ -191,121 +192,138 @@ class EstopGui extends QMainWindow {
   }
 
   /**
-   * Shutdown estop keep-alive and all GUI threads.
-   * @returns {void}
+   * Shutdown estop keep-alive and the status timer.
+   * @returns {Promise<void>}
    */
-  quit() {
-    this.estop_keep_alive.shutdown();
+  async quit() {
     this.quitting = true;
+    clearInterval(this._statusTimer);
+    await this.estopKeepAlive.shutdown();
+  }
+
+  async _allow() {
+    await this._checkIn(() => this.estopKeepAlive.allow(), 'Release');
+  }
+
+  async _stop() {
+    await this._checkIn(() => this.estopKeepAlive.stop(), 'STOP');
+  }
+
+  /**
+   * A check-in of a button: its failure is displayed (it was an unhandled rejection, which ended the process).
+   * @param {() => Promise<void>} checkIn
+   * @param {string} button
+   * @returns {Promise<void>}
+   */
+  async _checkIn(checkIn, button) {
+    try {
+      await checkIn();
+      this._updateStatusLabel();
+    } catch (e) {
+      this.logger.error(`${button} failed: ${e?.stack ?? e}`);
+      this.setStatusLabel(`${button} failed: ${e?.message ?? e}`);
+    }
   }
 }
 
 /**
- * Convert an estop_protos.EstopSystemStatus to some HTML text.
- * @param  {EstopSystemStatus} status The EstopSystemStatus to parse.
- * @param  {string} my_id  Optionally specify an endpoint unique ID. If that ID is in the active estop system,
- * additional text is inserted into the markup.
- * @returns {string}        A string with HTML tags that can be displayed in a UI element (e.g. a dialog box)
+ * Convert a stop level into a string for the UI.
+ * @param {?number} level
+ * @returns {string}
  */
-function status_response_to_markup(status, my_id = null) {
-  const endpoints_data = status.getEndpointsList().map(e => ({
-    name: e.getEndpoint().getName(),
-    me: e.getEndpoint().getUniqueId() === my_id ? '(me)' : '(not me)',
-    proto_name: estop_pb.EstopStopLevel[e.getStopLevel()],
-    time: e.getTimeSinceValidResponse().getSeconds() + e.getTimeSinceValidResponse().getNanos() / 1000000,
-  }));
+function levelString(level) {
+  if (level === estopPb.EstopStopLevel.ESTOP_LEVEL_NONE) return 'Allowed';
+  if (
+    level === estopPb.EstopStopLevel.ESTOP_LEVEL_CUT ||
+    level === estopPb.EstopStopLevel.ESTOP_LEVEL_SETTLE_THEN_CUT
+  ) {
+    return 'Stopped';
+  }
+  return '';
+}
 
+/**
+ * Name of a stop level (jspb enums map the names to the values).
+ * @param {number} level
+ * @returns {string}
+ */
+function stopLevelName(level) {
+  return Object.keys(estopPb.EstopStopLevel).find(name => estopPb.EstopStopLevel[name] === level) ?? String(level);
+}
+
+/**
+ * Convert an estopPb.EstopSystemStatus to some HTML text.
+ * @param {estopPb.EstopSystemStatus} status The EstopSystemStatus to parse.
+ * @param {?string} [myId=null] Optionally specify an endpoint unique ID. If that ID is in the active estop system,
+ * additional text is inserted into the markup.
+ * @returns {string} A string with HTML tags that can be displayed in a UI element (e.g. a dialog box)
+ */
+function statusResponseToMarkup(status, myId = null) {
   let msg = '';
-
-  for (const data of endpoints_data) {
-    msg += `<b>${data.name} ${data.me}</b>  ${data.proto_name} (sent ${data.time} ago)<br>`;
+  for (const e of status.getEndpointsList()) {
+    const endpoint = e.getEndpoint();
+    const me = myId === endpoint?.getUniqueId() ? '(me)' : '(not me)';
+    const sinceValid = e.getTimeSinceValidResponse();
+    // Seconds (nanos / 1e6 were thousandths of seconds).
+    const time = (sinceValid?.getSeconds() ?? 0) + (sinceValid?.getNanos() ?? 0) / 1e9;
+    const level = stopLevelName(e.getStopLevel());
+    msg += `<b>${endpoint?.getName() ?? ''} ${me}</b>  ${level} (sent ${time.toFixed(2)} ago)<br>`;
   }
 
-  const net_level = estop_pb.EstopStopLevel[status.getStopLevel()];
+  const netLevel = stopLevelName(status.getStopLevel());
   const reason = status.getStopLevelDetails();
-  const markup = `<b>${net_level}</b>  (${reason})<br><br>Endpoints:<br>${msg}`;
-
-  return markup;
+  return `<b>${netLevel}</b>  (${reason})<br><br>Endpoints:<br>${msg}`;
 }
 
 /**
  * Build the application window and configure the estop.
- * @param  {string} hostname
- * @param  {EstopClient} estop_client
- * @param  {number} timeout_sec  Timeout of this estop endpoint (seconds)
- * @returns {Array<QApplication, EstopGui>}
+ * @param {string} hostname
+ * @param {EstopClient} estopClient
+ * @param {number} timeoutSec Timeout of this estop endpoint (seconds)
+ * @returns {Promise<EstopGui>}
  */
-function build_app(hostname, estop_client, timeout_sec) {
-  // Const qt_app = new QWidget();
-  const qt_app = QApplication.instance();
-
-  /* Const icon_path = path.join(process.cwd(), 'resources', 'stop-sign.png');
-  const icon = new QIcon(icon_path);
-  qt_app.setWindowIcon(icon);*/
-
-  // Setting the taskbar icon in windows. See https://stackoverflow.com/a/1552105
-  if (process.platform === 'win32') {
-    // Const myappid = 'bostondynamics.estop_button.1'  // arbitrary string
-    // ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid);
-  }
-
-  const gui = new EstopGui(hostname, estop_client, timeout_sec, 'EStop');
-  return [qt_app, gui];
+async function buildApp(hostname, estopClient, timeoutSec) {
+  const gui = await EstopGui.create(hostname, estopClient, timeoutSec, 'EStop');
+  gui.setWindowIcon(new QIcon(path.join(__dirname, 'resources', 'stop-sign.png')));
+  return gui;
 }
 
 /**
- * Run the QT application.
- * @param  {QApplication} qt_app
- * @param  {EstopGui} button_window
- * @returns {number}
+ * Show the window: the application runs until it is closed, then the estop keep-alive is shut down.
+ * @param {EstopGui} buttonWindow
  */
-function run_app(qt_app, button_window) {
-  button_window.show();
-  const retcode = 0; // Qt_app.exec();
-  // button_window.quit();
-  return retcode;
+function runApp(buttonWindow) {
+  buttonWindow.addEventListener(WidgetEventTypes.Close, () => {
+    buttonWindow.quit().catch(e => buttonWindow.logger.error(`Shutdown failed: ${e?.stack ?? e}`));
+  });
+  buttonWindow.show();
+  // Prevents the garbage collection of the window.
+  global.estopWindow = buttonWindow;
 }
 
-function build_and_run_app(hostname, estop_client, options) {
-  const [qt_app, button_window] = build_app(hostname, estop_client, options.timeout);
-
-  if (!qt_app || !button_window) {
-    process.exit(1);
-  }
+async function buildAndRunApp(hostname, estopClient, options) {
+  const buttonWindow = await buildApp(hostname, estopClient, options.timeout);
 
   // Set some Qt flags for our GUI behavior.
   if (options.on_top) {
-    button_window.setWindowFlag(WindowType.WindowStaysOnTopHint, true);
+    buttonWindow.setWindowFlag(WindowType.WindowStaysOnTopHint, true);
   }
   if (options.start_minimized) {
-    button_window.setWindowState(WindowState.WindowMinimized);
-  }
-
-  /**
-   * Cleanly shut down the application on signal.
-   * @returns {void}
-   */
-  function sigint_handler(sig, frame) {
-    button_window.quit();
-    button_window.logger.info('Estop gui received signal for clean shutdown. Exiting.');
-    process.exit(0);
+    buttonWindow.setWindowState(WindowState.WindowMinimized);
   }
 
   // Look for a signal for a clean shut-down.
-  process.on('SIGINT', sigint_handler);
-  // Set up a timer to let the python interpreter run once every 100ms. This lets us catch signals.
-  // From https://stackoverflow.com/a/4939113.
-  // timer = QtCore.QTimer()
-  // timer.start(100)
-  // Temporarily break out of the QT event loop, so we can look at signals.
-  // timer.timeout.connect(lambda: None)
+  process.on('SIGINT', () => {
+    buttonWindow.logger.info('Estop gui received signal for clean shutdown. Exiting.');
+    buttonWindow.quit().finally(() => process.exit(0));
+  });
 
-  return run_app(qt_app, button_window);
+  runApp(buttonWindow);
 }
 
 async function main(args = null) {
   const parser = new argparse.ArgumentParser();
-  util.add_common_arguments(parser);
+  util.addBaseArguments(parser);
   parser.add_argument('-t', '--timeout', { default: 5, type: 'float', help: 'Timeout in seconds' });
   parser.add_argument('--no-on-top', {
     help: 'Allow window to be hidden.',
@@ -322,22 +340,24 @@ async function main(args = null) {
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
-  // Bosdyn.client.util.setup_logging(options.verbose)
+  util.setupLogging(options.verbose);
 
   // Create robot object
-  const sdk = client.sdk.create_standard_sdk('estop_gui');
-  const robot = sdk.create_robot(options.hostname);
-  await robot.authenticate(options.username, options.password);
+  const sdk = createStandardSdk('estop_gui');
+  const robot = sdk.createRobot(options.hostname);
+  await util.authenticate(robot);
 
   // Create estop client for the robot
-  const estop_client = await robot.ensureClient(EstopClient.defaultServiceName);
+  const estopClient = await robot.ensureClient(EstopClient.defaultServiceName);
 
-  // Process.exit(build_and_run_app(options.hostname, estop_client, options));
-  build_and_run_app(options.hostname, estop_client, options);
+  await buildAndRunApp(options.hostname, estopClient, options);
 }
 
 if (require.main === module) {
-  main();
+  main().catch(e => {
+    console.error(e);
+    process.exit(1);
+  });
 } else {
   module.exports = main;
 }

@@ -15,8 +15,8 @@ works.
 
 ## Setup Dependencies
 
-See the requirements.txt file for a list of python dependencies which can be installed with pip
-using the command:
+The GUI version needs NodeGui (`@nodegui/nodegui`, which downloads Qt when it is installed), and the version without
+a GUI needs reblessed. Both are installed in this directory with:
 
 ```
 npm install
@@ -24,16 +24,16 @@ npm install
 
 ## Run the Example
 
-To run the example as a GUI:
+To run the example as a GUI (with `qode`, the Node.js of NodeGui):
 
 ```
-npm run gui -- --username USERNAME --password PASSWORD ROBOT_IP
+npm run gui -- ROBOT_IP
 ```
 
 To run the example without a GUI:
 
 ```
-npm run nogui -- --username USERNAME --password PASSWORD ROBOT_IP
+npm run nogui -- ROBOT_IP
 ```
 
 ### GUI Version
@@ -46,25 +46,5 @@ an operational state, press the green `Release` button.
 ### Command-line version without a GUI
 
 Similar to the usage of the GUI version, the non-GUI version of the example uses `Space` for
-engaging the E-Stop system and `r` for releasing it.
-
-<!--
-## Troubleshooting
-
-The following error may appear when the example as a GUI is run on linux:
-
-```
-qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
-This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
-
-Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl, xcb.
-
-Aborted (core dumped)
-```
-
-If so, execute the following command:
-
-```
-sudo apt-get install python3-pyqt5
-```
--->
+engaging the E-Stop system and `r` for releasing it. `s` lets the robot prepare for the loss of power (e.g. sit down)
+before the power is cut (`ESTOP_LEVEL_SETTLE_THEN_CUT`), and `q` or `Ctrl-C` quits.

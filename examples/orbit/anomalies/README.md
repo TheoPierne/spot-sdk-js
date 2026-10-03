@@ -12,23 +12,23 @@ This Orbit API example demonstrates how to retrieve and edit anomaly data with a
 
 ## Understanding Orbit Web API
 
-Please begin with the [Quickstart Guide](../../../../docs/python/quickstart.md) to get your Python programming environment set up properly. Then, specifically for this example, look at the [Orbit API Docs](../../../../docs/concepts/orbit/orbit_api.md). For a complete list of resources and their methods, see the <a href="../../../../docs/orbit/docs.html">Orbit API Reference</a>.
+Please begin with the [Installation](../../../docs/guide/installation.md) page of the documentation of the SDK to get your Node.js environment set up properly. Then, specifically for this example, look at the [Orbit](../../../docs/guide/other-services.md#orbit) section of the guide. For a complete list of the methods of the client, see the [API reference of the Orbit client](../../../docs/api/bosdyn-orbit/client.md).
 
 ## Run the Example
 
 To run the example to get anomalies stored on your Orbit instance, run the following command with verify set to False. When set to False, requests will skip server's TLS certificate verifications which will make your application vulnerable. For production software, we recommend you set verify to True or a path to CA bundle.
 
 ```
-node get_anomalies.js --hostname ORBIT_IP --verify false
+node get_anomalies.js --hostname ORBIT_IP --verify False
 ```
 
-To close multiple anomaly alerts at once obtain their elementIds from the get_anomalies.py example and use them as arguments in the following command:
+To close multiple anomaly alerts at once obtain their elementIds from the get_anomalies.js example and use them as arguments in the following command:
 
 ```
 node patch_anomalies.js --hostname ORBIT_IP --bulk-close-element-ids ELEMENT_ID_1 ELEMENT_ID_2 ELEMENT_ID_3 --verify False
 ```
 
-To edit an anomaly alert, obtain the anomaly uuid from the get_anomalies.py example and use it as an argument in the following command, and set the status flag to **open** or **closed** and patch the anomaly:
+To edit an anomaly alert, obtain the anomaly uuid from the get_anomalies.js example and use it as an argument in the following command, and set the status flag to **open** or **closed** and patch the anomaly:
 
 ```
 node patch_anomalies.js --hostname ORBIT_IP --anomaly-uuid ANOMALY_UUID_1 --status STATUS --verify False

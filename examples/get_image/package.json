@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@u4/opencv4nodejs": "^6.5.2"
+    "@u4/opencv4nodejs": "^6.5.3"
   }
 }

@@ -8,17 +8,18 @@ const { ArgumentParser } = require('argparse');
 const { WorldObjectType } = require('../../src/bosdyn/api/world_object_pb');
 const util = require('../../src/bosdyn-client/util');
 const { WorldObjectClient } = require('../../src/bosdyn-client/world_object');
+const { nowSec } = require('../../src/bosdyn-core/util');
 const { createStandardSdk } = require('../../src/index');
 
 async function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
 
   const options = args === null ? parser.parse_args() : parser.parse_args(args);
 
   const sdk = createStandardSdk('WorldObjectClient');
   const robot = sdk.createRobot(options.hostname);
-  await robot.authenticate(options.username, options.password);
+  await util.authenticate(robot);
   await (await robot.timeSync).waitForSync();
 
   /** @type {WorldObjectClient} */
@@ -51,7 +52,7 @@ async function main(args = null) {
       1,
     )}`,
   );
-  
+
   // Get all entity objects (an object of a specific type).
   const requestEntities = [WorldObjectType.WORLD_OBJECT_TRACKED_ENTITY];
   const entitiesObjects = (await worldObjectClient.listWorldObjects(requestEntities)).getWorldObjectsList();
@@ -63,11 +64,11 @@ async function main(args = null) {
     )}`,
   );
 
-  // Get all objects detected after this time
-  let startTime = Date.now();
+  // Get all objects detected after this time (in seconds, like Python: Date.now() was a time 55 000 years away).
+  let startTime = nowSec();
   let mostRecentObjects = (await worldObjectClient.listWorldObjects(null, startTime)).getWorldObjectsList();
   console.log(
-    `Recent objects after ${new Date(startTime).toLocaleString()} are: \n${JSON.stringify(
+    `Recent objects after ${new Date(startTime * 1_000).toLocaleString()} are: \n${JSON.stringify(
       mostRecentObjects.map(e => e.toObject()),
       null,
       1,
@@ -75,10 +76,10 @@ async function main(args = null) {
   );
 
   // Get all objects detected after this time in the future (so should get no objects).
-  startTime = Date.now() + 1_000_000;
+  startTime = nowSec() + 1_000;
   mostRecentObjects = (await worldObjectClient.listWorldObjects(null, startTime)).getWorldObjectsList();
   console.log(
-    `Recent objects after ${new Date(startTime).toLocaleString()} are: \n${JSON.stringify(
+    `Recent objects after ${new Date(startTime * 1_000).toLocaleString()} are: \n${JSON.stringify(
       mostRecentObjects.map(e => e.toObject()),
       null,
       1,

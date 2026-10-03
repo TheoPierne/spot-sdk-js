@@ -15,7 +15,7 @@ const { createStandardSdk } = require('../../src/index');
 
 async function main(args = null) {
   const parser = new ArgumentParser();
-  util.addCommonArguments(parser);
+  util.addBaseArguments(parser);
   parser.add_argument('--disp', { type: 'float', help: 'Maximum displacement to travel (m)', default: 12.5 });
   parser.add_argument('--duration', { type: 'float', help: 'Maximum duration (s)' });
 
@@ -23,7 +23,7 @@ async function main(args = null) {
 
   const sdk = createStandardSdk('AutoReturnExample');
   const robot = sdk.createRobot(options.hostname);
-  await robot.authenticate(options.username, options.password);
+  await util.authenticate(robot);
 
   /** @type {LeaseClient} */
   const leaseClient = await robot.ensureClient(LeaseClient.defaultServiceName);

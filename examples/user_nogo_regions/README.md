@@ -8,5 +8,5 @@ obstacles using the world object service.
 To run the examples:
 
 ```sh
-node user_nogo_regions.js --username USERNAME --password PASSWORD ROBOT_IP
+node user_nogo_regions.js ROBOT_IP
 ```
