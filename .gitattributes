@@ -1,0 +1,12 @@
+# LF everywhere: the repository stores LF, core.autocrlf=true (the default of Git for Windows) checked the files out
+# with CRLF, and a CRLF shebang breaks the bin of the package on Linux and macOS.
+* text=auto eol=lf
+
+# Binary files, whatever their content looks like.
+*.bddf binary
+*.bin binary
+*.csq binary
+*.jpeg binary
+*.jpg binary
+*.pb binary
+*.png binary

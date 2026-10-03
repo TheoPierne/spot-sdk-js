@@ -1,0 +1,98 @@
+{
+ "spec": {
+  "b64": "EgwKBG5hbWUSBAoCKgASHgoGbmVzdGVkEhQKEgoQEgwKBGZsYWcSBAoCOgAYARIeCgRtb2RlEhYKFCoSCgRmYXN0CgRzbG93GgRzbG93EiUKA3JvaRIeChwyGgoKCgNpbWcSA3NyYxIKCggoATACOANABBgBEhMKB2VuYWJsZWQSCAoGOgQKAggBEjgKBmNob2ljZRIuCixiKgoJCgFiEgQKAhgBChoKAWESFQoPEg0KAXgSCAoGGgQSAggDEgIYAhIBYRIZCgVjb3VudBIQCg4aDBICCAIiAggBKgIIBRIeCgZwb2ludHMSFAoSEhAKBhoEEgIIBxoCCAIiAggDEkIKBXNwZWVkEjkKISIfEgkJAAAAAAAA4D8aBQoDbS9zIgAqCQkAAAAAAAAAQBIUCgVTcGVlZBIJVGhlIHNwZWVkGAE=",
+  "text": "specs {\n  key: \"choice\"\n  value {\n    spec {\n      one_of_spec {\n        specs {\n          key: \"a\"\n          value {\n            spec {\n              specs {\n                key: \"x\"\n                value {\n                  spec {\n                    int_spec {\n                      default_value {\n                        value: 3\n                      }\n                    }\n                  }\n                }\n              }\n            }\n            ui_info {\n              display_order: 2\n            }\n          }\n        }\n        specs {\n          key: \"b\"\n          value {\n            spec {\n              is_hidden_by_default: true\n            }\n          }\n        }\n        default_key: \"a\"\n      }\n    }\n  }\n}\nspecs {\n  key: \"count\"\n  value {\n    spec {\n      int_spec {\n        default_value {\n          value: 2\n        }\n        min_value {\n          value: 1\n        }\n        max_value {\n          value: 5\n        }\n      }\n    }\n  }\n}\nspecs {\n  key: \"enabled\"\n  value {\n    spec {\n      bool_spec {\n        default_value {\n          value: true\n        }\n      }\n    }\n  }\n}\nspecs {\n  key: \"mode\"\n  value {\n    spec {\n      string_spec {\n        options: \"fast\"\n        options: \"slow\"\n        default_value: \"slow\"\n      }\n    }\n  }\n}\nspecs {\n  key: \"name\"\n  value {\n    spec {\n      string_spec {\n      }\n    }\n  }\n}\nspecs {\n  key: \"nested\"\n  value {\n    spec {\n      dict_spec {\n        specs {\n          key: \"flag\"\n          value {\n            spec {\n              bool_spec {\n              }\n            }\n          }\n        }\n        is_hidden_by_default: true\n      }\n    }\n  }\n}\nspecs {\n  key: \"points\"\n  value {\n    spec {\n      list_spec {\n        element_spec {\n          int_spec {\n            default_value {\n              value: 7\n            }\n          }\n        }\n        min_number_of_values {\n          value: 2\n        }\n        max_number_of_values {\n          value: 3\n        }\n      }\n    }\n  }\n}\nspecs {\n  key: \"roi\"\n  value {\n    spec {\n      roi_spec {\n        service_and_source {\n          service: \"img\"\n          source: \"src\"\n        }\n        default_area {\n          rectangle {\n            x: 1\n            y: 2\n            cols: 3\n            rows: 4\n          }\n        }\n        allows_rectangle: true\n      }\n    }\n  }\n}\nspecs {\n  key: \"speed\"\n  value {\n    spec {\n      double_spec {\n        default_value {\n          value: 0.5\n        }\n        units {\n          name: \"m/s\"\n        }\n        min_value {\n        }\n        max_value {\n          value: 2.0\n        }\n      }\n    }\n    ui_info {\n      display_name: \"Speed\"\n      description: \"The speed\"\n      display_order: 1\n    }\n  }\n}\n"
+ },
+ "default": "values {\n  key: \"choice\"\n  value {\n    one_of_value {\n      key: \"a\"\n      values {\n        key: \"a\"\n        value {\n          values {\n            key: \"x\"\n            value {\n              int_value {\n                value: 3\n              }\n            }\n          }\n        }\n      }\n      values {\n        key: \"b\"\n        value {\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"count\"\n  value {\n    int_value {\n      value: 2\n    }\n  }\n}\nvalues {\n  key: \"enabled\"\n  value {\n    bool_value {\n      value: true\n    }\n  }\n}\nvalues {\n  key: \"mode\"\n  value {\n    string_value {\n      value: \"slow\"\n    }\n  }\n}\nvalues {\n  key: \"name\"\n  value {\n    string_value {\n    }\n  }\n}\nvalues {\n  key: \"nested\"\n  value {\n    dict_value {\n      values {\n        key: \"flag\"\n        value {\n          bool_value {\n          }\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"points\"\n  value {\n    list_value {\n      values {\n        int_value {\n          value: 7\n        }\n      }\n      values {\n        int_value {\n          value: 7\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"roi\"\n  value {\n    roi_value {\n      area {\n        rectangle {\n          x: 1\n          y: 2\n          cols: 3\n          rows: 4\n        }\n      }\n      service_and_source {\n        service: \"img\"\n        source: \"src\"\n      }\n    }\n  }\n}\nvalues {\n  key: \"speed\"\n  value {\n    double_value {\n      value: 0.5\n    }\n  }\n}\n",
+ "converted": {
+  "param": "ChAKBG5hbWUSCCoGCgRzcG90ChgKBm5lc3RlZBIOCgwKCgoEZmxhZxICOgAKEAoEbW9kZRIIKgYKBHNsb3cKIQoDcm9pEhoyGAoKCggoATACOANABBIKCgNpbWcSA3NyYwoPCgdlbmFibGVkEgQ6AggBCigKBmNob2ljZRIeQhwKAWEaBQoBYhIAGhAKAWESCwoJCgF4EgQaAggFCg0KBWNvdW50EgQaAggECh4KBnBvaW50cxIUEhIKBBoCCAcKBBoCCAcKBBoCCAkKFAoFc3BlZWQSCyIJCQAAAAAAAOA/",
+  "dict": {
+   "speed": 0.5,
+   "points": [
+    7,
+    7,
+    9
+   ],
+   "count": 4,
+   "choice": {
+    "x": 5
+   },
+   "enabled": true,
+   "roi": {
+    "message": "area { rectangle { x: 1 y: 2 cols: 3 rows: 4 } } service_and_source { service: \"img\" source: \"src\" }"
+   },
+   "mode": "slow",
+   "nested": {
+    "flag": false
+   },
+   "name": "spot"
+  }
+ },
+ "invalid": {
+  "param": "ChAKBG5hbWUSCCoGCgRzcG90ChgKBm5lc3RlZBIOCgwKCgoEZmxhZxICOgAKEQoEbW9kZRIJKgcKBW90aGVyCiEKA3JvaRIaMhgKCgoIKAEwAjgDQAQSCgoDaW1nEgNzcmMKDwoHZW5hYmxlZBIEOgIIAQooCgZjaG9pY2USHkIcCgFhGgUKAWISABoQCgFhEgsKCQoBeBIEGgIIBQoNCgVjb3VudBIEGgIICgoeCgZwb2ludHMSFBISCgQaAggHCgQaAggHCgQaAggJChQKBXNwZWVkEgsiCQkAAAAAAADgPw==",
+  "error": "status: STATUS_INVALID_VALUE\nerror_messages: \"count param has error: Value 10 above max_bound 5\"\nerror_messages: \"mode param has error: Chosen string value other not among options [\\'fast\\', \\'slow\\']\"\n"
+ },
+ "coerce": [
+  {
+   "name": "dict",
+   "param": "ChgKBm5lc3RlZBIOCgwKCgoEZmxhZxICOgAKEQoEbW9kZRIJKgcKBW90aGVyCiEKA3JvaRIaMhgKCgoIKAEwAjgDQAQSCgoDaW1nEgNzcmMKDwoHZW5hYmxlZBIEOgIIAQooCgZjaG9pY2USHkIcCgFjGgUKAWISABoQCgFhEgsKCQoBeBIEGgIIBQoNCgVjb3VudBIEGgIICgoLCgN6enoSBDoCCAEKNwoGcG9pbnRzEi0SKwoEGgIIBwoEGgIIBwoEGgIICQoEGgIIAQoEGgIIAgoLIgkJAAAAAAAABEAKFAoFc3BlZWQSCyIJCQAAAAAAACJA",
+   "did": true,
+   "after": "values {\n  key: \"choice\"\n  value {\n    one_of_value {\n      key: \"a\"\n      values {\n        key: \"a\"\n        value {\n          values {\n            key: \"x\"\n            value {\n              int_value {\n                value: 5\n              }\n            }\n          }\n        }\n      }\n      values {\n        key: \"b\"\n        value {\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"count\"\n  value {\n    int_value {\n      value: 2\n    }\n  }\n}\nvalues {\n  key: \"enabled\"\n  value {\n    bool_value {\n      value: true\n    }\n  }\n}\nvalues {\n  key: \"mode\"\n  value {\n    string_value {\n      value: \"slow\"\n    }\n  }\n}\nvalues {\n  key: \"name\"\n  value {\n    string_value {\n    }\n  }\n}\nvalues {\n  key: \"nested\"\n  value {\n    dict_value {\n      values {\n        key: \"flag\"\n        value {\n          bool_value {\n          }\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"points\"\n  value {\n    list_value {\n      values {\n        int_value {\n          value: 7\n        }\n      }\n      values {\n        int_value {\n          value: 7\n        }\n      }\n      values {\n        int_value {\n          value: 9\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"roi\"\n  value {\n    roi_value {\n      area {\n        rectangle {\n          x: 1\n          y: 2\n          cols: 3\n          rows: 4\n        }\n      }\n      service_and_source {\n        service: \"img\"\n        source: \"src\"\n      }\n    }\n  }\n}\nvalues {\n  key: \"speed\"\n  value {\n    double_value {\n      value: 0.5\n    }\n  }\n}\n"
+  },
+  {
+   "name": "valid dict",
+   "param": "ChAKBG5hbWUSCCoGCgRzcG90ChgKBm5lc3RlZBIOCgwKCgoEZmxhZxICOgAKEAoEbW9kZRIIKgYKBHNsb3cKIQoDcm9pEhoyGAoKCggoATACOANABBIKCgNpbWcSA3NyYwoPCgdlbmFibGVkEgQ6AggBCigKBmNob2ljZRIeQhwKAWEaBQoBYhIAGhAKAWESCwoJCgF4EgQaAggFCg0KBWNvdW50EgQaAggECh4KBnBvaW50cxIUEhIKBBoCCAcKBBoCCAcKBBoCCAkKFAoFc3BlZWQSCyIJCQAAAAAAAOA/",
+   "did": true,
+   "after": "values {\n  key: \"choice\"\n  value {\n    one_of_value {\n      key: \"a\"\n      values {\n        key: \"a\"\n        value {\n          values {\n            key: \"x\"\n            value {\n              int_value {\n                value: 5\n              }\n            }\n          }\n        }\n      }\n      values {\n        key: \"b\"\n        value {\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"count\"\n  value {\n    int_value {\n      value: 4\n    }\n  }\n}\nvalues {\n  key: \"enabled\"\n  value {\n    bool_value {\n      value: true\n    }\n  }\n}\nvalues {\n  key: \"mode\"\n  value {\n    string_value {\n      value: \"slow\"\n    }\n  }\n}\nvalues {\n  key: \"name\"\n  value {\n    string_value {\n      value: \"spot\"\n    }\n  }\n}\nvalues {\n  key: \"nested\"\n  value {\n    dict_value {\n      values {\n        key: \"flag\"\n        value {\n          bool_value {\n          }\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"points\"\n  value {\n    list_value {\n      values {\n        int_value {\n          value: 7\n        }\n      }\n      values {\n        int_value {\n          value: 7\n        }\n      }\n      values {\n        int_value {\n          value: 9\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"roi\"\n  value {\n    roi_value {\n      area {\n        rectangle {\n          x: 1\n          y: 2\n          cols: 3\n          rows: 4\n        }\n      }\n      service_and_source {\n        service: \"img\"\n        source: \"src\"\n      }\n    }\n  }\n}\nvalues {\n  key: \"speed\"\n  value {\n    double_value {\n      value: 0.5\n    }\n  }\n}\n"
+  },
+  {
+   "name": "extra key only",
+   "param": "ChAKBG5hbWUSCCoGCgRzcG90ChgKBm5lc3RlZBIOCgwKCgoEZmxhZxICOgAKEAoEbW9kZRIIKgYKBHNsb3cKIQoDcm9pEhoyGAoKCggoATACOANABBIKCgNpbWcSA3NyYwoPCgdlbmFibGVkEgQ6AggBCigKBmNob2ljZRIeQhwKAWEaBQoBYhIAGhAKAWESCwoJCgF4EgQaAggFCg0KBWNvdW50EgQaAggECgsKA3p6ehIEOgIIAQoeCgZwb2ludHMSFBISCgQaAggHCgQaAggHCgQaAggJChQKBXNwZWVkEgsiCQkAAAAAAADgPw==",
+   "did": true,
+   "after": "values {\n  key: \"choice\"\n  value {\n    one_of_value {\n      key: \"a\"\n      values {\n        key: \"a\"\n        value {\n          values {\n            key: \"x\"\n            value {\n              int_value {\n                value: 5\n              }\n            }\n          }\n        }\n      }\n      values {\n        key: \"b\"\n        value {\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"count\"\n  value {\n    int_value {\n      value: 4\n    }\n  }\n}\nvalues {\n  key: \"enabled\"\n  value {\n    bool_value {\n      value: true\n    }\n  }\n}\nvalues {\n  key: \"mode\"\n  value {\n    string_value {\n      value: \"slow\"\n    }\n  }\n}\nvalues {\n  key: \"name\"\n  value {\n    string_value {\n      value: \"spot\"\n    }\n  }\n}\nvalues {\n  key: \"nested\"\n  value {\n    dict_value {\n      values {\n        key: \"flag\"\n        value {\n          bool_value {\n          }\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"points\"\n  value {\n    list_value {\n      values {\n        int_value {\n          value: 7\n        }\n      }\n      values {\n        int_value {\n          value: 7\n        }\n      }\n      values {\n        int_value {\n          value: 9\n        }\n      }\n    }\n  }\n}\nvalues {\n  key: \"roi\"\n  value {\n    roi_value {\n      area {\n        rectangle {\n          x: 1\n          y: 2\n          cols: 3\n          rows: 4\n        }\n      }\n      service_and_source {\n        service: \"img\"\n        source: \"src\"\n      }\n    }\n  }\n}\nvalues {\n  key: \"speed\"\n  value {\n    double_value {\n      value: 0.5\n    }\n  }\n}\n"
+  },
+  {
+   "name": "short list",
+   "param": "CgQaAggB",
+   "did": true,
+   "after": "values {\n  int_value {\n    value: 1\n  }\n}\nvalues {\n  int_value {\n    value: 7\n  }\n}\n"
+  },
+  {
+   "name": "roi same",
+   "param": "EgoKA2ltZxIDc3Jj",
+   "did": true,
+   "after": "service_and_source {\n  service: \"img\"\n  source: \"src\"\n}\n"
+  },
+  {
+   "name": "roi other",
+   "param": "EgwKA2ltZxIFb3RoZXI=",
+   "did": false,
+   "after": "service_and_source {\n  service: \"img\"\n  source: \"other\"\n}\n"
+  },
+  {
+   "name": "empty custom param",
+   "param": "",
+   "did": true,
+   "after": "list_value {\n  values {\n    int_value {\n      value: 7\n    }\n  }\n  values {\n    int_value {\n      value: 7\n    }\n  }\n}\n"
+  }
+ ],
+ "defaults": {
+  "roi without rectangle": null,
+  "one of without default key": null,
+  "string from options": "value: \"x\"\n",
+  "int from max": "value: -3\n",
+  "double none": "",
+  "bool none": ""
+ },
+ "list": [
+  7,
+  7,
+  9
+ ],
+ "oneof": {
+  "x": 5
+ },
+ "invalid_spec": [
+  "count param has error: Default Spec Value below allowed minimum Value"
+ ]
+}

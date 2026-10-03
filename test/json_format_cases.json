@@ -1,0 +1,306 @@
+[
+ {
+  "name": "keepalive status",
+  "type": "bosdyn.api.keepalive.GetStatusResponse",
+  "b64": "CjYKFgoMCIDiz6oGEIDKte4BEgZjbGktw6kSCwiB4s+qBhCAlO86GgsIguLPqgYQlZrvOiICCAES6wEI////////////ARLNAQoKc3VwZXJ2aXNvchIXCggIARCAyrXuATILCgkKBGJvZHkaAQMSMwoWCP3//////////wEQgL6o0P//////ARIZEhcKAXQSBmQKInEiXCIIeOKYg/CfmIA4AxJVCgMQ6AcaThIFCgNhcm0aRQo+CiZ0eXBlLmdvb2dsZWFwaXMuY29tL2Jvc2R5bi5hcGkuU0UzUG9zZRIUChIJAAAAAAAA8D8RAAAAAAAA4L8VAAAoQRoTCgRib2R5EgFlGgIBAiIBYSIBYiIFYWRtaW4aBgj24c+qBiIGdGFibGV0EgIIBxoCAWM=",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"header\": {\n    \"requestHeader\": {\n      \"requestTimestamp\": \"2023-11-14T22:13:20.500Z\",\n      \"clientName\": \"cli-\\u00e9\"\n    },\n    \"requestReceivedTimestamp\": \"2023-11-14T22:13:21.123456Z\",\n    \"responseTimestamp\": \"2023-11-14T22:13:22.123456789Z\",\n    \"error\": {\n      \"code\": \"CODE_OK\"\n    }\n  },\n  \"status\": [\n    {\n      \"policyId\": \"18446744073709551615\",\n      \"policy\": {\n        \"name\": \"supervisor\",\n        \"actions\": [\n          {\n            \"after\": \"1.500s\",\n            \"leaseStale\": {\n              \"leases\": [\n                {\n                  \"resource\": \"body\",\n                  \"sequence\": [\n                    3\n                  ]\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"-3.100s\",\n            \"recordEvent\": {\n              \"events\": [\n                {\n                  \"type\": \"t\",\n                  \"description\": \"d\\n\\\"q\\\"\\\\\",\n                  \"id\": \"x\\u2603\\ud83d\\ude00\",\n                  \"level\": \"LEVEL_HIGH\"\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"0.000001s\",\n            \"autoReturn\": {\n              \"leases\": [\n                {\n                  \"resource\": \"arm\"\n                }\n              ],\n              \"params\": {\n                \"mobilityParams\": {\n                  \"@type\": \"type.googleapis.com/bosdyn.api.SE3Pose\",\n                  \"position\": {\n                    \"x\": 1.0,\n                    \"y\": -0.5\n                  }\n                },\n                \"maxDisplacement\": 10.5\n              }\n            }\n          }\n        ],\n        \"associatedLeases\": [\n          {\n            \"resource\": \"body\",\n            \"epoch\": \"e\",\n            \"sequence\": [\n              1,\n              2\n            ],\n            \"clientNames\": [\n              \"a\",\n              \"b\"\n            ]\n          }\n        ],\n        \"userId\": \"admin\"\n      },\n      \"lastCheckin\": \"2023-11-14T22:13:10Z\",\n      \"clientName\": \"tablet\"\n    },\n    {\n      \"policyId\": \"7\"\n    }\n  ],\n  \"activeControlActions\": [\n    \"POLICY_CONTROL_ACTION_AUTO_RETURN\",\n    99\n  ]\n}"
+   },
+   "preserving": {
+    "json": "{\n  \"header\": {\n    \"request_header\": {\n      \"request_timestamp\": \"2023-11-14T22:13:20.500Z\",\n      \"client_name\": \"cli-\\u00e9\"\n    },\n    \"request_received_timestamp\": \"2023-11-14T22:13:21.123456Z\",\n    \"response_timestamp\": \"2023-11-14T22:13:22.123456789Z\",\n    \"error\": {\n      \"code\": \"CODE_OK\"\n    }\n  },\n  \"status\": [\n    {\n      \"policy_id\": \"18446744073709551615\",\n      \"policy\": {\n        \"name\": \"supervisor\",\n        \"actions\": [\n          {\n            \"after\": \"1.500s\",\n            \"lease_stale\": {\n              \"leases\": [\n                {\n                  \"resource\": \"body\",\n                  \"sequence\": [\n                    3\n                  ]\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"-3.100s\",\n            \"record_event\": {\n              \"events\": [\n                {\n                  \"type\": \"t\",\n                  \"description\": \"d\\n\\\"q\\\"\\\\\",\n                  \"id\": \"x\\u2603\\ud83d\\ude00\",\n                  \"level\": \"LEVEL_HIGH\"\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"0.000001s\",\n            \"auto_return\": {\n              \"leases\": [\n                {\n                  \"resource\": \"arm\"\n                }\n              ],\n              \"params\": {\n                \"mobility_params\": {\n                  \"@type\": \"type.googleapis.com/bosdyn.api.SE3Pose\",\n                  \"position\": {\n                    \"x\": 1.0,\n                    \"y\": -0.5\n                  }\n                },\n                \"max_displacement\": 10.5\n              }\n            }\n          }\n        ],\n        \"associated_leases\": [\n          {\n            \"resource\": \"body\",\n            \"epoch\": \"e\",\n            \"sequence\": [\n              1,\n              2\n            ],\n            \"client_names\": [\n              \"a\",\n              \"b\"\n            ]\n          }\n        ],\n        \"user_id\": \"admin\"\n      },\n      \"last_checkin\": \"2023-11-14T22:13:10Z\",\n      \"client_name\": \"tablet\"\n    },\n    {\n      \"policy_id\": \"7\"\n    }\n  ],\n  \"active_control_actions\": [\n    \"POLICY_CONTROL_ACTION_AUTO_RETURN\",\n    99\n  ]\n}"
+   },
+   "integers": {
+    "json": "{\n  \"header\": {\n    \"requestHeader\": {\n      \"requestTimestamp\": \"2023-11-14T22:13:20.500Z\",\n      \"clientName\": \"cli-\\u00e9\"\n    },\n    \"requestReceivedTimestamp\": \"2023-11-14T22:13:21.123456Z\",\n    \"responseTimestamp\": \"2023-11-14T22:13:22.123456789Z\",\n    \"error\": {\n      \"code\": 1\n    }\n  },\n  \"status\": [\n    {\n      \"policyId\": \"18446744073709551615\",\n      \"policy\": {\n        \"name\": \"supervisor\",\n        \"actions\": [\n          {\n            \"after\": \"1.500s\",\n            \"leaseStale\": {\n              \"leases\": [\n                {\n                  \"resource\": \"body\",\n                  \"sequence\": [\n                    3\n                  ]\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"-3.100s\",\n            \"recordEvent\": {\n              \"events\": [\n                {\n                  \"type\": \"t\",\n                  \"description\": \"d\\n\\\"q\\\"\\\\\",\n                  \"id\": \"x\\u2603\\ud83d\\ude00\",\n                  \"level\": 3\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"0.000001s\",\n            \"autoReturn\": {\n              \"leases\": [\n                {\n                  \"resource\": \"arm\"\n                }\n              ],\n              \"params\": {\n                \"mobilityParams\": {\n                  \"@type\": \"type.googleapis.com/bosdyn.api.SE3Pose\",\n                  \"position\": {\n                    \"x\": 1.0,\n                    \"y\": -0.5\n                  }\n                },\n                \"maxDisplacement\": 10.5\n              }\n            }\n          }\n        ],\n        \"associatedLeases\": [\n          {\n            \"resource\": \"body\",\n            \"epoch\": \"e\",\n            \"sequence\": [\n              1,\n              2\n            ],\n            \"clientNames\": [\n              \"a\",\n              \"b\"\n            ]\n          }\n        ],\n        \"userId\": \"admin\"\n      },\n      \"lastCheckin\": \"2023-11-14T22:13:10Z\",\n      \"clientName\": \"tablet\"\n    },\n    {\n      \"policyId\": \"7\"\n    }\n  ],\n  \"activeControlActions\": [\n    1,\n    99\n  ]\n}"
+   },
+   "sorted": {
+    "json": "{\n  \"activeControlActions\": [\n    \"POLICY_CONTROL_ACTION_AUTO_RETURN\",\n    99\n  ],\n  \"header\": {\n    \"error\": {\n      \"code\": \"CODE_OK\"\n    },\n    \"requestHeader\": {\n      \"clientName\": \"cli-\\u00e9\",\n      \"requestTimestamp\": \"2023-11-14T22:13:20.500Z\"\n    },\n    \"requestReceivedTimestamp\": \"2023-11-14T22:13:21.123456Z\",\n    \"responseTimestamp\": \"2023-11-14T22:13:22.123456789Z\"\n  },\n  \"status\": [\n    {\n      \"clientName\": \"tablet\",\n      \"lastCheckin\": \"2023-11-14T22:13:10Z\",\n      \"policy\": {\n        \"actions\": [\n          {\n            \"after\": \"1.500s\",\n            \"leaseStale\": {\n              \"leases\": [\n                {\n                  \"resource\": \"body\",\n                  \"sequence\": [\n                    3\n                  ]\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"-3.100s\",\n            \"recordEvent\": {\n              \"events\": [\n                {\n                  \"description\": \"d\\n\\\"q\\\"\\\\\",\n                  \"id\": \"x\\u2603\\ud83d\\ude00\",\n                  \"level\": \"LEVEL_HIGH\",\n                  \"type\": \"t\"\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"0.000001s\",\n            \"autoReturn\": {\n              \"leases\": [\n                {\n                  \"resource\": \"arm\"\n                }\n              ],\n              \"params\": {\n                \"maxDisplacement\": 10.5,\n                \"mobilityParams\": {\n                  \"@type\": \"type.googleapis.com/bosdyn.api.SE3Pose\",\n                  \"position\": {\n                    \"x\": 1.0,\n                    \"y\": -0.5\n                  }\n                }\n              }\n            }\n          }\n        ],\n        \"associatedLeases\": [\n          {\n            \"clientNames\": [\n              \"a\",\n              \"b\"\n            ],\n            \"epoch\": \"e\",\n            \"resource\": \"body\",\n            \"sequence\": [\n              1,\n              2\n            ]\n          }\n        ],\n        \"name\": \"supervisor\",\n        \"userId\": \"admin\"\n      },\n      \"policyId\": \"18446744073709551615\"\n    },\n    {\n      \"policyId\": \"7\"\n    }\n  ]\n}"
+   },
+   "compact": {
+    "json": "{\"header\": {\"requestHeader\": {\"requestTimestamp\": \"2023-11-14T22:13:20.500Z\", \"clientName\": \"cli-\\u00e9\"}, \"requestReceivedTimestamp\": \"2023-11-14T22:13:21.123456Z\", \"responseTimestamp\": \"2023-11-14T22:13:22.123456789Z\", \"error\": {\"code\": \"CODE_OK\"}}, \"status\": [{\"policyId\": \"18446744073709551615\", \"policy\": {\"name\": \"supervisor\", \"actions\": [{\"after\": \"1.500s\", \"leaseStale\": {\"leases\": [{\"resource\": \"body\", \"sequence\": [3]}]}}, {\"after\": \"-3.100s\", \"recordEvent\": {\"events\": [{\"type\": \"t\", \"description\": \"d\\n\\\"q\\\"\\\\\", \"id\": \"x\\u2603\\ud83d\\ude00\", \"level\": \"LEVEL_HIGH\"}]}}, {\"after\": \"0.000001s\", \"autoReturn\": {\"leases\": [{\"resource\": \"arm\"}], \"params\": {\"mobilityParams\": {\"@type\": \"type.googleapis.com/bosdyn.api.SE3Pose\", \"position\": {\"x\": 1.0, \"y\": -0.5}}, \"maxDisplacement\": 10.5}}}], \"associatedLeases\": [{\"resource\": \"body\", \"epoch\": \"e\", \"sequence\": [1, 2], \"clientNames\": [\"a\", \"b\"]}], \"userId\": \"admin\"}, \"lastCheckin\": \"2023-11-14T22:13:10Z\", \"clientName\": \"tablet\"}, {\"policyId\": \"7\"}], \"activeControlActions\": [\"POLICY_CONTROL_ACTION_AUTO_RETURN\", 99]}"
+   },
+   "indent0": {
+    "json": "{\n\"header\": {\n\"requestHeader\": {\n\"requestTimestamp\": \"2023-11-14T22:13:20.500Z\",\n\"clientName\": \"cli-\\u00e9\"\n},\n\"requestReceivedTimestamp\": \"2023-11-14T22:13:21.123456Z\",\n\"responseTimestamp\": \"2023-11-14T22:13:22.123456789Z\",\n\"error\": {\n\"code\": \"CODE_OK\"\n}\n},\n\"status\": [\n{\n\"policyId\": \"18446744073709551615\",\n\"policy\": {\n\"name\": \"supervisor\",\n\"actions\": [\n{\n\"after\": \"1.500s\",\n\"leaseStale\": {\n\"leases\": [\n{\n\"resource\": \"body\",\n\"sequence\": [\n3\n]\n}\n]\n}\n},\n{\n\"after\": \"-3.100s\",\n\"recordEvent\": {\n\"events\": [\n{\n\"type\": \"t\",\n\"description\": \"d\\n\\\"q\\\"\\\\\",\n\"id\": \"x\\u2603\\ud83d\\ude00\",\n\"level\": \"LEVEL_HIGH\"\n}\n]\n}\n},\n{\n\"after\": \"0.000001s\",\n\"autoReturn\": {\n\"leases\": [\n{\n\"resource\": \"arm\"\n}\n],\n\"params\": {\n\"mobilityParams\": {\n\"@type\": \"type.googleapis.com/bosdyn.api.SE3Pose\",\n\"position\": {\n\"x\": 1.0,\n\"y\": -0.5\n}\n},\n\"maxDisplacement\": 10.5\n}\n}\n}\n],\n\"associatedLeases\": [\n{\n\"resource\": \"body\",\n\"epoch\": \"e\",\n\"sequence\": [\n1,\n2\n],\n\"clientNames\": [\n\"a\",\n\"b\"\n]\n}\n],\n\"userId\": \"admin\"\n},\n\"lastCheckin\": \"2023-11-14T22:13:10Z\",\n\"clientName\": \"tablet\"\n},\n{\n\"policyId\": \"7\"\n}\n],\n\"activeControlActions\": [\n\"POLICY_CONTROL_ACTION_AUTO_RETURN\",\n99\n]\n}"
+   },
+   "utf8": {
+    "json": "{\n  \"header\": {\n    \"requestHeader\": {\n      \"requestTimestamp\": \"2023-11-14T22:13:20.500Z\",\n      \"clientName\": \"cli-é\"\n    },\n    \"requestReceivedTimestamp\": \"2023-11-14T22:13:21.123456Z\",\n    \"responseTimestamp\": \"2023-11-14T22:13:22.123456789Z\",\n    \"error\": {\n      \"code\": \"CODE_OK\"\n    }\n  },\n  \"status\": [\n    {\n      \"policyId\": \"18446744073709551615\",\n      \"policy\": {\n        \"name\": \"supervisor\",\n        \"actions\": [\n          {\n            \"after\": \"1.500s\",\n            \"leaseStale\": {\n              \"leases\": [\n                {\n                  \"resource\": \"body\",\n                  \"sequence\": [\n                    3\n                  ]\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"-3.100s\",\n            \"recordEvent\": {\n              \"events\": [\n                {\n                  \"type\": \"t\",\n                  \"description\": \"d\\n\\\"q\\\"\\\\\",\n                  \"id\": \"x☃😀\",\n                  \"level\": \"LEVEL_HIGH\"\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"0.000001s\",\n            \"autoReturn\": {\n              \"leases\": [\n                {\n                  \"resource\": \"arm\"\n                }\n              ],\n              \"params\": {\n                \"mobilityParams\": {\n                  \"@type\": \"type.googleapis.com/bosdyn.api.SE3Pose\",\n                  \"position\": {\n                    \"x\": 1.0,\n                    \"y\": -0.5\n                  }\n                },\n                \"maxDisplacement\": 10.5\n              }\n            }\n          }\n        ],\n        \"associatedLeases\": [\n          {\n            \"resource\": \"body\",\n            \"epoch\": \"e\",\n            \"sequence\": [\n              1,\n              2\n            ],\n            \"clientNames\": [\n              \"a\",\n              \"b\"\n            ]\n          }\n        ],\n        \"userId\": \"admin\"\n      },\n      \"lastCheckin\": \"2023-11-14T22:13:10Z\",\n      \"clientName\": \"tablet\"\n    },\n    {\n      \"policyId\": \"7\"\n    }\n  ],\n  \"activeControlActions\": [\n    \"POLICY_CONTROL_ACTION_AUTO_RETURN\",\n    99\n  ]\n}"
+   }
+  }
+ },
+ {
+  "name": "battery",
+  "type": "bosdyn.api.BatteryState",
+  "b64": "EgJiMRoJCQAAAAAAAElAIgMIkBwqCQnxaOOItfjkvjIJCQCA4Dd5w0FDOjiamZmZmZm5PwAAAAAAAPA/AAAAAAAA8H8AAAAAAADw/wAAAAAAAPh/AAAAAAAAAIAAAIBUNG+dQUAD",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"identifier\": \"b1\",\n  \"chargePercentage\": 50.0,\n  \"estimatedRuntime\": \"3600s\",\n  \"current\": -1e-05,\n  \"voltage\": 1e+16,\n  \"temperatures\": [\n    0.1,\n    1.0,\n    \"Infinity\",\n    \"-Infinity\",\n    \"NaN\",\n    -0.0,\n    123456789.125\n  ],\n  \"status\": \"STATUS_DISCHARGING\"\n}"
+   },
+   "always": {
+    "json": "{\n  \"identifier\": \"b1\",\n  \"chargePercentage\": 50.0,\n  \"estimatedRuntime\": \"3600s\",\n  \"current\": -1e-05,\n  \"voltage\": 1e+16,\n  \"temperatures\": [\n    0.1,\n    1.0,\n    \"Infinity\",\n    \"-Infinity\",\n    \"NaN\",\n    -0.0,\n    123456789.125\n  ],\n  \"status\": \"STATUS_DISCHARGING\"\n}"
+   }
+  }
+ },
+ {
+  "name": "empty battery",
+  "type": "bosdyn.api.BatteryState",
+  "b64": "",
+  "outputs": {
+   "default": {
+    "json": "{}"
+   },
+   "always": {
+    "json": "{\n  \"identifier\": \"\",\n  \"temperatures\": [],\n  \"status\": \"STATUS_UNKNOWN\"\n}"
+   }
+  }
+ },
+ {
+  "name": "fans",
+  "type": "bosdyn.api.GetFanInformationResponse",
+  "b64": "EhMKCmJvZHlfZmFuXzASBQ3NzMw9EgoKAWESBQ3msWF/EhMKCmhpcHNfZmFuXzESBQ0rUppE",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"fanInformation\": {\n    \"hips_fan_1\": {\n      \"frequency\": 1234.5677\n    },\n    \"a\": {\n      \"frequency\": 3e+38\n    },\n    \"body_fan_0\": {\n      \"frequency\": 0.1\n    }\n  }\n}"
+   },
+   "precision": {
+    "json": "{\n  \"fanInformation\": {\n    \"hips_fan_1\": {\n      \"frequency\": 1230.0\n    },\n    \"a\": {\n      \"frequency\": 3e+38\n    },\n    \"body_fan_0\": {\n      \"frequency\": 0.1\n    }\n  }\n}"
+   }
+  }
+ },
+ {
+  "name": "int keys",
+  "type": "bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence",
+  "b64": "CgcIAhUAAIA/CgcIChUAAAA/",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"brightnesses\": {\n    \"10\": 0.5,\n    \"2\": 1.0\n  }\n}"
+   }
+  }
+ },
+ {
+  "name": "bool map",
+  "type": "bosdyn.api.GetFeatureEnabledResponse",
+  "b64": "EgUKAXgQARIFCgF5EAA=",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"featureEnabled\": {\n    \"y\": false,\n    \"x\": true\n  }\n}"
+   }
+  }
+ },
+ {
+  "name": "struct",
+  "type": "bosdyn.api.AlertData",
+  "b64": "CAMSAXQicQoKCgFzEgUaA8OpAQoHCgFiEgIgAQoQCgFvEgsqCQoHCgFrEgIgAAoOCgFmEgkRAAAAAAAABEAKHwoBbBIaMhgKCREAAAAAAADwPwoDGgFhCgIyAAoCKgAKBwoBbhICCAAKDgoBaRIJEQAAAAAAAPA/",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"severity\": \"SEVERITY_LEVEL_ERROR\",\n  \"title\": \"t\",\n  \"additionalData\": {\n    \"i\": 1.0,\n    \"n\": null,\n    \"l\": [\n      1.0,\n      \"a\",\n      [],\n      {}\n    ],\n    \"f\": 2.5,\n    \"o\": {\n      \"k\": false\n    },\n    \"b\": true,\n    \"s\": \"\\u00e9\\u0001\"\n  }\n}"
+   }
+  }
+ },
+ {
+  "name": "struct nan",
+  "type": "bosdyn.api.AlertData",
+  "b64": "IhIKEAoDbmFuEgkRAAAAAAAA+H8=",
+  "outputs": {
+   "default": {
+    "error": "SerializeToJsonError",
+    "message": "Failed to serialize additional_data field: Fail to serialize NaN for Value.number_value, which would parse as string_value."
+   }
+  }
+ },
+ {
+  "name": "any wrapper",
+  "type": "bosdyn.api.auto_return.Params",
+  "b64": "CjwKL3R5cGUuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLnByb3RvYnVmLkRvdWJsZVZhbHVlEgkJAAAAAAAA+D8=",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"mobilityParams\": {\n    \"@type\": \"type.googleapis.com/google.protobuf.DoubleValue\",\n    \"value\": 1.5\n  }\n}"
+   }
+  }
+ },
+ {
+  "name": "any duration",
+  "type": "bosdyn.api.auto_return.Params",
+  "b64": "CjIKLHR5cGUuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uEgIIAg==",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"mobilityParams\": {\n    \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\n    \"value\": \"2s\"\n  }\n}"
+   }
+  }
+ },
+ {
+  "name": "any message",
+  "type": "bosdyn.api.auto_return.Params",
+  "b64": "CjAKI3R5cGUuZ29vZ2xlYXBpcy5jb20vYm9zZHluLmFwaS5WZWMzEgkJAAAAAAAACEA=",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"mobilityParams\": {\n    \"@type\": \"type.googleapis.com/bosdyn.api.Vec3\",\n    \"x\": 3.0\n  }\n}"
+   }
+  }
+ },
+ {
+  "name": "any empty message",
+  "type": "bosdyn.api.auto_return.Params",
+  "b64": "CiUKI3R5cGUuZ29vZ2xlYXBpcy5jb20vYm9zZHluLmFwaS5WZWMz",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"mobilityParams\": {\n    \"@type\": \"type.googleapis.com/bosdyn.api.Vec3\"\n  }\n}"
+   }
+  }
+ },
+ {
+  "name": "any unknown",
+  "type": "bosdyn.api.auto_return.Params",
+  "b64": "CiYKIHR5cGUuZ29vZ2xlYXBpcy5jb20vdW5rbm93bi5UeXBlEgIIAQ==",
+  "outputs": {
+   "default": {
+    "error": "TypeError",
+    "message": "Can not find message descriptor by type_url: type.googleapis.com/unknown.Type"
+   }
+  }
+ },
+ {
+  "name": "any unset",
+  "type": "bosdyn.api.auto_return.Params",
+  "b64": "CgA=",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"mobilityParams\": {}\n}"
+   }
+  }
+ },
+ {
+  "name": "field mask",
+  "type": "bosdyn.api.graph_nav.Edge.Annotations",
+  "b64": "SioKCXZlbF9saW1pdAoddGVycmFpbl9wYXJhbXMuZ3JvdW5kX211X2hpbnQ=",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"overrideMobilityParams\": \"velLimit,terrainParams.groundMuHint\"\n}"
+   }
+  }
+ },
+ {
+  "name": "field mask uppercase",
+  "type": "bosdyn.api.graph_nav.Edge.Annotations",
+  "b64": "SgUKA0JhZA==",
+  "outputs": {
+   "default": {
+    "error": "SerializeToJsonError",
+    "message": "Failed to serialize override_mobility_params field: Fail to print FieldMask to Json string: Path name Bad must not contain uppercase letters.."
+   }
+  }
+ },
+ {
+  "name": "field mask trailing",
+  "type": "bosdyn.api.graph_nav.Edge.Annotations",
+  "b64": "SgsKCXRyYWlsaW5nXw==",
+  "outputs": {
+   "default": {
+    "error": "SerializeToJsonError",
+    "message": "Failed to serialize override_mobility_params field: Fail to print FieldMask to Json string: Trailing \"_\" in path name trailing_.."
+   }
+  }
+ },
+ {
+  "name": "int64",
+  "type": "bosdyn.api.Parameter",
+  "b64": "CgFsGP/////////v/wE=",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"label\": \"l\",\n  \"intValue\": \"-9007199254740993\"\n}"
+   }
+  }
+ },
+ {
+  "name": "timestamp parameter",
+  "type": "bosdyn.api.Parameter",
+  "b64": "CgF0Kg0IgJK4w5j+////ARAF",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"label\": \"t\",\n  \"timestamp\": \"0001-01-01T00:00:00.000000005Z\"\n}"
+   }
+  }
+ },
+ {
+  "name": "bytes",
+  "type": "bosdyn.api.DataBlob",
+  "b64": "GgF4IggA/xBoZWxsbw==",
+  "outputs": {
+   "default": {
+    "json": "{\n  \"typeId\": \"x\",\n  \"data\": \"AP8QaGVsbG8=\"\n}"
+   }
+  }
+ },
+ {
+  "name": "bad timestamp",
+  "type": "bosdyn.api.Parameter",
+  "b64": "KgsQ////////////AQ==",
+  "outputs": {
+   "default": {
+    "error": "SerializeToJsonError",
+    "message": "Failed to serialize timestamp field: Timestamp is not valid: Nanos -1 must be in a range [0, 999999].."
+   }
+  }
+ },
+ {
+  "name": "bad duration",
+  "type": "bosdyn.api.Parameter",
+  "b64": "Mg0IARD///////////8B",
+  "outputs": {
+   "default": {
+    "error": "SerializeToJsonError",
+    "message": "Failed to serialize duration field: Duration is not valid: Sign mismatch.."
+   }
+  }
+ },
+ {
+  "name": "big timestamp",
+  "type": "bosdyn.api.Parameter",
+  "b64": "KgcIgIPR/68H",
+  "outputs": {
+   "default": {
+    "error": "SerializeToJsonError",
+    "message": "Failed to serialize timestamp field: Timestamp is not valid: Seconds 253402300800 must be in range [-62135596800, 253402300799].."
+   }
+  }
+ },
+ {
+  "name": "top timestamp",
+  "type": "google.protobuf.Timestamp",
+  "b64": "CICg+PoFEICt4gQ=",
+  "outputs": {
+   "default": {
+    "json": "\"2020-09-13T12:26:40.010Z\""
+   }
+  }
+ },
+ {
+  "name": "top duration",
+  "type": "google.protobuf.Duration",
+  "b64": "CP///////////wEQ+///////////AQ==",
+  "outputs": {
+   "default": {
+    "json": "\"-1.000000005s\""
+   }
+  }
+ },
+ {
+  "name": "top wrapper",
+  "type": "google.protobuf.Int64Value",
+  "b64": "CAU=",
+  "outputs": {
+   "default": {
+    "json": "\"5\""
+   }
+  }
+ },
+ {
+  "name": "top bytes wrapper",
+  "type": "google.protobuf.BytesValue",
+  "b64": "CgJhYg==",
+  "outputs": {
+   "default": {
+    "json": "\"YWI=\""
+   }
+  }
+ }
+]

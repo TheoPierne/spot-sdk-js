@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig.json",
+  // npm run test:typings: the typings of typings/ and src/bosdyn/, checked strictly, used like an application does.
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "module": "node16",
+    "moduleResolution": "node16",
+    "target": "es2022",
+    "lib": ["es2023", "esnext.disposable"],
+    "types": ["node"],
+    "skipLibCheck": false,
+    // Like the exports of package.json (test/ has its package.json: spot-sdk-js cannot import itself from here).
+    "paths": {
+      "spot-sdk-js": ["../../typings/index.d.ts"],
+      "spot-sdk-js/src/bosdyn/*": ["../../src/bosdyn/*"],
+      "spot-sdk-js/src/*": ["../../typings/*"]
+    }
+  },
+  "files": ["usage.ts"]
+}

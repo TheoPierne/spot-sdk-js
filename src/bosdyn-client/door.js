@@ -1,0 +1,81 @@
+/**
+ * @file For clients to the door service.
+ */
+
+'use strict';
+
+const { BaseClient, handleCommonHeaderErrors, handleLeaseUseResultErrors } = require('./common');
+const { addLeaseWalletProcessors } = require('./lease');
+const { DoorServiceClient } = require('../bosdyn/api/spot/door_service_grpc_pb');
+
+/**
+ * @typedef {import('./exceptions').LeaseUseError} LeaseUseError
+ * @typedef {import('./exceptions').RpcError} RpcError
+ * @typedef {import('../bosdyn/api/spot/door_pb').OpenDoorCommandRequest} OpenDoorCommandRequest
+ * @typedef {import('../bosdyn/api/spot/door_pb').OpenDoorCommandResponse} OpenDoorCommandResponse
+ * @typedef {import('../bosdyn/api/spot/door_pb').OpenDoorFeedbackRequest} OpenDoorFeedbackRequest
+ * @typedef {import('../bosdyn/api/spot/door_pb').OpenDoorFeedbackResponse} OpenDoorFeedbackResponse
+ */
+
+/**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
+ * Client for the door service.
+ * @extends {BaseClient<DoorServiceClient>}
+ */
+class DoorClient extends BaseClient {
+  static defaultServiceName = 'door';
+  static serviceType = 'bosdyn.api.spot.DoorService';
+
+  /**
+   * Create an instance of DoorClient's class.
+   * @param {?string} name Name of the Class.
+   */
+  constructor(name = null) {
+    super(DoorServiceClient, name);
+  }
+
+  /**
+   * Update instance from another object.
+   * @param {Robot} other The object where to copy from.
+   * @returns {void}
+   */
+  updateFrom(other) {
+    super.updateFrom(other);
+    if (this.leaseWallet) addLeaseWalletProcessors(this, this.leaseWallet);
+  }
+
+  /**
+   * Issue a open door command to the robot.
+   * @param {OpenDoorCommandRequest} request The door command.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<OpenDoorCommandResponse>} The full OpenDoorCommandResponse message,
+   * which includes a command id for feedback.
+   * @throws {RpcError} Problem communicating with the robot.
+   * @throws {LeaseUseError} The lease for the request failed.
+   */
+  openDoor(request, args) {
+    return this.call(this._stub.openDoor, request, null, _openDoorErrorHandler, true, args);
+  }
+
+  /**
+   * Get feedback from the robot on a specific door command.
+   * @param {OpenDoorFeedbackRequest} request The request for feedback of the door command.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<OpenDoorFeedbackResponse>} The full OpenDoorFeedbackResponse message.
+   * @throws {RpcError} Problem communicating with the robot.
+   */
+  openDoorFeedback(request, args) {
+    return this.call(this._stub.openDoorFeedback, request, null, _openDoorFeedbackErrorHandler, true, args);
+  }
+}
+
+const _openDoorErrorHandler = handleCommonHeaderErrors(handleLeaseUseResultErrors(() => null));
+
+const _openDoorFeedbackErrorHandler = handleCommonHeaderErrors(() => null);
+
+module.exports = {
+  DoorClient,
+};

@@ -8,11 +8,11 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Using the Robot State Service
 
-This example program demonstrates how to query the robot state service for the hardware config, the current robot state, or the robot metrics.
+This example program demonstrates how to query the robot state service for the hardware config, current robot state, robot metrics, joint states, or frame tree snapshot.
 
 ## Setup Dependencies
 
-This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
+The example uses the SDK of this repository: install its dependencies at the root of the repository with:
 
 ```
 npm install
@@ -23,7 +23,7 @@ npm install
 To run the example:
 
 ```
-node get_robot_state.js --username USERNAME --password PASSWORD ROBOT_IP {state, hardware, metrics}
+node get_robot_state.js ROBOT_IP {state, hardware, metrics, joints, frame_tree}
 ```
 
-As well, the program requires one of `{state, hardware, metrics}` as a command line argument to specify which robot state request to issue when running the example program.
+As well, the program requires one of `{state, hardware, metrics, joints, frame_tree}` as a command line argument to specify which robot state request to issue when running the example program.

@@ -1,0 +1,299 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+# 1.0.0 - (unreleased)
+
+First stable release. The SDK follows the official Python SDK of Boston Dynamics (behavior and protobuf definitions
+of 5.2.0): each module was compared with its Python counterpart, function by function, and fixed or completed to
+behave the same way. The deliberate differences are described in the JSDoc.
+
+## Breaking Changes
+
+- Node.js 22 or later is required (`engines`), the oldest version still maintained and the one the CI tests with
+  Node.js 24. `engines` said 18, but the dependencies already required 20 (numjs) and even 22.22 (which).
+- `src/bosdyn-client/loggerUtil.js` is renamed `logger_util.js`, like the other modules.
+- The loggers are at the `info` level by default (they were at `debug`), and write to stderr instead of stdout. The
+  requests and responses of the RPCs are logged at the `debug` level only.
+- `util.setupLogging(verbose, includeDedupFilter, alwaysPrintLoggerLevels)`: the second argument adds the filter of
+  the repeated messages, like Python.
+- Options of the RPCs (the `args` of the client methods): `timeout: null` or `Infinity` means no deadline (it gave
+  30 s), like `timeout=None` in Python. The object is no longer modified, and `metadata`, `waitForReady` and the
+  other call options of grpc-js are passed to the call.
+- The options objects of the helpers (robot command builders, `LeaseKeepAlive`, ...) are checked: an unknown option
+  throws a `TypeError` instead of being ignored.
+- Durations follow the Python SDK: `blockForTrajectoryCmd()` takes seconds (`feedbackIntervalSecs`, `timeoutSec`),
+  and the function given to `setClockSource()` returns seconds.
+- The 64-bit integers that can exceed 2^53 are strings: BDDF hashes and additional indexes, E-Stop challenges,
+  keepalive policy ids, signal schema ids and recording session ids. The BDDF readers return the timestamps in
+  nanoseconds as BigInt.
+- The command line (`bin`) is rewritten from the Python one: same commands, options and output.
+- `NODE_ENV=development` no longer replaces the robot certificate with a test CA: set `BOSDYN_CA_CERT` instead.
+- `src/bosdyn-client/index.js` no longer patches `console`.
+- `Queue.push()` returns the new length of the queue, like `Array.prototype.push()` (a `Queue` is an `Array`), and
+  takes several values: it returned the queue.
+
+## Security
+
+- Removed the client certificate, the private key and the test CA published in `src/bosdyn-client/resources` and
+  sent by default. The key must be considered leaked.
+- The passwords, tokens and secrets are no longer written in the logs: every request and response was logged, at a
+  debug level enabled by default.
+- Loading the SDK no longer changes `process.env`.
+
+## Features
+
+### Clients and helpers
+
+- New clients: audio-visual (with `AudioVisualHelper`), autowalk, area callback, gripper camera parameters, hazard
+  avoidance, inverse kinematics, keepalive (with `PolicyKeepalive`), log status, payload software update (and
+  initiation), and GPS (listener with NTRIP corrections, aggregator and registration clients).
+- New helpers: access controlled doors (`access_controlled_door_util`), lease resource hierarchy and
+  `LeaseValidator`, Spot CAM `LightsHelper`, data chunks, `ErrorCallbackResult`, `blockingCommand()`, the periodic
+  tasks of `async_tasks`, and `robot_id.compareVersions()`.
+- Custom parameters (`service_customization_helpers`): validation, conversion of the parameters to objects, default
+  values of the specs, coercion of the parameters to the specs, and builders of the specs.
+- New options: `copyRequest` for the RPCs, `retryInterval` for `authenticateFromPayloadCredentials()`, `logImages`
+  for `CameraBaseImageServicer`.
+- The additions of the Python SDK 5.2.0: `downloadToDisk()` and `uploadFromDisk()` (modules `graph_nav_download` and
+  `graph_nav_upload`, with their command lines: a graph and its snapshots in the standard file layout, uploaded by
+  batches of 16 MB), `speakerDisableAgc` and `speakerDisableNr` for `AudioVisualClient.setSystemParams()`,
+  `trackingMode` for `armJointMoveHelper()`, the `Timestamp` variables of the missions (`TYPE_TIMESTAMP`), the RPC
+  options of `DataAcquisitionStoreHelper.storeDataAsChunks()` and `storeFile()`, `setProcessName()`, and the errors
+  `ConnectionResetError`, `InternalDeserializationError` and `AnimationRejectedDanceActiveError`.
+
+### Services for payloads
+
+- `GrpcServiceRunner`, to run a gRPC service and stop it on Ctrl-C.
+- Area callback services: `AreaCallbackServiceServicer`, `runService()`, `AreaCallbackServiceConfig` and
+  `handleServiceFaults()`.
+- `LoggingHandler`: a winston transport that sends the logs to the data buffer of the robot.
+- The image service helpers and the data acquisition plugin service run with grpc-js. `CameraInterface` has a
+  `captureLock` for the concurrent captures.
+
+### Core
+
+- `text_format` (printing and parsing) and `json_format` (printing): the text and JSON formats of the protobuf
+  messages, like in Python. `build.js` generates the descriptors of the messages they need.
+- Formatting helpers like Python: `durationStr()`, `timestampStr()`, `secsToHms()`, `distanceStr()`,
+  `formatMetric()`.
+- `setClockSource()` and a sub-millisecond clock. `Event` and `Lock`, like the ones of Python's `threading`.
+- `DedupLoggingMessages` and `safePbEnumToString()`.
+- The BDDF readers and writers can be closed with `await using`.
+
+### Package
+
+- The command line has all the commands of the Python one, e.g. `become-estop`, the power commands, images, logs
+  and payloads.
+- `BOSDYN_CA_CERT`: the certificates to trust instead of the robot certificate, e.g. the CA of a mock robot.
+- `require('spot-sdk-js')` exports the public API of all the modules (778 names, instead of 73): the clients, the
+  helpers and the errors. The Spot CAM, the GPS and Orbit, and the modules of generic names (text and JSON formats,
+  images, protobuf descriptors) are in the namespaces `spotCam`, `gps`, `orbit`, `textFormat`, `jsonFormat`,
+  `imageUtil` and `descriptorPool`. The names that several modules export with different values (e.g. the
+  `NoTimeSyncError` of GraphNav and of the robot commands) are required from their module. ES modules import all of
+  them by name. `src/bosdyn-client/gps` and `src/bosdyn-orbit` have an index, and the Spot CAM index exports the
+  clients.
+- Typings generated from the JSDoc (`typings/`), for the package and for each module.
+- Documentation (`docs/`, Docsify 5, served by `npm run docs`): guides (installation, getting started, concepts,
+  robot control, perception, navigation, data, payloads, other services, command line, TypeScript, differences with
+  Python, development), the examples, and an API reference generated from the JSDoc by `npm run build:docs`.
+- JSDoc: a description of each module (`@file`), and about 540 descriptions of classes, functions and methods, from
+  the docstrings of the Python SDK.
+- Protobuf definitions of the Spot SDK 5.2.0, with their typings.
+- Examples: upload a choreographed sequence, the anomalies of Orbit, undocking, a robot state command and every
+  world object. Ported from the Python SDK 5.2.0: the events, the index, the pages and the deletion of pages of the
+  data service (`get_events`, `get_index`, `get_pages`, `delete_pages`), the live image viewer (`image_viewer`) and
+  the edition of the anomalies of Orbit (`patch_anomalies`).
+
+## Bug Fixes
+
+### Robot commands, power, E-Stop and leases
+
+- `robotCommand()` crashed for every command without a mobility command: stop, safe power off, selfright and the
+  arm commands failed.
+- The MobilityParams were lost (`Any.pack()` returns nothing): the maximum speed, the stairs mode or the body height
+  were never sent.
+- The `end_time` of the commands was never set, so the velocity commands were rejected, and the `reference_time` of
+  the trajectories was never converted to the clock of the robot (arm surface contact too).
+- These builders always threw: `constrainedManipulationCommand()`, `synchroTrajectoryCommandInBodyFrame()`,
+  `clawGripperCommandHelper()` and `armJointFreezeCommand()`. `armGazeCommand()` built the wrong trajectory,
+  `armJointMoveHelper()` failed with a maximum velocity or acceleration, `jointCommand()` was empty, and
+  `buildBodyExternalForces(EXTERNAL_FORCE_USE_ESTIMATE)` returned `null`.
+- `armPoseCommandFromPose()` lasted 5000 s by default, and the joint control stream stopped after 30 s.
+- `blockingSelfright()` never saw the end of the command, `blockUntilArmArrives()` could loop forever when the arm
+  stalled, and `blockForTrajectoryCmd()` mixed seconds and milliseconds.
+- Power: a timeout reached during the feedback was reported as a success (it throws `CommandTimedOutError`), and
+  `safePowerOffMotors()` polled without delay.
+- E-Stop: two concurrent check-ins could reuse a challenge and make `stop()` fail, and an error in the check-in loop
+  killed the process.
+- `LeaseKeepAlive` kept the lease of a resource named `'_RESOURCE_BODY'` instead of `body`. `mustAcquire` had no
+  effect, the check-ins could overlap, and `shutdown()` could hang or leave the keep-alive running.
+- `PolicyKeepalive` added all the policy ids as one element and sent 71 RPCs per second (seconds passed as
+  milliseconds). Its error callback and back-off work like Python.
+- The lease wallet processor and the lease validator crashed on missing fields, and modified shared messages.
+- Spot Check polled every 4 ms instead of 4 s.
+
+### Robot, SDK and clients
+
+- Responses larger than 4 MB were refused (images, maps, logs): the maximum message sizes were never applied to the
+  channels.
+- `logger.warning()` and `logger.exception()` do not exist in winston: every error path threw a `TypeError` (token
+  manager, keep-alives, GPS, NTRIP).
+- `ResponseError.toString()` always threw, so any `${error}` crashed and hid the original error.
+- A failed token refresh (e.g. a network outage) killed the application.
+- Only the root of the package could be imported: the modules (`spot-sdk-js/src/...`) can be imported too.
+- `BOSDYN_RESOURCE_ROOT` was wrong on Linux and macOS, and `KeepaliveClient` was not registered by
+  `createStandardSdk()`.
+- Concurrent `ensureClient()` calls created several clients, `registerPayloadAndAuthenticate()` hid all the errors,
+  and the request processors ran in the reverse order of Python.
+- The errors of the status tables used wrong enum paths, and the status names of the non-contiguous enums were
+  wrong.
+- The DNS and certificate errors of grpc-js are translated like the ones of Python.
+- `util.authenticate()` went on after a successful token login, the terminal test was inverted, and `--guid` /
+  `--secret` were required.
+- Token cache: the usernames with dots were cut, and `~` is expanded.
+- Time sync: `waitForSync()` did not see the end of the thread, and `timespecToRobotTimespan()` gave dates of 1970.
+- Like Python 5.2.0, the request header keeps its other fields (e.g. `disable_rpc_logging`, they were dropped), a
+  client whose responses cannot be parsed gets a new channel (`InternalDeserializationError`, grpc-js words
+  included), and a connection reset is a `ConnectionResetError`.
+
+### GraphNav, missions, autowalk, docking and area callbacks
+
+- The map and snapshot downloads threw a `RangeError` (`push(...chunk)`).
+- `uploadEdgeSnapshot()` sent waypoint snapshots, `setLocalization()` sent `FIDUCIAL_INIT_UNKNOWN`, and the GPS
+  navigation errors, the leases of the snapshot uploads and the empty graphs are handled like Python.
+- Docking added milliseconds to seconds: the end time was 8 hours away, and docking always failed.
+- The streamed responses of CompileAutowalk and LoadAutowalk were never reassembled, and the ones of map processing
+  are merged like Python.
+- `makeEdgeEnvironment()` of the recording client always threw.
+- Missions: `getInfo()` and `getMission()` always failed, the mission trees built by `protoFromObject()` had no
+  implementation, the values of any type are converted (the strings were NaN floats), and the leases of the remote
+  missions are sent.
+- World objects: the times are in seconds (they were documented and used as milliseconds).
+- Area callbacks: `run()` was not awaited, so GraphNav ignored STOP and CONTROL. `blockUntilArrivedAtEnd()` always
+  threw, the BeginControl errors were in the BeginCallback table, and `beginControll()` is renamed `beginControl()`.
+
+### Images, point clouds, data acquisition and data buffer
+
+- The image service helpers and the data acquisition plugin service could not be loaded, and their servicers were
+  written like Python.
+- `depthImageToPointcloud()`, `writePgmOrPpm()` and `saveImagesAsFiles()` never worked, and the depth images threw a
+  `RangeError` on odd offsets.
+- Data acquisition: `_getLiveDataError()` always threw, the metadata were not a `Struct`, and the plugin client has
+  `getStatus()`, `getServiceInfo()` and `cancelAcquisition()`. The requests of the plugin service expired after 8 h
+  instead of 30 s.
+- Data acquisition store: `storeFile()` used the content of the file as its path, and `queryStoredCaptures()` did not
+  reassemble its stream.
+- The data acquisition helpers (`acquireAndProcessRequest()`, the time query parameters, `downloadDataREST()`) and
+  the BDDF download (file, token, command line) did not work.
+- Data buffer: the type names of the messages, and `DataBufferLoggingProcessor` left rejected promises.
+
+### BDDF
+
+- The normal end of a file was never reached, and a non-ASCII string corrupted the file.
+- The 64-bit timestamps and hashes lost their precision, the specs with several keys, the concurrent reads, the
+  unique series, the write errors, the POD series and the protobuf channel iterator did not work, and the protobuf
+  types outside `bosdyn.api` are supported. The files are checked both ways with the Python SDK.
+- `StreamDataReader` reads a real stream.
+- The additional indexes of the series (int64, often timestamps in nanoseconds) are exact: they were rounded above
+  2^53, a BigInt made `close()` throw (the whole file was lost), and an invalid value was indexed before being
+  checked. They are checked before the block is indexed, and read back as decimal strings, like in the files of Python.
+
+### GPS
+
+- The GPS pipeline produced no point: NMEA field names of pynmea2 used with nmea-simple, last line dropped,
+  GGA/GST/ZDA grouping, `readline()` and `index('$')` of Python, inverted condition and loop without `await`.
+- NTRIP client: connection storm, and the client kept the process alive after a failure.
+
+### Spot CAM
+
+- `setPowerStatus(true)` turned off aux1, aux2 and the microphone.
+- `loadSound()` sent wrong chunks, the IR meter overlays and the auto scale could not be set, the health logs were
+  numbers instead of bytes, `listLogpoints()` was always empty, the auto focus threw, and the stream quality used
+  wrong setters.
+
+### Choreography and Orbit
+
+- The conversion of the `.cha` animation files did not work at all: it is rewritten from Python.
+- The choreography client: `setNonStrictParsing()`, the binary sequences read as UTF-8,
+  `loadChoreographySequenceFromTxtFile()` (it was empty) and the start times in seconds.
+- Orbit client: the bodies of the POST requests were never sent, the certificate option referenced itself, and the
+  cookies, the image statuses, the site walk archives and the validation of the webhooks work like Python.
+- `createClient()` of Orbit reads `--verify true` or `false` in any case, like Python 5.2.0: `--verify false` was the
+  path of a CA bundle.
+- An animation refused while the robot dances is an `AnimationRejectedDanceActiveError`, like Python 5.2.0 (a generic
+  `ResponseError`).
+
+### Services and payloads
+
+- `getLogStatus()` threw on every success.
+- The network compute bridge client threw a `TypeError` on every successful response.
+- Directory registration keep-alive: seconds were passed as milliseconds, so every re-registration timed out and
+  faulted the service.
+- The payload registration keep-alive crashed when the payload was already registered, and
+  `updatePayloadVersion()` sends the credentials.
+- Payload software update: the requests were replaced by their sub-messages, and a phantom parameter shifted the
+  arguments.
+- Audio-visual: `checkColor()` crashed, then looped until out of memory (it blocked the event loop, keep-alives
+  included). The pulse sequences and the colors are handled like Python.
+- Server utils: `ResponseContext` crashed on new responses, and the `strip*()` functions did not work.
+
+### Math and geometry
+
+- `getATformB()` was wrong as soon as a chain of frames had a rotation (reversed composition).
+- `Quat.fromMatrix()` crashed for the rotations of about 162° and more, `SE3Pose.fromMatrix()` gave arrays,
+  `Quat.slerp()` and `SE3Pose.interp()` always threw, `Quat.fromTwoVectors()` was wrong, `transformCloud()` threw a
+  `ReferenceError`, and `isWithinThreshold()` called a missing function.
+- `transformVec3()` ignored the protobuf vectors, `SE2Velocity.fromVector()` read the wrong element, and the missing
+  sub-messages are handled.
+- `geometry.toEulerZxy()` follows the Python algorithm.
+
+### Typings
+
+- Typings that could not be used: the options of `synchroStandCommand()`, `synchroVelocityCommand()` and of the
+  trajectory commands were all required (and `footprintRBody` missing), the parameters of `EstopKeepAlive` and the
+  message of the errors could only be `null`, `getOdomTformBody()` returned a number, `getPointCloudFromSources()`
+  no promise, and the `create()` factories of the BDDF readers did not compile.
+- Wrong protobuf types in the JSDoc (GraphNav recording, data service, missions, Spot CAM stream quality, map
+  processing) and wrong descriptions (`AudioVisualClient`, `hasArm()`, `Robot.shutdown()`).
+
+### Examples
+
+- `hello_spot` could not work (inverted E-Stop condition, stand command).
+- The units of `arm_simple`, `stance_in_place`, `user_nogo_regions` and `get_world_objects`, the license check of
+  `dock_my_robot`, and the E-Stop GUI (rewritten).
+- The examples ignored `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD`: they authenticated with the deprecated
+  `--username` and `--password` options, and `user_nogo_regions` sent no credentials at all. Like Python, they take
+  the arguments of `addBaseArguments()` and authenticate with `util.authenticate(robot)` (the environment variables,
+  or a prompt).
+- `disable_ir_emission` crashed at start (`util.add_common_arguments()`).
+- The Orbit anomalies example did not load (wrong path of `util`) and took the robot arguments instead of Orbit's. Its
+  limit was sent in the body of a GET request, and it always reported a failure.
+- `get_image`: `--auto-rotate` turned the front cameras the wrong way (it rotates like `scipy.ndimage.rotate()` now),
+  the raw images crashed it (e.g. the depth of the command of its README), `--list` ended it before the capture, only
+  the first `/` was removed from the file names, and it showed the directory of the script instead of the current one.
+  The 16-bit grey images are saved in PNG (Python cannot save them).
+- `spot_light` takes the `--brightness_threshold` of Python: its threshold was fixed at 250.
+
+## Refactor
+
+- The background tasks use an `Event` like Python's instead of node-threading-event, whose waits leaked listeners.
+  Like the daemon threads of Python, their timers do not keep the process alive.
+- `BaseClient.call()` reassembles the streamed `DataChunk` responses once for all the clients.
+- All the errors of the SDK derive from `BosdynError` (`bosdyn.client.Error` in Python), and `String(error)` gives
+  the text of Python.
+- Removed the unused dependencies: `@grpc/proto-loader`, `dotenv`, `expandenv`, `moment`, `ndarray-pixels`,
+  `node-pid-controller`, `node-threading-event`, `quaternion`, `semver`, `tslib` and `underscore`, and `which` (the
+  image viewers are looked for in the `PATH` like `shutil.which()`). Added `long`, which the BDDF modules required
+  without declaring it.
+- `build.js` runs on all the platforms, adds `[jstype = JS_STRING]` to the 64-bit fields which need it, generates
+  the descriptors of the messages, and fixes a duplicate property of the generated typings.
+- Tests: `npm test` runs 470 tests with `node:test`, including ports of the Python tests and comparisons with the
+  output of the Python SDK (command line, text and JSON formats, BDDF files, math). The test servers use ephemeral
+  ports.
+- Tooling: ESLint flat config with eslint-plugin-n, eslint-plugin-import and eslint-plugin-jsdoc, Prettier for the
+  whole repository (`npm run lint`), `npm run build:typings` and `npm run test:typings`, LF line endings, and a CI
+  that runs the lint, the typings check and the tests on Node.js 22 and 24. tslint and dtslint are removed.
+- `npm run docs` serves the documentation with docsify.
+- axios (Orbit) and sharp (images) are loaded when they are used, and the image viewers of the system are looked for
+  at the first use of `image_util`: the package root loads every module in about the same time as before.
