@@ -5,19 +5,53 @@
   "description": "Develop applications and payloads for Spot using the unofficial Boston Dynamics Spot Node.js SDK.",
   "scripts": {
     "build": "node build.js",
-    "lint": "tslint typings/index.d.ts typings/**/*.d.ts && eslint --config eslint.config.cjs  src",
-    "docs": "jsdoc -c jsdoc.json",
+    "build:docs": "npm run build:typings && node build_docs.js",
+    "build:typings": "node build_typings.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "node test/run.js",
+    "test:typings": "tsc -p test/typings/tsconfig.json",
+    "docs": "docsify serve docs",
     "count": "count-code-line -e /examples/*/node_modules,/typings,/test/node_modules,/docs"
   },
   "main": "./src/index.js",
   "types": "./typings/index.d.ts",
   "exports": {
     ".": {
-      "require": {
-        "types": "./typings/index.d.ts",
-        "default": "./src/index.js"
-      }
-    }
+      "types": "./typings/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./src/bosdyn-client": {
+      "types": "./typings/bosdyn-client/index.d.ts",
+      "default": "./src/bosdyn-client/index.js"
+    },
+    "./src/bosdyn-client/gps": {
+      "types": "./typings/bosdyn-client/gps/index.d.ts",
+      "default": "./src/bosdyn-client/gps/index.js"
+    },
+    "./src/bosdyn-client/spot_cam": {
+      "types": "./typings/bosdyn-client/spot_cam/index.d.ts",
+      "default": "./src/bosdyn-client/spot_cam/index.js"
+    },
+    "./src/bosdyn-core/bddf": {
+      "types": "./typings/bosdyn-core/bddf/index.d.ts",
+      "default": "./src/bosdyn-core/bddf/index.js"
+    },
+    "./src/bosdyn-orbit": {
+      "types": "./typings/bosdyn-orbit/index.d.ts",
+      "default": "./src/bosdyn-orbit/index.js"
+    },
+    "./src/bosdyn/*.js": "./src/bosdyn/*.js",
+    "./src/bosdyn/*": "./src/bosdyn/*.js",
+    "./src/*.js": {
+      "types": "./typings/*.d.ts",
+      "default": "./src/*.js"
+    },
+    "./src/*": {
+      "types": "./typings/*.d.ts",
+      "default": "./src/*.js"
+    },
+    "./package.json": "./package.json"
   },
   "bin": "./src/bosdyn-client/command_line.js",
   "files": [
@@ -48,49 +82,41 @@
     "url": "https://github.com/TheoPierne/spot-sdk-js/issues"
   },
   "dependencies": {
-    "@d4c/numjs": "^0.17.34",
-    "@grpc/grpc-js": "^1.14.0",
-    "@grpc/proto-loader": "^0.8.0",
+    "@d4c/numjs": "^0.17.35",
+    "@grpc/grpc-js": "^1.14.5",
     "@types/argparse": "^2.0.17",
     "@types/google-protobuf": "^3.15.12",
     "argparse": "^2.0.1",
-    "axios": "^1.12.2",
-    "dotenv": "^17.2.3",
-    "expandenv": "^1.0.0",
+    "axios": "^1.20.0",
     "google-protobuf": "^3.21.4",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
+    "long": "^5.3.2",
     "luxon": "^3.7.2",
-    "moment": "^2.30.1",
-    "ndarray-pixels": "^5.0.1",
     "nmea-simple": "^3.3.0",
-    "node-pid-controller": "^1.0.1",
-    "node-threading-event": "^1.0.3",
     "prompt": "^1.3.0",
     "python-struct": "^1.1.3",
-    "quaternion": "^2.2.0",
-    "semver": "^7.7.3",
-    "sharp": "^0.34.4",
-    "tmp": "^0.2.5",
-    "tslib": "^2.8.1",
-    "underscore": "^1.13.7",
+    "sharp": "^0.35.4",
+    "tmp": "^0.2.7",
     "uuid": "^11.1.0",
-    "which": "^5.0.0",
-    "winston": "^3.18.3"
+    "winston": "^3.19.0"
   },
   "devDependencies": {
-    "better-docs": "^2.7.3",
-    "dtslint": "^4.2.1",
-    "eslint": "^9.38.0",
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^24.19.0",
+    "docsify-cli": "^5.0.0",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-jsdoc": "^64.5.4",
+    "eslint-plugin-n": "^18.4.0",
+    "eslint-plugin-prettier": "^5.5.6",
+    "globals": "^14.0.0",
     "grpc_tools_node_protoc_ts": "^5.3.3",
-    "grpc-tools": "^1.13.0",
-    "prettier": "^3.6.2",
-    "tslint": "^6.1.3",
-    "typescript": "^5.9.3"
+    "grpc-tools": "^1.13.1",
+    "prettier": "^3.9.9",
+    "typescript": "^6.0.3"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   }
 }

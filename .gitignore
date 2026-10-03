@@ -3,6 +3,9 @@ node_modules/
 
 examples/**/node_modules/
 
-generate_js_file_with_proto_file.txt
 .env
 count.output.json
+
+# Private keys and certificate requests: never in the package (the test CA lives with the mock robot).
+*.key
+*.csr

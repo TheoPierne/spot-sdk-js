@@ -2,3 +2,4 @@ docs
 files
 src/bosdyn/api
 CODEOWNERS
+typings

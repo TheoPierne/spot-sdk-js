@@ -1,246 +1,222 @@
-const {
-    defineConfig,
-    globalIgnores,
-} = require("eslint/config");
+'use strict';
 
-const _import = require("eslint-plugin-import");
+// The configuration of ESLint (flat config). Prettier formats the code: eslint-plugin-prettier reports the
+// differences with the format of .prettierrc.json, and eslint-config-prettier turns off the formatting rules of ESLint.
+// The rules below check the rest: errors, Node.js (eslint-plugin-n), requires (eslint-plugin-import), and the JSDoc
+// the typings are generated from (eslint-plugin-jsdoc).
 
-const {
-    fixupPluginRules,
-} = require("@eslint/compat");
+const path = require('node:path');
 
-const globals = require("globals");
-const js = require("@eslint/js");
+const js = require('@eslint/js');
+const { defineConfig, globalIgnores } = require('eslint/config');
+const importPlugin = require('eslint-plugin-import');
+const jsdoc = require('eslint-plugin-jsdoc');
+const nodePlugin = require('eslint-plugin-n');
+const prettierRecommended = require('eslint-plugin-prettier/recommended');
+const globals = require('globals');
 
-const {
-    FlatCompat,
-} = require("@eslint/eslintrc");
+// The Node.js globals are imported, e.g. `const process = require('node:process');`.
+const RESTRICTED_GLOBALS = [
+  { name: 'Buffer', message: 'Import Buffer from `node:buffer` instead' },
+  { name: 'process', message: 'Import process from `node:process` instead' },
+  ...['setTimeout', 'setInterval', 'setImmediate', 'clearTimeout', 'clearInterval'].map(name => ({
+    name,
+    message: `Import ${name} from \`node:timers\` instead`,
+  })),
+];
 
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
+module.exports = defineConfig([
+  globalIgnores([
+    'build/',
+    'docs/',
+    'files/',
+    // Generated: the protobuf messages (build.js) and the typings (npm run build:typings).
+    'src/bosdyn/',
+    'typings/',
+    'count.output.json',
+  ]),
 
-module.exports = defineConfig([globalIgnores(["**/docs", "**/files", "src/bosdyn/api"]), {
-    extends: compat.extends("eslint:recommended", "plugin:prettier/recommended"),
+  js.configs.recommended,
+  nodePlugin.configs['flat/recommended-script'],
 
-    plugins: {
-        import: fixupPluginRules(_import),
-    },
+  {
+    plugins: { import: importPlugin, jsdoc },
 
     languageOptions: {
-        globals: {
-            ...globals.node,
-        },
+      ecmaVersion: 'latest',
+      sourceType: 'commonjs',
+      globals: globals.node,
+    },
 
-        ecmaVersion: "latest",
-        sourceType: "commonjs",
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
+    },
+
+    settings: {
+      // The JSDoc types are TypeScript types: TypeScript generates the typings from them.
+      jsdoc: { mode: 'typescript', tagNamePreference: { augments: 'extends' } },
     },
 
     rules: {
-        "import/order": ["error", {
-            groups: ["builtin", "external", "internal", "index", "sibling", "parent"],
+      // Possible errors.
+      'array-callback-return': 'error',
+      'no-constructor-return': 'error',
+      'no-promise-executor-return': 'error',
+      'no-self-compare': 'error',
+      'no-template-curly-in-string': 'error',
+      'no-unmodified-loop-condition': 'error',
+      'no-unreachable-loop': 'error',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrors: 'none' }],
 
-            alphabetize: {
-                order: "asc",
-            },
-        }],
+      // Best practices.
+      'accessor-pairs': 'error',
+      'consistent-return': 'error',
+      'consistent-this': ['error', '$this'],
+      'default-case-last': 'error',
+      'dot-notation': 'error',
+      eqeqeq: ['error', 'always', { null: 'ignore' }],
+      'func-name-matching': 'error',
+      'func-names': 'error',
+      'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
+      'no-array-constructor': 'error',
+      'no-empty-function': ['error', { allow: ['arrowFunctions'] }],
+      'no-implied-eval': 'error',
+      'no-inline-comments': 'error',
+      'no-invalid-this': 'error',
+      'no-label-var': 'error',
+      'no-lone-blocks': 'error',
+      'no-lonely-if': 'error',
+      'no-new': 'error',
+      'no-new-func': 'error',
+      'no-new-wrappers': 'error',
+      'no-object-constructor': 'error',
+      'no-octal-escape': 'error',
+      'no-restricted-globals': ['error', ...RESTRICTED_GLOBALS],
+      'no-return-assign': 'error',
+      'no-sequences': 'error',
+      'no-shadow': 'error',
+      'no-throw-literal': 'error',
+      'no-undef-init': 'error',
+      'no-unneeded-ternary': 'error',
+      'no-unused-expressions': 'error',
+      'no-useless-call': 'error',
+      'no-useless-computed-key': 'error',
+      'no-useless-concat': 'error',
+      'no-useless-constructor': 'error',
+      'no-useless-return': 'error',
+      'no-var': 'error',
+      'no-void': 'error',
+      'object-shorthand': ['error', 'always', { avoidQuotes: true }],
+      'operator-assignment': 'error',
+      'prefer-const': ['error', { destructuring: 'all' }],
+      'prefer-numeric-literals': 'error',
+      'prefer-object-has-own': 'error',
+      'prefer-promise-reject-errors': 'error',
+      'prefer-rest-params': 'error',
+      'prefer-spread': 'error',
+      'prefer-template': 'error',
+      radix: 'error',
+      strict: ['error', 'global'],
+      yoda: 'error',
 
-        "prettier/prettier": [2, {
-            printWidth: 120,
-            singleQuote: true,
-            quoteProps: "as-needed",
-            trailingComma: "all",
-            endOfLine: "auto",
-            arrowParens: "avoid",
-        }],
+      // Complexity.
+      'max-depth': ['error', 4],
+      'max-nested-callbacks': ['error', 4],
 
-        strict: ["error", "global"],
-        "no-await-in-loop": "warn",
-        "no-compare-neg-zero": "error",
-        "no-template-curly-in-string": "error",
-        "no-unsafe-negation": "error",
+      // Node.js (the callbacks rules of ESLint moved to eslint-plugin-n).
+      'n/callback-return': 'error',
+      'n/handle-callback-err': 'error',
+      'n/no-new-require': 'error',
+      'n/no-path-concat': 'error',
+      'n/prefer-node-protocol': 'error',
+      // The SDK is a library: it throws (its command lines set process.exitCode).
+      'n/no-process-exit': 'error',
 
-        "valid-jsdoc": ["error", {
-            requireReturn: false,
-            requireReturnDescription: false,
+      // Requires (import/no-extraneous-dependencies knows the devDependencies, unlike n/no-extraneous-require).
+      'import/no-extraneous-dependencies': ['error', { devDependencies: false }],
+      'n/no-extraneous-require': 'off',
+      'import/no-self-import': 'error',
+      'import/no-useless-path-segments': ['error', { commonjs: true }],
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'index', 'sibling', 'parent'],
+          alphabetize: { order: 'asc' },
+        },
+      ],
 
-            prefer: {
-                return: "returns",
-                arg: "param",
-            },
-
-            preferType: {
-                String: "string",
-                Number: "number",
-                Boolean: "boolean",
-                Symbol: "symbol",
-                object: "Object",
-                function: "Function",
-                array: "Array",
-                date: "Date",
-                error: "Error",
-                null: "void",
-            },
-        }],
-
-        "accessor-pairs": "warn",
-        "array-callback-return": "error",
-        "consistent-return": "error",
-        curly: ["error", "multi-line", "consistent"],
-        "dot-location": ["error", "property"],
-        "dot-notation": "error",
-        eqeqeq: "error",
-        "no-empty-function": "error",
-        "no-floating-decimal": "error",
-        "no-implied-eval": "error",
-        "no-invalid-this": "error",
-        "no-lone-blocks": "error",
-        "no-multi-spaces": "error",
-        "no-new-func": "error",
-        "no-new-wrappers": "error",
-        "no-new": "error",
-        "no-octal-escape": "error",
-        "no-return-assign": "error",
-        "no-return-await": "error",
-        "no-self-compare": "error",
-        "no-sequences": "error",
-        "no-throw-literal": "error",
-        "no-unmodified-loop-condition": "error",
-        "no-unused-expressions": "error",
-        "no-useless-call": "error",
-        "no-useless-concat": "error",
-        "no-useless-escape": "error",
-        "no-useless-return": "error",
-        "no-void": "error",
-        "no-warning-comments": "warn",
-        "prefer-promise-reject-errors": "error",
-        "require-await": "warn",
-        "wrap-iife": "error",
-        yoda: "error",
-        "no-label-var": "error",
-        "no-shadow": "error",
-        "no-undef-init": "error",
-        "callback-return": "error",
-        "getter-return": "off",
-        "handle-callback-err": "error",
-        "no-mixed-requires": "error",
-        "no-new-require": "error",
-        "no-path-concat": "error",
-        "array-bracket-spacing": "error",
-        "block-spacing": "error",
-
-        "brace-style": ["error", "1tbs", {
-            allowSingleLine: true,
-        }],
-
-        "comma-dangle": ["error", "always-multiline"],
-        "comma-spacing": "error",
-        "comma-style": "error",
-        "computed-property-spacing": "error",
-        "consistent-this": ["error", "$this"],
-        "eol-last": "error",
-        "func-names": "error",
-        "func-name-matching": "error",
-
-        "func-style": ["error", "declaration", {
-            allowArrowFunctions: true,
-        }],
-
-        "key-spacing": "error",
-        "keyword-spacing": "error",
-        "max-depth": "warn",
-        "max-len": ["error", 120, 2],
-
-        "max-nested-callbacks": ["error", {
-            max: 4,
-        }],
-
-        "max-statements-per-line": ["error", {
-            max: 2,
-        }],
-
-        "new-cap": "off",
-        "no-array-constructor": "error",
-        "no-inline-comments": "error",
-        "no-lonely-if": "error",
-
-        "no-multiple-empty-lines": ["error", {
-            max: 2,
-            maxEOF: 1,
-            maxBOF: 0,
-        }],
-
-        "no-new-object": "error",
-        "no-spaced-func": "error",
-        "no-trailing-spaces": "error",
-        "no-unneeded-ternary": "error",
-        "no-whitespace-before-property": "error",
-        "nonblock-statement-body-position": "error",
-        "object-curly-spacing": ["error", "always"],
-        "operator-assignment": "error",
-        "padded-blocks": ["error", "never"],
-        "quote-props": ["error", "as-needed"],
-
-        quotes: ["error", "single", {
-            avoidEscape: true,
-            allowTemplateLiterals: true,
-        }],
-
-        "semi-spacing": "error",
-        semi: "error",
-        "space-before-blocks": "error",
-
-        "space-before-function-paren": ["error", {
-            anonymous: "never",
-            named: "never",
-            asyncArrow: "always",
-        }],
-
-        "space-in-parens": "error",
-        "space-infix-ops": "error",
-        "space-unary-ops": "error",
-        "spaced-comment": "error",
-        "template-tag-spacing": "error",
-        "unicode-bom": "error",
-        "arrow-body-style": "error",
-        "arrow-parens": ["error", "as-needed"],
-        "arrow-spacing": "error",
-        "no-duplicate-imports": "error",
-        "no-useless-computed-key": "error",
-        "no-useless-constructor": "error",
-        "prefer-arrow-callback": "error",
-        "prefer-numeric-literals": "error",
-        "prefer-rest-params": "error",
-        "prefer-spread": "error",
-        "prefer-template": "error",
-        "prefer-object-has-own": "error",
-        "rest-spread-spacing": "error",
-        "template-curly-spacing": "error",
-        "yield-star-spacing": "error",
-
-        "no-restricted-globals": ["error", {
-            name: "Buffer",
-            message: "Import Buffer from `node:buffer` instead",
-        }, {
-            name: "process",
-            message: "Import process from `node:process` instead",
-        }, {
-            name: "setTimeout",
-            message: "Import setTimeout from `node:timers` instead",
-        }, {
-            name: "setInterval",
-            message: "Import setInterval from `node:timers` instead",
-        }, {
-            name: "setImmediate",
-            message: "Import setImmediate from `node:timers` instead",
-        }, {
-            name: "clearTimeout",
-            message: "Import clearTimeout from `node:timers` instead",
-        }, {
-            name: "clearInterval",
-            message: "Import clearInterval from `node:timers` instead",
-        }],
+      // JSDoc: the syntax, names and tags TypeScript reads.
+      'jsdoc/check-alignment': 'error',
+      'jsdoc/check-param-names': ['error', { checkDestructured: false }],
+      'jsdoc/check-property-names': 'error',
+      'jsdoc/check-tag-names': 'error',
+      'jsdoc/empty-tags': 'error',
+      'jsdoc/implements-on-classes': 'error',
+      'jsdoc/multiline-blocks': 'error',
+      'jsdoc/no-multi-asterisks': 'error',
+      // The types exist (and the imports used by the JSDoc only are used). The globals of TypeScript and Node.js:
+      'jsdoc/no-undefined-types': [
+        'error',
+        {
+          definedTypes: ['ArrayBufferView', 'ArrayLike', 'AsyncIterable', 'Generator', 'IterableIterator', 'NodeJS'],
+        },
+      ],
+      'jsdoc/require-param-name': 'error',
+      'jsdoc/require-property-name': 'error',
+      'jsdoc/valid-types': 'error',
     },
-}]);
+  },
+
+  {
+    // The tools of the repository: they run on the Node.js versions of the CI, and test/ has a package.json.
+    files: ['test/**/*.js', 'build.js', 'build_docs.js', 'build_typings.js', 'eslint.config.cjs'],
+    settings: { node: { version: '>=22.3.0' } },
+    rules: {
+      'import/no-extraneous-dependencies': [
+        'error',
+        { devDependencies: true, packageDir: [__dirname, path.join(__dirname, 'test')] },
+      ],
+      'n/no-unpublished-import': 'off',
+      'n/no-unpublished-require': 'off',
+      // The fakes of the tests have methods which do nothing.
+      'no-empty-function': ['error', { allow: ['arrowFunctions', 'asyncMethods', 'methods', 'setters'] }],
+    },
+  },
+
+  {
+    // Each example is a script with its package.json, and runs with the SDK of the repository (npm link, or
+    // "file:../.."): it may exit the process, and have a shebang.
+    files: ['examples/**/*.js'],
+    rules: {
+      'import/no-extraneous-dependencies': 'off',
+      'n/hashbang': 'off',
+      'n/no-missing-require': 'off',
+      'n/no-process-exit': 'off',
+      'n/no-unpublished-require': 'off',
+    },
+  },
+
+  prettierRecommended,
+
+  {
+    // After eslint-config-prettier, which turns them off: they do not conflict with the format of Prettier.
+    rules: {
+      curly: ['error', 'multi-line', 'consistent'],
+      'max-len': [
+        'error',
+        {
+          code: 120,
+          tabWidth: 2,
+          ignoreUrls: true,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
+          ignoreRegExpLiterals: true,
+          // The JSDoc imports of types cannot be wrapped.
+          ignorePattern: String.raw`^\s*\* @typedef \{import\(`,
+        },
+      ],
+      'arrow-body-style': 'error',
+      'prefer-arrow-callback': 'error',
+    },
+  },
+]);
