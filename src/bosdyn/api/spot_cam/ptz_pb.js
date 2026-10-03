@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
 goog.object.extend(proto, google_protobuf_wrappers_pb);
@@ -522,10 +516,10 @@ proto.bosdyn.api.spot_cam.PtzDescription.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.spot_cam.PtzDescription.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    panLimit: (f = msg.getPanLimit()) && proto.bosdyn.api.spot_cam.PtzDescription.Limits.toObject(includeInstance, f),
-    tiltLimit: (f = msg.getTiltLimit()) && proto.bosdyn.api.spot_cam.PtzDescription.Limits.toObject(includeInstance, f),
-    zoomLimit: (f = msg.getZoomLimit()) && proto.bosdyn.api.spot_cam.PtzDescription.Limits.toObject(includeInstance, f)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+panLimit: (f = msg.getPanLimit()) && proto.bosdyn.api.spot_cam.PtzDescription.Limits.toObject(includeInstance, f),
+tiltLimit: (f = msg.getTiltLimit()) && proto.bosdyn.api.spot_cam.PtzDescription.Limits.toObject(includeInstance, f),
+zoomLimit: (f = msg.getZoomLimit()) && proto.bosdyn.api.spot_cam.PtzDescription.Limits.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -538,7 +532,7 @@ proto.bosdyn.api.spot_cam.PtzDescription.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.PtzDescription}
  */
 proto.bosdyn.api.spot_cam.PtzDescription.deserializeBinary = function(bytes) {
@@ -563,7 +557,7 @@ proto.bosdyn.api.spot_cam.PtzDescription.deserializeBinaryFromReader = function(
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -676,8 +670,8 @@ proto.bosdyn.api.spot_cam.PtzDescription.Limits.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.PtzDescription.Limits.toObject = function(includeInstance, msg) {
   var f, obj = {
-    min: (f = msg.getMin()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    max: (f = msg.getMax()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
+min: (f = msg.getMin()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+max: (f = msg.getMax()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -690,7 +684,7 @@ proto.bosdyn.api.spot_cam.PtzDescription.Limits.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.PtzDescription.Limits}
  */
 proto.bosdyn.api.spot_cam.PtzDescription.Limits.deserializeBinary = function(bytes) {
@@ -1007,10 +1001,10 @@ proto.bosdyn.api.spot_cam.PtzPosition.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.spot_cam.PtzPosition.toObject = function(includeInstance, msg) {
   var f, obj = {
-    ptz: (f = msg.getPtz()) && proto.bosdyn.api.spot_cam.PtzDescription.toObject(includeInstance, f),
-    pan: (f = msg.getPan()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    tilt: (f = msg.getTilt()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    zoom: (f = msg.getZoom()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
+ptz: (f = msg.getPtz()) && proto.bosdyn.api.spot_cam.PtzDescription.toObject(includeInstance, f),
+pan: (f = msg.getPan()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+tilt: (f = msg.getTilt()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+zoom: (f = msg.getZoom()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1023,7 +1017,7 @@ proto.bosdyn.api.spot_cam.PtzPosition.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.PtzPosition}
  */
 proto.bosdyn.api.spot_cam.PtzPosition.deserializeBinary = function(bytes) {
@@ -1311,10 +1305,10 @@ proto.bosdyn.api.spot_cam.PtzVelocity.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.spot_cam.PtzVelocity.toObject = function(includeInstance, msg) {
   var f, obj = {
-    ptz: (f = msg.getPtz()) && proto.bosdyn.api.spot_cam.PtzDescription.toObject(includeInstance, f),
-    pan: (f = msg.getPan()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    tilt: (f = msg.getTilt()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    zoom: (f = msg.getZoom()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
+ptz: (f = msg.getPtz()) && proto.bosdyn.api.spot_cam.PtzDescription.toObject(includeInstance, f),
+pan: (f = msg.getPan()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+tilt: (f = msg.getTilt()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+zoom: (f = msg.getZoom()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1327,7 +1321,7 @@ proto.bosdyn.api.spot_cam.PtzVelocity.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.PtzVelocity}
  */
 proto.bosdyn.api.spot_cam.PtzVelocity.deserializeBinary = function(bytes) {
@@ -1615,8 +1609,8 @@ proto.bosdyn.api.spot_cam.GetPtzPositionRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.GetPtzPositionRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    ptz: (f = msg.getPtz()) && proto.bosdyn.api.spot_cam.PtzDescription.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+ptz: (f = msg.getPtz()) && proto.bosdyn.api.spot_cam.PtzDescription.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1629,7 +1623,7 @@ proto.bosdyn.api.spot_cam.GetPtzPositionRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetPtzPositionRequest}
  */
 proto.bosdyn.api.spot_cam.GetPtzPositionRequest.deserializeBinary = function(bytes) {
@@ -1817,8 +1811,8 @@ proto.bosdyn.api.spot_cam.GetPtzPositionResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.GetPtzPositionResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    position: (f = msg.getPosition()) && proto.bosdyn.api.spot_cam.PtzPosition.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+position: (f = msg.getPosition()) && proto.bosdyn.api.spot_cam.PtzPosition.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1831,7 +1825,7 @@ proto.bosdyn.api.spot_cam.GetPtzPositionResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetPtzPositionResponse}
  */
 proto.bosdyn.api.spot_cam.GetPtzPositionResponse.deserializeBinary = function(bytes) {
@@ -2019,8 +2013,8 @@ proto.bosdyn.api.spot_cam.GetPtzVelocityRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.GetPtzVelocityRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    ptz: (f = msg.getPtz()) && proto.bosdyn.api.spot_cam.PtzDescription.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+ptz: (f = msg.getPtz()) && proto.bosdyn.api.spot_cam.PtzDescription.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2033,7 +2027,7 @@ proto.bosdyn.api.spot_cam.GetPtzVelocityRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetPtzVelocityRequest}
  */
 proto.bosdyn.api.spot_cam.GetPtzVelocityRequest.deserializeBinary = function(bytes) {
@@ -2221,8 +2215,8 @@ proto.bosdyn.api.spot_cam.GetPtzVelocityResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.GetPtzVelocityResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    velocity: (f = msg.getVelocity()) && proto.bosdyn.api.spot_cam.PtzVelocity.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+velocity: (f = msg.getVelocity()) && proto.bosdyn.api.spot_cam.PtzVelocity.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2235,7 +2229,7 @@ proto.bosdyn.api.spot_cam.GetPtzVelocityResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetPtzVelocityResponse}
  */
 proto.bosdyn.api.spot_cam.GetPtzVelocityResponse.deserializeBinary = function(bytes) {
@@ -2423,7 +2417,7 @@ proto.bosdyn.api.spot_cam.ListPtzRequest.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.spot_cam.ListPtzRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2436,7 +2430,7 @@ proto.bosdyn.api.spot_cam.ListPtzRequest.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.ListPtzRequest}
  */
 proto.bosdyn.api.spot_cam.ListPtzRequest.deserializeBinary = function(bytes) {
@@ -2581,8 +2575,8 @@ proto.bosdyn.api.spot_cam.ListPtzResponse.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot_cam.ListPtzResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    ptzsList: jspb.Message.toObjectList(msg.getPtzsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+ptzsList: jspb.Message.toObjectList(msg.getPtzsList(),
     proto.bosdyn.api.spot_cam.PtzDescription.toObject, includeInstance)
   };
 
@@ -2596,7 +2590,7 @@ proto.bosdyn.api.spot_cam.ListPtzResponse.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.ListPtzResponse}
  */
 proto.bosdyn.api.spot_cam.ListPtzResponse.deserializeBinary = function(bytes) {
@@ -2785,8 +2779,8 @@ proto.bosdyn.api.spot_cam.SetPtzPositionRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.SetPtzPositionRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    position: (f = msg.getPosition()) && proto.bosdyn.api.spot_cam.PtzPosition.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+position: (f = msg.getPosition()) && proto.bosdyn.api.spot_cam.PtzPosition.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2799,7 +2793,7 @@ proto.bosdyn.api.spot_cam.SetPtzPositionRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetPtzPositionRequest}
  */
 proto.bosdyn.api.spot_cam.SetPtzPositionRequest.deserializeBinary = function(bytes) {
@@ -2987,8 +2981,8 @@ proto.bosdyn.api.spot_cam.SetPtzPositionResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.SetPtzPositionResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    position: (f = msg.getPosition()) && proto.bosdyn.api.spot_cam.PtzPosition.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+position: (f = msg.getPosition()) && proto.bosdyn.api.spot_cam.PtzPosition.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3001,7 +2995,7 @@ proto.bosdyn.api.spot_cam.SetPtzPositionResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetPtzPositionResponse}
  */
 proto.bosdyn.api.spot_cam.SetPtzPositionResponse.deserializeBinary = function(bytes) {
@@ -3189,8 +3183,8 @@ proto.bosdyn.api.spot_cam.SetPtzVelocityRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.SetPtzVelocityRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    velocity: (f = msg.getVelocity()) && proto.bosdyn.api.spot_cam.PtzVelocity.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+velocity: (f = msg.getVelocity()) && proto.bosdyn.api.spot_cam.PtzVelocity.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3203,7 +3197,7 @@ proto.bosdyn.api.spot_cam.SetPtzVelocityRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetPtzVelocityRequest}
  */
 proto.bosdyn.api.spot_cam.SetPtzVelocityRequest.deserializeBinary = function(bytes) {
@@ -3391,8 +3385,8 @@ proto.bosdyn.api.spot_cam.SetPtzVelocityResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.SetPtzVelocityResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    velocity: (f = msg.getVelocity()) && proto.bosdyn.api.spot_cam.PtzVelocity.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+velocity: (f = msg.getVelocity()) && proto.bosdyn.api.spot_cam.PtzVelocity.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3405,7 +3399,7 @@ proto.bosdyn.api.spot_cam.SetPtzVelocityResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetPtzVelocityResponse}
  */
 proto.bosdyn.api.spot_cam.SetPtzVelocityResponse.deserializeBinary = function(bytes) {
@@ -3593,7 +3587,7 @@ proto.bosdyn.api.spot_cam.InitializeLensRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.InitializeLensRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3606,7 +3600,7 @@ proto.bosdyn.api.spot_cam.InitializeLensRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.InitializeLensRequest}
  */
 proto.bosdyn.api.spot_cam.InitializeLensRequest.deserializeBinary = function(bytes) {
@@ -3744,7 +3738,7 @@ proto.bosdyn.api.spot_cam.InitializeLensResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.InitializeLensResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3757,7 +3751,7 @@ proto.bosdyn.api.spot_cam.InitializeLensResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.InitializeLensResponse}
  */
 proto.bosdyn.api.spot_cam.InitializeLensResponse.deserializeBinary = function(bytes) {
@@ -3895,9 +3889,9 @@ proto.bosdyn.api.spot_cam.PtzFocusState.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot_cam.PtzFocusState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    mode: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    focusPosition: (f = msg.getFocusPosition()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
-    approxDistance: (f = msg.getApproxDistance()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
+mode: jspb.Message.getFieldWithDefault(msg, 1, 0),
+focusPosition: (f = msg.getFocusPosition()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
+approxDistance: (f = msg.getApproxDistance()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3910,7 +3904,7 @@ proto.bosdyn.api.spot_cam.PtzFocusState.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.PtzFocusState}
  */
 proto.bosdyn.api.spot_cam.PtzFocusState.deserializeBinary = function(bytes) {
@@ -4136,8 +4130,8 @@ proto.bosdyn.api.spot_cam.SetPtzFocusStateRequest.prototype.toObject = function(
  */
 proto.bosdyn.api.spot_cam.SetPtzFocusStateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    focusState: (f = msg.getFocusState()) && proto.bosdyn.api.spot_cam.PtzFocusState.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+focusState: (f = msg.getFocusState()) && proto.bosdyn.api.spot_cam.PtzFocusState.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4150,7 +4144,7 @@ proto.bosdyn.api.spot_cam.SetPtzFocusStateRequest.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetPtzFocusStateRequest}
  */
 proto.bosdyn.api.spot_cam.SetPtzFocusStateRequest.deserializeBinary = function(bytes) {
@@ -4338,7 +4332,7 @@ proto.bosdyn.api.spot_cam.SetPtzFocusStateResponse.prototype.toObject = function
  */
 proto.bosdyn.api.spot_cam.SetPtzFocusStateResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4351,7 +4345,7 @@ proto.bosdyn.api.spot_cam.SetPtzFocusStateResponse.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetPtzFocusStateResponse}
  */
 proto.bosdyn.api.spot_cam.SetPtzFocusStateResponse.deserializeBinary = function(bytes) {
@@ -4489,7 +4483,7 @@ proto.bosdyn.api.spot_cam.GetPtzFocusStateRequest.prototype.toObject = function(
  */
 proto.bosdyn.api.spot_cam.GetPtzFocusStateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4502,7 +4496,7 @@ proto.bosdyn.api.spot_cam.GetPtzFocusStateRequest.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetPtzFocusStateRequest}
  */
 proto.bosdyn.api.spot_cam.GetPtzFocusStateRequest.deserializeBinary = function(bytes) {
@@ -4640,8 +4634,8 @@ proto.bosdyn.api.spot_cam.GetPtzFocusStateResponse.prototype.toObject = function
  */
 proto.bosdyn.api.spot_cam.GetPtzFocusStateResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    focusState: (f = msg.getFocusState()) && proto.bosdyn.api.spot_cam.PtzFocusState.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+focusState: (f = msg.getFocusState()) && proto.bosdyn.api.spot_cam.PtzFocusState.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4654,7 +4648,7 @@ proto.bosdyn.api.spot_cam.GetPtzFocusStateResponse.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetPtzFocusStateResponse}
  */
 proto.bosdyn.api.spot_cam.GetPtzFocusStateResponse.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
 goog.object.extend(proto, google_protobuf_duration_pb);
@@ -962,17 +956,17 @@ proto.bosdyn.api.autowalk.Walk.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.autowalk.Walk.toObject = function(includeInstance, msg) {
   var f, obj = {
-    globalParameters: (f = msg.getGlobalParameters()) && proto.bosdyn.api.autowalk.GlobalParameters.toObject(includeInstance, f),
-    playbackMode: (f = msg.getPlaybackMode()) && proto.bosdyn.api.autowalk.PlaybackMode.toObject(includeInstance, f),
-    mapName: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    missionName: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    elementsList: jspb.Message.toObjectList(msg.getElementsList(),
+globalParameters: (f = msg.getGlobalParameters()) && proto.bosdyn.api.autowalk.GlobalParameters.toObject(includeInstance, f),
+playbackMode: (f = msg.getPlaybackMode()) && proto.bosdyn.api.autowalk.PlaybackMode.toObject(includeInstance, f),
+mapName: jspb.Message.getFieldWithDefault(msg, 7, ""),
+missionName: jspb.Message.getFieldWithDefault(msg, 4, ""),
+elementsList: jspb.Message.toObjectList(msg.getElementsList(),
     proto.bosdyn.api.autowalk.Element.toObject, includeInstance),
-    docksList: jspb.Message.toObjectList(msg.getDocksList(),
+docksList: jspb.Message.toObjectList(msg.getDocksList(),
     proto.bosdyn.api.autowalk.Dock.toObject, includeInstance),
-    id: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    choreographyItems: (f = msg.getChoreographyItems()) && proto.bosdyn.api.autowalk.ChoreographyItems.toObject(includeInstance, f),
-    interrupts: (f = msg.getInterrupts()) && proto.bosdyn.api.autowalk.WalkInterrupt.toObject(includeInstance, f)
+id: jspb.Message.getFieldWithDefault(msg, 8, ""),
+choreographyItems: (f = msg.getChoreographyItems()) && proto.bosdyn.api.autowalk.ChoreographyItems.toObject(includeInstance, f),
+interrupts: (f = msg.getInterrupts()) && proto.bosdyn.api.autowalk.WalkInterrupt.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -985,7 +979,7 @@ proto.bosdyn.api.autowalk.Walk.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Walk}
  */
 proto.bosdyn.api.autowalk.Walk.deserializeBinary = function(bytes) {
@@ -1020,11 +1014,11 @@ proto.bosdyn.api.autowalk.Walk.deserializeBinaryFromReader = function(msg, reade
       msg.setPlaybackMode(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMapName(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMissionName(value);
       break;
     case 5:
@@ -1038,7 +1032,7 @@ proto.bosdyn.api.autowalk.Walk.deserializeBinaryFromReader = function(msg, reade
       msg.addDocks(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setId(value);
       break;
     case 9:
@@ -1469,13 +1463,13 @@ proto.bosdyn.api.autowalk.GlobalParameters.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.autowalk.GlobalParameters.toObject = function(includeInstance, msg) {
   var f, obj = {
-    groupName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    shouldAutofocusPtz: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    selfRightAttempts: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    postMissionCallbacksList: jspb.Message.toObjectList(msg.getPostMissionCallbacksList(),
+groupName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+shouldAutofocusPtz: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+selfRightAttempts: jspb.Message.getFieldWithDefault(msg, 3, 0),
+postMissionCallbacksList: jspb.Message.toObjectList(msg.getPostMissionCallbacksList(),
     proto.bosdyn.api.autowalk.Action.RemoteGrpc.toObject, includeInstance),
-    skipActions: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
-    hriBehaviors: (f = msg.getHriBehaviors()) && proto.bosdyn.api.autowalk.HriBehaviors.toObject(includeInstance, f)
+skipActions: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+hriBehaviors: (f = msg.getHriBehaviors()) && proto.bosdyn.api.autowalk.HriBehaviors.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1488,7 +1482,7 @@ proto.bosdyn.api.autowalk.GlobalParameters.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.GlobalParameters}
  */
 proto.bosdyn.api.autowalk.GlobalParameters.deserializeBinary = function(bytes) {
@@ -1513,7 +1507,7 @@ proto.bosdyn.api.autowalk.GlobalParameters.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setGroupName(value);
       break;
     case 2:
@@ -1793,12 +1787,12 @@ proto.bosdyn.api.autowalk.Dock.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.autowalk.Dock.toObject = function(includeInstance, msg) {
   var f, obj = {
-    dockId: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    dockedWaypointId: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    targetPrepPose: (f = msg.getTargetPrepPose()) && proto.bosdyn.api.autowalk.Target.toObject(includeInstance, f),
-    promptDuration: (f = msg.getPromptDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    disableRecharge: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
-    disableEnd: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
+dockId: jspb.Message.getFieldWithDefault(msg, 1, 0),
+dockedWaypointId: jspb.Message.getFieldWithDefault(msg, 2, ""),
+targetPrepPose: (f = msg.getTargetPrepPose()) && proto.bosdyn.api.autowalk.Target.toObject(includeInstance, f),
+promptDuration: (f = msg.getPromptDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+disableRecharge: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
+disableEnd: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
   };
 
   if (includeInstance) {
@@ -1811,7 +1805,7 @@ proto.bosdyn.api.autowalk.Dock.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Dock}
  */
 proto.bosdyn.api.autowalk.Dock.deserializeBinary = function(bytes) {
@@ -1840,7 +1834,7 @@ proto.bosdyn.api.autowalk.Dock.deserializeBinaryFromReader = function(msg, reade
       msg.setDockId(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDockedWaypointId(value);
       break;
     case 3:
@@ -2115,8 +2109,8 @@ proto.bosdyn.api.autowalk.HriBehaviors.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.autowalk.HriBehaviors.toObject = function(includeInstance, msg) {
   var f, obj = {
-    playAlertBehaviors: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    playUndockBehaviors: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+playAlertBehaviors: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+playUndockBehaviors: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -2129,7 +2123,7 @@ proto.bosdyn.api.autowalk.HriBehaviors.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.HriBehaviors}
  */
 proto.bosdyn.api.autowalk.HriBehaviors.deserializeBinary = function(bytes) {
@@ -2282,9 +2276,9 @@ proto.bosdyn.api.autowalk.ChoreographyItems.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.autowalk.ChoreographyItems.toObject = function(includeInstance, msg) {
   var f, obj = {
-    choreographySequencesList: jspb.Message.toObjectList(msg.getChoreographySequencesList(),
+choreographySequencesList: jspb.Message.toObjectList(msg.getChoreographySequencesList(),
     bosdyn_api_spot_choreography_sequence_pb.ChoreographySequence.toObject, includeInstance),
-    animatedMovesList: jspb.Message.toObjectList(msg.getAnimatedMovesList(),
+animatedMovesList: jspb.Message.toObjectList(msg.getAnimatedMovesList(),
     bosdyn_api_spot_choreography_sequence_pb.Animation.toObject, includeInstance)
   };
 
@@ -2298,7 +2292,7 @@ proto.bosdyn.api.autowalk.ChoreographyItems.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ChoreographyItems}
  */
 proto.bosdyn.api.autowalk.ChoreographyItems.deserializeBinary = function(bytes) {
@@ -2515,9 +2509,9 @@ proto.bosdyn.api.autowalk.PlaybackMode.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.autowalk.PlaybackMode.toObject = function(includeInstance, msg) {
   var f, obj = {
-    once: (f = msg.getOnce()) && proto.bosdyn.api.autowalk.PlaybackMode.Once.toObject(includeInstance, f),
-    periodic: (f = msg.getPeriodic()) && proto.bosdyn.api.autowalk.PlaybackMode.Periodic.toObject(includeInstance, f),
-    continuous: (f = msg.getContinuous()) && proto.bosdyn.api.autowalk.PlaybackMode.Continuous.toObject(includeInstance, f)
+once: (f = msg.getOnce()) && proto.bosdyn.api.autowalk.PlaybackMode.Once.toObject(includeInstance, f),
+periodic: (f = msg.getPeriodic()) && proto.bosdyn.api.autowalk.PlaybackMode.Periodic.toObject(includeInstance, f),
+continuous: (f = msg.getContinuous()) && proto.bosdyn.api.autowalk.PlaybackMode.Continuous.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2530,7 +2524,7 @@ proto.bosdyn.api.autowalk.PlaybackMode.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.PlaybackMode}
  */
 proto.bosdyn.api.autowalk.PlaybackMode.deserializeBinary = function(bytes) {
@@ -2657,7 +2651,7 @@ proto.bosdyn.api.autowalk.PlaybackMode.Once.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.autowalk.PlaybackMode.Once.toObject = function(includeInstance, msg) {
   var f, obj = {
-    skipDockingAfterCompletion: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
+skipDockingAfterCompletion: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
   };
 
   if (includeInstance) {
@@ -2670,7 +2664,7 @@ proto.bosdyn.api.autowalk.PlaybackMode.Once.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.PlaybackMode.Once}
  */
 proto.bosdyn.api.autowalk.PlaybackMode.Once.deserializeBinary = function(bytes) {
@@ -2787,8 +2781,8 @@ proto.bosdyn.api.autowalk.PlaybackMode.Periodic.prototype.toObject = function(op
  */
 proto.bosdyn.api.autowalk.PlaybackMode.Periodic.toObject = function(includeInstance, msg) {
   var f, obj = {
-    interval: (f = msg.getInterval()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    repetitions: jspb.Message.getFieldWithDefault(msg, 2, 0)
+interval: (f = msg.getInterval()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+repetitions: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2801,7 +2795,7 @@ proto.bosdyn.api.autowalk.PlaybackMode.Periodic.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.PlaybackMode.Periodic}
  */
 proto.bosdyn.api.autowalk.PlaybackMode.Periodic.deserializeBinary = function(bytes) {
@@ -2981,7 +2975,7 @@ proto.bosdyn.api.autowalk.PlaybackMode.Continuous.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.PlaybackMode.Continuous}
  */
 proto.bosdyn.api.autowalk.PlaybackMode.Continuous.deserializeBinary = function(bytes) {
@@ -3180,16 +3174,16 @@ proto.bosdyn.api.autowalk.Element.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.autowalk.Element.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    target: (f = msg.getTarget()) && proto.bosdyn.api.autowalk.Target.toObject(includeInstance, f),
-    targetFailureBehavior: (f = msg.getTargetFailureBehavior()) && proto.bosdyn.api.autowalk.FailureBehavior.toObject(includeInstance, f),
-    action: (f = msg.getAction()) && proto.bosdyn.api.autowalk.Action.toObject(includeInstance, f),
-    actionWrapper: (f = msg.getActionWrapper()) && proto.bosdyn.api.autowalk.ActionWrapper.toObject(includeInstance, f),
-    actionFailureBehavior: (f = msg.getActionFailureBehavior()) && proto.bosdyn.api.autowalk.FailureBehavior.toObject(includeInstance, f),
-    isSkipped: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
-    batteryMonitor: (f = msg.getBatteryMonitor()) && proto.bosdyn.api.autowalk.BatteryMonitor.toObject(includeInstance, f),
-    actionDuration: (f = msg.getActionDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    id: jspb.Message.getFieldWithDefault(msg, 10, "")
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+target: (f = msg.getTarget()) && proto.bosdyn.api.autowalk.Target.toObject(includeInstance, f),
+targetFailureBehavior: (f = msg.getTargetFailureBehavior()) && proto.bosdyn.api.autowalk.FailureBehavior.toObject(includeInstance, f),
+action: (f = msg.getAction()) && proto.bosdyn.api.autowalk.Action.toObject(includeInstance, f),
+actionWrapper: (f = msg.getActionWrapper()) && proto.bosdyn.api.autowalk.ActionWrapper.toObject(includeInstance, f),
+actionFailureBehavior: (f = msg.getActionFailureBehavior()) && proto.bosdyn.api.autowalk.FailureBehavior.toObject(includeInstance, f),
+isSkipped: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
+batteryMonitor: (f = msg.getBatteryMonitor()) && proto.bosdyn.api.autowalk.BatteryMonitor.toObject(includeInstance, f),
+actionDuration: (f = msg.getActionDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+id: jspb.Message.getFieldWithDefault(msg, 10, "")
   };
 
   if (includeInstance) {
@@ -3202,7 +3196,7 @@ proto.bosdyn.api.autowalk.Element.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Element}
  */
 proto.bosdyn.api.autowalk.Element.deserializeBinary = function(bytes) {
@@ -3227,7 +3221,7 @@ proto.bosdyn.api.autowalk.Element.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -3270,7 +3264,7 @@ proto.bosdyn.api.autowalk.Element.deserializeBinaryFromReader = function(msg, re
       msg.setActionDuration(value);
       break;
     case 10:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setId(value);
       break;
     default:
@@ -3753,11 +3747,11 @@ proto.bosdyn.api.autowalk.Target.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.autowalk.Target.toObject = function(includeInstance, msg) {
   var f, obj = {
-    navigateTo: (f = msg.getNavigateTo()) && proto.bosdyn.api.autowalk.Target.NavigateTo.toObject(includeInstance, f),
-    navigateRoute: (f = msg.getNavigateRoute()) && proto.bosdyn.api.autowalk.Target.NavigateRoute.toObject(includeInstance, f),
-    relocalize: (f = msg.getRelocalize()) && proto.bosdyn.api.autowalk.Target.Relocalize.toObject(includeInstance, f),
-    targetStowBehavior: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    successWhenGoalAreaReached: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
+navigateTo: (f = msg.getNavigateTo()) && proto.bosdyn.api.autowalk.Target.NavigateTo.toObject(includeInstance, f),
+navigateRoute: (f = msg.getNavigateRoute()) && proto.bosdyn.api.autowalk.Target.NavigateRoute.toObject(includeInstance, f),
+relocalize: (f = msg.getRelocalize()) && proto.bosdyn.api.autowalk.Target.Relocalize.toObject(includeInstance, f),
+targetStowBehavior: jspb.Message.getFieldWithDefault(msg, 5, 0),
+successWhenGoalAreaReached: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
   };
 
   if (includeInstance) {
@@ -3770,7 +3764,7 @@ proto.bosdyn.api.autowalk.Target.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Target}
  */
 proto.bosdyn.api.autowalk.Target.deserializeBinary = function(bytes) {
@@ -3929,7 +3923,7 @@ proto.bosdyn.api.autowalk.Target.Relocalize.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.autowalk.Target.Relocalize.toObject = function(includeInstance, msg) {
   var f, obj = {
-    setLocalizationRequest: (f = msg.getSetLocalizationRequest()) && bosdyn_api_graph_nav_graph_nav_pb.SetLocalizationRequest.toObject(includeInstance, f)
+setLocalizationRequest: (f = msg.getSetLocalizationRequest()) && bosdyn_api_graph_nav_graph_nav_pb.SetLocalizationRequest.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3942,7 +3936,7 @@ proto.bosdyn.api.autowalk.Target.Relocalize.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Target.Relocalize}
  */
 proto.bosdyn.api.autowalk.Target.Relocalize.deserializeBinary = function(bytes) {
@@ -4080,9 +4074,9 @@ proto.bosdyn.api.autowalk.Target.NavigateTo.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.autowalk.Target.NavigateTo.toObject = function(includeInstance, msg) {
   var f, obj = {
-    destinationWaypointId: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
-    destinationWaypointTformBodyGoal: (f = msg.getDestinationWaypointTformBodyGoal()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f)
+destinationWaypointId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
+destinationWaypointTformBodyGoal: (f = msg.getDestinationWaypointTformBodyGoal()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4095,7 +4089,7 @@ proto.bosdyn.api.autowalk.Target.NavigateTo.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Target.NavigateTo}
  */
 proto.bosdyn.api.autowalk.Target.NavigateTo.deserializeBinary = function(bytes) {
@@ -4120,7 +4114,7 @@ proto.bosdyn.api.autowalk.Target.NavigateTo.deserializeBinaryFromReader = functi
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDestinationWaypointId(value);
       break;
     case 3:
@@ -4312,9 +4306,9 @@ proto.bosdyn.api.autowalk.Target.NavigateRoute.prototype.toObject = function(opt
  */
 proto.bosdyn.api.autowalk.Target.NavigateRoute.toObject = function(includeInstance, msg) {
   var f, obj = {
-    route: (f = msg.getRoute()) && bosdyn_api_graph_nav_nav_pb.Route.toObject(includeInstance, f),
-    travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
-    destinationWaypointTformBodyGoal: (f = msg.getDestinationWaypointTformBodyGoal()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f)
+route: (f = msg.getRoute()) && bosdyn_api_graph_nav_nav_pb.Route.toObject(includeInstance, f),
+travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
+destinationWaypointTformBodyGoal: (f = msg.getDestinationWaypointTformBodyGoal()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4327,7 +4321,7 @@ proto.bosdyn.api.autowalk.Target.NavigateRoute.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Target.NavigateRoute}
  */
 proto.bosdyn.api.autowalk.Target.NavigateRoute.deserializeBinary = function(bytes) {
@@ -4741,11 +4735,11 @@ proto.bosdyn.api.autowalk.Action.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.autowalk.Action.toObject = function(includeInstance, msg) {
   var f, obj = {
-    sleep: (f = msg.getSleep()) && proto.bosdyn.api.autowalk.Action.Sleep.toObject(includeInstance, f),
-    dataAcquisition: (f = msg.getDataAcquisition()) && proto.bosdyn.api.autowalk.Action.DataAcquisition.toObject(includeInstance, f),
-    remoteGrpc: (f = msg.getRemoteGrpc()) && proto.bosdyn.api.autowalk.Action.RemoteGrpc.toObject(includeInstance, f),
-    executeChoreography: (f = msg.getExecuteChoreography()) && proto.bosdyn.api.autowalk.Action.ExecuteChoreography.toObject(includeInstance, f),
-    node: (f = msg.getNode()) && bosdyn_api_mission_nodes_pb.Node.toObject(includeInstance, f)
+sleep: (f = msg.getSleep()) && proto.bosdyn.api.autowalk.Action.Sleep.toObject(includeInstance, f),
+dataAcquisition: (f = msg.getDataAcquisition()) && proto.bosdyn.api.autowalk.Action.DataAcquisition.toObject(includeInstance, f),
+remoteGrpc: (f = msg.getRemoteGrpc()) && proto.bosdyn.api.autowalk.Action.RemoteGrpc.toObject(includeInstance, f),
+executeChoreography: (f = msg.getExecuteChoreography()) && proto.bosdyn.api.autowalk.Action.ExecuteChoreography.toObject(includeInstance, f),
+node: (f = msg.getNode()) && bosdyn_api_mission_nodes_pb.Node.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4758,7 +4752,7 @@ proto.bosdyn.api.autowalk.Action.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Action}
  */
 proto.bosdyn.api.autowalk.Action.deserializeBinary = function(bytes) {
@@ -4911,7 +4905,7 @@ proto.bosdyn.api.autowalk.Action.Sleep.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.autowalk.Action.Sleep.toObject = function(includeInstance, msg) {
   var f, obj = {
-    duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4924,7 +4918,7 @@ proto.bosdyn.api.autowalk.Action.Sleep.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Action.Sleep}
  */
 proto.bosdyn.api.autowalk.Action.Sleep.deserializeBinary = function(bytes) {
@@ -5069,10 +5063,10 @@ proto.bosdyn.api.autowalk.Action.DataAcquisition.prototype.toObject = function(o
  */
 proto.bosdyn.api.autowalk.Action.DataAcquisition.toObject = function(includeInstance, msg) {
   var f, obj = {
-    acquireDataRequest: (f = msg.getAcquireDataRequest()) && bosdyn_api_data_acquisition_pb.AcquireDataRequest.toObject(includeInstance, f),
-    completionBehavior: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    lastKnownCapabilities: (f = msg.getLastKnownCapabilities()) && bosdyn_api_data_acquisition_pb.AcquisitionCapabilityList.toObject(includeInstance, f),
-    recordTimeImagesList: jspb.Message.toObjectList(msg.getRecordTimeImagesList(),
+acquireDataRequest: (f = msg.getAcquireDataRequest()) && bosdyn_api_data_acquisition_pb.AcquireDataRequest.toObject(includeInstance, f),
+completionBehavior: jspb.Message.getFieldWithDefault(msg, 2, 0),
+lastKnownCapabilities: (f = msg.getLastKnownCapabilities()) && bosdyn_api_data_acquisition_pb.AcquisitionCapabilityList.toObject(includeInstance, f),
+recordTimeImagesList: jspb.Message.toObjectList(msg.getRecordTimeImagesList(),
     bosdyn_api_image_pb.ImageCaptureAndSource.toObject, includeInstance)
   };
 
@@ -5086,7 +5080,7 @@ proto.bosdyn.api.autowalk.Action.DataAcquisition.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Action.DataAcquisition}
  */
 proto.bosdyn.api.autowalk.Action.DataAcquisition.deserializeBinary = function(bytes) {
@@ -5361,13 +5355,13 @@ proto.bosdyn.api.autowalk.Action.RemoteGrpc.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.autowalk.Action.RemoteGrpc.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    rpcTimeout: (f = msg.getRpcTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    leaseResourcesList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
-    inputsList: jspb.Message.toObjectList(msg.getInputsList(),
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+rpcTimeout: (f = msg.getRpcTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+leaseResourcesList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
+inputsList: jspb.Message.toObjectList(msg.getInputsList(),
     bosdyn_api_mission_util_pb.KeyValue.toObject, includeInstance),
-    parameters: (f = msg.getParameters()) && bosdyn_api_service_customization_pb.CustomParamCollection.toObject(includeInstance, f),
-    recordTimeImagesList: jspb.Message.toObjectList(msg.getRecordTimeImagesList(),
+parameters: (f = msg.getParameters()) && bosdyn_api_service_customization_pb.CustomParamCollection.toObject(includeInstance, f),
+recordTimeImagesList: jspb.Message.toObjectList(msg.getRecordTimeImagesList(),
     bosdyn_api_image_pb.ImageCaptureAndSource.toObject, includeInstance)
   };
 
@@ -5381,7 +5375,7 @@ proto.bosdyn.api.autowalk.Action.RemoteGrpc.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Action.RemoteGrpc}
  */
 proto.bosdyn.api.autowalk.Action.RemoteGrpc.deserializeBinary = function(bytes) {
@@ -5406,7 +5400,7 @@ proto.bosdyn.api.autowalk.Action.RemoteGrpc.deserializeBinaryFromReader = functi
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
@@ -5415,7 +5409,7 @@ proto.bosdyn.api.autowalk.Action.RemoteGrpc.deserializeBinaryFromReader = functi
       msg.setRpcTimeout(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addLeaseResources(value);
       break;
     case 4:
@@ -5748,8 +5742,8 @@ proto.bosdyn.api.autowalk.Action.ExecuteChoreography.prototype.toObject = functi
  */
 proto.bosdyn.api.autowalk.Action.ExecuteChoreography.toObject = function(includeInstance, msg) {
   var f, obj = {
-    sequenceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    promptParams: (f = msg.getPromptParams()) && proto.bosdyn.api.autowalk.Action.ExecuteChoreography.PromptParams.toObject(includeInstance, f)
+sequenceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+promptParams: (f = msg.getPromptParams()) && proto.bosdyn.api.autowalk.Action.ExecuteChoreography.PromptParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5762,7 +5756,7 @@ proto.bosdyn.api.autowalk.Action.ExecuteChoreography.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Action.ExecuteChoreography}
  */
 proto.bosdyn.api.autowalk.Action.ExecuteChoreography.deserializeBinary = function(bytes) {
@@ -5787,7 +5781,7 @@ proto.bosdyn.api.autowalk.Action.ExecuteChoreography.deserializeBinaryFromReader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSequenceName(value);
       break;
     case 2:
@@ -5874,8 +5868,8 @@ proto.bosdyn.api.autowalk.Action.ExecuteChoreography.PromptParams.prototype.toOb
  */
 proto.bosdyn.api.autowalk.Action.ExecuteChoreography.PromptParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    promptForStartTime: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    promptTimeout: (f = msg.getPromptTimeout()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+promptForStartTime: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+promptTimeout: (f = msg.getPromptTimeout()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5888,7 +5882,7 @@ proto.bosdyn.api.autowalk.Action.ExecuteChoreography.PromptParams.toObject = fun
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.Action.ExecuteChoreography.PromptParams}
  */
 proto.bosdyn.api.autowalk.Action.ExecuteChoreography.PromptParams.deserializeBinary = function(bytes) {
@@ -6295,14 +6289,14 @@ proto.bosdyn.api.autowalk.ActionWrapper.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.autowalk.ActionWrapper.toObject = function(includeInstance, msg) {
   var f, obj = {
-    robotBodySit: (f = msg.getRobotBodySit()) && proto.bosdyn.api.autowalk.ActionWrapper.RobotBodySit.toObject(includeInstance, f),
-    robotBodyPose: (f = msg.getRobotBodyPose()) && proto.bosdyn.api.autowalk.ActionWrapper.RobotBodyPose.toObject(includeInstance, f),
-    spotCamLed: (f = msg.getSpotCamLed()) && proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed.toObject(includeInstance, f),
-    spotCamPtz: (f = msg.getSpotCamPtz()) && proto.bosdyn.api.autowalk.ActionWrapper.SpotCamPtz.toObject(includeInstance, f),
-    armSensorPointing: (f = msg.getArmSensorPointing()) && proto.bosdyn.api.autowalk.ActionWrapper.ArmSensorPointing.toObject(includeInstance, f),
-    spotCamAlignment: (f = msg.getSpotCamAlignment()) && proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.toObject(includeInstance, f),
-    gripperCameraParams: (f = msg.getGripperCameraParams()) && proto.bosdyn.api.autowalk.ActionWrapper.GripperCameraParams.toObject(includeInstance, f),
-    gripperCommand: (f = msg.getGripperCommand()) && proto.bosdyn.api.autowalk.ActionWrapper.GripperCommand.toObject(includeInstance, f)
+robotBodySit: (f = msg.getRobotBodySit()) && proto.bosdyn.api.autowalk.ActionWrapper.RobotBodySit.toObject(includeInstance, f),
+robotBodyPose: (f = msg.getRobotBodyPose()) && proto.bosdyn.api.autowalk.ActionWrapper.RobotBodyPose.toObject(includeInstance, f),
+spotCamLed: (f = msg.getSpotCamLed()) && proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed.toObject(includeInstance, f),
+spotCamPtz: (f = msg.getSpotCamPtz()) && proto.bosdyn.api.autowalk.ActionWrapper.SpotCamPtz.toObject(includeInstance, f),
+armSensorPointing: (f = msg.getArmSensorPointing()) && proto.bosdyn.api.autowalk.ActionWrapper.ArmSensorPointing.toObject(includeInstance, f),
+spotCamAlignment: (f = msg.getSpotCamAlignment()) && proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.toObject(includeInstance, f),
+gripperCameraParams: (f = msg.getGripperCameraParams()) && proto.bosdyn.api.autowalk.ActionWrapper.GripperCameraParams.toObject(includeInstance, f),
+gripperCommand: (f = msg.getGripperCommand()) && proto.bosdyn.api.autowalk.ActionWrapper.GripperCommand.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6315,7 +6309,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.deserializeBinary = function(bytes) {
@@ -6520,7 +6514,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.RobotBodySit.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper.RobotBodySit}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.RobotBodySit.deserializeBinary = function(bytes) {
@@ -6608,7 +6602,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.RobotBodyPose.prototype.toObject = funct
  */
 proto.bosdyn.api.autowalk.ActionWrapper.RobotBodyPose.toObject = function(includeInstance, msg) {
   var f, obj = {
-    targetTformBody: (f = msg.getTargetTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
+targetTformBody: (f = msg.getTargetTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6621,7 +6615,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.RobotBodyPose.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper.RobotBodyPose}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.RobotBodyPose.deserializeBinary = function(bytes) {
@@ -6759,7 +6753,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed.prototype.toObject = function
  */
 proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed.toObject = function(includeInstance, msg) {
   var f, obj = {
-    brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
+brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -6772,7 +6766,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed.deserializeBinary = function(bytes) {
@@ -6833,7 +6827,12 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed.serializeBinaryToWriter = fun
   var f = undefined;
   f = message.getBrightnessesMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeFloat);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getBrightnessesMap(true),
+    1,
+    writer,
+    jspb.BinaryWriter.prototype.writeInt32,
+    jspb.BinaryWriter.prototype.writeFloat);
   }
 };
 
@@ -6857,7 +6856,8 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed.prototype.getBrightnessesMap 
  */
 proto.bosdyn.api.autowalk.ActionWrapper.SpotCamLed.prototype.clearBrightnessesMap = function() {
   this.getBrightnessesMap().clear();
-  return this;};
+  return this;
+};
 
 
 
@@ -6892,7 +6892,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamPtz.prototype.toObject = function
  */
 proto.bosdyn.api.autowalk.ActionWrapper.SpotCamPtz.toObject = function(includeInstance, msg) {
   var f, obj = {
-    ptzPosition: (f = msg.getPtzPosition()) && bosdyn_api_spot_cam_ptz_pb.PtzPosition.toObject(includeInstance, f)
+ptzPosition: (f = msg.getPtzPosition()) && bosdyn_api_spot_cam_ptz_pb.PtzPosition.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6905,7 +6905,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamPtz.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper.SpotCamPtz}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.SpotCamPtz.deserializeBinary = function(bytes) {
@@ -7050,11 +7050,11 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.prototype.toObject = fu
  */
 proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.toObject = function(includeInstance, msg) {
   var f, obj = {
-    alignmentsList: jspb.Message.toObjectList(msg.getAlignmentsList(),
+alignmentsList: jspb.Message.toObjectList(msg.getAlignmentsList(),
     proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.Alignment.toObject, includeInstance),
-    targetTformSensor: (f = msg.getTargetTformSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    finalZoom: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    targetSensorIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f
+targetTformSensor: (f = msg.getTargetTformSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+finalZoom: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+targetSensorIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -7067,7 +7067,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.toObject = function(inc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.deserializeBinary = function(bytes) {
@@ -7106,7 +7106,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.deserializeBinaryFromRe
       msg.setFinalZoom(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addTargetSensorIds(value);
       break;
     default:
@@ -7229,12 +7229,12 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.Alignment.prototype.toO
  */
 proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.Alignment.toObject = function(includeInstance, msg) {
   var f, obj = {
-    zoom: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    sensorId: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    sceneObjectId: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    referenceImage: (f = msg.getReferenceImage()) && bosdyn_api_image_pb.ImageCaptureAndSource.toObject(includeInstance, f),
-    isSkipped: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    focusState: (f = msg.getFocusState()) && bosdyn_api_spot_cam_ptz_pb.PtzFocusState.toObject(includeInstance, f)
+zoom: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+sensorId: jspb.Message.getFieldWithDefault(msg, 2, ""),
+sceneObjectId: (f = jspb.Message.getField(msg, 3)) == null ? undefined : f,
+referenceImage: (f = msg.getReferenceImage()) && bosdyn_api_image_pb.ImageCaptureAndSource.toObject(includeInstance, f),
+isSkipped: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+focusState: (f = msg.getFocusState()) && bosdyn_api_spot_cam_ptz_pb.PtzFocusState.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7247,7 +7247,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.Alignment.toObject = fu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.Alignment}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.Alignment.deserializeBinary = function(bytes) {
@@ -7276,11 +7276,11 @@ proto.bosdyn.api.autowalk.ActionWrapper.SpotCamAlignment.Alignment.deserializeBi
       msg.setZoom(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSensorId(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSceneObjectId(value);
       break;
     case 6:
@@ -7699,12 +7699,12 @@ proto.bosdyn.api.autowalk.ActionWrapper.ArmSensorPointing.prototype.toObject = f
  */
 proto.bosdyn.api.autowalk.ActionWrapper.ArmSensorPointing.toObject = function(includeInstance, msg) {
   var f, obj = {
-    jointTrajectory: (f = msg.getJointTrajectory()) && bosdyn_api_arm_command_pb.ArmJointTrajectory.toObject(includeInstance, f),
-    wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    poseTrajectoryRtTarget: (f = msg.getPoseTrajectoryRtTarget()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
-    targetTformMeasuredOffset: (f = msg.getTargetTformMeasuredOffset()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
-    bodyAssistParams: (f = msg.getBodyAssistParams()) && bosdyn_api_spot_robot_command_pb.BodyControlParams.BodyAssistForManipulation.toObject(includeInstance, f),
-    forceStowOverride: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
+jointTrajectory: (f = msg.getJointTrajectory()) && bosdyn_api_arm_command_pb.ArmJointTrajectory.toObject(includeInstance, f),
+wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+poseTrajectoryRtTarget: (f = msg.getPoseTrajectoryRtTarget()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
+targetTformMeasuredOffset: (f = msg.getTargetTformMeasuredOffset()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
+bodyAssistParams: (f = msg.getBodyAssistParams()) && bosdyn_api_spot_robot_command_pb.BodyControlParams.BodyAssistForManipulation.toObject(includeInstance, f),
+forceStowOverride: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
   };
 
   if (includeInstance) {
@@ -7717,7 +7717,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.ArmSensorPointing.toObject = function(in
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper.ArmSensorPointing}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.ArmSensorPointing.deserializeBinary = function(bytes) {
@@ -8084,7 +8084,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.GripperCameraParams.prototype.toObject =
  */
 proto.bosdyn.api.autowalk.ActionWrapper.GripperCameraParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    params: (f = msg.getParams()) && bosdyn_api_gripper_camera_param_pb.GripperCameraParams.toObject(includeInstance, f)
+params: (f = msg.getParams()) && bosdyn_api_gripper_camera_param_pb.GripperCameraParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8097,7 +8097,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.GripperCameraParams.toObject = function(
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper.GripperCameraParams}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.GripperCameraParams.deserializeBinary = function(bytes) {
@@ -8235,8 +8235,8 @@ proto.bosdyn.api.autowalk.ActionWrapper.GripperCommand.prototype.toObject = func
  */
 proto.bosdyn.api.autowalk.ActionWrapper.GripperCommand.toObject = function(includeInstance, msg) {
   var f, obj = {
-    request: (f = msg.getRequest()) && bosdyn_api_gripper_command_pb.GripperCommand.Request.toObject(includeInstance, f),
-    disablePostActionClose: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+request: (f = msg.getRequest()) && bosdyn_api_gripper_command_pb.GripperCommand.Request.toObject(includeInstance, f),
+disablePostActionClose: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -8249,7 +8249,7 @@ proto.bosdyn.api.autowalk.ActionWrapper.GripperCommand.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ActionWrapper.GripperCommand}
  */
 proto.bosdyn.api.autowalk.ActionWrapper.GripperCommand.deserializeBinary = function(bytes) {
@@ -8740,12 +8740,12 @@ proto.bosdyn.api.autowalk.FailureBehavior.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.autowalk.FailureBehavior.toObject = function(includeInstance, msg) {
   var f, obj = {
-    retryCount: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    promptDuration: (f = msg.getPromptDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    safePowerOff: (f = msg.getSafePowerOff()) && proto.bosdyn.api.autowalk.FailureBehavior.SafePowerOff.toObject(includeInstance, f),
-    proceedIfAble: (f = msg.getProceedIfAble()) && proto.bosdyn.api.autowalk.FailureBehavior.ProceedIfAble.toObject(includeInstance, f),
-    returnToStartAndTryAgainLater: (f = msg.getReturnToStartAndTryAgainLater()) && proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTryAgainLater.toObject(includeInstance, f),
-    returnToStartAndTerminate: (f = msg.getReturnToStartAndTerminate()) && proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTerminate.toObject(includeInstance, f)
+retryCount: jspb.Message.getFieldWithDefault(msg, 1, 0),
+promptDuration: (f = msg.getPromptDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+safePowerOff: (f = msg.getSafePowerOff()) && proto.bosdyn.api.autowalk.FailureBehavior.SafePowerOff.toObject(includeInstance, f),
+proceedIfAble: (f = msg.getProceedIfAble()) && proto.bosdyn.api.autowalk.FailureBehavior.ProceedIfAble.toObject(includeInstance, f),
+returnToStartAndTryAgainLater: (f = msg.getReturnToStartAndTryAgainLater()) && proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTryAgainLater.toObject(includeInstance, f),
+returnToStartAndTerminate: (f = msg.getReturnToStartAndTerminate()) && proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTerminate.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8758,7 +8758,7 @@ proto.bosdyn.api.autowalk.FailureBehavior.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.FailureBehavior}
  */
 proto.bosdyn.api.autowalk.FailureBehavior.deserializeBinary = function(bytes) {
@@ -8922,7 +8922,7 @@ proto.bosdyn.api.autowalk.FailureBehavior.SafePowerOff.prototype.toObject = func
  */
 proto.bosdyn.api.autowalk.FailureBehavior.SafePowerOff.toObject = function(includeInstance, msg) {
   var f, obj = {
-    request: (f = msg.getRequest()) && bosdyn_api_basic_command_pb.SafePowerOffCommand.Request.toObject(includeInstance, f)
+request: (f = msg.getRequest()) && bosdyn_api_basic_command_pb.SafePowerOffCommand.Request.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8935,7 +8935,7 @@ proto.bosdyn.api.autowalk.FailureBehavior.SafePowerOff.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.FailureBehavior.SafePowerOff}
  */
 proto.bosdyn.api.autowalk.FailureBehavior.SafePowerOff.deserializeBinary = function(bytes) {
@@ -9086,7 +9086,7 @@ proto.bosdyn.api.autowalk.FailureBehavior.ProceedIfAble.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.FailureBehavior.ProceedIfAble}
  */
 proto.bosdyn.api.autowalk.FailureBehavior.ProceedIfAble.deserializeBinary = function(bytes) {
@@ -9174,7 +9174,7 @@ proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTryAgainLater.prototyp
  */
 proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTryAgainLater.toObject = function(includeInstance, msg) {
   var f, obj = {
-    tryAgainDelay: (f = msg.getTryAgainDelay()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+tryAgainDelay: (f = msg.getTryAgainDelay()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9187,7 +9187,7 @@ proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTryAgainLater.toObject
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTryAgainLater}
  */
 proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTryAgainLater.deserializeBinary = function(bytes) {
@@ -9338,7 +9338,7 @@ proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTerminate.toObject = f
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTerminate}
  */
 proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTerminate.deserializeBinary = function(bytes) {
@@ -9636,9 +9636,9 @@ proto.bosdyn.api.autowalk.WalkInterrupt.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.autowalk.WalkInterrupt.toObject = function(includeInstance, msg) {
   var f, obj = {
-    signalsList: jspb.Message.toObjectList(msg.getSignalsList(),
+signalsList: jspb.Message.toObjectList(msg.getSignalsList(),
     proto.bosdyn.api.autowalk.WalkInterrupt.DaqPluginSignal.toObject, includeInstance),
-    conditionsAndBehaviorsList: jspb.Message.toObjectList(msg.getConditionsAndBehaviorsList(),
+conditionsAndBehaviorsList: jspb.Message.toObjectList(msg.getConditionsAndBehaviorsList(),
     proto.bosdyn.api.autowalk.WalkInterrupt.ConditionAndBehavior.toObject, includeInstance)
   };
 
@@ -9652,7 +9652,7 @@ proto.bosdyn.api.autowalk.WalkInterrupt.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.WalkInterrupt}
  */
 proto.bosdyn.api.autowalk.WalkInterrupt.deserializeBinary = function(bytes) {
@@ -9766,9 +9766,9 @@ proto.bosdyn.api.autowalk.WalkInterrupt.DaqPluginSignal.prototype.toObject = fun
  */
 proto.bosdyn.api.autowalk.WalkInterrupt.DaqPluginSignal.toObject = function(includeInstance, msg) {
   var f, obj = {
-    capability: (f = msg.getCapability()) && bosdyn_api_data_acquisition_pb.DataAcquisitionCapability.toObject(includeInstance, f),
-    dataCapture: (f = msg.getDataCapture()) && bosdyn_api_data_acquisition_pb.DataCapture.toObject(includeInstance, f),
-    blackboardName: jspb.Message.getFieldWithDefault(msg, 3, "")
+capability: (f = msg.getCapability()) && bosdyn_api_data_acquisition_pb.DataAcquisitionCapability.toObject(includeInstance, f),
+dataCapture: (f = msg.getDataCapture()) && bosdyn_api_data_acquisition_pb.DataCapture.toObject(includeInstance, f),
+blackboardName: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -9781,7 +9781,7 @@ proto.bosdyn.api.autowalk.WalkInterrupt.DaqPluginSignal.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.WalkInterrupt.DaqPluginSignal}
  */
 proto.bosdyn.api.autowalk.WalkInterrupt.DaqPluginSignal.deserializeBinary = function(bytes) {
@@ -9816,7 +9816,7 @@ proto.bosdyn.api.autowalk.WalkInterrupt.DaqPluginSignal.deserializeBinaryFromRea
       msg.setDataCapture(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setBlackboardName(value);
       break;
     default:
@@ -10040,11 +10040,11 @@ proto.bosdyn.api.autowalk.WalkInterrupt.ConditionAndBehavior.prototype.toObject 
  */
 proto.bosdyn.api.autowalk.WalkInterrupt.ConditionAndBehavior.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    conditionNode: (f = msg.getConditionNode()) && bosdyn_api_mission_nodes_pb.Condition.toObject(includeInstance, f),
-    safePowerOff: (f = msg.getSafePowerOff()) && proto.bosdyn.api.autowalk.FailureBehavior.SafePowerOff.toObject(includeInstance, f),
-    returnToStartAndTerminate: (f = msg.getReturnToStartAndTerminate()) && proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTerminate.toObject(includeInstance, f),
-    behaviorNode: (f = msg.getBehaviorNode()) && bosdyn_api_mission_nodes_pb.Node.toObject(includeInstance, f)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+conditionNode: (f = msg.getConditionNode()) && bosdyn_api_mission_nodes_pb.Condition.toObject(includeInstance, f),
+safePowerOff: (f = msg.getSafePowerOff()) && proto.bosdyn.api.autowalk.FailureBehavior.SafePowerOff.toObject(includeInstance, f),
+returnToStartAndTerminate: (f = msg.getReturnToStartAndTerminate()) && proto.bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTerminate.toObject(includeInstance, f),
+behaviorNode: (f = msg.getBehaviorNode()) && bosdyn_api_mission_nodes_pb.Node.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -10057,7 +10057,7 @@ proto.bosdyn.api.autowalk.WalkInterrupt.ConditionAndBehavior.toObject = function
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.WalkInterrupt.ConditionAndBehavior}
  */
 proto.bosdyn.api.autowalk.WalkInterrupt.ConditionAndBehavior.deserializeBinary = function(bytes) {
@@ -10082,7 +10082,7 @@ proto.bosdyn.api.autowalk.WalkInterrupt.ConditionAndBehavior.deserializeBinaryFr
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -10450,8 +10450,8 @@ proto.bosdyn.api.autowalk.BatteryMonitor.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.autowalk.BatteryMonitor.toObject = function(includeInstance, msg) {
   var f, obj = {
-    batteryStartThreshold: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    batteryStopThreshold: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+batteryStartThreshold: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+batteryStopThreshold: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -10464,7 +10464,7 @@ proto.bosdyn.api.autowalk.BatteryMonitor.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.BatteryMonitor}
  */
 proto.bosdyn.api.autowalk.BatteryMonitor.deserializeBinary = function(bytes) {

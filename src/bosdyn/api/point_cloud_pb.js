@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -312,11 +306,11 @@ proto.bosdyn.api.PointCloudSource.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.PointCloudSource.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    frameNameSensor: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
-    supportedCloudTypesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+frameNameSensor: jspb.Message.getFieldWithDefault(msg, 3, ""),
+acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
+supportedCloudTypesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -329,7 +323,7 @@ proto.bosdyn.api.PointCloudSource.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PointCloudSource}
  */
 proto.bosdyn.api.PointCloudSource.deserializeBinary = function(bytes) {
@@ -354,11 +348,11 @@ proto.bosdyn.api.PointCloudSource.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameNameSensor(value);
       break;
     case 30:
@@ -372,10 +366,7 @@ proto.bosdyn.api.PointCloudSource.deserializeBinaryFromReader = function(msg, re
       msg.setTransformsSnapshot(value);
       break;
     case 4:
-      var values = /** @type {!Array<!proto.bosdyn.api.PointCloudRequest.PointCloudType>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addSupportedCloudTypes(values[i]);
-      }
+      reader.readPackableEnumInto(msg.getSupportedCloudTypesList());
       break;
     default:
       reader.skipField();
@@ -625,11 +616,11 @@ proto.bosdyn.api.PointCloud.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.PointCloud.toObject = function(includeInstance, msg) {
   var f, obj = {
-    source: (f = msg.getSource()) && proto.bosdyn.api.PointCloudSource.toObject(includeInstance, f),
-    numPoints: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    encoding: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    encodingParameters: (f = msg.getEncodingParameters()) && proto.bosdyn.api.PointCloud.EncodingParameters.toObject(includeInstance, f),
-    data: msg.getData_asB64()
+source: (f = msg.getSource()) && proto.bosdyn.api.PointCloudSource.toObject(includeInstance, f),
+numPoints: jspb.Message.getFieldWithDefault(msg, 2, 0),
+encoding: jspb.Message.getFieldWithDefault(msg, 3, 0),
+encodingParameters: (f = msg.getEncodingParameters()) && proto.bosdyn.api.PointCloud.EncodingParameters.toObject(includeInstance, f),
+data: msg.getData_asB64()
   };
 
   if (includeInstance) {
@@ -642,7 +633,7 @@ proto.bosdyn.api.PointCloud.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PointCloud}
  */
 proto.bosdyn.api.PointCloud.deserializeBinary = function(bytes) {
@@ -799,12 +790,12 @@ proto.bosdyn.api.PointCloud.EncodingParameters.prototype.toObject = function(opt
  */
 proto.bosdyn.api.PointCloud.EncodingParameters.toObject = function(includeInstance, msg) {
   var f, obj = {
-    scaleFactor: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    maxX: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    maxY: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    maxZ: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    remappingConstant: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    bytesPerPoint: jspb.Message.getFieldWithDefault(msg, 6, 0)
+scaleFactor: jspb.Message.getFieldWithDefault(msg, 1, 0),
+maxX: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+maxY: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+maxZ: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+remappingConstant: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+bytesPerPoint: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -817,7 +808,7 @@ proto.bosdyn.api.PointCloud.EncodingParameters.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PointCloud.EncodingParameters}
  */
 proto.bosdyn.api.PointCloud.EncodingParameters.deserializeBinary = function(bytes) {
@@ -1238,10 +1229,10 @@ proto.bosdyn.api.LidarPointCloud.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.LidarPointCloud.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pointCloud: (f = msg.getPointCloud()) && proto.bosdyn.api.PointCloud.toObject(includeInstance, f),
-    numBeams: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    numScans: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    lidarPoseHistoryList: jspb.Message.toObjectList(msg.getLidarPoseHistoryList(),
+pointCloud: (f = msg.getPointCloud()) && proto.bosdyn.api.PointCloud.toObject(includeInstance, f),
+numBeams: jspb.Message.getFieldWithDefault(msg, 2, 0),
+numScans: jspb.Message.getFieldWithDefault(msg, 3, 0),
+lidarPoseHistoryList: jspb.Message.toObjectList(msg.getLidarPoseHistoryList(),
     proto.bosdyn.api.LidarPointCloud.LidarPoseSample.toObject, includeInstance)
   };
 
@@ -1255,7 +1246,7 @@ proto.bosdyn.api.LidarPointCloud.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LidarPointCloud}
  */
 proto.bosdyn.api.LidarPointCloud.deserializeBinary = function(bytes) {
@@ -1391,9 +1382,9 @@ proto.bosdyn.api.LidarPointCloud.LidarPoseSample.prototype.toObject = function(o
  */
 proto.bosdyn.api.LidarPointCloud.LidarPoseSample.toObject = function(includeInstance, msg) {
   var f, obj = {
-    lidarPosInVision: (f = msg.getLidarPosInVision()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    scanNumber: jspb.Message.getFieldWithDefault(msg, 3, 0)
+lidarPosInVision: (f = msg.getLidarPosInVision()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+scanNumber: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1406,7 +1397,7 @@ proto.bosdyn.api.LidarPointCloud.LidarPoseSample.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LidarPointCloud.LidarPoseSample}
  */
 proto.bosdyn.api.LidarPointCloud.LidarPoseSample.deserializeBinary = function(bytes) {
@@ -1734,7 +1725,7 @@ proto.bosdyn.api.ListPointCloudSourcesRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.ListPointCloudSourcesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1747,7 +1738,7 @@ proto.bosdyn.api.ListPointCloudSourcesRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ListPointCloudSourcesRequest}
  */
 proto.bosdyn.api.ListPointCloudSourcesRequest.deserializeBinary = function(bytes) {
@@ -1892,8 +1883,8 @@ proto.bosdyn.api.ListPointCloudSourcesResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.ListPointCloudSourcesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    pointCloudSourcesList: jspb.Message.toObjectList(msg.getPointCloudSourcesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+pointCloudSourcesList: jspb.Message.toObjectList(msg.getPointCloudSourcesList(),
     proto.bosdyn.api.PointCloudSource.toObject, includeInstance)
   };
 
@@ -1907,7 +1898,7 @@ proto.bosdyn.api.ListPointCloudSourcesResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ListPointCloudSourcesResponse}
  */
 proto.bosdyn.api.ListPointCloudSourcesResponse.deserializeBinary = function(bytes) {
@@ -2096,9 +2087,9 @@ proto.bosdyn.api.PointCloudRequest.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.PointCloudRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pointCloudSourceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    cloudType: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    downsampleRate: jspb.Message.getFieldWithDefault(msg, 3, 0)
+pointCloudSourceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+cloudType: jspb.Message.getFieldWithDefault(msg, 2, 0),
+downsampleRate: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -2111,7 +2102,7 @@ proto.bosdyn.api.PointCloudRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PointCloudRequest}
  */
 proto.bosdyn.api.PointCloudRequest.deserializeBinary = function(bytes) {
@@ -2136,7 +2127,7 @@ proto.bosdyn.api.PointCloudRequest.deserializeBinaryFromReader = function(msg, r
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setPointCloudSourceName(value);
       break;
     case 2:
@@ -2302,8 +2293,8 @@ proto.bosdyn.api.GetPointCloudRequest.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.GetPointCloudRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    pointCloudRequestsList: jspb.Message.toObjectList(msg.getPointCloudRequestsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+pointCloudRequestsList: jspb.Message.toObjectList(msg.getPointCloudRequestsList(),
     proto.bosdyn.api.PointCloudRequest.toObject, includeInstance)
   };
 
@@ -2317,7 +2308,7 @@ proto.bosdyn.api.GetPointCloudRequest.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetPointCloudRequest}
  */
 proto.bosdyn.api.GetPointCloudRequest.deserializeBinary = function(bytes) {
@@ -2532,11 +2523,11 @@ proto.bosdyn.api.PointCloudResponse.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.PointCloudResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    pointCloud: (f = msg.getPointCloud()) && proto.bosdyn.api.PointCloud.toObject(includeInstance, f),
-    lidarCloud: (f = msg.getLidarCloud()) && proto.bosdyn.api.LidarPointCloud.toObject(includeInstance, f),
-    noUpdate: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    expectedTimeToNextUpdate: jspb.Message.getFieldWithDefault(msg, 5, 0)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+pointCloud: (f = msg.getPointCloud()) && proto.bosdyn.api.PointCloud.toObject(includeInstance, f),
+lidarCloud: (f = msg.getLidarCloud()) && proto.bosdyn.api.LidarPointCloud.toObject(includeInstance, f),
+noUpdate: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+expectedTimeToNextUpdate: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -2549,7 +2540,7 @@ proto.bosdyn.api.PointCloudResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PointCloudResponse}
  */
 proto.bosdyn.api.PointCloudResponse.deserializeBinary = function(bytes) {
@@ -2843,8 +2834,8 @@ proto.bosdyn.api.GetPointCloudResponse.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.GetPointCloudResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    pointCloudResponsesList: jspb.Message.toObjectList(msg.getPointCloudResponsesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+pointCloudResponsesList: jspb.Message.toObjectList(msg.getPointCloudResponsesList(),
     proto.bosdyn.api.PointCloudResponse.toObject, includeInstance)
   };
 
@@ -2858,7 +2849,7 @@ proto.bosdyn.api.GetPointCloudResponse.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetPointCloudResponse}
  */
 proto.bosdyn.api.GetPointCloudResponse.deserializeBinary = function(bytes) {

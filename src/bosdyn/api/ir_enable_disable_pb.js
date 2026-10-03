@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -100,8 +94,8 @@ proto.bosdyn.api.IREnableDisableRequest.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.IREnableDisableRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    request: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+request: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -114,7 +108,7 @@ proto.bosdyn.api.IREnableDisableRequest.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.IREnableDisableRequest}
  */
 proto.bosdyn.api.IREnableDisableRequest.deserializeBinary = function(bytes) {
@@ -290,7 +284,7 @@ proto.bosdyn.api.IREnableDisableResponse.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.IREnableDisableResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -303,7 +297,7 @@ proto.bosdyn.api.IREnableDisableResponse.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.IREnableDisableResponse}
  */
 proto.bosdyn.api.IREnableDisableResponse.deserializeBinary = function(bytes) {

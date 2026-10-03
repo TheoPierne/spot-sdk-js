@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -260,7 +254,7 @@ proto.bosdyn.api.LocalGridType.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.LocalGridType.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, "")
+name: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -273,7 +267,7 @@ proto.bosdyn.api.LocalGridType.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LocalGridType}
  */
 proto.bosdyn.api.LocalGridType.deserializeBinary = function(bytes) {
@@ -298,7 +292,7 @@ proto.bosdyn.api.LocalGridType.deserializeBinaryFromReader = function(msg, reade
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     default:
@@ -390,7 +384,7 @@ proto.bosdyn.api.LocalGridRequest.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.LocalGridRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    localGridTypeName: jspb.Message.getFieldWithDefault(msg, 1, "")
+localGridTypeName: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -403,7 +397,7 @@ proto.bosdyn.api.LocalGridRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LocalGridRequest}
  */
 proto.bosdyn.api.LocalGridRequest.deserializeBinary = function(bytes) {
@@ -428,7 +422,7 @@ proto.bosdyn.api.LocalGridRequest.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setLocalGridTypeName(value);
       break;
     default:
@@ -520,9 +514,9 @@ proto.bosdyn.api.LocalGridExtent.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.LocalGridExtent.toObject = function(includeInstance, msg) {
   var f, obj = {
-    cellSize: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    numCellsX: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    numCellsY: jspb.Message.getFieldWithDefault(msg, 4, 0)
+cellSize: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+numCellsX: jspb.Message.getFieldWithDefault(msg, 3, 0),
+numCellsY: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -535,7 +529,7 @@ proto.bosdyn.api.LocalGridExtent.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LocalGridExtent}
  */
 proto.bosdyn.api.LocalGridExtent.deserializeBinary = function(bytes) {
@@ -717,18 +711,18 @@ proto.bosdyn.api.LocalGrid.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.LocalGrid.toObject = function(includeInstance, msg) {
   var f, obj = {
-    localGridTypeName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
-    frameNameLocalGridData: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    extent: (f = msg.getExtent()) && proto.bosdyn.api.LocalGridExtent.toObject(includeInstance, f),
-    cellFormat: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    encoding: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    data: msg.getData_asB64(),
-    rleCountsList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
-    cellValueScale: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
-    cellValueOffset: jspb.Message.getFloatingPointFieldWithDefault(msg, 9, 0.0),
-    unknownCells: msg.getUnknownCells_asB64()
+localGridTypeName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
+frameNameLocalGridData: jspb.Message.getFieldWithDefault(msg, 11, ""),
+extent: (f = msg.getExtent()) && proto.bosdyn.api.LocalGridExtent.toObject(includeInstance, f),
+cellFormat: jspb.Message.getFieldWithDefault(msg, 4, 0),
+encoding: jspb.Message.getFieldWithDefault(msg, 5, 0),
+data: msg.getData_asB64(),
+rleCountsList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
+cellValueScale: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
+cellValueOffset: jspb.Message.getFloatingPointFieldWithDefault(msg, 9, 0.0),
+unknownCells: msg.getUnknownCells_asB64()
   };
 
   if (includeInstance) {
@@ -741,7 +735,7 @@ proto.bosdyn.api.LocalGrid.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LocalGrid}
  */
 proto.bosdyn.api.LocalGrid.deserializeBinary = function(bytes) {
@@ -766,7 +760,7 @@ proto.bosdyn.api.LocalGrid.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setLocalGridTypeName(value);
       break;
     case 30:
@@ -780,7 +774,7 @@ proto.bosdyn.api.LocalGrid.deserializeBinaryFromReader = function(msg, reader) {
       msg.setTransformsSnapshot(value);
       break;
     case 11:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameNameLocalGridData(value);
       break;
     case 3:
@@ -801,10 +795,7 @@ proto.bosdyn.api.LocalGrid.deserializeBinaryFromReader = function(msg, reader) {
       msg.setData(value);
       break;
     case 7:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addRleCounts(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getRleCountsList());
       break;
     case 8:
       var value = /** @type {number} */ (reader.readDouble());
@@ -1331,9 +1322,9 @@ proto.bosdyn.api.LocalGridResponse.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.LocalGridResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    localGridTypeName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    localGrid: (f = msg.getLocalGrid()) && proto.bosdyn.api.LocalGrid.toObject(includeInstance, f)
+localGridTypeName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+localGrid: (f = msg.getLocalGrid()) && proto.bosdyn.api.LocalGrid.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1346,7 +1337,7 @@ proto.bosdyn.api.LocalGridResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LocalGridResponse}
  */
 proto.bosdyn.api.LocalGridResponse.deserializeBinary = function(bytes) {
@@ -1371,7 +1362,7 @@ proto.bosdyn.api.LocalGridResponse.deserializeBinaryFromReader = function(msg, r
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setLocalGridTypeName(value);
       break;
     case 2:
@@ -1553,7 +1544,7 @@ proto.bosdyn.api.GetLocalGridTypesRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.GetLocalGridTypesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1566,7 +1557,7 @@ proto.bosdyn.api.GetLocalGridTypesRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetLocalGridTypesRequest}
  */
 proto.bosdyn.api.GetLocalGridTypesRequest.deserializeBinary = function(bytes) {
@@ -1711,8 +1702,8 @@ proto.bosdyn.api.GetLocalGridTypesResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.GetLocalGridTypesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    localGridTypeList: jspb.Message.toObjectList(msg.getLocalGridTypeList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+localGridTypeList: jspb.Message.toObjectList(msg.getLocalGridTypeList(),
     proto.bosdyn.api.LocalGridType.toObject, includeInstance)
   };
 
@@ -1726,7 +1717,7 @@ proto.bosdyn.api.GetLocalGridTypesResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetLocalGridTypesResponse}
  */
 proto.bosdyn.api.GetLocalGridTypesResponse.deserializeBinary = function(bytes) {
@@ -1922,8 +1913,8 @@ proto.bosdyn.api.GetLocalGridsRequest.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.GetLocalGridsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    localGridRequestsList: jspb.Message.toObjectList(msg.getLocalGridRequestsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+localGridRequestsList: jspb.Message.toObjectList(msg.getLocalGridRequestsList(),
     proto.bosdyn.api.LocalGridRequest.toObject, includeInstance)
   };
 
@@ -1937,7 +1928,7 @@ proto.bosdyn.api.GetLocalGridsRequest.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetLocalGridsRequest}
  */
 proto.bosdyn.api.GetLocalGridsRequest.deserializeBinary = function(bytes) {
@@ -2133,10 +2124,10 @@ proto.bosdyn.api.GetLocalGridsResponse.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.GetLocalGridsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    localGridResponsesList: jspb.Message.toObjectList(msg.getLocalGridResponsesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+localGridResponsesList: jspb.Message.toObjectList(msg.getLocalGridResponsesList(),
     proto.bosdyn.api.LocalGridResponse.toObject, includeInstance),
-    numLocalGridErrors: jspb.Message.getFieldWithDefault(msg, 3, 0)
+numLocalGridErrors: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -2149,7 +2140,7 @@ proto.bosdyn.api.GetLocalGridsResponse.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetLocalGridsResponse}
  */
 proto.bosdyn.api.GetLocalGridsResponse.deserializeBinary = function(bytes) {

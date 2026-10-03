@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -226,8 +220,8 @@ proto.bosdyn.api.autowalk.FailedElement.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.autowalk.FailedElement.toObject = function(includeInstance, msg) {
   var f, obj = {
-    errorsList: (f = jspb.Message.getRepeatedField(msg, 1)) == null ? undefined : f,
-    warningsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
+errorsList: (f = jspb.Message.getRepeatedField(msg, 1)) == null ? undefined : f,
+warningsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -240,7 +234,7 @@ proto.bosdyn.api.autowalk.FailedElement.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.FailedElement}
  */
 proto.bosdyn.api.autowalk.FailedElement.deserializeBinary = function(bytes) {
@@ -265,11 +259,11 @@ proto.bosdyn.api.autowalk.FailedElement.deserializeBinaryFromReader = function(m
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addErrors(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addWarnings(value);
       break;
     default:
@@ -424,8 +418,8 @@ proto.bosdyn.api.autowalk.NodeIdentifier.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.autowalk.NodeIdentifier.toObject = function(includeInstance, msg) {
   var f, obj = {
-    nodeId: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    userDataId: jspb.Message.getFieldWithDefault(msg, 2, "")
+nodeId: jspb.Message.getFieldWithDefault(msg, 1, 0),
+userDataId: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -438,7 +432,7 @@ proto.bosdyn.api.autowalk.NodeIdentifier.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.NodeIdentifier}
  */
 proto.bosdyn.api.autowalk.NodeIdentifier.deserializeBinary = function(bytes) {
@@ -467,7 +461,7 @@ proto.bosdyn.api.autowalk.NodeIdentifier.deserializeBinaryFromReader = function(
       msg.setNodeId(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setUserDataId(value);
       break;
     default:
@@ -584,9 +578,9 @@ proto.bosdyn.api.autowalk.ElementIdentifiers.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.autowalk.ElementIdentifiers.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rootId: (f = msg.getRootId()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f),
-    actionId: (f = msg.getActionId()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f),
-    navigationId: (f = msg.getNavigationId()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f)
+rootId: (f = msg.getRootId()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f),
+actionId: (f = msg.getActionId()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f),
+navigationId: (f = msg.getNavigationId()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -599,7 +593,7 @@ proto.bosdyn.api.autowalk.ElementIdentifiers.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.ElementIdentifiers}
  */
 proto.bosdyn.api.autowalk.ElementIdentifiers.deserializeBinary = function(bytes) {
@@ -837,9 +831,9 @@ proto.bosdyn.api.autowalk.CompileAutowalkRequest.prototype.toObject = function(o
  */
 proto.bosdyn.api.autowalk.CompileAutowalkRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    walk: (f = msg.getWalk()) && bosdyn_api_autowalk_walks_pb.Walk.toObject(includeInstance, f),
-    treatWarningsAsErrors: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+walk: (f = msg.getWalk()) && bosdyn_api_autowalk_walks_pb.Walk.toObject(includeInstance, f),
+treatWarningsAsErrors: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -852,7 +846,7 @@ proto.bosdyn.api.autowalk.CompileAutowalkRequest.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.CompileAutowalkRequest}
  */
 proto.bosdyn.api.autowalk.CompileAutowalkRequest.deserializeBinary = function(bytes) {
@@ -1076,14 +1070,14 @@ proto.bosdyn.api.autowalk.CompileAutowalkResponse.prototype.toObject = function(
  */
 proto.bosdyn.api.autowalk.CompileAutowalkResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    root: (f = msg.getRoot()) && bosdyn_api_mission_nodes_pb.Node.toObject(includeInstance, f),
-    elementIdentifiersList: jspb.Message.toObjectList(msg.getElementIdentifiersList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+root: (f = msg.getRoot()) && bosdyn_api_mission_nodes_pb.Node.toObject(includeInstance, f),
+elementIdentifiersList: jspb.Message.toObjectList(msg.getElementIdentifiersList(),
     proto.bosdyn.api.autowalk.ElementIdentifiers.toObject, includeInstance),
-    failedElementsMap: (f = msg.getFailedElementsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.autowalk.FailedElement.toObject) : [],
-    dockingNode: (f = msg.getDockingNode()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f),
-    loopNode: (f = msg.getLoopNode()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f)
+failedElementsMap: (f = msg.getFailedElementsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.autowalk.FailedElement.toObject) : [],
+dockingNode: (f = msg.getDockingNode()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f),
+loopNode: (f = msg.getLoopNode()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1096,7 +1090,7 @@ proto.bosdyn.api.autowalk.CompileAutowalkResponse.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.CompileAutowalkResponse}
  */
 proto.bosdyn.api.autowalk.CompileAutowalkResponse.deserializeBinary = function(bytes) {
@@ -1217,7 +1211,13 @@ proto.bosdyn.api.autowalk.CompileAutowalkResponse.serializeBinaryToWriter = func
   }
   f = message.getFailedElementsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(6, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.autowalk.FailedElement.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getFailedElementsMap(true),
+    6,
+    writer,
+    jspb.BinaryWriter.prototype.writeInt32,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.autowalk.FailedElement.serializeBinaryToWriter);
   }
   f = message.getDockingNode();
   if (f != null) {
@@ -1396,7 +1396,8 @@ proto.bosdyn.api.autowalk.CompileAutowalkResponse.prototype.getFailedElementsMap
  */
 proto.bosdyn.api.autowalk.CompileAutowalkResponse.prototype.clearFailedElementsMap = function() {
   this.getFailedElementsMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -1512,11 +1513,11 @@ proto.bosdyn.api.autowalk.LoadAutowalkRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.autowalk.LoadAutowalkRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    walk: (f = msg.getWalk()) && bosdyn_api_autowalk_walks_pb.Walk.toObject(includeInstance, f),
-    leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+walk: (f = msg.getWalk()) && bosdyn_api_autowalk_walks_pb.Walk.toObject(includeInstance, f),
+leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
     bosdyn_api_lease_pb.Lease.toObject, includeInstance),
-    treatWarningsAsErrors: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
+treatWarningsAsErrors: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -1529,7 +1530,7 @@ proto.bosdyn.api.autowalk.LoadAutowalkRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.LoadAutowalkRequest}
  */
 proto.bosdyn.api.autowalk.LoadAutowalkRequest.deserializeBinary = function(bytes) {
@@ -1804,18 +1805,18 @@ proto.bosdyn.api.autowalk.LoadAutowalkResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.autowalk.LoadAutowalkResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
     bosdyn_api_lease_pb.LeaseUseResult.toObject, includeInstance),
-    failedNodesList: jspb.Message.toObjectList(msg.getFailedNodesList(),
+failedNodesList: jspb.Message.toObjectList(msg.getFailedNodesList(),
     bosdyn_api_mission_mission_pb.FailedNode.toObject, includeInstance),
-    elementIdentifiersList: jspb.Message.toObjectList(msg.getElementIdentifiersList(),
+elementIdentifiersList: jspb.Message.toObjectList(msg.getElementIdentifiersList(),
     proto.bosdyn.api.autowalk.ElementIdentifiers.toObject, includeInstance),
-    failedElementsMap: (f = msg.getFailedElementsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.autowalk.FailedElement.toObject) : [],
-    missionId: jspb.Message.getFieldWithDefault(msg, 9, 0),
-    dockingNode: (f = msg.getDockingNode()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f),
-    loopNode: (f = msg.getLoopNode()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f)
+failedElementsMap: (f = msg.getFailedElementsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.autowalk.FailedElement.toObject) : [],
+missionId: jspb.Message.getFieldWithDefault(msg, 9, 0),
+dockingNode: (f = msg.getDockingNode()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f),
+loopNode: (f = msg.getLoopNode()) && proto.bosdyn.api.autowalk.NodeIdentifier.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1828,7 +1829,7 @@ proto.bosdyn.api.autowalk.LoadAutowalkResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.autowalk.LoadAutowalkResponse}
  */
 proto.bosdyn.api.autowalk.LoadAutowalkResponse.deserializeBinary = function(bytes) {
@@ -1966,7 +1967,13 @@ proto.bosdyn.api.autowalk.LoadAutowalkResponse.serializeBinaryToWriter = functio
   }
   f = message.getFailedElementsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(8, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.autowalk.FailedElement.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getFailedElementsMap(true),
+    8,
+    writer,
+    jspb.BinaryWriter.prototype.writeInt32,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.autowalk.FailedElement.serializeBinaryToWriter);
   }
   f = message.getMissionId();
   if (f !== 0) {
@@ -2192,7 +2199,8 @@ proto.bosdyn.api.autowalk.LoadAutowalkResponse.prototype.getFailedElementsMap = 
  */
 proto.bosdyn.api.autowalk.LoadAutowalkResponse.prototype.clearFailedElementsMap = function() {
   this.getFailedElementsMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -959,8 +953,8 @@ proto.bosdyn.api.Color.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Color.toObject = function(includeInstance, msg) {
   var f, obj = {
-    preset: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    rgb: (f = msg.getRgb()) && proto.bosdyn.api.Color.RGB.toObject(includeInstance, f)
+preset: (f = jspb.Message.getField(msg, 1)) == null ? undefined : f,
+rgb: (f = msg.getRgb()) && proto.bosdyn.api.Color.RGB.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -973,7 +967,7 @@ proto.bosdyn.api.Color.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Color}
  */
 proto.bosdyn.api.Color.deserializeBinary = function(bytes) {
@@ -1095,9 +1089,9 @@ proto.bosdyn.api.Color.RGB.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Color.RGB.toObject = function(includeInstance, msg) {
   var f, obj = {
-    r: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    g: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    b: jspb.Message.getFieldWithDefault(msg, 3, 0)
+r: jspb.Message.getFieldWithDefault(msg, 1, 0),
+g: jspb.Message.getFieldWithDefault(msg, 2, 0),
+b: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1110,7 +1104,7 @@ proto.bosdyn.api.Color.RGB.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Color.RGB}
  */
 proto.bosdyn.api.Color.RGB.deserializeBinary = function(bytes) {
@@ -1358,13 +1352,13 @@ proto.bosdyn.api.LedSequenceGroup.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.LedSequenceGroup.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frontCenter: (f = msg.getFrontCenter()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
-    frontLeft: (f = msg.getFrontLeft()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
-    frontRight: (f = msg.getFrontRight()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
-    hindLeft: (f = msg.getHindLeft()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
-    hindRight: (f = msg.getHindRight()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
-    spotCam: (f = msg.getSpotCam()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.toObject(includeInstance, f),
-    statusLights: (f = msg.getStatusLights()) && proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.toObject(includeInstance, f)
+frontCenter: (f = msg.getFrontCenter()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
+frontLeft: (f = msg.getFrontLeft()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
+frontRight: (f = msg.getFrontRight()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
+hindLeft: (f = msg.getHindLeft()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
+hindRight: (f = msg.getHindRight()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject(includeInstance, f),
+spotCam: (f = msg.getSpotCam()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.toObject(includeInstance, f),
+statusLights: (f = msg.getStatusLights()) && proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1377,7 +1371,7 @@ proto.bosdyn.api.LedSequenceGroup.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup}
  */
 proto.bosdyn.api.LedSequenceGroup.deserializeBinary = function(bytes) {
@@ -1594,11 +1588,11 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    animationSequence: (f = msg.getAnimationSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.toObject(includeInstance, f),
-    blinkSequence: (f = msg.getBlinkSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.BlinkSequence.toObject(includeInstance, f),
-    pulseSequence: (f = msg.getPulseSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.PulseSequence.toObject(includeInstance, f),
-    syncedBlinkSequence: (f = msg.getSyncedBlinkSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.SyncedBlinkSequence.toObject(includeInstance, f),
-    solidColorSequence: (f = msg.getSolidColorSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.SolidColorSequence.toObject(includeInstance, f)
+animationSequence: (f = msg.getAnimationSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.toObject(includeInstance, f),
+blinkSequence: (f = msg.getBlinkSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.BlinkSequence.toObject(includeInstance, f),
+pulseSequence: (f = msg.getPulseSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.PulseSequence.toObject(includeInstance, f),
+syncedBlinkSequence: (f = msg.getSyncedBlinkSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.SyncedBlinkSequence.toObject(includeInstance, f),
+solidColorSequence: (f = msg.getSolidColorSequence()) && proto.bosdyn.api.LedSequenceGroup.LedSequence.SolidColorSequence.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1611,7 +1605,7 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.LedSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.deserializeBinary = function(bytes) {
@@ -1771,7 +1765,7 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.prototype.toObje
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    framesList: jspb.Message.toObjectList(msg.getFramesList(),
+framesList: jspb.Message.toObjectList(msg.getFramesList(),
     proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.Frame.toObject, includeInstance)
   };
 
@@ -1785,7 +1779,7 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.toObject = funct
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.deserializeBinary = function(bytes) {
@@ -1886,9 +1880,9 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.Frame.prototype.
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.Frame.toObject = function(includeInstance, msg) {
   var f, obj = {
-    color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    interpolation: jspb.Message.getFieldWithDefault(msg, 3, 0)
+color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+interpolation: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1901,7 +1895,7 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.Frame.toObject =
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.Frame}
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.AnimationSequence.Frame.deserializeBinary = function(bytes) {
@@ -2156,9 +2150,9 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.BlinkSequence.prototype.toObject =
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.BlinkSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    dutyCycle: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+dutyCycle: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -2171,7 +2165,7 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.BlinkSequence.toObject = function(
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.LedSequence.BlinkSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.BlinkSequence.deserializeBinary = function(bytes) {
@@ -2388,8 +2382,8 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.PulseSequence.prototype.toObject =
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.PulseSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2402,7 +2396,7 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.PulseSequence.toObject = function(
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.LedSequence.PulseSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.PulseSequence.deserializeBinary = function(bytes) {
@@ -2590,8 +2584,8 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.SyncedBlinkSequence.prototype.toOb
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.SyncedBlinkSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2604,7 +2598,7 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.SyncedBlinkSequence.toObject = fun
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.LedSequence.SyncedBlinkSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.SyncedBlinkSequence.deserializeBinary = function(bytes) {
@@ -2792,7 +2786,7 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.SolidColorSequence.prototype.toObj
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.SolidColorSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f)
+color: (f = msg.getColor()) && proto.bosdyn.api.Color.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2805,7 +2799,7 @@ proto.bosdyn.api.LedSequenceGroup.LedSequence.SolidColorSequence.toObject = func
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.LedSequence.SolidColorSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.LedSequence.SolidColorSequence.deserializeBinary = function(bytes) {
@@ -3156,10 +3150,10 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.prototype.toObject = function(
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    animationSequence: (f = msg.getAnimationSequence()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.toObject(includeInstance, f),
-    blinkSequence: (f = msg.getBlinkSequence()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BlinkSequence.toObject(includeInstance, f),
-    breatheSequence: (f = msg.getBreatheSequence()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BreatheSequence.toObject(includeInstance, f),
-    fixedBrightnessSequence: (f = msg.getFixedBrightnessSequence()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.toObject(includeInstance, f)
+animationSequence: (f = msg.getAnimationSequence()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.toObject(includeInstance, f),
+blinkSequence: (f = msg.getBlinkSequence()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BlinkSequence.toObject(includeInstance, f),
+breatheSequence: (f = msg.getBreatheSequence()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BreatheSequence.toObject(includeInstance, f),
+fixedBrightnessSequence: (f = msg.getFixedBrightnessSequence()) && proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3172,7 +3166,7 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.SpotCamSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.deserializeBinary = function(bytes) {
@@ -3319,7 +3313,7 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.prototype.to
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    framesList: jspb.Message.toObjectList(msg.getFramesList(),
+framesList: jspb.Message.toObjectList(msg.getFramesList(),
     proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.toObject, includeInstance)
   };
 
@@ -3333,7 +3327,7 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.toObject = f
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.deserializeBinary = function(bytes) {
@@ -3434,7 +3428,7 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.protot
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.toObject = function(includeInstance, msg) {
   var f, obj = {
-    brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
+brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -3447,7 +3441,7 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.toObje
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame}
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.deserializeBinary = function(bytes) {
@@ -3508,7 +3502,12 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.serial
   var f = undefined;
   f = message.getBrightnessesMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeFloat);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getBrightnessesMap(true),
+    1,
+    writer,
+    jspb.BinaryWriter.prototype.writeInt32,
+    jspb.BinaryWriter.prototype.writeFloat);
   }
 };
 
@@ -3532,7 +3531,8 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.protot
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.prototype.clearBrightnessesMap = function() {
   this.getBrightnessesMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -3605,9 +3605,9 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BlinkSequence.prototype.toObje
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BlinkSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    brightness: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    dutyCycle: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+brightness: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+dutyCycle: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -3620,7 +3620,7 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BlinkSequence.toObject = funct
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BlinkSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BlinkSequence.deserializeBinary = function(bytes) {
@@ -3816,8 +3816,8 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BreatheSequence.prototype.toOb
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BreatheSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    brightness: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+brightness: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+period: (f = msg.getPeriod()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3830,7 +3830,7 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BreatheSequence.toObject = fun
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BreatheSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.BreatheSequence.deserializeBinary = function(bytes) {
@@ -3997,7 +3997,7 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.protot
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
+brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -4010,7 +4010,7 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.toObje
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.deserializeBinary = function(bytes) {
@@ -4071,7 +4071,12 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.serial
   var f = undefined;
   f = message.getBrightnessesMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeFloat);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getBrightnessesMap(true),
+    1,
+    writer,
+    jspb.BinaryWriter.prototype.writeInt32,
+    jspb.BinaryWriter.prototype.writeFloat);
   }
 };
 
@@ -4095,7 +4100,8 @@ proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.protot
  */
 proto.bosdyn.api.LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.prototype.clearBrightnessesMap = function() {
   this.getBrightnessesMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -4285,9 +4291,9 @@ proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.prototype.toObject = func
  */
 proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    framesList: jspb.Message.toObjectList(msg.getFramesList(),
+framesList: jspb.Message.toObjectList(msg.getFramesList(),
     proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.Frame.toObject, includeInstance),
-    interpolation: jspb.Message.getFieldWithDefault(msg, 2, 0)
+interpolation: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -4300,7 +4306,7 @@ proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence}
  */
 proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.deserializeBinary = function(bytes) {
@@ -4412,15 +4418,15 @@ proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.Frame.prototype.toObject 
  */
 proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.Frame.toObject = function(includeInstance, msg) {
   var f, obj = {
-    topLeft: (f = msg.getTopLeft()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    upperMidLeft: (f = msg.getUpperMidLeft()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    lowerMidLeft: (f = msg.getLowerMidLeft()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    bottomLeft: (f = msg.getBottomLeft()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    topRight: (f = msg.getTopRight()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    upperMidRight: (f = msg.getUpperMidRight()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    lowerMidRight: (f = msg.getLowerMidRight()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    bottomRight: (f = msg.getBottomRight()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
-    duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+topLeft: (f = msg.getTopLeft()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+upperMidLeft: (f = msg.getUpperMidLeft()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+lowerMidLeft: (f = msg.getLowerMidLeft()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+bottomLeft: (f = msg.getBottomLeft()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+topRight: (f = msg.getTopRight()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+upperMidRight: (f = msg.getUpperMidRight()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+lowerMidRight: (f = msg.getLowerMidRight()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+bottomRight: (f = msg.getBottomRight()) && proto.bosdyn.api.Color.toObject(includeInstance, f),
+duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4433,7 +4439,7 @@ proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.Frame.toObject = function
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.Frame}
  */
 proto.bosdyn.api.LedSequenceGroup.StatusLightsSequence.Frame.deserializeBinary = function(bytes) {
@@ -5286,7 +5292,7 @@ proto.bosdyn.api.AudioSequenceGroup.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.AudioSequenceGroup.toObject = function(includeInstance, msg) {
   var f, obj = {
-    buzzer: (f = msg.getBuzzer()) && proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.toObject(includeInstance, f)
+buzzer: (f = msg.getBuzzer()) && proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5299,7 +5305,7 @@ proto.bosdyn.api.AudioSequenceGroup.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AudioSequenceGroup}
  */
 proto.bosdyn.api.AudioSequenceGroup.deserializeBinary = function(bytes) {
@@ -5407,7 +5413,7 @@ proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.prototype.toObject = function
  */
 proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    notesList: jspb.Message.toObjectList(msg.getNotesList(),
+notesList: jspb.Message.toObjectList(msg.getNotesList(),
     proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.NoteWithDuration.toObject, includeInstance)
   };
 
@@ -5421,7 +5427,7 @@ proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence}
  */
 proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.deserializeBinary = function(bytes) {
@@ -5522,8 +5528,8 @@ proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.NoteWithDuration.prototype.to
  */
 proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.NoteWithDuration.toObject = function(includeInstance, msg) {
   var f, obj = {
-    note: (f = msg.getNote()) && bosdyn_api_spot_choreography_params_pb.BuzzerNoteParams.toObject(includeInstance, f),
-    duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+note: (f = msg.getNote()) && bosdyn_api_spot_choreography_params_pb.BuzzerNoteParams.toObject(includeInstance, f),
+duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5536,7 +5542,7 @@ proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.NoteWithDuration.toObject = f
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.NoteWithDuration}
  */
 proto.bosdyn.api.AudioSequenceGroup.BuzzerSequence.NoteWithDuration.deserializeBinary = function(bytes) {
@@ -5799,10 +5805,10 @@ proto.bosdyn.api.AudioVisualBehavior.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.AudioVisualBehavior.toObject = function(includeInstance, msg) {
   var f, obj = {
-    enabled: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    priority: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    ledSequenceGroup: (f = msg.getLedSequenceGroup()) && proto.bosdyn.api.LedSequenceGroup.toObject(includeInstance, f),
-    audioSequenceGroup: (f = msg.getAudioSequenceGroup()) && proto.bosdyn.api.AudioSequenceGroup.toObject(includeInstance, f)
+enabled: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+priority: jspb.Message.getFieldWithDefault(msg, 2, 0),
+ledSequenceGroup: (f = msg.getLedSequenceGroup()) && proto.bosdyn.api.LedSequenceGroup.toObject(includeInstance, f),
+audioSequenceGroup: (f = msg.getAudioSequenceGroup()) && proto.bosdyn.api.AudioSequenceGroup.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5815,7 +5821,7 @@ proto.bosdyn.api.AudioVisualBehavior.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AudioVisualBehavior}
  */
 proto.bosdyn.api.AudioVisualBehavior.deserializeBinary = function(bytes) {
@@ -6061,9 +6067,9 @@ proto.bosdyn.api.LiveAudioVisualBehavior.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.LiveAudioVisualBehavior.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    permanent: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    behavior: (f = msg.getBehavior()) && proto.bosdyn.api.AudioVisualBehavior.toObject(includeInstance, f)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+permanent: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+behavior: (f = msg.getBehavior()) && proto.bosdyn.api.AudioVisualBehavior.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6076,7 +6082,7 @@ proto.bosdyn.api.LiveAudioVisualBehavior.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LiveAudioVisualBehavior}
  */
 proto.bosdyn.api.LiveAudioVisualBehavior.deserializeBinary = function(bytes) {
@@ -6101,7 +6107,7 @@ proto.bosdyn.api.LiveAudioVisualBehavior.deserializeBinaryFromReader = function(
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -6272,10 +6278,10 @@ proto.bosdyn.api.RunBehaviorRequest.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.RunBehaviorRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    restart: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+restart: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
   };
 
   if (includeInstance) {
@@ -6288,7 +6294,7 @@ proto.bosdyn.api.RunBehaviorRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RunBehaviorRequest}
  */
 proto.bosdyn.api.RunBehaviorRequest.deserializeBinary = function(bytes) {
@@ -6318,7 +6324,7 @@ proto.bosdyn.api.RunBehaviorRequest.deserializeBinaryFromReader = function(msg, 
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 3:
@@ -6534,9 +6540,9 @@ proto.bosdyn.api.RunBehaviorResponse.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.RunBehaviorResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    runResult: jspb.Message.getFieldWithDefault(msg, 3, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+runResult: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -6549,7 +6555,7 @@ proto.bosdyn.api.RunBehaviorResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RunBehaviorResponse}
  */
 proto.bosdyn.api.RunBehaviorResponse.deserializeBinary = function(bytes) {
@@ -6767,8 +6773,8 @@ proto.bosdyn.api.StopBehaviorRequest.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.StopBehaviorRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    behaviorName: jspb.Message.getFieldWithDefault(msg, 2, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+behaviorName: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -6781,7 +6787,7 @@ proto.bosdyn.api.StopBehaviorRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.StopBehaviorRequest}
  */
 proto.bosdyn.api.StopBehaviorRequest.deserializeBinary = function(bytes) {
@@ -6811,7 +6817,7 @@ proto.bosdyn.api.StopBehaviorRequest.deserializeBinaryFromReader = function(msg,
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setBehaviorName(value);
       break;
     default:
@@ -6948,8 +6954,8 @@ proto.bosdyn.api.StopBehaviorResponse.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.StopBehaviorResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -6962,7 +6968,7 @@ proto.bosdyn.api.StopBehaviorResponse.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.StopBehaviorResponse}
  */
 proto.bosdyn.api.StopBehaviorResponse.deserializeBinary = function(bytes) {
@@ -7138,9 +7144,9 @@ proto.bosdyn.api.AddOrModifyBehaviorRequest.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.AddOrModifyBehaviorRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    behavior: (f = msg.getBehavior()) && proto.bosdyn.api.AudioVisualBehavior.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+behavior: (f = msg.getBehavior()) && proto.bosdyn.api.AudioVisualBehavior.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7153,7 +7159,7 @@ proto.bosdyn.api.AddOrModifyBehaviorRequest.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AddOrModifyBehaviorRequest}
  */
 proto.bosdyn.api.AddOrModifyBehaviorRequest.deserializeBinary = function(bytes) {
@@ -7183,7 +7189,7 @@ proto.bosdyn.api.AddOrModifyBehaviorRequest.deserializeBinaryFromReader = functi
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 3:
@@ -7377,11 +7383,11 @@ proto.bosdyn.api.AddOrModifyBehaviorResponse.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.AddOrModifyBehaviorResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    deprecatedInvalidFieldsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
-    errorMessage: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    liveBehavior: (f = msg.getLiveBehavior()) && proto.bosdyn.api.LiveAudioVisualBehavior.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+deprecatedInvalidFieldsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
+errorMessage: jspb.Message.getFieldWithDefault(msg, 5, ""),
+liveBehavior: (f = msg.getLiveBehavior()) && proto.bosdyn.api.LiveAudioVisualBehavior.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7394,7 +7400,7 @@ proto.bosdyn.api.AddOrModifyBehaviorResponse.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AddOrModifyBehaviorResponse}
  */
 proto.bosdyn.api.AddOrModifyBehaviorResponse.deserializeBinary = function(bytes) {
@@ -7428,11 +7434,11 @@ proto.bosdyn.api.AddOrModifyBehaviorResponse.deserializeBinaryFromReader = funct
       msg.setStatus(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addDeprecatedInvalidFields(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setErrorMessage(value);
       break;
     case 4:
@@ -7705,8 +7711,8 @@ proto.bosdyn.api.DeleteBehaviorsRequest.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.DeleteBehaviorsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    behaviorNamesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+behaviorNamesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -7719,7 +7725,7 @@ proto.bosdyn.api.DeleteBehaviorsRequest.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.DeleteBehaviorsRequest}
  */
 proto.bosdyn.api.DeleteBehaviorsRequest.deserializeBinary = function(bytes) {
@@ -7749,7 +7755,7 @@ proto.bosdyn.api.DeleteBehaviorsRequest.deserializeBinaryFromReader = function(m
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addBehaviorNames(value);
       break;
     default:
@@ -7912,9 +7918,9 @@ proto.bosdyn.api.DeleteBehaviorsResponse.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.DeleteBehaviorsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    deletedBehaviorsList: jspb.Message.toObjectList(msg.getDeletedBehaviorsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+deletedBehaviorsList: jspb.Message.toObjectList(msg.getDeletedBehaviorsList(),
     proto.bosdyn.api.LiveAudioVisualBehavior.toObject, includeInstance)
   };
 
@@ -7928,7 +7934,7 @@ proto.bosdyn.api.DeleteBehaviorsResponse.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.DeleteBehaviorsResponse}
  */
 proto.bosdyn.api.DeleteBehaviorsResponse.deserializeBinary = function(bytes) {
@@ -8156,7 +8162,7 @@ proto.bosdyn.api.ListBehaviorsRequest.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.ListBehaviorsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8169,7 +8175,7 @@ proto.bosdyn.api.ListBehaviorsRequest.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ListBehaviorsRequest}
  */
 proto.bosdyn.api.ListBehaviorsRequest.deserializeBinary = function(bytes) {
@@ -8314,8 +8320,8 @@ proto.bosdyn.api.ListBehaviorsResponse.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.ListBehaviorsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    behaviorsList: jspb.Message.toObjectList(msg.getBehaviorsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+behaviorsList: jspb.Message.toObjectList(msg.getBehaviorsList(),
     proto.bosdyn.api.LiveAudioVisualBehavior.toObject, includeInstance)
   };
 
@@ -8329,7 +8335,7 @@ proto.bosdyn.api.ListBehaviorsResponse.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ListBehaviorsResponse}
  */
 proto.bosdyn.api.ListBehaviorsResponse.deserializeBinary = function(bytes) {
@@ -8544,8 +8550,8 @@ proto.bosdyn.api.PresetColorAssociation.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.PresetColorAssociation.toObject = function(includeInstance, msg) {
   var f, obj = {
-    colorName: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    customValue: (f = msg.getCustomValue()) && proto.bosdyn.api.Color.RGB.toObject(includeInstance, f)
+colorName: (f = jspb.Message.getField(msg, 1)) == null ? undefined : f,
+customValue: (f = msg.getCustomValue()) && proto.bosdyn.api.Color.RGB.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8558,7 +8564,7 @@ proto.bosdyn.api.PresetColorAssociation.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PresetColorAssociation}
  */
 proto.bosdyn.api.PresetColorAssociation.deserializeBinary = function(bytes) {
@@ -8757,15 +8763,15 @@ proto.bosdyn.api.AudioVisualSystemParams.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.AudioVisualSystemParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    enabled: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    maxBrightness: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    buzzerMaxVolume: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    speakerMaxVolume: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    normalColorAssociation: (f = msg.getNormalColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
-    warningColorAssociation: (f = msg.getWarningColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
-    dangerColorAssociation: (f = msg.getDangerColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
-    speakerDisableAgc: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
-    speakerDisableNr: jspb.Message.getBooleanFieldWithDefault(msg, 9, false)
+enabled: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+maxBrightness: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+buzzerMaxVolume: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+speakerMaxVolume: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+normalColorAssociation: (f = msg.getNormalColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
+warningColorAssociation: (f = msg.getWarningColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
+dangerColorAssociation: (f = msg.getDangerColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
+speakerDisableAgc: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
+speakerDisableNr: jspb.Message.getBooleanFieldWithDefault(msg, 9, false)
   };
 
   if (includeInstance) {
@@ -8778,7 +8784,7 @@ proto.bosdyn.api.AudioVisualSystemParams.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AudioVisualSystemParams}
  */
 proto.bosdyn.api.AudioVisualSystemParams.deserializeBinary = function(bytes) {
@@ -9190,7 +9196,7 @@ proto.bosdyn.api.GetSystemParamsRequest.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.GetSystemParamsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9203,7 +9209,7 @@ proto.bosdyn.api.GetSystemParamsRequest.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetSystemParamsRequest}
  */
 proto.bosdyn.api.GetSystemParamsRequest.deserializeBinary = function(bytes) {
@@ -9341,8 +9347,8 @@ proto.bosdyn.api.GetSystemParamsResponse.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.GetSystemParamsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    params: (f = msg.getParams()) && proto.bosdyn.api.AudioVisualSystemParams.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+params: (f = msg.getParams()) && proto.bosdyn.api.AudioVisualSystemParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9355,7 +9361,7 @@ proto.bosdyn.api.GetSystemParamsResponse.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetSystemParamsResponse}
  */
 proto.bosdyn.api.GetSystemParamsResponse.deserializeBinary = function(bytes) {
@@ -9543,16 +9549,16 @@ proto.bosdyn.api.SetSystemParamsRequest.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.SetSystemParamsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    enabled: (f = msg.getEnabled()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    maxBrightness: (f = msg.getMaxBrightness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    buzzerMaxVolume: (f = msg.getBuzzerMaxVolume()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    speakerMaxVolume: (f = msg.getSpeakerMaxVolume()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    normalColorAssociation: (f = msg.getNormalColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
-    warningColorAssociation: (f = msg.getWarningColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
-    dangerColorAssociation: (f = msg.getDangerColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
-    speakerDisableAgc: (f = msg.getSpeakerDisableAgc()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    speakerDisableNr: (f = msg.getSpeakerDisableNr()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+enabled: (f = msg.getEnabled()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+maxBrightness: (f = msg.getMaxBrightness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+buzzerMaxVolume: (f = msg.getBuzzerMaxVolume()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+speakerMaxVolume: (f = msg.getSpeakerMaxVolume()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+normalColorAssociation: (f = msg.getNormalColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
+warningColorAssociation: (f = msg.getWarningColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
+dangerColorAssociation: (f = msg.getDangerColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
+speakerDisableAgc: (f = msg.getSpeakerDisableAgc()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+speakerDisableNr: (f = msg.getSpeakerDisableNr()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9565,7 +9571,7 @@ proto.bosdyn.api.SetSystemParamsRequest.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SetSystemParamsRequest}
  */
 proto.bosdyn.api.SetSystemParamsRequest.deserializeBinary = function(bytes) {
@@ -10153,7 +10159,7 @@ proto.bosdyn.api.SetSystemParamsResponse.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.SetSystemParamsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -10166,7 +10172,7 @@ proto.bosdyn.api.SetSystemParamsResponse.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SetSystemParamsResponse}
  */
 proto.bosdyn.api.SetSystemParamsResponse.deserializeBinary = function(bytes) {

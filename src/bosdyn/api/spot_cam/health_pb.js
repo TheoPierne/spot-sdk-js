@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -280,8 +274,8 @@ proto.bosdyn.api.spot_cam.Temperature.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.spot_cam.Temperature.toObject = function(includeInstance, msg) {
   var f, obj = {
-    channelName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    temperature: jspb.Message.getFieldWithDefault(msg, 2, 0)
+channelName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+temperature: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -294,7 +288,7 @@ proto.bosdyn.api.spot_cam.Temperature.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.Temperature}
  */
 proto.bosdyn.api.spot_cam.Temperature.deserializeBinary = function(bytes) {
@@ -319,7 +313,7 @@ proto.bosdyn.api.spot_cam.Temperature.deserializeBinaryFromReader = function(msg
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setChannelName(value);
       break;
     case 2:
@@ -440,7 +434,7 @@ proto.bosdyn.api.spot_cam.ClearBITEventsRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.ClearBITEventsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -453,7 +447,7 @@ proto.bosdyn.api.spot_cam.ClearBITEventsRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.ClearBITEventsRequest}
  */
 proto.bosdyn.api.spot_cam.ClearBITEventsRequest.deserializeBinary = function(bytes) {
@@ -591,7 +585,7 @@ proto.bosdyn.api.spot_cam.ClearBITEventsResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.ClearBITEventsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -604,7 +598,7 @@ proto.bosdyn.api.spot_cam.ClearBITEventsResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.ClearBITEventsResponse}
  */
 proto.bosdyn.api.spot_cam.ClearBITEventsResponse.deserializeBinary = function(bytes) {
@@ -742,7 +736,7 @@ proto.bosdyn.api.spot_cam.GetBITStatusRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot_cam.GetBITStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -755,7 +749,7 @@ proto.bosdyn.api.spot_cam.GetBITStatusRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetBITStatusRequest}
  */
 proto.bosdyn.api.spot_cam.GetBITStatusRequest.deserializeBinary = function(bytes) {
@@ -900,10 +894,10 @@ proto.bosdyn.api.spot_cam.GetBITStatusResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.spot_cam.GetBITStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    eventsList: jspb.Message.toObjectList(msg.getEventsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+eventsList: jspb.Message.toObjectList(msg.getEventsList(),
     bosdyn_api_robot_state_pb.SystemFault.toObject, includeInstance),
-    degradationsList: jspb.Message.toObjectList(msg.getDegradationsList(),
+degradationsList: jspb.Message.toObjectList(msg.getDegradationsList(),
     proto.bosdyn.api.spot_cam.GetBITStatusResponse.Degradation.toObject, includeInstance)
   };
 
@@ -917,7 +911,7 @@ proto.bosdyn.api.spot_cam.GetBITStatusResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetBITStatusResponse}
  */
 proto.bosdyn.api.spot_cam.GetBITStatusResponse.deserializeBinary = function(bytes) {
@@ -1044,8 +1038,8 @@ proto.bosdyn.api.spot_cam.GetBITStatusResponse.Degradation.prototype.toObject = 
  */
 proto.bosdyn.api.spot_cam.GetBITStatusResponse.Degradation.toObject = function(includeInstance, msg) {
   var f, obj = {
-    type: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    description: jspb.Message.getFieldWithDefault(msg, 2, "")
+type: jspb.Message.getFieldWithDefault(msg, 1, 0),
+description: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1058,7 +1052,7 @@ proto.bosdyn.api.spot_cam.GetBITStatusResponse.Degradation.toObject = function(i
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetBITStatusResponse.Degradation}
  */
 proto.bosdyn.api.spot_cam.GetBITStatusResponse.Degradation.deserializeBinary = function(bytes) {
@@ -1087,7 +1081,7 @@ proto.bosdyn.api.spot_cam.GetBITStatusResponse.Degradation.deserializeBinaryFrom
       msg.setType(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDescription(value);
       break;
     default:
@@ -1326,7 +1320,7 @@ proto.bosdyn.api.spot_cam.GetTemperatureRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.GetTemperatureRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1339,7 +1333,7 @@ proto.bosdyn.api.spot_cam.GetTemperatureRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetTemperatureRequest}
  */
 proto.bosdyn.api.spot_cam.GetTemperatureRequest.deserializeBinary = function(bytes) {
@@ -1484,8 +1478,8 @@ proto.bosdyn.api.spot_cam.GetTemperatureResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.GetTemperatureResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    tempsList: jspb.Message.toObjectList(msg.getTempsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+tempsList: jspb.Message.toObjectList(msg.getTempsList(),
     proto.bosdyn.api.spot_cam.Temperature.toObject, includeInstance)
   };
 
@@ -1499,7 +1493,7 @@ proto.bosdyn.api.spot_cam.GetTemperatureResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetTemperatureResponse}
  */
 proto.bosdyn.api.spot_cam.GetTemperatureResponse.deserializeBinary = function(bytes) {
@@ -1688,7 +1682,7 @@ proto.bosdyn.api.spot_cam.GetSystemLogRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot_cam.GetSystemLogRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1701,7 +1695,7 @@ proto.bosdyn.api.spot_cam.GetSystemLogRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetSystemLogRequest}
  */
 proto.bosdyn.api.spot_cam.GetSystemLogRequest.deserializeBinary = function(bytes) {
@@ -1839,8 +1833,8 @@ proto.bosdyn.api.spot_cam.GetSystemLogResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.spot_cam.GetSystemLogResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    data: (f = msg.getData()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+data: (f = msg.getData()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1853,7 +1847,7 @@ proto.bosdyn.api.spot_cam.GetSystemLogResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetSystemLogResponse}
  */
 proto.bosdyn.api.spot_cam.GetSystemLogResponse.deserializeBinary = function(bytes) {

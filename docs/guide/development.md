@@ -25,7 +25,7 @@
 | `npm run build:docs` | Generates the typings, then the API reference (`docs/api/`) and `docs/changelog.md`. |
 | `npm run docs` | Serves the documentation on `http://localhost:3000`. |
 | `npm publish` | Runs the lint, the typings check and the tests first (`prepublishOnly`), then publishes `src/` and `typings/`. |
-| `npm run build` | Generates `src/bosdyn/` from the `.proto` files of the Spot SDK (`../spot-sdk-py/spot-sdk-5.2.0/protos`), with `grpc-tools`. |
+| `npm run build` | Generates `src/bosdyn/` from the `.proto` files of the Spot SDK (`../spot-sdk-py/spot-sdk-5.2.0/protos`), with `grpc-tools` and the generator of google-protobuf 4 (`@protocolbuffers/protoc-gen-js`, downloaded by its install script). It does not remove the files of the `.proto` files that the Spot SDK removed. |
 
 The CI runs the lint and the tests on Node.js 24, checks that `typings/` is up to date, and analyzes the code with
 CodeQL.

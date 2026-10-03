@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_basic_command_pb = require('../../../bosdyn/api/basic_command_pb.js');
 goog.object.extend(proto, bosdyn_api_basic_command_pb);
@@ -1150,7 +1144,7 @@ proto.bosdyn.api.graph_nav.VisualRefinementOptions.prototype.toObject = function
  */
 proto.bosdyn.api.graph_nav.VisualRefinementOptions.toObject = function(includeInstance, msg) {
   var f, obj = {
-    verifyRefinementQuality: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
+verifyRefinementQuality: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
   };
 
   if (includeInstance) {
@@ -1163,7 +1157,7 @@ proto.bosdyn.api.graph_nav.VisualRefinementOptions.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.VisualRefinementOptions}
  */
 proto.bosdyn.api.graph_nav.VisualRefinementOptions.deserializeBinary = function(bytes) {
@@ -1306,17 +1300,17 @@ proto.bosdyn.api.graph_nav.SetLocalizationRequest.prototype.toObject = function(
  */
 proto.bosdyn.api.graph_nav.SetLocalizationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    initialGuess: (f = msg.getInitialGuess()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
-    koTformBody: (f = msg.getKoTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    maxDistance: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    maxYaw: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    fiducialInit: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    useFiducialId: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    doAmbiguityCheck: jspb.Message.getBooleanFieldWithDefault(msg, 10, false),
-    restrictFiducialDetectionsToTargetWaypoint: jspb.Message.getBooleanFieldWithDefault(msg, 11, false),
-    refineFiducialResultWithIcp: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
-    refineWithVisualFeatures: (f = msg.getRefineWithVisualFeatures()) && proto.bosdyn.api.graph_nav.VisualRefinementOptions.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+initialGuess: (f = msg.getInitialGuess()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
+koTformBody: (f = msg.getKoTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+maxDistance: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+maxYaw: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
+fiducialInit: jspb.Message.getFieldWithDefault(msg, 7, 0),
+useFiducialId: jspb.Message.getFieldWithDefault(msg, 8, 0),
+doAmbiguityCheck: jspb.Message.getBooleanFieldWithDefault(msg, 10, false),
+restrictFiducialDetectionsToTargetWaypoint: jspb.Message.getBooleanFieldWithDefault(msg, 11, false),
+refineFiducialResultWithIcp: (f = jspb.Message.getBooleanField(msg, 9)) == null ? undefined : f,
+refineWithVisualFeatures: (f = msg.getRefineWithVisualFeatures()) && proto.bosdyn.api.graph_nav.VisualRefinementOptions.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1329,7 +1323,7 @@ proto.bosdyn.api.graph_nav.SetLocalizationRequest.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.SetLocalizationRequest}
  */
 proto.bosdyn.api.graph_nav.SetLocalizationRequest.deserializeBinary = function(bytes) {
@@ -1849,10 +1843,10 @@ proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.prototype.toObject = functi
  */
 proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    mapHasLidarData: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    robotConfiguredForLidar: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    mapHasGpsData: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    robotConfiguredForGps: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+mapHasLidarData: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+robotConfiguredForLidar: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+mapHasGpsData: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+robotConfiguredForGps: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
   };
 
   if (includeInstance) {
@@ -1865,7 +1859,7 @@ proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.SensorCompatibilityStatus}
  */
 proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.deserializeBinary = function(bytes) {
@@ -2069,15 +2063,15 @@ proto.bosdyn.api.graph_nav.SetLocalizationResponse.prototype.toObject = function
  */
 proto.bosdyn.api.graph_nav.SetLocalizationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    errorReport: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    localization: (f = msg.getLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
-    suspectedAmbiguity: (f = msg.getSuspectedAmbiguity()) && proto.bosdyn.api.graph_nav.SetLocalizationResponse.SuspectedAmbiguity.toObject(includeInstance, f),
-    impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
-    sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
-    qualityCheckResult: jspb.Message.getFieldWithDefault(msg, 10, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+errorReport: jspb.Message.getFieldWithDefault(msg, 4, ""),
+localization: (f = msg.getLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
+suspectedAmbiguity: (f = msg.getSuspectedAmbiguity()) && proto.bosdyn.api.graph_nav.SetLocalizationResponse.SuspectedAmbiguity.toObject(includeInstance, f),
+impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
+sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
+qualityCheckResult: jspb.Message.getFieldWithDefault(msg, 10, 0)
   };
 
   if (includeInstance) {
@@ -2090,7 +2084,7 @@ proto.bosdyn.api.graph_nav.SetLocalizationResponse.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.SetLocalizationResponse}
  */
 proto.bosdyn.api.graph_nav.SetLocalizationResponse.deserializeBinary = function(bytes) {
@@ -2129,7 +2123,7 @@ proto.bosdyn.api.graph_nav.SetLocalizationResponse.deserializeBinaryFromReader =
       msg.setStatus(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setErrorReport(value);
       break;
     case 5:
@@ -2320,7 +2314,7 @@ proto.bosdyn.api.graph_nav.SetLocalizationResponse.SuspectedAmbiguity.prototype.
  */
 proto.bosdyn.api.graph_nav.SetLocalizationResponse.SuspectedAmbiguity.toObject = function(includeInstance, msg) {
   var f, obj = {
-    alternateRobotTformWaypoint: (f = msg.getAlternateRobotTformWaypoint()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
+alternateRobotTformWaypoint: (f = msg.getAlternateRobotTformWaypoint()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2333,7 +2327,7 @@ proto.bosdyn.api.graph_nav.SetLocalizationResponse.SuspectedAmbiguity.toObject =
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.SetLocalizationResponse.SuspectedAmbiguity}
  */
 proto.bosdyn.api.graph_nav.SetLocalizationResponse.SuspectedAmbiguity.deserializeBinary = function(bytes) {
@@ -2747,7 +2741,7 @@ proto.bosdyn.api.graph_nav.RouteGenParams.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.graph_nav.RouteGenParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    backtrackToStartWaypoint: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+backtrackToStartWaypoint: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -2760,7 +2754,7 @@ proto.bosdyn.api.graph_nav.RouteGenParams.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.RouteGenParams}
  */
 proto.bosdyn.api.graph_nav.RouteGenParams.deserializeBinary = function(bytes) {
@@ -2903,20 +2897,20 @@ proto.bosdyn.api.graph_nav.TravelParams.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.graph_nav.TravelParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    maxDistance: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    boxRegion: (f = msg.getBoxRegion()) && bosdyn_api_geometry_pb.OrientedBox2.toObject(includeInstance, f),
-    maxYaw: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    velocityLimit: (f = msg.getVelocityLimit()) && bosdyn_api_geometry_pb.SE2VelocityLimit.toObject(includeInstance, f),
-    ignoreFinalYaw: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    maxCorridorDistance: jspb.Message.getFloatingPointFieldWithDefault(msg, 18, 0.0),
-    featureQualityTolerance: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    disableDirectedExploration: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
-    disableAlternateRouteFinding: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
-    pathFollowingMode: jspb.Message.getFieldWithDefault(msg, 9, 0),
-    blockedPathWaitTime: (f = msg.getBlockedPathWaitTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    groundClutterMode: jspb.Message.getFieldWithDefault(msg, 11, 0),
-    lostDetectorStrictness: jspb.Message.getFieldWithDefault(msg, 14, 0),
-    plannerMode: jspb.Message.getFieldWithDefault(msg, 17, 0)
+maxDistance: (f = jspb.Message.getOptionalFloatingPointField(msg, 1)) == null ? undefined : f,
+boxRegion: (f = msg.getBoxRegion()) && bosdyn_api_geometry_pb.OrientedBox2.toObject(includeInstance, f),
+maxYaw: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+velocityLimit: (f = msg.getVelocityLimit()) && bosdyn_api_geometry_pb.SE2VelocityLimit.toObject(includeInstance, f),
+ignoreFinalYaw: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+maxCorridorDistance: jspb.Message.getFloatingPointFieldWithDefault(msg, 18, 0.0),
+featureQualityTolerance: jspb.Message.getFieldWithDefault(msg, 5, 0),
+disableDirectedExploration: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
+disableAlternateRouteFinding: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
+pathFollowingMode: jspb.Message.getFieldWithDefault(msg, 9, 0),
+blockedPathWaitTime: (f = msg.getBlockedPathWaitTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+groundClutterMode: jspb.Message.getFieldWithDefault(msg, 11, 0),
+lostDetectorStrictness: jspb.Message.getFieldWithDefault(msg, 14, 0),
+plannerMode: jspb.Message.getFieldWithDefault(msg, 17, 0)
   };
 
   if (includeInstance) {
@@ -2929,7 +2923,7 @@ proto.bosdyn.api.graph_nav.TravelParams.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.TravelParams}
  */
 proto.bosdyn.api.graph_nav.TravelParams.deserializeBinary = function(bytes) {
@@ -3531,10 +3525,10 @@ proto.bosdyn.api.graph_nav.ModifyNavigationResponse.prototype.toObject = functio
  */
 proto.bosdyn.api.graph_nav.ModifyNavigationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
     bosdyn_api_lease_pb.LeaseUseResult.toObject, includeInstance),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0)
+status: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -3547,7 +3541,7 @@ proto.bosdyn.api.graph_nav.ModifyNavigationResponse.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.ModifyNavigationResponse}
  */
 proto.bosdyn.api.graph_nav.ModifyNavigationResponse.deserializeBinary = function(bytes) {
@@ -3781,17 +3775,17 @@ proto.bosdyn.api.graph_nav.NavigateToRequest.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.graph_nav.NavigateToRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
     bosdyn_api_lease_pb.Lease.toObject, includeInstance),
-    destinationWaypointId: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    routeParams: (f = msg.getRouteParams()) && proto.bosdyn.api.graph_nav.RouteGenParams.toObject(includeInstance, f),
-    travelParams: (f = msg.getTravelParams()) && proto.bosdyn.api.graph_nav.TravelParams.toObject(includeInstance, f),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    clockIdentifier: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    destinationWaypointTformBodyGoal: (f = msg.getDestinationWaypointTformBodyGoal()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
-    commandId: jspb.Message.getFieldWithDefault(msg, 9, 0),
-    routeBlockedBehavior: jspb.Message.getFieldWithDefault(msg, 10, 0)
+destinationWaypointId: jspb.Message.getFieldWithDefault(msg, 3, ""),
+routeParams: (f = msg.getRouteParams()) && proto.bosdyn.api.graph_nav.RouteGenParams.toObject(includeInstance, f),
+travelParams: (f = msg.getTravelParams()) && proto.bosdyn.api.graph_nav.TravelParams.toObject(includeInstance, f),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+clockIdentifier: jspb.Message.getFieldWithDefault(msg, 7, ""),
+destinationWaypointTformBodyGoal: (f = msg.getDestinationWaypointTformBodyGoal()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
+commandId: jspb.Message.getFieldWithDefault(msg, 9, 0),
+routeBlockedBehavior: jspb.Message.getFieldWithDefault(msg, 10, 0)
   };
 
   if (includeInstance) {
@@ -3804,7 +3798,7 @@ proto.bosdyn.api.graph_nav.NavigateToRequest.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.NavigateToRequest}
  */
 proto.bosdyn.api.graph_nav.NavigateToRequest.deserializeBinary = function(bytes) {
@@ -3839,7 +3833,7 @@ proto.bosdyn.api.graph_nav.NavigateToRequest.deserializeBinaryFromReader = funct
       msg.addLeases(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDestinationWaypointId(value);
       break;
     case 4:
@@ -3858,7 +3852,7 @@ proto.bosdyn.api.graph_nav.NavigateToRequest.deserializeBinaryFromReader = funct
       msg.setEndTime(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClockIdentifier(value);
       break;
     case 8:
@@ -4316,14 +4310,14 @@ proto.bosdyn.api.graph_nav.NavigateToResponse.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.graph_nav.NavigateToResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
     bosdyn_api_lease_pb.LeaseUseResult.toObject, includeInstance),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
-    commandId: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    errorWaypointIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
-    areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f)
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
+commandId: jspb.Message.getFieldWithDefault(msg, 4, 0),
+errorWaypointIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4336,7 +4330,7 @@ proto.bosdyn.api.graph_nav.NavigateToResponse.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.NavigateToResponse}
  */
 proto.bosdyn.api.graph_nav.NavigateToResponse.deserializeBinary = function(bytes) {
@@ -4384,7 +4378,7 @@ proto.bosdyn.api.graph_nav.NavigateToResponse.deserializeBinaryFromReader = func
       msg.setCommandId(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addErrorWaypointIds(value);
       break;
     case 10:
@@ -4753,9 +4747,9 @@ proto.bosdyn.api.graph_nav.RouteFollowingParams.prototype.toObject = function(op
  */
 proto.bosdyn.api.graph_nav.RouteFollowingParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    newCmdBehavior: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    existingCmdBehavior: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    routeBlockedBehavior: jspb.Message.getFieldWithDefault(msg, 3, 0)
+newCmdBehavior: jspb.Message.getFieldWithDefault(msg, 1, 0),
+existingCmdBehavior: jspb.Message.getFieldWithDefault(msg, 2, 0),
+routeBlockedBehavior: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -4768,7 +4762,7 @@ proto.bosdyn.api.graph_nav.RouteFollowingParams.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.RouteFollowingParams}
  */
 proto.bosdyn.api.graph_nav.RouteFollowingParams.deserializeBinary = function(bytes) {
@@ -4978,16 +4972,16 @@ proto.bosdyn.api.graph_nav.NavigateRouteRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.graph_nav.NavigateRouteRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
     bosdyn_api_lease_pb.Lease.toObject, includeInstance),
-    route: (f = msg.getRoute()) && bosdyn_api_graph_nav_nav_pb.Route.toObject(includeInstance, f),
-    routeFollowParams: (f = msg.getRouteFollowParams()) && proto.bosdyn.api.graph_nav.RouteFollowingParams.toObject(includeInstance, f),
-    travelParams: (f = msg.getTravelParams()) && proto.bosdyn.api.graph_nav.TravelParams.toObject(includeInstance, f),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    clockIdentifier: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    destinationWaypointTformBodyGoal: (f = msg.getDestinationWaypointTformBodyGoal()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
-    commandId: jspb.Message.getFieldWithDefault(msg, 8, 0)
+route: (f = msg.getRoute()) && bosdyn_api_graph_nav_nav_pb.Route.toObject(includeInstance, f),
+routeFollowParams: (f = msg.getRouteFollowParams()) && proto.bosdyn.api.graph_nav.RouteFollowingParams.toObject(includeInstance, f),
+travelParams: (f = msg.getTravelParams()) && proto.bosdyn.api.graph_nav.TravelParams.toObject(includeInstance, f),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+clockIdentifier: jspb.Message.getFieldWithDefault(msg, 6, ""),
+destinationWaypointTformBodyGoal: (f = msg.getDestinationWaypointTformBodyGoal()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
+commandId: jspb.Message.getFieldWithDefault(msg, 8, 0)
   };
 
   if (includeInstance) {
@@ -5000,7 +4994,7 @@ proto.bosdyn.api.graph_nav.NavigateRouteRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.NavigateRouteRequest}
  */
 proto.bosdyn.api.graph_nav.NavigateRouteRequest.deserializeBinary = function(bytes) {
@@ -5055,7 +5049,7 @@ proto.bosdyn.api.graph_nav.NavigateRouteRequest.deserializeBinaryFromReader = fu
       msg.setEndTime(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClockIdentifier(value);
       break;
     case 7:
@@ -5504,16 +5498,16 @@ proto.bosdyn.api.graph_nav.NavigateRouteResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.graph_nav.NavigateRouteResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
     bosdyn_api_lease_pb.LeaseUseResult.toObject, includeInstance),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
-    commandId: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    errorWaypointIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
-    errorEdgeIdsList: jspb.Message.toObjectList(msg.getErrorEdgeIdsList(),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
+commandId: jspb.Message.getFieldWithDefault(msg, 4, 0),
+errorWaypointIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+errorEdgeIdsList: jspb.Message.toObjectList(msg.getErrorEdgeIdsList(),
     bosdyn_api_graph_nav_map_pb.Edge.Id.toObject, includeInstance),
-    areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f)
+areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5526,7 +5520,7 @@ proto.bosdyn.api.graph_nav.NavigateRouteResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.NavigateRouteResponse}
  */
 proto.bosdyn.api.graph_nav.NavigateRouteResponse.deserializeBinary = function(bytes) {
@@ -5574,7 +5568,7 @@ proto.bosdyn.api.graph_nav.NavigateRouteResponse.deserializeBinaryFromReader = f
       msg.setCommandId(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addErrorWaypointIds(value);
       break;
     case 6:
@@ -5997,9 +5991,9 @@ proto.bosdyn.api.graph_nav.GPSNavigationParams.prototype.toObject = function(opt
  */
 proto.bosdyn.api.graph_nav.GPSNavigationParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    goalLlh: (f = msg.getGoalLlh()) && bosdyn_api_gps_gps_pb.LLH.toObject(includeInstance, f),
-    goalYaw: (f = msg.getGoalYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxDistanceFromMap: (f = msg.getMaxDistanceFromMap()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+goalLlh: (f = msg.getGoalLlh()) && bosdyn_api_gps_gps_pb.LLH.toObject(includeInstance, f),
+goalYaw: (f = msg.getGoalYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxDistanceFromMap: (f = msg.getMaxDistanceFromMap()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6012,7 +6006,7 @@ proto.bosdyn.api.graph_nav.GPSNavigationParams.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.GPSNavigationParams}
  */
 proto.bosdyn.api.graph_nav.GPSNavigationParams.deserializeBinary = function(bytes) {
@@ -6283,18 +6277,18 @@ proto.bosdyn.api.graph_nav.NavigateToAnchorRequest.prototype.toObject = function
  */
 proto.bosdyn.api.graph_nav.NavigateToAnchorRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
     bosdyn_api_lease_pb.Lease.toObject, includeInstance),
-    seedTformGoal: (f = msg.getSeedTformGoal()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    gpsNavigationParams: (f = msg.getGpsNavigationParams()) && proto.bosdyn.api.graph_nav.GPSNavigationParams.toObject(includeInstance, f),
-    goalWaypointRtSeedEwrtSeedTolerance: (f = msg.getGoalWaypointRtSeedEwrtSeedTolerance()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    routeParams: (f = msg.getRouteParams()) && proto.bosdyn.api.graph_nav.RouteGenParams.toObject(includeInstance, f),
-    travelParams: (f = msg.getTravelParams()) && proto.bosdyn.api.graph_nav.TravelParams.toObject(includeInstance, f),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    clockIdentifier: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    routeBlockedBehavior: jspb.Message.getFieldWithDefault(msg, 12, 0),
-    commandId: jspb.Message.getFieldWithDefault(msg, 10, 0)
+seedTformGoal: (f = msg.getSeedTformGoal()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+gpsNavigationParams: (f = msg.getGpsNavigationParams()) && proto.bosdyn.api.graph_nav.GPSNavigationParams.toObject(includeInstance, f),
+goalWaypointRtSeedEwrtSeedTolerance: (f = msg.getGoalWaypointRtSeedEwrtSeedTolerance()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+routeParams: (f = msg.getRouteParams()) && proto.bosdyn.api.graph_nav.RouteGenParams.toObject(includeInstance, f),
+travelParams: (f = msg.getTravelParams()) && proto.bosdyn.api.graph_nav.TravelParams.toObject(includeInstance, f),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+clockIdentifier: jspb.Message.getFieldWithDefault(msg, 9, ""),
+routeBlockedBehavior: jspb.Message.getFieldWithDefault(msg, 12, 0),
+commandId: jspb.Message.getFieldWithDefault(msg, 10, 0)
   };
 
   if (includeInstance) {
@@ -6307,7 +6301,7 @@ proto.bosdyn.api.graph_nav.NavigateToAnchorRequest.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.NavigateToAnchorRequest}
  */
 proto.bosdyn.api.graph_nav.NavigateToAnchorRequest.deserializeBinary = function(bytes) {
@@ -6372,7 +6366,7 @@ proto.bosdyn.api.graph_nav.NavigateToAnchorRequest.deserializeBinaryFromReader =
       msg.setEndTime(value);
       break;
     case 9:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClockIdentifier(value);
       break;
     case 12:
@@ -6890,15 +6884,15 @@ proto.bosdyn.api.graph_nav.NavigateToAnchorResponse.prototype.toObject = functio
  */
 proto.bosdyn.api.graph_nav.NavigateToAnchorResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResultsList: jspb.Message.toObjectList(msg.getLeaseUseResultsList(),
     bosdyn_api_lease_pb.LeaseUseResult.toObject, includeInstance),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
-    commandId: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    errorWaypointIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
-    areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f),
-    gpsStatus: jspb.Message.getFieldWithDefault(msg, 8, 0)
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
+commandId: jspb.Message.getFieldWithDefault(msg, 4, 0),
+errorWaypointIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f),
+gpsStatus: jspb.Message.getFieldWithDefault(msg, 8, 0)
   };
 
   if (includeInstance) {
@@ -6911,7 +6905,7 @@ proto.bosdyn.api.graph_nav.NavigateToAnchorResponse.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.NavigateToAnchorResponse}
  */
 proto.bosdyn.api.graph_nav.NavigateToAnchorResponse.deserializeBinary = function(bytes) {
@@ -6959,7 +6953,7 @@ proto.bosdyn.api.graph_nav.NavigateToAnchorResponse.deserializeBinaryFromReader 
       msg.setCommandId(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addErrorWaypointIds(value);
       break;
     case 7:
@@ -7369,8 +7363,8 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackRequest.prototype.toObject = functi
  */
 proto.bosdyn.api.graph_nav.NavigationFeedbackRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    commandId: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+commandId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -7383,7 +7377,7 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackRequest.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.NavigationFeedbackRequest}
  */
 proto.bosdyn.api.graph_nav.NavigationFeedbackRequest.deserializeBinary = function(bytes) {
@@ -7550,22 +7544,22 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.prototype.toObject = funct
  */
 proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
-    areaCallbackErrorsMap: (f = msg.getAreaCallbackErrorsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.graph_nav.AreaCallbackError.toObject) : [],
-    remainingRoute: (f = msg.getRemainingRoute()) && bosdyn_api_graph_nav_nav_pb.Route.toObject(includeInstance, f),
-    completedRoute: (f = msg.getCompletedRoute()) && bosdyn_api_graph_nav_nav_pb.CompletedRoute.toObject(includeInstance, f),
-    remainingRouteLength: jspb.Message.getFloatingPointFieldWithDefault(msg, 17, 0.0),
-    commandId: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    lastKoTformGoal: (f = msg.getLastKoTformGoal()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    bodyMovementStatus: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    pathFollowingMode: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    activeRegionInformationMap: (f = msg.getActiveRegionInformationMap()) ? f.toObject(includeInstance, proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.toObject) : [],
-    goalStatus: jspb.Message.getFieldWithDefault(msg, 19, 0),
-    routeFollowingStatus: jspb.Message.getFieldWithDefault(msg, 1000, 0),
-    blockageStatus: jspb.Message.getFieldWithDefault(msg, 1001, 0),
-    stuckReason: jspb.Message.getFieldWithDefault(msg, 11, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
+areaCallbackErrorsMap: (f = msg.getAreaCallbackErrorsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.graph_nav.AreaCallbackError.toObject) : [],
+remainingRoute: (f = msg.getRemainingRoute()) && bosdyn_api_graph_nav_nav_pb.Route.toObject(includeInstance, f),
+completedRoute: (f = msg.getCompletedRoute()) && bosdyn_api_graph_nav_nav_pb.CompletedRoute.toObject(includeInstance, f),
+remainingRouteLength: jspb.Message.getFloatingPointFieldWithDefault(msg, 17, 0.0),
+commandId: jspb.Message.getFieldWithDefault(msg, 4, 0),
+lastKoTformGoal: (f = msg.getLastKoTformGoal()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+bodyMovementStatus: jspb.Message.getFieldWithDefault(msg, 7, 0),
+pathFollowingMode: jspb.Message.getFieldWithDefault(msg, 8, 0),
+activeRegionInformationMap: (f = msg.getActiveRegionInformationMap()) ? f.toObject(includeInstance, proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.toObject) : [],
+goalStatus: jspb.Message.getFieldWithDefault(msg, 19, 0),
+routeFollowingStatus: jspb.Message.getFieldWithDefault(msg, 1000, 0),
+blockageStatus: jspb.Message.getFieldWithDefault(msg, 1001, 0),
+stuckReason: jspb.Message.getFieldWithDefault(msg, 11, 0)
   };
 
   if (includeInstance) {
@@ -7578,7 +7572,7 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.NavigationFeedbackResponse}
  */
 proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.deserializeBinary = function(bytes) {
@@ -7619,7 +7613,7 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.deserializeBinaryFromReade
     case 9:
       var value = msg.getAreaCallbackErrorsMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.graph_nav.AreaCallbackError.deserializeBinaryFromReader, "", new proto.bosdyn.api.graph_nav.AreaCallbackError());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.graph_nav.AreaCallbackError.deserializeBinaryFromReader, "", new proto.bosdyn.api.graph_nav.AreaCallbackError());
          });
       break;
     case 3:
@@ -7656,7 +7650,7 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.deserializeBinaryFromReade
     case 10:
       var value = msg.getActiveRegionInformationMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.deserializeBinaryFromReader, "", new proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.deserializeBinaryFromReader, "", new proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation());
          });
       break;
     case 19:
@@ -7729,7 +7723,13 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.serializeBinaryToWriter = 
   }
   f = message.getAreaCallbackErrorsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(9, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.graph_nav.AreaCallbackError.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getAreaCallbackErrorsMap(true),
+    9,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.graph_nav.AreaCallbackError.serializeBinaryToWriter);
   }
   f = message.getRemainingRoute();
   if (f != null) {
@@ -7785,7 +7785,13 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.serializeBinaryToWriter = 
   }
   f = message.getActiveRegionInformationMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(10, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getActiveRegionInformationMap(true),
+    10,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.serializeBinaryToWriter);
   }
   f = message.getGoalStatus();
   if (f !== 0.0) {
@@ -7912,9 +7918,9 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.pr
  */
 proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.toObject = function(includeInstance, msg) {
   var f, obj = {
-    description: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    serviceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    regionStatus: jspb.Message.getFieldWithDefault(msg, 3, 0)
+description: jspb.Message.getFieldWithDefault(msg, 1, ""),
+serviceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+regionStatus: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -7927,7 +7933,7 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.to
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation}
  */
 proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.deserializeBinary = function(bytes) {
@@ -7952,11 +7958,11 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.de
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDescription(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 3:
@@ -8191,7 +8197,8 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.prototype.getAreaCallbackE
  */
 proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.prototype.clearAreaCallbackErrorsMap = function() {
   this.getAreaCallbackErrorsMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -8396,7 +8403,8 @@ proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.prototype.getActiveRegionI
  */
 proto.bosdyn.api.graph_nav.NavigationFeedbackResponse.prototype.clearActiveRegionInformationMap = function() {
   this.getActiveRegionInformationMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -8503,15 +8511,15 @@ proto.bosdyn.api.graph_nav.GetLocalizationStateRequest.prototype.toObject = func
  */
 proto.bosdyn.api.graph_nav.GetLocalizationStateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    waypointId: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    requestLivePointCloud: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    requestLiveImages: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    requestLiveTerrainMaps: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    requestLiveWorldObjects: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
-    requestLiveRobotState: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
-    compressLivePointCloud: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
-    requestGpsState: jspb.Message.getBooleanFieldWithDefault(msg, 9, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+waypointId: jspb.Message.getFieldWithDefault(msg, 8, ""),
+requestLivePointCloud: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+requestLiveImages: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+requestLiveTerrainMaps: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+requestLiveWorldObjects: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+requestLiveRobotState: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
+compressLivePointCloud: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
+requestGpsState: jspb.Message.getBooleanFieldWithDefault(msg, 9, false)
   };
 
   if (includeInstance) {
@@ -8524,7 +8532,7 @@ proto.bosdyn.api.graph_nav.GetLocalizationStateRequest.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.GetLocalizationStateRequest}
  */
 proto.bosdyn.api.graph_nav.GetLocalizationStateRequest.deserializeBinary = function(bytes) {
@@ -8554,7 +8562,7 @@ proto.bosdyn.api.graph_nav.GetLocalizationStateRequest.deserializeBinaryFromRead
       msg.setHeader(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setWaypointId(value);
       break;
     case 2:
@@ -8894,9 +8902,9 @@ proto.bosdyn.api.graph_nav.RemotePointCloudStatus.prototype.toObject = function(
  */
 proto.bosdyn.api.graph_nav.RemotePointCloudStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    existsInDirectory: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    hasData: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+existsInDirectory: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+hasData: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
   };
 
   if (includeInstance) {
@@ -8909,7 +8917,7 @@ proto.bosdyn.api.graph_nav.RemotePointCloudStatus.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.RemotePointCloudStatus}
  */
 proto.bosdyn.api.graph_nav.RemotePointCloudStatus.deserializeBinary = function(bytes) {
@@ -8934,7 +8942,7 @@ proto.bosdyn.api.graph_nav.RemotePointCloudStatus.deserializeBinaryFromReader = 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
@@ -9084,16 +9092,16 @@ proto.bosdyn.api.graph_nav.LostDetectorState.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.graph_nav.LostDetectorState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    isLost: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    totalNumAcceptedLocalizations: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    totalNumRejectedLocalizations: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    numRejectedLocalizationsSinceAccepted: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    distanceTraveledWithRejectedLocalization: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    lastAcceptedLocalization: (f = msg.getLastAcceptedLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
-    lastRejectedLocalization: (f = msg.getLastRejectedLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
-    lastAcceptedStrictLocalization: (f = msg.getLastAcceptedStrictLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
-    numConsecutiveBadEdges: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    params: (f = msg.getParams()) && proto.bosdyn.api.graph_nav.LostDetectorState.Params.toObject(includeInstance, f)
+isLost: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+totalNumAcceptedLocalizations: jspb.Message.getFieldWithDefault(msg, 2, 0),
+totalNumRejectedLocalizations: jspb.Message.getFieldWithDefault(msg, 3, 0),
+numRejectedLocalizationsSinceAccepted: jspb.Message.getFieldWithDefault(msg, 4, 0),
+distanceTraveledWithRejectedLocalization: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+lastAcceptedLocalization: (f = msg.getLastAcceptedLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
+lastRejectedLocalization: (f = msg.getLastRejectedLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
+lastAcceptedStrictLocalization: (f = msg.getLastAcceptedStrictLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
+numConsecutiveBadEdges: jspb.Message.getFieldWithDefault(msg, 8, 0),
+params: (f = msg.getParams()) && proto.bosdyn.api.graph_nav.LostDetectorState.Params.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9106,7 +9114,7 @@ proto.bosdyn.api.graph_nav.LostDetectorState.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.LostDetectorState}
  */
 proto.bosdyn.api.graph_nav.LostDetectorState.deserializeBinary = function(bytes) {
@@ -9312,10 +9320,10 @@ proto.bosdyn.api.graph_nav.LostDetectorState.Params.prototype.toObject = functio
  */
 proto.bosdyn.api.graph_nav.LostDetectorState.Params.toObject = function(includeInstance, msg) {
   var f, obj = {
-    maxTimeWithBadLocalization: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    maxDistanceWithBadLocalization: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    maxNumEdgesWithBadLocalization: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    strictness: jspb.Message.getFieldWithDefault(msg, 4, 0)
+maxTimeWithBadLocalization: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+maxDistanceWithBadLocalization: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+maxNumEdgesWithBadLocalization: jspb.Message.getFieldWithDefault(msg, 3, 0),
+strictness: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -9328,7 +9336,7 @@ proto.bosdyn.api.graph_nav.LostDetectorState.Params.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.LostDetectorState.Params}
  */
 proto.bosdyn.api.graph_nav.LostDetectorState.Params.deserializeBinary = function(bytes) {
@@ -9795,14 +9803,14 @@ proto.bosdyn.api.graph_nav.GetLocalizationStateResponse.prototype.toObject = fun
  */
 proto.bosdyn.api.graph_nav.GetLocalizationStateResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    localization: (f = msg.getLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
-    robotKinematics: (f = msg.getRobotKinematics()) && bosdyn_api_robot_state_pb.KinematicState.toObject(includeInstance, f),
-    remoteCloudStatusList: jspb.Message.toObjectList(msg.getRemoteCloudStatusList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+localization: (f = msg.getLocalization()) && bosdyn_api_graph_nav_nav_pb.Localization.toObject(includeInstance, f),
+robotKinematics: (f = msg.getRobotKinematics()) && bosdyn_api_robot_state_pb.KinematicState.toObject(includeInstance, f),
+remoteCloudStatusList: jspb.Message.toObjectList(msg.getRemoteCloudStatusList(),
     proto.bosdyn.api.graph_nav.RemotePointCloudStatus.toObject, includeInstance),
-    liveData: (f = msg.getLiveData()) && bosdyn_api_graph_nav_map_pb.WaypointSnapshot.toObject(includeInstance, f),
-    lostDetectorState: (f = msg.getLostDetectorState()) && proto.bosdyn.api.graph_nav.LostDetectorState.toObject(includeInstance, f),
-    gps: (f = msg.getGps()) && bosdyn_api_graph_nav_gps_pb.GPSLocalization.toObject(includeInstance, f)
+liveData: (f = msg.getLiveData()) && bosdyn_api_graph_nav_map_pb.WaypointSnapshot.toObject(includeInstance, f),
+lostDetectorState: (f = msg.getLostDetectorState()) && proto.bosdyn.api.graph_nav.LostDetectorState.toObject(includeInstance, f),
+gps: (f = msg.getGps()) && bosdyn_api_graph_nav_gps_pb.GPSLocalization.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9815,7 +9823,7 @@ proto.bosdyn.api.graph_nav.GetLocalizationStateResponse.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.GetLocalizationStateResponse}
  */
 proto.bosdyn.api.graph_nav.GetLocalizationStateResponse.deserializeBinary = function(bytes) {
@@ -10254,8 +10262,8 @@ proto.bosdyn.api.graph_nav.ClearGraphRequest.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.graph_nav.ClearGraphRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -10268,7 +10276,7 @@ proto.bosdyn.api.graph_nav.ClearGraphRequest.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.ClearGraphRequest}
  */
 proto.bosdyn.api.graph_nav.ClearGraphRequest.deserializeBinary = function(bytes) {
@@ -10456,9 +10464,9 @@ proto.bosdyn.api.graph_nav.ClearGraphResponse.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.graph_nav.ClearGraphResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -10471,7 +10479,7 @@ proto.bosdyn.api.graph_nav.ClearGraphResponse.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.ClearGraphResponse}
  */
 proto.bosdyn.api.graph_nav.ClearGraphResponse.deserializeBinary = function(bytes) {
@@ -10697,12 +10705,12 @@ proto.bosdyn.api.graph_nav.UploadGraphRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.graph_nav.UploadGraphRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    graph: (f = msg.getGraph()) && bosdyn_api_graph_nav_map_pb.Graph.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    generateNewAnchoring: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    treatValidationWarningsAsErrors: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
-    replaceGraph: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+graph: (f = msg.getGraph()) && bosdyn_api_graph_nav_map_pb.Graph.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+generateNewAnchoring: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+treatValidationWarningsAsErrors: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+replaceGraph: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
   };
 
   if (includeInstance) {
@@ -10715,7 +10723,7 @@ proto.bosdyn.api.graph_nav.UploadGraphRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadGraphRequest}
  */
 proto.bosdyn.api.graph_nav.UploadGraphRequest.deserializeBinary = function(bytes) {
@@ -11040,8 +11048,8 @@ proto.bosdyn.api.graph_nav.UploadGraphStreamingRequest.prototype.toObject = func
  */
 proto.bosdyn.api.graph_nav.UploadGraphStreamingRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -11054,7 +11062,7 @@ proto.bosdyn.api.graph_nav.UploadGraphStreamingRequest.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadGraphStreamingRequest}
  */
 proto.bosdyn.api.graph_nav.UploadGraphStreamingRequest.deserializeBinary = function(bytes) {
@@ -11249,19 +11257,19 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.graph_nav.UploadGraphResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    loadedWaypointSnapshotIdsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
-    unknownWaypointSnapshotIdsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
-    loadedEdgeSnapshotIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
-    unknownEdgeSnapshotIdsList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
-    licenseStatus: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
-    areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f),
-    mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f),
-    validationStatus: (f = msg.getValidationStatus()) && proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.toObject(includeInstance, f),
-    replacedGraph: jspb.Message.getBooleanFieldWithDefault(msg, 13, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 8, 0),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+loadedWaypointSnapshotIdsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
+unknownWaypointSnapshotIdsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
+loadedEdgeSnapshotIdsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+unknownEdgeSnapshotIdsList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
+licenseStatus: jspb.Message.getFieldWithDefault(msg, 7, 0),
+sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
+areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f),
+mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f),
+validationStatus: (f = msg.getValidationStatus()) && proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.toObject(includeInstance, f),
+replacedGraph: jspb.Message.getBooleanFieldWithDefault(msg, 13, false)
   };
 
   if (includeInstance) {
@@ -11274,7 +11282,7 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadGraphResponse}
  */
 proto.bosdyn.api.graph_nav.UploadGraphResponse.deserializeBinary = function(bytes) {
@@ -11313,19 +11321,19 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.deserializeBinaryFromReader = fun
       msg.setLeaseUseResult(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addLoadedWaypointSnapshotIds(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addUnknownWaypointSnapshotIds(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addLoadedEdgeSnapshotIds(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addUnknownEdgeSnapshotIds(value);
       break;
     case 7:
@@ -11536,23 +11544,23 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.prototype.toObje
  */
 proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    missingWaypointIdsInEdgesList: (f = jspb.Message.getRepeatedField(msg, 1)) == null ? undefined : f,
-    missingWaypointIdsInAnchorsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
-    edgeIdsInvalidTransformList: jspb.Message.toObjectList(msg.getEdgeIdsInvalidTransformList(),
+missingWaypointIdsInEdgesList: (f = jspb.Message.getRepeatedField(msg, 1)) == null ? undefined : f,
+missingWaypointIdsInAnchorsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
+edgeIdsInvalidTransformList: jspb.Message.toObjectList(msg.getEdgeIdsInvalidTransformList(),
     bosdyn_api_graph_nav_map_pb.Edge.Id.toObject, includeInstance),
-    waypointAnchorsInvalidTransformList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
-    objectAnchorsInvalidTransformList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
-    duplicateWaypointIdsList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
-    duplicateWaypointAnchorIdsList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
-    duplicateObjectAnchorIdsList: (f = jspb.Message.getRepeatedField(msg, 8)) == null ? undefined : f,
-    duplicateEdgeIdsList: jspb.Message.toObjectList(msg.getDuplicateEdgeIdsList(),
+waypointAnchorsInvalidTransformList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
+objectAnchorsInvalidTransformList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+duplicateWaypointIdsList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
+duplicateWaypointAnchorIdsList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
+duplicateObjectAnchorIdsList: (f = jspb.Message.getRepeatedField(msg, 8)) == null ? undefined : f,
+duplicateEdgeIdsList: jspb.Message.toObjectList(msg.getDuplicateEdgeIdsList(),
     bosdyn_api_graph_nav_map_pb.Edge.Id.toObject, includeInstance),
-    invalidWaypointIdsSelfEdgesList: (f = jspb.Message.getRepeatedField(msg, 10)) == null ? undefined : f,
-    hasEmptyWaypointIds: jspb.Message.getBooleanFieldWithDefault(msg, 11, false),
-    hasEmptyEdgeIds: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
-    hasEmptyWaypointAnchorIds: jspb.Message.getBooleanFieldWithDefault(msg, 13, false),
-    hasEmptyObjectAnchorIds: jspb.Message.getBooleanFieldWithDefault(msg, 14, false),
-    malformedStaircaseEdgeIdsList: jspb.Message.toObjectList(msg.getMalformedStaircaseEdgeIdsList(),
+invalidWaypointIdsSelfEdgesList: (f = jspb.Message.getRepeatedField(msg, 10)) == null ? undefined : f,
+hasEmptyWaypointIds: jspb.Message.getBooleanFieldWithDefault(msg, 11, false),
+hasEmptyEdgeIds: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
+hasEmptyWaypointAnchorIds: jspb.Message.getBooleanFieldWithDefault(msg, 13, false),
+hasEmptyObjectAnchorIds: jspb.Message.getBooleanFieldWithDefault(msg, 14, false),
+malformedStaircaseEdgeIdsList: jspb.Message.toObjectList(msg.getMalformedStaircaseEdgeIdsList(),
     bosdyn_api_graph_nav_map_pb.Edge.Id.toObject, includeInstance)
   };
 
@@ -11566,7 +11574,7 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.toObject = funct
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus}
  */
 proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.deserializeBinary = function(bytes) {
@@ -11591,11 +11599,11 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.deserializeBinar
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addMissingWaypointIdsInEdges(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addMissingWaypointIdsInAnchors(value);
       break;
     case 3:
@@ -11604,23 +11612,23 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.deserializeBinar
       msg.addEdgeIdsInvalidTransform(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addWaypointAnchorsInvalidTransform(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addObjectAnchorsInvalidTransform(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addDuplicateWaypointIds(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addDuplicateWaypointAnchorIds(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addDuplicateObjectAnchorIds(value);
       break;
     case 9:
@@ -11629,7 +11637,7 @@ proto.bosdyn.api.graph_nav.UploadGraphResponse.ValidationStatus.deserializeBinar
       msg.addDuplicateEdgeIds(value);
       break;
     case 10:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addInvalidWaypointIdsSelfEdges(value);
       break;
     case 11:
@@ -12731,7 +12739,7 @@ proto.bosdyn.api.graph_nav.DownloadGraphRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.graph_nav.DownloadGraphRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -12744,7 +12752,7 @@ proto.bosdyn.api.graph_nav.DownloadGraphRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.DownloadGraphRequest}
  */
 proto.bosdyn.api.graph_nav.DownloadGraphRequest.deserializeBinary = function(bytes) {
@@ -12882,8 +12890,8 @@ proto.bosdyn.api.graph_nav.DownloadGraphResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.graph_nav.DownloadGraphResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    graph: (f = msg.getGraph()) && bosdyn_api_graph_nav_map_pb.Graph.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+graph: (f = msg.getGraph()) && bosdyn_api_graph_nav_map_pb.Graph.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -12896,7 +12904,7 @@ proto.bosdyn.api.graph_nav.DownloadGraphResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.DownloadGraphResponse}
  */
 proto.bosdyn.api.graph_nav.DownloadGraphResponse.deserializeBinary = function(bytes) {
@@ -13084,8 +13092,8 @@ proto.bosdyn.api.graph_nav.DownloadGraphStreamingResponse.prototype.toObject = f
  */
 proto.bosdyn.api.graph_nav.DownloadGraphStreamingResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -13098,7 +13106,7 @@ proto.bosdyn.api.graph_nav.DownloadGraphStreamingResponse.toObject = function(in
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.DownloadGraphStreamingResponse}
  */
 proto.bosdyn.api.graph_nav.DownloadGraphStreamingResponse.deserializeBinary = function(bytes) {
@@ -13286,9 +13294,9 @@ proto.bosdyn.api.graph_nav.UploadWaypointSnapshotRequest.prototype.toObject = fu
  */
 proto.bosdyn.api.graph_nav.UploadWaypointSnapshotRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -13301,7 +13309,7 @@ proto.bosdyn.api.graph_nav.UploadWaypointSnapshotRequest.toObject = function(inc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadWaypointSnapshotRequest}
  */
 proto.bosdyn.api.graph_nav.UploadWaypointSnapshotRequest.deserializeBinary = function(bytes) {
@@ -13539,11 +13547,11 @@ proto.bosdyn.api.graph_nav.UploadWaypointSnapshotResponse.prototype.toObject = f
  */
 proto.bosdyn.api.graph_nav.UploadWaypointSnapshotResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
-    mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
+mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -13556,7 +13564,7 @@ proto.bosdyn.api.graph_nav.UploadWaypointSnapshotResponse.toObject = function(in
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadWaypointSnapshotResponse}
  */
 proto.bosdyn.api.graph_nav.UploadWaypointSnapshotResponse.deserializeBinary = function(bytes) {
@@ -13882,9 +13890,9 @@ proto.bosdyn.api.graph_nav.UploadEdgeSnapshotRequest.prototype.toObject = functi
  */
 proto.bosdyn.api.graph_nav.UploadEdgeSnapshotRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -13897,7 +13905,7 @@ proto.bosdyn.api.graph_nav.UploadEdgeSnapshotRequest.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadEdgeSnapshotRequest}
  */
 proto.bosdyn.api.graph_nav.UploadEdgeSnapshotRequest.deserializeBinary = function(bytes) {
@@ -14135,9 +14143,9 @@ proto.bosdyn.api.graph_nav.UploadEdgeSnapshotResponse.prototype.toObject = funct
  */
 proto.bosdyn.api.graph_nav.UploadEdgeSnapshotResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -14150,7 +14158,7 @@ proto.bosdyn.api.graph_nav.UploadEdgeSnapshotResponse.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadEdgeSnapshotResponse}
  */
 proto.bosdyn.api.graph_nav.UploadEdgeSnapshotResponse.deserializeBinary = function(bytes) {
@@ -14388,9 +14396,9 @@ proto.bosdyn.api.graph_nav.UploadSnapshotsRequest.prototype.toObject = function(
  */
 proto.bosdyn.api.graph_nav.UploadSnapshotsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -14403,7 +14411,7 @@ proto.bosdyn.api.graph_nav.UploadSnapshotsRequest.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadSnapshotsRequest}
  */
 proto.bosdyn.api.graph_nav.UploadSnapshotsRequest.deserializeBinary = function(bytes) {
@@ -14537,9 +14545,9 @@ proto.bosdyn.api.graph_nav.UploadSnapshotsRequest.Snapshots.prototype.toObject =
  */
 proto.bosdyn.api.graph_nav.UploadSnapshotsRequest.Snapshots.toObject = function(includeInstance, msg) {
   var f, obj = {
-    waypointSnapshotsList: jspb.Message.toObjectList(msg.getWaypointSnapshotsList(),
+waypointSnapshotsList: jspb.Message.toObjectList(msg.getWaypointSnapshotsList(),
     bosdyn_api_graph_nav_map_pb.WaypointSnapshot.toObject, includeInstance),
-    edgeSnapshotsList: jspb.Message.toObjectList(msg.getEdgeSnapshotsList(),
+edgeSnapshotsList: jspb.Message.toObjectList(msg.getEdgeSnapshotsList(),
     bosdyn_api_graph_nav_map_pb.EdgeSnapshot.toObject, includeInstance)
   };
 
@@ -14553,7 +14561,7 @@ proto.bosdyn.api.graph_nav.UploadSnapshotsRequest.Snapshots.toObject = function(
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadSnapshotsRequest.Snapshots}
  */
 proto.bosdyn.api.graph_nav.UploadSnapshotsRequest.Snapshots.deserializeBinary = function(bytes) {
@@ -14854,11 +14862,11 @@ proto.bosdyn.api.graph_nav.UploadSnapshotsResponse.prototype.toObject = function
  */
 proto.bosdyn.api.graph_nav.UploadSnapshotsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
-    mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
+mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -14871,7 +14879,7 @@ proto.bosdyn.api.graph_nav.UploadSnapshotsResponse.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.UploadSnapshotsResponse}
  */
 proto.bosdyn.api.graph_nav.UploadSnapshotsResponse.deserializeBinary = function(bytes) {
@@ -15197,11 +15205,11 @@ proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotRequest.prototype.toObject = 
  */
 proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    waypointSnapshotId: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    downloadImages: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    compressPointCloud: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    doNotDownloadPointCloud: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+waypointSnapshotId: jspb.Message.getFieldWithDefault(msg, 2, ""),
+downloadImages: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+compressPointCloud: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+doNotDownloadPointCloud: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -15214,7 +15222,7 @@ proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotRequest.toObject = function(i
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotRequest}
  */
 proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotRequest.deserializeBinary = function(bytes) {
@@ -15244,7 +15252,7 @@ proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotRequest.deserializeBinaryFrom
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setWaypointSnapshotId(value);
       break;
     case 3:
@@ -15468,10 +15476,10 @@ proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotResponse.prototype.toObject =
  */
 proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    waypointSnapshotId: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+waypointSnapshotId: jspb.Message.getFieldWithDefault(msg, 4, ""),
+chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15484,7 +15492,7 @@ proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotResponse.toObject = function(
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotResponse}
  */
 proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotResponse.deserializeBinary = function(bytes) {
@@ -15518,7 +15526,7 @@ proto.bosdyn.api.graph_nav.DownloadWaypointSnapshotResponse.deserializeBinaryFro
       msg.setStatus(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setWaypointSnapshotId(value);
       break;
     case 5:
@@ -15739,8 +15747,8 @@ proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotRequest.prototype.toObject = func
  */
 proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    edgeSnapshotId: jspb.Message.getFieldWithDefault(msg, 2, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+edgeSnapshotId: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -15753,7 +15761,7 @@ proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotRequest.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotRequest}
  */
 proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotRequest.deserializeBinary = function(bytes) {
@@ -15783,7 +15791,7 @@ proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotRequest.deserializeBinaryFromRead
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setEdgeSnapshotId(value);
       break;
     default:
@@ -15920,10 +15928,10 @@ proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotResponse.prototype.toObject = fun
  */
 proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    edgeSnapshotId: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+edgeSnapshotId: jspb.Message.getFieldWithDefault(msg, 4, ""),
+chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15936,7 +15944,7 @@ proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotResponse.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotResponse}
  */
 proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotResponse.deserializeBinary = function(bytes) {
@@ -15970,7 +15978,7 @@ proto.bosdyn.api.graph_nav.DownloadEdgeSnapshotResponse.deserializeBinaryFromRea
       msg.setStatus(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setEdgeSnapshotId(value);
       break;
     case 5:
@@ -16198,8 +16206,8 @@ proto.bosdyn.api.graph_nav.AreaCallbackServiceError.prototype.toObject = functio
  */
 proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject = function(includeInstance, msg) {
   var f, obj = {
-    missingServicesList: (f = jspb.Message.getRepeatedField(msg, 1)) == null ? undefined : f,
-    faultedServicesList: jspb.Message.toObjectList(msg.getFaultedServicesList(),
+missingServicesList: (f = jspb.Message.getRepeatedField(msg, 1)) == null ? undefined : f,
+faultedServicesList: jspb.Message.toObjectList(msg.getFaultedServicesList(),
     bosdyn_api_service_fault_pb.ServiceFault.toObject, includeInstance)
   };
 
@@ -16213,7 +16221,7 @@ proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.AreaCallbackServiceError}
  */
 proto.bosdyn.api.graph_nav.AreaCallbackServiceError.deserializeBinary = function(bytes) {
@@ -16238,7 +16246,7 @@ proto.bosdyn.api.graph_nav.AreaCallbackServiceError.deserializeBinaryFromReader 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addMissingServices(value);
       break;
     case 2:
@@ -16400,7 +16408,7 @@ proto.bosdyn.api.graph_nav.ValidateGraphRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.graph_nav.ValidateGraphRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -16413,7 +16421,7 @@ proto.bosdyn.api.graph_nav.ValidateGraphRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.ValidateGraphRequest}
  */
 proto.bosdyn.api.graph_nav.ValidateGraphRequest.deserializeBinary = function(bytes) {
@@ -16551,10 +16559,10 @@ proto.bosdyn.api.graph_nav.ValidateGraphResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.graph_nav.ValidateGraphResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
-    areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+sensorStatus: (f = msg.getSensorStatus()) && proto.bosdyn.api.graph_nav.SensorCompatibilityStatus.toObject(includeInstance, f),
+areaCallbackError: (f = msg.getAreaCallbackError()) && proto.bosdyn.api.graph_nav.AreaCallbackServiceError.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -16567,7 +16575,7 @@ proto.bosdyn.api.graph_nav.ValidateGraphResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.ValidateGraphResponse}
  */
 proto.bosdyn.api.graph_nav.ValidateGraphResponse.deserializeBinary = function(bytes) {

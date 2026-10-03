@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.object.extend(proto, google_protobuf_timestamp_pb);
@@ -170,10 +164,10 @@ proto.bosdyn.api.TimeSyncRoundTrip.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.TimeSyncRoundTrip.toObject = function(includeInstance, msg) {
   var f, obj = {
-    clientTx: (f = msg.getClientTx()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    serverRx: (f = msg.getServerRx()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    serverTx: (f = msg.getServerTx()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    clientRx: (f = msg.getClientRx()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+clientTx: (f = msg.getClientTx()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+serverRx: (f = msg.getServerRx()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+serverTx: (f = msg.getServerTx()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+clientRx: (f = msg.getClientRx()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -186,7 +180,7 @@ proto.bosdyn.api.TimeSyncRoundTrip.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TimeSyncRoundTrip}
  */
 proto.bosdyn.api.TimeSyncRoundTrip.deserializeBinary = function(bytes) {
@@ -474,8 +468,8 @@ proto.bosdyn.api.TimeSyncEstimate.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.TimeSyncEstimate.toObject = function(includeInstance, msg) {
   var f, obj = {
-    roundTripTime: (f = msg.getRoundTripTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    clockSkew: (f = msg.getClockSkew()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+roundTripTime: (f = msg.getRoundTripTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+clockSkew: (f = msg.getClockSkew()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -488,7 +482,7 @@ proto.bosdyn.api.TimeSyncEstimate.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TimeSyncEstimate}
  */
 proto.bosdyn.api.TimeSyncEstimate.deserializeBinary = function(bytes) {
@@ -676,9 +670,9 @@ proto.bosdyn.api.TimeSyncState.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.TimeSyncState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bestEstimate: (f = msg.getBestEstimate()) && proto.bosdyn.api.TimeSyncEstimate.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    measurementTime: (f = msg.getMeasurementTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+bestEstimate: (f = msg.getBestEstimate()) && proto.bosdyn.api.TimeSyncEstimate.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+measurementTime: (f = msg.getMeasurementTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -691,7 +685,7 @@ proto.bosdyn.api.TimeSyncState.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TimeSyncState}
  */
 proto.bosdyn.api.TimeSyncState.deserializeBinary = function(bytes) {
@@ -918,9 +912,9 @@ proto.bosdyn.api.TimeSyncUpdateRequest.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.TimeSyncUpdateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    previousRoundTrip: (f = msg.getPreviousRoundTrip()) && proto.bosdyn.api.TimeSyncRoundTrip.toObject(includeInstance, f),
-    clockIdentifier: jspb.Message.getFieldWithDefault(msg, 3, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+previousRoundTrip: (f = msg.getPreviousRoundTrip()) && proto.bosdyn.api.TimeSyncRoundTrip.toObject(includeInstance, f),
+clockIdentifier: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -933,7 +927,7 @@ proto.bosdyn.api.TimeSyncUpdateRequest.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TimeSyncUpdateRequest}
  */
 proto.bosdyn.api.TimeSyncUpdateRequest.deserializeBinary = function(bytes) {
@@ -968,7 +962,7 @@ proto.bosdyn.api.TimeSyncUpdateRequest.deserializeBinaryFromReader = function(ms
       msg.setPreviousRoundTrip(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClockIdentifier(value);
       break;
     default:
@@ -1150,10 +1144,10 @@ proto.bosdyn.api.TimeSyncUpdateResponse.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.TimeSyncUpdateResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    previousEstimate: (f = msg.getPreviousEstimate()) && proto.bosdyn.api.TimeSyncEstimate.toObject(includeInstance, f),
-    state: (f = msg.getState()) && proto.bosdyn.api.TimeSyncState.toObject(includeInstance, f),
-    clockIdentifier: jspb.Message.getFieldWithDefault(msg, 4, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+previousEstimate: (f = msg.getPreviousEstimate()) && proto.bosdyn.api.TimeSyncEstimate.toObject(includeInstance, f),
+state: (f = msg.getState()) && proto.bosdyn.api.TimeSyncState.toObject(includeInstance, f),
+clockIdentifier: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -1166,7 +1160,7 @@ proto.bosdyn.api.TimeSyncUpdateResponse.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TimeSyncUpdateResponse}
  */
 proto.bosdyn.api.TimeSyncUpdateResponse.deserializeBinary = function(bytes) {
@@ -1206,7 +1200,7 @@ proto.bosdyn.api.TimeSyncUpdateResponse.deserializeBinaryFromReader = function(m
       msg.setState(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClockIdentifier(value);
       break;
     default:

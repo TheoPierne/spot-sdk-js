@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_basic_command_pb = require('../../bosdyn/api/basic_command_pb.js');
 goog.object.extend(proto, bosdyn_api_basic_command_pb);
@@ -140,7 +134,7 @@ proto.bosdyn.api.FullBodyCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.FullBodyCommand}
  */
 proto.bosdyn.api.FullBodyCommand.deserializeBinary = function(bytes) {
@@ -260,15 +254,15 @@ proto.bosdyn.api.FullBodyCommand.Request.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.FullBodyCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    stopRequest: (f = msg.getStopRequest()) && bosdyn_api_basic_command_pb.StopCommand.Request.toObject(includeInstance, f),
-    freezeRequest: (f = msg.getFreezeRequest()) && bosdyn_api_basic_command_pb.FreezeCommand.Request.toObject(includeInstance, f),
-    selfrightRequest: (f = msg.getSelfrightRequest()) && bosdyn_api_basic_command_pb.SelfRightCommand.Request.toObject(includeInstance, f),
-    safePowerOffRequest: (f = msg.getSafePowerOffRequest()) && bosdyn_api_basic_command_pb.SafePowerOffCommand.Request.toObject(includeInstance, f),
-    batteryChangePoseRequest: (f = msg.getBatteryChangePoseRequest()) && bosdyn_api_basic_command_pb.BatteryChangePoseCommand.Request.toObject(includeInstance, f),
-    payloadEstimationRequest: (f = msg.getPayloadEstimationRequest()) && bosdyn_api_payload_estimation_pb.PayloadEstimationCommand.Request.toObject(includeInstance, f),
-    constrainedManipulationRequest: (f = msg.getConstrainedManipulationRequest()) && bosdyn_api_basic_command_pb.ConstrainedManipulationCommand.Request.toObject(includeInstance, f),
-    jointRequest: (f = msg.getJointRequest()) && bosdyn_api_basic_command_pb.JointCommand.Request.toObject(includeInstance, f),
-    params: (f = msg.getParams()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
+stopRequest: (f = msg.getStopRequest()) && bosdyn_api_basic_command_pb.StopCommand.Request.toObject(includeInstance, f),
+freezeRequest: (f = msg.getFreezeRequest()) && bosdyn_api_basic_command_pb.FreezeCommand.Request.toObject(includeInstance, f),
+selfrightRequest: (f = msg.getSelfrightRequest()) && bosdyn_api_basic_command_pb.SelfRightCommand.Request.toObject(includeInstance, f),
+safePowerOffRequest: (f = msg.getSafePowerOffRequest()) && bosdyn_api_basic_command_pb.SafePowerOffCommand.Request.toObject(includeInstance, f),
+batteryChangePoseRequest: (f = msg.getBatteryChangePoseRequest()) && bosdyn_api_basic_command_pb.BatteryChangePoseCommand.Request.toObject(includeInstance, f),
+payloadEstimationRequest: (f = msg.getPayloadEstimationRequest()) && bosdyn_api_payload_estimation_pb.PayloadEstimationCommand.Request.toObject(includeInstance, f),
+constrainedManipulationRequest: (f = msg.getConstrainedManipulationRequest()) && bosdyn_api_basic_command_pb.ConstrainedManipulationCommand.Request.toObject(includeInstance, f),
+jointRequest: (f = msg.getJointRequest()) && bosdyn_api_basic_command_pb.JointCommand.Request.toObject(includeInstance, f),
+params: (f = msg.getParams()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -281,7 +275,7 @@ proto.bosdyn.api.FullBodyCommand.Request.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.FullBodyCommand.Request}
  */
 proto.bosdyn.api.FullBodyCommand.Request.deserializeBinary = function(bytes) {
@@ -851,15 +845,15 @@ proto.bosdyn.api.FullBodyCommand.Feedback.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.FullBodyCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    stopFeedback: (f = msg.getStopFeedback()) && bosdyn_api_basic_command_pb.StopCommand.Feedback.toObject(includeInstance, f),
-    freezeFeedback: (f = msg.getFreezeFeedback()) && bosdyn_api_basic_command_pb.FreezeCommand.Feedback.toObject(includeInstance, f),
-    selfrightFeedback: (f = msg.getSelfrightFeedback()) && bosdyn_api_basic_command_pb.SelfRightCommand.Feedback.toObject(includeInstance, f),
-    safePowerOffFeedback: (f = msg.getSafePowerOffFeedback()) && bosdyn_api_basic_command_pb.SafePowerOffCommand.Feedback.toObject(includeInstance, f),
-    batteryChangePoseFeedback: (f = msg.getBatteryChangePoseFeedback()) && bosdyn_api_basic_command_pb.BatteryChangePoseCommand.Feedback.toObject(includeInstance, f),
-    payloadEstimationFeedback: (f = msg.getPayloadEstimationFeedback()) && bosdyn_api_payload_estimation_pb.PayloadEstimationCommand.Feedback.toObject(includeInstance, f),
-    constrainedManipulationFeedback: (f = msg.getConstrainedManipulationFeedback()) && bosdyn_api_basic_command_pb.ConstrainedManipulationCommand.Feedback.toObject(includeInstance, f),
-    jointFeedback: (f = msg.getJointFeedback()) && bosdyn_api_basic_command_pb.JointCommand.Feedback.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 100, 0)
+stopFeedback: (f = msg.getStopFeedback()) && bosdyn_api_basic_command_pb.StopCommand.Feedback.toObject(includeInstance, f),
+freezeFeedback: (f = msg.getFreezeFeedback()) && bosdyn_api_basic_command_pb.FreezeCommand.Feedback.toObject(includeInstance, f),
+selfrightFeedback: (f = msg.getSelfrightFeedback()) && bosdyn_api_basic_command_pb.SelfRightCommand.Feedback.toObject(includeInstance, f),
+safePowerOffFeedback: (f = msg.getSafePowerOffFeedback()) && bosdyn_api_basic_command_pb.SafePowerOffCommand.Feedback.toObject(includeInstance, f),
+batteryChangePoseFeedback: (f = msg.getBatteryChangePoseFeedback()) && bosdyn_api_basic_command_pb.BatteryChangePoseCommand.Feedback.toObject(includeInstance, f),
+payloadEstimationFeedback: (f = msg.getPayloadEstimationFeedback()) && bosdyn_api_payload_estimation_pb.PayloadEstimationCommand.Feedback.toObject(includeInstance, f),
+constrainedManipulationFeedback: (f = msg.getConstrainedManipulationFeedback()) && bosdyn_api_basic_command_pb.ConstrainedManipulationCommand.Feedback.toObject(includeInstance, f),
+jointFeedback: (f = msg.getJointFeedback()) && bosdyn_api_basic_command_pb.JointCommand.Feedback.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 100, 0)
   };
 
   if (includeInstance) {
@@ -872,7 +866,7 @@ proto.bosdyn.api.FullBodyCommand.Feedback.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.FullBodyCommand.Feedback}
  */
 proto.bosdyn.api.FullBodyCommand.Feedback.deserializeBinary = function(bytes) {

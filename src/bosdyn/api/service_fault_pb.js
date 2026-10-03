@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -194,9 +188,9 @@ proto.bosdyn.api.ServiceFaultId.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.ServiceFaultId.toObject = function(includeInstance, msg) {
   var f, obj = {
-    faultName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    serviceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    payloadGuid: jspb.Message.getFieldWithDefault(msg, 3, "")
+faultName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+serviceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+payloadGuid: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -209,7 +203,7 @@ proto.bosdyn.api.ServiceFaultId.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ServiceFaultId}
  */
 proto.bosdyn.api.ServiceFaultId.deserializeBinary = function(bytes) {
@@ -234,15 +228,15 @@ proto.bosdyn.api.ServiceFaultId.deserializeBinaryFromReader = function(msg, read
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFaultName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setPayloadGuid(value);
       break;
     default:
@@ -391,12 +385,12 @@ proto.bosdyn.api.ServiceFault.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.ServiceFault.toObject = function(includeInstance, msg) {
   var f, obj = {
-    faultId: (f = msg.getFaultId()) && proto.bosdyn.api.ServiceFaultId.toObject(includeInstance, f),
-    errorMessage: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    attributesList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
-    severity: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    onsetTimestamp: (f = msg.getOnsetTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+faultId: (f = msg.getFaultId()) && proto.bosdyn.api.ServiceFaultId.toObject(includeInstance, f),
+errorMessage: jspb.Message.getFieldWithDefault(msg, 2, ""),
+attributesList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
+severity: jspb.Message.getFieldWithDefault(msg, 4, 0),
+onsetTimestamp: (f = msg.getOnsetTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -409,7 +403,7 @@ proto.bosdyn.api.ServiceFault.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ServiceFault}
  */
 proto.bosdyn.api.ServiceFault.deserializeBinary = function(bytes) {
@@ -439,11 +433,11 @@ proto.bosdyn.api.ServiceFault.deserializeBinaryFromReader = function(msg, reader
       msg.setFaultId(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setErrorMessage(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addAttributes(value);
       break;
     case 4:
@@ -763,8 +757,8 @@ proto.bosdyn.api.TriggerServiceFaultRequest.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.TriggerServiceFaultRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    fault: (f = msg.getFault()) && proto.bosdyn.api.ServiceFault.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+fault: (f = msg.getFault()) && proto.bosdyn.api.ServiceFault.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -777,7 +771,7 @@ proto.bosdyn.api.TriggerServiceFaultRequest.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TriggerServiceFaultRequest}
  */
 proto.bosdyn.api.TriggerServiceFaultRequest.deserializeBinary = function(bytes) {
@@ -965,8 +959,8 @@ proto.bosdyn.api.TriggerServiceFaultResponse.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.TriggerServiceFaultResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -979,7 +973,7 @@ proto.bosdyn.api.TriggerServiceFaultResponse.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TriggerServiceFaultResponse}
  */
 proto.bosdyn.api.TriggerServiceFaultResponse.deserializeBinary = function(bytes) {
@@ -1155,10 +1149,10 @@ proto.bosdyn.api.ClearServiceFaultRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.ClearServiceFaultRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    faultId: (f = msg.getFaultId()) && proto.bosdyn.api.ServiceFaultId.toObject(includeInstance, f),
-    clearAllServiceFaults: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    clearAllPayloadFaults: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+faultId: (f = msg.getFaultId()) && proto.bosdyn.api.ServiceFaultId.toObject(includeInstance, f),
+clearAllServiceFaults: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+clearAllPayloadFaults: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
   };
 
   if (includeInstance) {
@@ -1171,7 +1165,7 @@ proto.bosdyn.api.ClearServiceFaultRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ClearServiceFaultRequest}
  */
 proto.bosdyn.api.ClearServiceFaultRequest.deserializeBinary = function(bytes) {
@@ -1417,8 +1411,8 @@ proto.bosdyn.api.ClearServiceFaultResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.ClearServiceFaultResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -1431,7 +1425,7 @@ proto.bosdyn.api.ClearServiceFaultResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ClearServiceFaultResponse}
  */
 proto.bosdyn.api.ClearServiceFaultResponse.deserializeBinary = function(bytes) {

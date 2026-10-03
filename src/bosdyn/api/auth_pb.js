@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -100,10 +94,10 @@ proto.bosdyn.api.GetAuthTokenRequest.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.GetAuthTokenRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    username: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    password: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    token: jspb.Message.getFieldWithDefault(msg, 4, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+username: jspb.Message.getFieldWithDefault(msg, 2, ""),
+password: jspb.Message.getFieldWithDefault(msg, 3, ""),
+token: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -116,7 +110,7 @@ proto.bosdyn.api.GetAuthTokenRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetAuthTokenRequest}
  */
 proto.bosdyn.api.GetAuthTokenRequest.deserializeBinary = function(bytes) {
@@ -146,15 +140,15 @@ proto.bosdyn.api.GetAuthTokenRequest.deserializeBinaryFromReader = function(msg,
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setUsername(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setPassword(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setToken(value);
       break;
     default:
@@ -341,9 +335,9 @@ proto.bosdyn.api.GetAuthTokenResponse.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.GetAuthTokenResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    token: jspb.Message.getFieldWithDefault(msg, 3, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+token: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -356,7 +350,7 @@ proto.bosdyn.api.GetAuthTokenResponse.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetAuthTokenResponse}
  */
 proto.bosdyn.api.GetAuthTokenResponse.deserializeBinary = function(bytes) {
@@ -390,7 +384,7 @@ proto.bosdyn.api.GetAuthTokenResponse.deserializeBinaryFromReader = function(msg
       msg.setStatus(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setToken(value);
       break;
     default:

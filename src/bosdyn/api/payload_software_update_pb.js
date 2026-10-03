@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -189,8 +183,8 @@ proto.bosdyn.api.SendCurrentVersionInfoRequest.prototype.toObject = function(opt
  */
 proto.bosdyn.api.SendCurrentVersionInfoRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    packageVersion: (f = msg.getPackageVersion()) && bosdyn_api_software_package_pb.SoftwarePackageVersion.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+packageVersion: (f = msg.getPackageVersion()) && bosdyn_api_software_package_pb.SoftwarePackageVersion.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -203,7 +197,7 @@ proto.bosdyn.api.SendCurrentVersionInfoRequest.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SendCurrentVersionInfoRequest}
  */
 proto.bosdyn.api.SendCurrentVersionInfoRequest.deserializeBinary = function(bytes) {
@@ -391,7 +385,7 @@ proto.bosdyn.api.SendCurrentVersionInfoResponse.prototype.toObject = function(op
  */
 proto.bosdyn.api.SendCurrentVersionInfoResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -404,7 +398,7 @@ proto.bosdyn.api.SendCurrentVersionInfoResponse.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SendCurrentVersionInfoResponse}
  */
 proto.bosdyn.api.SendCurrentVersionInfoResponse.deserializeBinary = function(bytes) {
@@ -549,8 +543,8 @@ proto.bosdyn.api.GetAvailableSoftwareUpdatesRequest.prototype.toObject = functio
  */
 proto.bosdyn.api.GetAvailableSoftwareUpdatesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    packageNamesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+packageNamesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -563,7 +557,7 @@ proto.bosdyn.api.GetAvailableSoftwareUpdatesRequest.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetAvailableSoftwareUpdatesRequest}
  */
 proto.bosdyn.api.GetAvailableSoftwareUpdatesRequest.deserializeBinary = function(bytes) {
@@ -593,7 +587,7 @@ proto.bosdyn.api.GetAvailableSoftwareUpdatesRequest.deserializeBinaryFromReader 
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addPackageNames(value);
       break;
     default:
@@ -756,8 +750,8 @@ proto.bosdyn.api.GetAvailableSoftwareUpdatesResponse.prototype.toObject = functi
  */
 proto.bosdyn.api.GetAvailableSoftwareUpdatesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    stagedPackagesList: jspb.Message.toObjectList(msg.getStagedPackagesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+stagedPackagesList: jspb.Message.toObjectList(msg.getStagedPackagesList(),
     bosdyn_api_software_package_pb.StagedSoftwarePackage.toObject, includeInstance)
   };
 
@@ -771,7 +765,7 @@ proto.bosdyn.api.GetAvailableSoftwareUpdatesResponse.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetAvailableSoftwareUpdatesResponse}
  */
 proto.bosdyn.api.GetAvailableSoftwareUpdatesResponse.deserializeBinary = function(bytes) {
@@ -960,8 +954,8 @@ proto.bosdyn.api.SendSoftwareUpdateStatusRequest.prototype.toObject = function(o
  */
 proto.bosdyn.api.SendSoftwareUpdateStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    updateStatus: (f = msg.getUpdateStatus()) && bosdyn_api_software_package_pb.SoftwareUpdateStatus.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+updateStatus: (f = msg.getUpdateStatus()) && bosdyn_api_software_package_pb.SoftwareUpdateStatus.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -974,7 +968,7 @@ proto.bosdyn.api.SendSoftwareUpdateStatusRequest.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SendSoftwareUpdateStatusRequest}
  */
 proto.bosdyn.api.SendSoftwareUpdateStatusRequest.deserializeBinary = function(bytes) {
@@ -1162,7 +1156,7 @@ proto.bosdyn.api.SendSoftwareUpdateStatusResponse.prototype.toObject = function(
  */
 proto.bosdyn.api.SendSoftwareUpdateStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1175,7 +1169,7 @@ proto.bosdyn.api.SendSoftwareUpdateStatusResponse.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SendSoftwareUpdateStatusResponse}
  */
 proto.bosdyn.api.SendSoftwareUpdateStatusResponse.deserializeBinary = function(bytes) {

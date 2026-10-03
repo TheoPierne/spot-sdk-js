@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -175,12 +169,12 @@ proto.bosdyn.api.LicenseInfo.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.LicenseInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    id: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    robotSerial: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    notValidBefore: (f = msg.getNotValidBefore()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    notValidAfter: (f = msg.getNotValidAfter()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    licensedFeaturesList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+id: jspb.Message.getFieldWithDefault(msg, 2, ""),
+robotSerial: jspb.Message.getFieldWithDefault(msg, 3, ""),
+notValidBefore: (f = msg.getNotValidBefore()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+notValidAfter: (f = msg.getNotValidAfter()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+licensedFeaturesList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -193,7 +187,7 @@ proto.bosdyn.api.LicenseInfo.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LicenseInfo}
  */
 proto.bosdyn.api.LicenseInfo.deserializeBinary = function(bytes) {
@@ -222,11 +216,11 @@ proto.bosdyn.api.LicenseInfo.deserializeBinaryFromReader = function(msg, reader)
       msg.setStatus(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setId(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRobotSerial(value);
       break;
     case 4:
@@ -240,7 +234,7 @@ proto.bosdyn.api.LicenseInfo.deserializeBinaryFromReader = function(msg, reader)
       msg.setNotValidAfter(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addLicensedFeatures(value);
       break;
     default:
@@ -529,7 +523,7 @@ proto.bosdyn.api.GetLicenseInfoRequest.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.GetLicenseInfoRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -542,7 +536,7 @@ proto.bosdyn.api.GetLicenseInfoRequest.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetLicenseInfoRequest}
  */
 proto.bosdyn.api.GetLicenseInfoRequest.deserializeBinary = function(bytes) {
@@ -680,8 +674,8 @@ proto.bosdyn.api.GetLicenseInfoResponse.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.GetLicenseInfoResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    license: (f = msg.getLicense()) && proto.bosdyn.api.LicenseInfo.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+license: (f = msg.getLicense()) && proto.bosdyn.api.LicenseInfo.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -694,7 +688,7 @@ proto.bosdyn.api.GetLicenseInfoResponse.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetLicenseInfoResponse}
  */
 proto.bosdyn.api.GetLicenseInfoResponse.deserializeBinary = function(bytes) {
@@ -889,8 +883,8 @@ proto.bosdyn.api.GetFeatureEnabledRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.GetFeatureEnabledRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    featureCodesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+featureCodesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -903,7 +897,7 @@ proto.bosdyn.api.GetFeatureEnabledRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetFeatureEnabledRequest}
  */
 proto.bosdyn.api.GetFeatureEnabledRequest.deserializeBinary = function(bytes) {
@@ -933,7 +927,7 @@ proto.bosdyn.api.GetFeatureEnabledRequest.deserializeBinaryFromReader = function
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addFeatureCodes(value);
       break;
     default:
@@ -1089,8 +1083,8 @@ proto.bosdyn.api.GetFeatureEnabledResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.GetFeatureEnabledResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    featureEnabledMap: (f = msg.getFeatureEnabledMap()) ? f.toObject(includeInstance, undefined) : []
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+featureEnabledMap: (f = msg.getFeatureEnabledMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -1103,7 +1097,7 @@ proto.bosdyn.api.GetFeatureEnabledResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetFeatureEnabledResponse}
  */
 proto.bosdyn.api.GetFeatureEnabledResponse.deserializeBinary = function(bytes) {
@@ -1135,7 +1129,7 @@ proto.bosdyn.api.GetFeatureEnabledResponse.deserializeBinaryFromReader = functio
     case 2:
       var value = msg.getFeatureEnabledMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readBool, null, "", false);
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readBool, null, "", false);
          });
       break;
     default:
@@ -1177,7 +1171,12 @@ proto.bosdyn.api.GetFeatureEnabledResponse.serializeBinaryToWriter = function(me
   }
   f = message.getFeatureEnabledMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(2, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeBool);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getFeatureEnabledMap(true),
+    2,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeBool);
   }
 };
 
@@ -1238,7 +1237,8 @@ proto.bosdyn.api.GetFeatureEnabledResponse.prototype.getFeatureEnabledMap = func
  */
 proto.bosdyn.api.GetFeatureEnabledResponse.prototype.clearFeatureEnabledMap = function() {
   this.getFeatureEnabledMap().clear();
-  return this;};
+  return this;
+};
 
 
 goog.object.extend(exports, proto.bosdyn.api);

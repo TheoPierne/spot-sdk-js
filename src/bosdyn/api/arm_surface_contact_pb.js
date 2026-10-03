@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -145,7 +139,7 @@ proto.bosdyn.api.ArmSurfaceContact.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmSurfaceContact}
  */
 proto.bosdyn.api.ArmSurfaceContact.deserializeBinary = function(bytes) {
@@ -259,27 +253,27 @@ proto.bosdyn.api.ArmSurfaceContact.Request.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.ArmSurfaceContact.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rootFrameName: jspb.Message.getFieldWithDefault(msg, 25, ""),
-    wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    rootTformTask: (f = msg.getRootTformTask()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    poseTrajectoryInTask: (f = msg.getPoseTrajectoryInTask()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
-    maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxLinearVelocity: (f = msg.getMaxLinearVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxAngularVelocity: (f = msg.getMaxAngularVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxPosTrackingError: (f = msg.getMaxPosTrackingError()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxRotTrackingError: (f = msg.getMaxRotTrackingError()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    forceRemainNearCurrentJointConfiguration: jspb.Message.getBooleanFieldWithDefault(msg, 15, false),
-    preferredJointConfiguration: (f = msg.getPreferredJointConfiguration()) && bosdyn_api_arm_command_pb.ArmJointPosition.toObject(includeInstance, f),
-    xAxis: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    yAxis: jspb.Message.getFieldWithDefault(msg, 9, 0),
-    zAxis: jspb.Message.getFieldWithDefault(msg, 10, 0),
-    pressForcePercentage: (f = msg.getPressForcePercentage()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    xyAdmittance: jspb.Message.getFieldWithDefault(msg, 21, 0),
-    zAdmittance: jspb.Message.getFieldWithDefault(msg, 22, 0),
-    xyToZCrossTermAdmittance: jspb.Message.getFieldWithDefault(msg, 17, 0),
-    biasForceEwrtBody: (f = msg.getBiasForceEwrtBody()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    gripperCommand: (f = msg.getGripperCommand()) && bosdyn_api_gripper_command_pb.ClawGripperCommand.Request.toObject(includeInstance, f),
-    isRobotFollowingHand: jspb.Message.getBooleanFieldWithDefault(msg, 24, false)
+rootFrameName: jspb.Message.getFieldWithDefault(msg, 25, ""),
+wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+rootTformTask: (f = msg.getRootTformTask()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+poseTrajectoryInTask: (f = msg.getPoseTrajectoryInTask()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
+maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxLinearVelocity: (f = msg.getMaxLinearVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxAngularVelocity: (f = msg.getMaxAngularVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxPosTrackingError: (f = msg.getMaxPosTrackingError()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxRotTrackingError: (f = msg.getMaxRotTrackingError()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+forceRemainNearCurrentJointConfiguration: (f = jspb.Message.getBooleanField(msg, 15)) == null ? undefined : f,
+preferredJointConfiguration: (f = msg.getPreferredJointConfiguration()) && bosdyn_api_arm_command_pb.ArmJointPosition.toObject(includeInstance, f),
+xAxis: jspb.Message.getFieldWithDefault(msg, 8, 0),
+yAxis: jspb.Message.getFieldWithDefault(msg, 9, 0),
+zAxis: jspb.Message.getFieldWithDefault(msg, 10, 0),
+pressForcePercentage: (f = msg.getPressForcePercentage()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+xyAdmittance: jspb.Message.getFieldWithDefault(msg, 21, 0),
+zAdmittance: jspb.Message.getFieldWithDefault(msg, 22, 0),
+xyToZCrossTermAdmittance: jspb.Message.getFieldWithDefault(msg, 17, 0),
+biasForceEwrtBody: (f = msg.getBiasForceEwrtBody()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+gripperCommand: (f = msg.getGripperCommand()) && bosdyn_api_gripper_command_pb.ClawGripperCommand.Request.toObject(includeInstance, f),
+isRobotFollowingHand: jspb.Message.getBooleanFieldWithDefault(msg, 24, false)
   };
 
   if (includeInstance) {
@@ -292,7 +286,7 @@ proto.bosdyn.api.ArmSurfaceContact.Request.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmSurfaceContact.Request}
  */
 proto.bosdyn.api.ArmSurfaceContact.Request.deserializeBinary = function(bytes) {
@@ -317,7 +311,7 @@ proto.bosdyn.api.ArmSurfaceContact.Request.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 25:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRootFrameName(value);
       break;
     case 6:
@@ -1292,7 +1286,7 @@ proto.bosdyn.api.ArmSurfaceContact.Feedback.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmSurfaceContact.Feedback}
  */
 proto.bosdyn.api.ArmSurfaceContact.Feedback.deserializeBinary = function(bytes) {

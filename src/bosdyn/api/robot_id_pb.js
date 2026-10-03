@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -169,12 +163,12 @@ proto.bosdyn.api.RobotId.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.RobotId.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serialNumber: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    species: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    version: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    softwareRelease: (f = msg.getSoftwareRelease()) && proto.bosdyn.api.RobotSoftwareRelease.toObject(includeInstance, f),
-    nickname: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    computerSerialNumber: jspb.Message.getFieldWithDefault(msg, 6, "")
+serialNumber: jspb.Message.getFieldWithDefault(msg, 1, ""),
+species: jspb.Message.getFieldWithDefault(msg, 2, ""),
+version: jspb.Message.getFieldWithDefault(msg, 3, ""),
+softwareRelease: (f = msg.getSoftwareRelease()) && proto.bosdyn.api.RobotSoftwareRelease.toObject(includeInstance, f),
+nickname: jspb.Message.getFieldWithDefault(msg, 5, ""),
+computerSerialNumber: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -187,7 +181,7 @@ proto.bosdyn.api.RobotId.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RobotId}
  */
 proto.bosdyn.api.RobotId.deserializeBinary = function(bytes) {
@@ -212,15 +206,15 @@ proto.bosdyn.api.RobotId.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSerialNumber(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSpecies(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setVersion(value);
       break;
     case 4:
@@ -229,11 +223,11 @@ proto.bosdyn.api.RobotId.deserializeBinaryFromReader = function(msg, reader) {
       msg.setSoftwareRelease(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNickname(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setComputerSerialNumber(value);
       break;
     default:
@@ -470,9 +464,9 @@ proto.bosdyn.api.SoftwareVersion.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.SoftwareVersion.toObject = function(includeInstance, msg) {
   var f, obj = {
-    majorVersion: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    minorVersion: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    patchLevel: jspb.Message.getFieldWithDefault(msg, 3, 0)
+majorVersion: jspb.Message.getFieldWithDefault(msg, 1, 0),
+minorVersion: jspb.Message.getFieldWithDefault(msg, 2, 0),
+patchLevel: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -485,7 +479,7 @@ proto.bosdyn.api.SoftwareVersion.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SoftwareVersion}
  */
 proto.bosdyn.api.SoftwareVersion.deserializeBinary = function(bytes) {
@@ -667,15 +661,15 @@ proto.bosdyn.api.RobotSoftwareRelease.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.RobotSoftwareRelease.toObject = function(includeInstance, msg) {
   var f, obj = {
-    version: (f = msg.getVersion()) && proto.bosdyn.api.SoftwareVersion.toObject(includeInstance, f),
-    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    type: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    changesetDate: (f = msg.getChangesetDate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    changeset: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    apiVersion: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    buildInformation: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    installDate: (f = msg.getInstallDate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    parametersList: jspb.Message.toObjectList(msg.getParametersList(),
+version: (f = msg.getVersion()) && proto.bosdyn.api.SoftwareVersion.toObject(includeInstance, f),
+name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+type: jspb.Message.getFieldWithDefault(msg, 3, ""),
+changesetDate: (f = msg.getChangesetDate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+changeset: jspb.Message.getFieldWithDefault(msg, 5, ""),
+apiVersion: jspb.Message.getFieldWithDefault(msg, 6, ""),
+buildInformation: jspb.Message.getFieldWithDefault(msg, 7, ""),
+installDate: (f = msg.getInstallDate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+parametersList: jspb.Message.toObjectList(msg.getParametersList(),
     bosdyn_api_parameter_pb.Parameter.toObject, includeInstance)
   };
 
@@ -689,7 +683,7 @@ proto.bosdyn.api.RobotSoftwareRelease.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RobotSoftwareRelease}
  */
 proto.bosdyn.api.RobotSoftwareRelease.deserializeBinary = function(bytes) {
@@ -719,11 +713,11 @@ proto.bosdyn.api.RobotSoftwareRelease.deserializeBinaryFromReader = function(msg
       msg.setVersion(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setType(value);
       break;
     case 4:
@@ -732,15 +726,15 @@ proto.bosdyn.api.RobotSoftwareRelease.deserializeBinaryFromReader = function(msg
       msg.setChangesetDate(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setChangeset(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setApiVersion(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setBuildInformation(value);
       break;
     case 8:
@@ -1123,7 +1117,7 @@ proto.bosdyn.api.RobotIdRequest.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.RobotIdRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1136,7 +1130,7 @@ proto.bosdyn.api.RobotIdRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RobotIdRequest}
  */
 proto.bosdyn.api.RobotIdRequest.deserializeBinary = function(bytes) {
@@ -1274,8 +1268,8 @@ proto.bosdyn.api.RobotIdResponse.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.RobotIdResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    robotId: (f = msg.getRobotId()) && proto.bosdyn.api.RobotId.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+robotId: (f = msg.getRobotId()) && proto.bosdyn.api.RobotId.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1288,7 +1282,7 @@ proto.bosdyn.api.RobotIdResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RobotIdResponse}
  */
 proto.bosdyn.api.RobotIdResponse.deserializeBinary = function(bytes) {

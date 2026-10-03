@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -290,10 +284,10 @@ proto.bosdyn.api.SE2Trajectory.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.SE2Trajectory.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pointsList: jspb.Message.toObjectList(msg.getPointsList(),
+pointsList: jspb.Message.toObjectList(msg.getPointsList(),
     proto.bosdyn.api.SE2TrajectoryPoint.toObject, includeInstance),
-    referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    interpolation: jspb.Message.getFieldWithDefault(msg, 4, 0)
+referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+interpolation: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -306,7 +300,7 @@ proto.bosdyn.api.SE2Trajectory.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE2Trajectory}
  */
 proto.bosdyn.api.SE2Trajectory.deserializeBinary = function(bytes) {
@@ -524,8 +518,8 @@ proto.bosdyn.api.SE2TrajectoryPoint.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.SE2TrajectoryPoint.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pose: (f = msg.getPose()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
-    timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+pose: (f = msg.getPose()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
+timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -538,7 +532,7 @@ proto.bosdyn.api.SE2TrajectoryPoint.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE2TrajectoryPoint}
  */
 proto.bosdyn.api.SE2TrajectoryPoint.deserializeBinary = function(bytes) {
@@ -733,11 +727,11 @@ proto.bosdyn.api.SE3Trajectory.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.SE3Trajectory.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pointsList: jspb.Message.toObjectList(msg.getPointsList(),
+pointsList: jspb.Message.toObjectList(msg.getPointsList(),
     proto.bosdyn.api.SE3TrajectoryPoint.toObject, includeInstance),
-    referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    posInterpolation: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    angInterpolation: jspb.Message.getFieldWithDefault(msg, 5, 0)
+referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+posInterpolation: jspb.Message.getFieldWithDefault(msg, 4, 0),
+angInterpolation: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -750,7 +744,7 @@ proto.bosdyn.api.SE3Trajectory.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE3Trajectory}
  */
 proto.bosdyn.api.SE3Trajectory.deserializeBinary = function(bytes) {
@@ -997,9 +991,9 @@ proto.bosdyn.api.SE3TrajectoryPoint.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.SE3TrajectoryPoint.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pose: (f = msg.getPose()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.SE3Velocity.toObject(includeInstance, f),
-    timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+pose: (f = msg.getPose()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.SE3Velocity.toObject(includeInstance, f),
+timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1012,7 +1006,7 @@ proto.bosdyn.api.SE3TrajectoryPoint.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE3TrajectoryPoint}
  */
 proto.bosdyn.api.SE3TrajectoryPoint.deserializeBinary = function(bytes) {
@@ -1257,12 +1251,12 @@ proto.bosdyn.api.Vec3Trajectory.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.Vec3Trajectory.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pointsList: jspb.Message.toObjectList(msg.getPointsList(),
+pointsList: jspb.Message.toObjectList(msg.getPointsList(),
     proto.bosdyn.api.Vec3TrajectoryPoint.toObject, includeInstance),
-    referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    posInterpolation: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    startingVelocity: (f = msg.getStartingVelocity()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    endingVelocity: (f = msg.getEndingVelocity()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f)
+referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+posInterpolation: jspb.Message.getFieldWithDefault(msg, 4, 0),
+startingVelocity: (f = msg.getStartingVelocity()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+endingVelocity: (f = msg.getEndingVelocity()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1275,7 +1269,7 @@ proto.bosdyn.api.Vec3Trajectory.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Vec3Trajectory}
  */
 proto.bosdyn.api.Vec3Trajectory.deserializeBinary = function(bytes) {
@@ -1593,9 +1587,9 @@ proto.bosdyn.api.Vec3TrajectoryPoint.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.Vec3TrajectoryPoint.toObject = function(includeInstance, msg) {
   var f, obj = {
-    point: (f = msg.getPoint()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    linearSpeed: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+point: (f = msg.getPoint()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+linearSpeed: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1608,7 +1602,7 @@ proto.bosdyn.api.Vec3TrajectoryPoint.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Vec3TrajectoryPoint}
  */
 proto.bosdyn.api.Vec3TrajectoryPoint.deserializeBinary = function(bytes) {
@@ -1832,9 +1826,9 @@ proto.bosdyn.api.WrenchTrajectory.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.WrenchTrajectory.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pointsList: jspb.Message.toObjectList(msg.getPointsList(),
+pointsList: jspb.Message.toObjectList(msg.getPointsList(),
     proto.bosdyn.api.WrenchTrajectoryPoint.toObject, includeInstance),
-    referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1847,7 +1841,7 @@ proto.bosdyn.api.WrenchTrajectory.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.WrenchTrajectory}
  */
 proto.bosdyn.api.WrenchTrajectory.deserializeBinary = function(bytes) {
@@ -2036,8 +2030,8 @@ proto.bosdyn.api.WrenchTrajectoryPoint.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.WrenchTrajectoryPoint.toObject = function(includeInstance, msg) {
   var f, obj = {
-    wrench: (f = msg.getWrench()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
-    timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+wrench: (f = msg.getWrench()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2050,7 +2044,7 @@ proto.bosdyn.api.WrenchTrajectoryPoint.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.WrenchTrajectoryPoint}
  */
 proto.bosdyn.api.WrenchTrajectoryPoint.deserializeBinary = function(bytes) {
@@ -2245,10 +2239,10 @@ proto.bosdyn.api.ScalarTrajectory.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.ScalarTrajectory.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pointsList: jspb.Message.toObjectList(msg.getPointsList(),
+pointsList: jspb.Message.toObjectList(msg.getPointsList(),
     proto.bosdyn.api.ScalarTrajectoryPoint.toObject, includeInstance),
-    referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    interpolation: jspb.Message.getFieldWithDefault(msg, 3, 0)
+referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+interpolation: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -2261,7 +2255,7 @@ proto.bosdyn.api.ScalarTrajectory.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ScalarTrajectory}
  */
 proto.bosdyn.api.ScalarTrajectory.deserializeBinary = function(bytes) {
@@ -2479,9 +2473,9 @@ proto.bosdyn.api.ScalarTrajectoryPoint.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.ScalarTrajectoryPoint.toObject = function(includeInstance, msg) {
   var f, obj = {
-    point: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    velocity: (f = msg.getVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+point: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+velocity: (f = msg.getVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2494,7 +2488,7 @@ proto.bosdyn.api.ScalarTrajectoryPoint.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ScalarTrajectoryPoint}
  */
 proto.bosdyn.api.ScalarTrajectoryPoint.deserializeBinary = function(bytes) {

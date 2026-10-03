@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -402,9 +396,9 @@ proto.bosdyn.api.spot.SpotCheckCommandRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot.SpotCheckCommandRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    command: jspb.Message.getFieldWithDefault(msg, 3, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+command: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -417,7 +411,7 @@ proto.bosdyn.api.spot.SpotCheckCommandRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SpotCheckCommandRequest}
  */
 proto.bosdyn.api.spot.SpotCheckCommandRequest.deserializeBinary = function(bytes) {
@@ -644,10 +638,10 @@ proto.bosdyn.api.spot.SpotCheckCommandResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.spot.SpotCheckCommandResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    message: jspb.Message.getFieldWithDefault(msg, 4, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+message: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -660,7 +654,7 @@ proto.bosdyn.api.spot.SpotCheckCommandResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SpotCheckCommandResponse}
  */
 proto.bosdyn.api.spot.SpotCheckCommandResponse.deserializeBinary = function(bytes) {
@@ -699,7 +693,7 @@ proto.bosdyn.api.spot.SpotCheckCommandResponse.deserializeBinaryFromReader = fun
       msg.setStatus(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMessage(value);
       break;
     default:
@@ -915,7 +909,7 @@ proto.bosdyn.api.spot.SpotCheckFeedbackRequest.prototype.toObject = function(opt
  */
 proto.bosdyn.api.spot.SpotCheckFeedbackRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -928,7 +922,7 @@ proto.bosdyn.api.spot.SpotCheckFeedbackRequest.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SpotCheckFeedbackRequest}
  */
 proto.bosdyn.api.spot.SpotCheckFeedbackRequest.deserializeBinary = function(bytes) {
@@ -1066,17 +1060,17 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot.SpotCheckFeedbackResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    state: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    lastCommand: jspb.Message.getFieldWithDefault(msg, 12, 0),
-    error: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    cameraResultsMap: (f = msg.getCameraResultsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.toObject) : [],
-    loadCellResultsMap: (f = msg.getLoadCellResultsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.spot.LoadCellSpotCheckResult.toObject) : [],
-    kinematicCalResultsMap: (f = msg.getKinematicCalResultsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.spot.JointKinematicCheckResult.toObject) : [],
-    payloadResult: (f = msg.getPayloadResult()) && proto.bosdyn.api.spot.PayloadCheckResult.toObject(includeInstance, f),
-    hipRangeOfMotionResultsMap: (f = msg.getHipRangeOfMotionResultsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.spot.HipRangeOfMotionResult.toObject) : [],
-    progress: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
-    lastCalTimestamp: (f = msg.getLastCalTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+state: jspb.Message.getFieldWithDefault(msg, 2, 0),
+lastCommand: jspb.Message.getFieldWithDefault(msg, 12, 0),
+error: jspb.Message.getFieldWithDefault(msg, 6, 0),
+cameraResultsMap: (f = msg.getCameraResultsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.toObject) : [],
+loadCellResultsMap: (f = msg.getLoadCellResultsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.spot.LoadCellSpotCheckResult.toObject) : [],
+kinematicCalResultsMap: (f = msg.getKinematicCalResultsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.spot.JointKinematicCheckResult.toObject) : [],
+payloadResult: (f = msg.getPayloadResult()) && proto.bosdyn.api.spot.PayloadCheckResult.toObject(includeInstance, f),
+hipRangeOfMotionResultsMap: (f = msg.getHipRangeOfMotionResultsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.spot.HipRangeOfMotionResult.toObject) : [],
+progress: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
+lastCalTimestamp: (f = msg.getLastCalTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1089,7 +1083,7 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SpotCheckFeedbackResponse}
  */
 proto.bosdyn.api.spot.SpotCheckFeedbackResponse.deserializeBinary = function(bytes) {
@@ -1133,19 +1127,19 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.deserializeBinaryFromReader = fu
     case 3:
       var value = msg.getCameraResultsMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.deserializeBinaryFromReader, "", new proto.bosdyn.api.spot.DepthPlaneSpotCheckResult());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.deserializeBinaryFromReader, "", new proto.bosdyn.api.spot.DepthPlaneSpotCheckResult());
          });
       break;
     case 4:
       var value = msg.getLoadCellResultsMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.spot.LoadCellSpotCheckResult.deserializeBinaryFromReader, "", new proto.bosdyn.api.spot.LoadCellSpotCheckResult());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.spot.LoadCellSpotCheckResult.deserializeBinaryFromReader, "", new proto.bosdyn.api.spot.LoadCellSpotCheckResult());
          });
       break;
     case 5:
       var value = msg.getKinematicCalResultsMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.spot.JointKinematicCheckResult.deserializeBinaryFromReader, "", new proto.bosdyn.api.spot.JointKinematicCheckResult());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.spot.JointKinematicCheckResult.deserializeBinaryFromReader, "", new proto.bosdyn.api.spot.JointKinematicCheckResult());
          });
       break;
     case 8:
@@ -1156,7 +1150,7 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.deserializeBinaryFromReader = fu
     case 13:
       var value = msg.getHipRangeOfMotionResultsMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.spot.HipRangeOfMotionResult.deserializeBinaryFromReader, "", new proto.bosdyn.api.spot.HipRangeOfMotionResult());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.spot.HipRangeOfMotionResult.deserializeBinaryFromReader, "", new proto.bosdyn.api.spot.HipRangeOfMotionResult());
          });
       break;
     case 7:
@@ -1228,15 +1222,33 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.serializeBinaryToWriter = functi
   }
   f = message.getCameraResultsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(3, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getCameraResultsMap(true),
+    3,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.serializeBinaryToWriter);
   }
   f = message.getLoadCellResultsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(4, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.spot.LoadCellSpotCheckResult.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getLoadCellResultsMap(true),
+    4,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.spot.LoadCellSpotCheckResult.serializeBinaryToWriter);
   }
   f = message.getKinematicCalResultsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(5, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.spot.JointKinematicCheckResult.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getKinematicCalResultsMap(true),
+    5,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.spot.JointKinematicCheckResult.serializeBinaryToWriter);
   }
   f = message.getPayloadResult();
   if (f != null) {
@@ -1248,7 +1260,13 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.serializeBinaryToWriter = functi
   }
   f = message.getHipRangeOfMotionResultsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(13, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.spot.HipRangeOfMotionResult.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getHipRangeOfMotionResultsMap(true),
+    13,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.spot.HipRangeOfMotionResult.serializeBinaryToWriter);
   }
   f = message.getProgress();
   if (f !== 0.0) {
@@ -1422,7 +1440,8 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.prototype.getCameraResultsMap = 
  */
 proto.bosdyn.api.spot.SpotCheckFeedbackResponse.prototype.clearCameraResultsMap = function() {
   this.getCameraResultsMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -1444,7 +1463,8 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.prototype.getLoadCellResultsMap 
  */
 proto.bosdyn.api.spot.SpotCheckFeedbackResponse.prototype.clearLoadCellResultsMap = function() {
   this.getLoadCellResultsMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -1466,7 +1486,8 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.prototype.getKinematicCalResults
  */
 proto.bosdyn.api.spot.SpotCheckFeedbackResponse.prototype.clearKinematicCalResultsMap = function() {
   this.getKinematicCalResultsMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -1525,7 +1546,8 @@ proto.bosdyn.api.spot.SpotCheckFeedbackResponse.prototype.getHipRangeOfMotionRes
  */
 proto.bosdyn.api.spot.SpotCheckFeedbackResponse.prototype.clearHipRangeOfMotionResultsMap = function() {
   this.getHipRangeOfMotionResultsMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -1615,8 +1637,8 @@ proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    severityScore: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+severityScore: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -1629,7 +1651,7 @@ proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DepthPlaneSpotCheckResult}
  */
 proto.bosdyn.api.spot.DepthPlaneSpotCheckResult.deserializeBinary = function(bytes) {
@@ -1785,8 +1807,8 @@ proto.bosdyn.api.spot.PayloadCheckResult.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.spot.PayloadCheckResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    error: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    extraPayload: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+error: jspb.Message.getFieldWithDefault(msg, 1, 0),
+extraPayload: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -1799,7 +1821,7 @@ proto.bosdyn.api.spot.PayloadCheckResult.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.PayloadCheckResult}
  */
 proto.bosdyn.api.spot.PayloadCheckResult.deserializeBinary = function(bytes) {
@@ -1954,9 +1976,9 @@ proto.bosdyn.api.spot.LoadCellSpotCheckResult.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot.LoadCellSpotCheckResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    error: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    zero: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    oldZero: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
+error: jspb.Message.getFieldWithDefault(msg, 2, 0),
+zero: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+oldZero: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
   };
 
   if (includeInstance) {
@@ -1969,7 +1991,7 @@ proto.bosdyn.api.spot.LoadCellSpotCheckResult.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LoadCellSpotCheckResult}
  */
 proto.bosdyn.api.spot.LoadCellSpotCheckResult.deserializeBinary = function(bytes) {
@@ -2153,10 +2175,10 @@ proto.bosdyn.api.spot.JointKinematicCheckResult.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot.JointKinematicCheckResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    error: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    offset: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    oldOffset: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    healthScore: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0)
+error: jspb.Message.getFieldWithDefault(msg, 2, 0),
+offset: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+oldOffset: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+healthScore: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0)
   };
 
   if (includeInstance) {
@@ -2169,7 +2191,7 @@ proto.bosdyn.api.spot.JointKinematicCheckResult.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.JointKinematicCheckResult}
  */
 proto.bosdyn.api.spot.JointKinematicCheckResult.deserializeBinary = function(bytes) {
@@ -2385,8 +2407,8 @@ proto.bosdyn.api.spot.FootHeightCheckResult.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.spot.FootHeightCheckResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    footHeightErrorFromMean: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+footHeightErrorFromMean: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -2399,7 +2421,7 @@ proto.bosdyn.api.spot.FootHeightCheckResult.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.FootHeightCheckResult}
  */
 proto.bosdyn.api.spot.FootHeightCheckResult.deserializeBinary = function(bytes) {
@@ -2555,8 +2577,8 @@ proto.bosdyn.api.spot.LegPairCheckResult.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.spot.LegPairCheckResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    legPairDistanceChange: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+legPairDistanceChange: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -2569,7 +2591,7 @@ proto.bosdyn.api.spot.LegPairCheckResult.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LegPairCheckResult}
  */
 proto.bosdyn.api.spot.LegPairCheckResult.deserializeBinary = function(bytes) {
@@ -2732,9 +2754,9 @@ proto.bosdyn.api.spot.HipRangeOfMotionResult.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.spot.HipRangeOfMotionResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    error: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    hxList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 2)) == null ? undefined : f,
-    hyList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 3)) == null ? undefined : f
+error: jspb.Message.getFieldWithDefault(msg, 1, 0),
+hxList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 2)) == null ? undefined : f,
+hyList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -2747,7 +2769,7 @@ proto.bosdyn.api.spot.HipRangeOfMotionResult.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.HipRangeOfMotionResult}
  */
 proto.bosdyn.api.spot.HipRangeOfMotionResult.deserializeBinary = function(bytes) {
@@ -2776,16 +2798,10 @@ proto.bosdyn.api.spot.HipRangeOfMotionResult.deserializeBinaryFromReader = funct
       msg.setError(value);
       break;
     case 2:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedFloat() : [reader.readFloat()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addHx(values[i]);
-      }
+      reader.readPackableFloatInto(msg.getHxList());
       break;
     case 3:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedFloat() : [reader.readFloat()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addHy(values[i]);
-      }
+      reader.readPackableFloatInto(msg.getHyList());
       break;
     default:
       reader.skipField();
@@ -2973,9 +2989,9 @@ proto.bosdyn.api.spot.CameraCalibrationCommandRequest.prototype.toObject = funct
  */
 proto.bosdyn.api.spot.CameraCalibrationCommandRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    command: jspb.Message.getFieldWithDefault(msg, 3, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+command: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -2988,7 +3004,7 @@ proto.bosdyn.api.spot.CameraCalibrationCommandRequest.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.CameraCalibrationCommandRequest}
  */
 proto.bosdyn.api.spot.CameraCalibrationCommandRequest.deserializeBinary = function(bytes) {
@@ -3214,8 +3230,8 @@ proto.bosdyn.api.spot.CameraCalibrationCommandResponse.prototype.toObject = func
  */
 proto.bosdyn.api.spot.CameraCalibrationCommandResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3228,7 +3244,7 @@ proto.bosdyn.api.spot.CameraCalibrationCommandResponse.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.CameraCalibrationCommandResponse}
  */
 proto.bosdyn.api.spot.CameraCalibrationCommandResponse.deserializeBinary = function(bytes) {
@@ -3416,7 +3432,7 @@ proto.bosdyn.api.spot.CameraCalibrationFeedbackRequest.prototype.toObject = func
  */
 proto.bosdyn.api.spot.CameraCalibrationFeedbackRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3429,7 +3445,7 @@ proto.bosdyn.api.spot.CameraCalibrationFeedbackRequest.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.CameraCalibrationFeedbackRequest}
  */
 proto.bosdyn.api.spot.CameraCalibrationFeedbackRequest.deserializeBinary = function(bytes) {
@@ -3567,9 +3583,9 @@ proto.bosdyn.api.spot.CameraCalibrationFeedbackResponse.prototype.toObject = fun
  */
 proto.bosdyn.api.spot.CameraCalibrationFeedbackResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    progress: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+progress: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -3582,7 +3598,7 @@ proto.bosdyn.api.spot.CameraCalibrationFeedbackResponse.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.CameraCalibrationFeedbackResponse}
  */
 proto.bosdyn.api.spot.CameraCalibrationFeedbackResponse.deserializeBinary = function(bytes) {

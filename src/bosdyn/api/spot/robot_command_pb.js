@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -221,22 +215,22 @@ proto.bosdyn.api.spot.MobilityParams.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.spot.MobilityParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    velLimit: (f = msg.getVelLimit()) && bosdyn_api_geometry_pb.SE2VelocityLimit.toObject(includeInstance, f),
-    bodyControl: (f = msg.getBodyControl()) && proto.bosdyn.api.spot.BodyControlParams.toObject(includeInstance, f),
-    locomotionHint: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    stairHint: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    stairsMode: jspb.Message.getFieldWithDefault(msg, 17, 0),
-    allowDegradedPerception: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
-    obstacleParams: (f = msg.getObstacleParams()) && proto.bosdyn.api.spot.ObstacleParams.toObject(includeInstance, f),
-    swingHeight: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    terrainParams: (f = msg.getTerrainParams()) && proto.bosdyn.api.spot.TerrainParams.toObject(includeInstance, f),
-    disallowStairTracker: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
-    disableStairErrorAutoDescent: jspb.Message.getBooleanFieldWithDefault(msg, 16, false),
-    externalForceParams: (f = msg.getExternalForceParams()) && proto.bosdyn.api.spot.BodyExternalForceParams.toObject(includeInstance, f),
-    disallowNonStairsPitchLimiting: jspb.Message.getBooleanFieldWithDefault(msg, 11, false),
-    disableNearmapCliffAvoidance: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
-    disableMissingDataCliffs: jspb.Message.getBooleanFieldWithDefault(msg, 21, false),
-    hazardDetectionMode: jspb.Message.getFieldWithDefault(msg, 18, 0)
+velLimit: (f = msg.getVelLimit()) && bosdyn_api_geometry_pb.SE2VelocityLimit.toObject(includeInstance, f),
+bodyControl: (f = msg.getBodyControl()) && proto.bosdyn.api.spot.BodyControlParams.toObject(includeInstance, f),
+locomotionHint: jspb.Message.getFieldWithDefault(msg, 3, 0),
+stairHint: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+stairsMode: jspb.Message.getFieldWithDefault(msg, 17, 0),
+allowDegradedPerception: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+obstacleParams: (f = msg.getObstacleParams()) && proto.bosdyn.api.spot.ObstacleParams.toObject(includeInstance, f),
+swingHeight: jspb.Message.getFieldWithDefault(msg, 7, 0),
+terrainParams: (f = msg.getTerrainParams()) && proto.bosdyn.api.spot.TerrainParams.toObject(includeInstance, f),
+disallowStairTracker: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
+disableStairErrorAutoDescent: jspb.Message.getBooleanFieldWithDefault(msg, 16, false),
+externalForceParams: (f = msg.getExternalForceParams()) && proto.bosdyn.api.spot.BodyExternalForceParams.toObject(includeInstance, f),
+disallowNonStairsPitchLimiting: jspb.Message.getBooleanFieldWithDefault(msg, 11, false),
+disableNearmapCliffAvoidance: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
+disableMissingDataCliffs: jspb.Message.getBooleanFieldWithDefault(msg, 21, false),
+hazardDetectionMode: jspb.Message.getFieldWithDefault(msg, 18, 0)
   };
 
   if (includeInstance) {
@@ -249,7 +243,7 @@ proto.bosdyn.api.spot.MobilityParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.MobilityParams}
  */
 proto.bosdyn.api.spot.MobilityParams.deserializeBinary = function(bytes) {
@@ -954,10 +948,10 @@ proto.bosdyn.api.spot.BodyControlParams.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.BodyControlParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    baseOffsetRtFootprint: (f = msg.getBaseOffsetRtFootprint()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
-    bodyAssistForManipulation: (f = msg.getBodyAssistForManipulation()) && proto.bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation.toObject(includeInstance, f),
-    bodyPose: (f = msg.getBodyPose()) && proto.bosdyn.api.spot.BodyControlParams.BodyPose.toObject(includeInstance, f),
-    rotationSetting: jspb.Message.getFieldWithDefault(msg, 2, 0)
+baseOffsetRtFootprint: (f = msg.getBaseOffsetRtFootprint()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
+bodyAssistForManipulation: (f = msg.getBodyAssistForManipulation()) && proto.bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation.toObject(includeInstance, f),
+bodyPose: (f = msg.getBodyPose()) && proto.bosdyn.api.spot.BodyControlParams.BodyPose.toObject(includeInstance, f),
+rotationSetting: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -970,7 +964,7 @@ proto.bosdyn.api.spot.BodyControlParams.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.BodyControlParams}
  */
 proto.bosdyn.api.spot.BodyControlParams.deserializeBinary = function(bytes) {
@@ -1117,8 +1111,8 @@ proto.bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation.prototype.toOb
  */
 proto.bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation.toObject = function(includeInstance, msg) {
   var f, obj = {
-    enableBodyYawAssist: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    enableHipHeightAssist: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+enableBodyYawAssist: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+enableHipHeightAssist: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -1131,7 +1125,7 @@ proto.bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation.toObject = fun
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation}
  */
 proto.bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation.deserializeBinary = function(bytes) {
@@ -1277,8 +1271,8 @@ proto.bosdyn.api.spot.BodyControlParams.BodyPose.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot.BodyControlParams.BodyPose.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rootFrameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    baseOffsetRtRoot: (f = msg.getBaseOffsetRtRoot()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f)
+rootFrameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+baseOffsetRtRoot: (f = msg.getBaseOffsetRtRoot()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1291,7 +1285,7 @@ proto.bosdyn.api.spot.BodyControlParams.BodyPose.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.BodyControlParams.BodyPose}
  */
 proto.bosdyn.api.spot.BodyControlParams.BodyPose.deserializeBinary = function(bytes) {
@@ -1316,7 +1310,7 @@ proto.bosdyn.api.spot.BodyControlParams.BodyPose.deserializeBinaryFromReader = f
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRootFrameName(value);
       break;
     case 2:
@@ -1587,12 +1581,12 @@ proto.bosdyn.api.spot.ObstacleParams.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.spot.ObstacleParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    disableVisionFootObstacleAvoidance: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    disableVisionFootConstraintAvoidance: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    disableVisionBodyObstacleAvoidance: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    obstacleAvoidancePadding: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    disableVisionFootObstacleBodyAssist: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
-    disableVisionNegativeObstacles: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
+disableVisionFootObstacleAvoidance: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+disableVisionFootConstraintAvoidance: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+disableVisionBodyObstacleAvoidance: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+obstacleAvoidancePadding: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+disableVisionFootObstacleBodyAssist: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+disableVisionNegativeObstacles: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
   };
 
   if (includeInstance) {
@@ -1605,7 +1599,7 @@ proto.bosdyn.api.spot.ObstacleParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ObstacleParams}
  */
 proto.bosdyn.api.spot.ObstacleParams.deserializeBinary = function(bytes) {
@@ -1867,9 +1861,9 @@ proto.bosdyn.api.spot.TerrainParams.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.spot.TerrainParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    groundMuHint: (f = msg.getGroundMuHint()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    enableGratedFloor: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    gratedSurfacesMode: jspb.Message.getFieldWithDefault(msg, 4, 0)
+groundMuHint: (f = msg.getGroundMuHint()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+enableGratedFloor: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+gratedSurfacesMode: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -1882,7 +1876,7 @@ proto.bosdyn.api.spot.TerrainParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.TerrainParams}
  */
 proto.bosdyn.api.spot.TerrainParams.deserializeBinary = function(bytes) {
@@ -2088,9 +2082,9 @@ proto.bosdyn.api.spot.BodyExternalForceParams.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot.BodyExternalForceParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    externalForceIndicator: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    frameName: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    externalForceOverride: (f = msg.getExternalForceOverride()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f)
+externalForceIndicator: jspb.Message.getFieldWithDefault(msg, 1, 0),
+frameName: jspb.Message.getFieldWithDefault(msg, 4, ""),
+externalForceOverride: (f = msg.getExternalForceOverride()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2103,7 +2097,7 @@ proto.bosdyn.api.spot.BodyExternalForceParams.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.BodyExternalForceParams}
  */
 proto.bosdyn.api.spot.BodyExternalForceParams.deserializeBinary = function(bytes) {
@@ -2132,7 +2126,7 @@ proto.bosdyn.api.spot.BodyExternalForceParams.deserializeBinaryFromReader = func
       msg.setExternalForceIndicator(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 3:

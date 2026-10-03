@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
 goog.object.extend(proto, google_protobuf_duration_pb);
@@ -1482,7 +1476,7 @@ proto.bosdyn.api.spot.ListAllMovesRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot.ListAllMovesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1495,7 +1489,7 @@ proto.bosdyn.api.spot.ListAllMovesRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ListAllMovesRequest}
  */
 proto.bosdyn.api.spot.ListAllMovesRequest.deserializeBinary = function(bytes) {
@@ -1640,10 +1634,10 @@ proto.bosdyn.api.spot.ListAllMovesResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot.ListAllMovesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    movesList: jspb.Message.toObjectList(msg.getMovesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+movesList: jspb.Message.toObjectList(msg.getMovesList(),
     proto.bosdyn.api.spot.MoveInfo.toObject, includeInstance),
-    moveParamConfig: jspb.Message.getFieldWithDefault(msg, 3, "")
+moveParamConfig: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -1656,7 +1650,7 @@ proto.bosdyn.api.spot.ListAllMovesResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ListAllMovesResponse}
  */
 proto.bosdyn.api.spot.ListAllMovesResponse.deserializeBinary = function(bytes) {
@@ -1691,7 +1685,7 @@ proto.bosdyn.api.spot.ListAllMovesResponse.deserializeBinaryFromReader = functio
       msg.addMoves(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMoveParamConfig(value);
       break;
     default:
@@ -1874,7 +1868,7 @@ proto.bosdyn.api.spot.ListAllSequencesRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot.ListAllSequencesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1887,7 +1881,7 @@ proto.bosdyn.api.spot.ListAllSequencesRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ListAllSequencesRequest}
  */
 proto.bosdyn.api.spot.ListAllSequencesRequest.deserializeBinary = function(bytes) {
@@ -2032,9 +2026,9 @@ proto.bosdyn.api.spot.ListAllSequencesResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.spot.ListAllSequencesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    knownSequencesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
-    sequenceInfoList: jspb.Message.toObjectList(msg.getSequenceInfoList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+knownSequencesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
+sequenceInfoList: jspb.Message.toObjectList(msg.getSequenceInfoList(),
     proto.bosdyn.api.spot.SequenceInfo.toObject, includeInstance)
   };
 
@@ -2048,7 +2042,7 @@ proto.bosdyn.api.spot.ListAllSequencesResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ListAllSequencesResponse}
  */
 proto.bosdyn.api.spot.ListAllSequencesResponse.deserializeBinary = function(bytes) {
@@ -2078,7 +2072,7 @@ proto.bosdyn.api.spot.ListAllSequencesResponse.deserializeBinaryFromReader = fun
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addKnownSequences(value);
       break;
     case 3:
@@ -2292,10 +2286,10 @@ proto.bosdyn.api.spot.SequenceInfo.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.spot.SequenceInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    labelsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
-    savedState: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    exitState: jspb.Message.getFieldWithDefault(msg, 4, 0)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+labelsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
+savedState: jspb.Message.getFieldWithDefault(msg, 3, 0),
+exitState: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -2308,7 +2302,7 @@ proto.bosdyn.api.spot.SequenceInfo.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SequenceInfo}
  */
 proto.bosdyn.api.spot.SequenceInfo.deserializeBinary = function(bytes) {
@@ -2333,11 +2327,11 @@ proto.bosdyn.api.spot.SequenceInfo.deserializeBinaryFromReader = function(msg, r
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addLabels(value);
       break;
     case 3:
@@ -2541,9 +2535,9 @@ proto.bosdyn.api.spot.GetChoreographySequenceRequest.prototype.toObject = functi
  */
 proto.bosdyn.api.spot.GetChoreographySequenceRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    sequenceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    returnAnimationNamesOnly: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+sequenceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+returnAnimationNamesOnly: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
   };
 
   if (includeInstance) {
@@ -2556,7 +2550,7 @@ proto.bosdyn.api.spot.GetChoreographySequenceRequest.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.GetChoreographySequenceRequest}
  */
 proto.bosdyn.api.spot.GetChoreographySequenceRequest.deserializeBinary = function(bytes) {
@@ -2586,7 +2580,7 @@ proto.bosdyn.api.spot.GetChoreographySequenceRequest.deserializeBinaryFromReader
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSequenceName(value);
       break;
     case 3:
@@ -2759,12 +2753,12 @@ proto.bosdyn.api.spot.GetChoreographySequenceResponse.prototype.toObject = funct
  */
 proto.bosdyn.api.spot.GetChoreographySequenceResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    choreographySequence: (f = msg.getChoreographySequence()) && proto.bosdyn.api.spot.ChoreographySequence.toObject(includeInstance, f),
-    animatedMovesList: jspb.Message.toObjectList(msg.getAnimatedMovesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+choreographySequence: (f = msg.getChoreographySequence()) && proto.bosdyn.api.spot.ChoreographySequence.toObject(includeInstance, f),
+animatedMovesList: jspb.Message.toObjectList(msg.getAnimatedMovesList(),
     proto.bosdyn.api.spot.Animation.toObject, includeInstance),
-    animationNamesList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f
+animationNamesList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -2777,7 +2771,7 @@ proto.bosdyn.api.spot.GetChoreographySequenceResponse.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.GetChoreographySequenceResponse}
  */
 proto.bosdyn.api.spot.GetChoreographySequenceResponse.deserializeBinary = function(bytes) {
@@ -2821,7 +2815,7 @@ proto.bosdyn.api.spot.GetChoreographySequenceResponse.deserializeBinaryFromReade
       msg.addAnimatedMoves(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addAnimationNames(value);
       break;
     default:
@@ -3102,8 +3096,8 @@ proto.bosdyn.api.spot.GetAnimationRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot.GetAnimationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    name: jspb.Message.getFieldWithDefault(msg, 2, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+name: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -3116,7 +3110,7 @@ proto.bosdyn.api.spot.GetAnimationRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.GetAnimationRequest}
  */
 proto.bosdyn.api.spot.GetAnimationRequest.deserializeBinary = function(bytes) {
@@ -3146,7 +3140,7 @@ proto.bosdyn.api.spot.GetAnimationRequest.deserializeBinaryFromReader = function
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     default:
@@ -3283,9 +3277,9 @@ proto.bosdyn.api.spot.GetAnimationResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot.GetAnimationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    animatedMove: (f = msg.getAnimatedMove()) && proto.bosdyn.api.spot.Animation.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+animatedMove: (f = msg.getAnimatedMove()) && proto.bosdyn.api.spot.Animation.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3298,7 +3292,7 @@ proto.bosdyn.api.spot.GetAnimationResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.GetAnimationResponse}
  */
 proto.bosdyn.api.spot.GetAnimationResponse.deserializeBinary = function(bytes) {
@@ -3524,8 +3518,8 @@ proto.bosdyn.api.spot.DeleteSequenceRequest.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.spot.DeleteSequenceRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    sequenceName: jspb.Message.getFieldWithDefault(msg, 2, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+sequenceName: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -3538,7 +3532,7 @@ proto.bosdyn.api.spot.DeleteSequenceRequest.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DeleteSequenceRequest}
  */
 proto.bosdyn.api.spot.DeleteSequenceRequest.deserializeBinary = function(bytes) {
@@ -3568,7 +3562,7 @@ proto.bosdyn.api.spot.DeleteSequenceRequest.deserializeBinaryFromReader = functi
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSequenceName(value);
       break;
     default:
@@ -3705,8 +3699,8 @@ proto.bosdyn.api.spot.DeleteSequenceResponse.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.spot.DeleteSequenceResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -3719,7 +3713,7 @@ proto.bosdyn.api.spot.DeleteSequenceResponse.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DeleteSequenceResponse}
  */
 proto.bosdyn.api.spot.DeleteSequenceResponse.deserializeBinary = function(bytes) {
@@ -3904,9 +3898,9 @@ proto.bosdyn.api.spot.SaveSequenceRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot.SaveSequenceRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    sequenceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    addLabelsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+sequenceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+addLabelsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -3919,7 +3913,7 @@ proto.bosdyn.api.spot.SaveSequenceRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SaveSequenceRequest}
  */
 proto.bosdyn.api.spot.SaveSequenceRequest.deserializeBinary = function(bytes) {
@@ -3949,11 +3943,11 @@ proto.bosdyn.api.spot.SaveSequenceRequest.deserializeBinaryFromReader = function
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSequenceName(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addAddLabels(value);
       break;
     default:
@@ -4134,8 +4128,8 @@ proto.bosdyn.api.spot.SaveSequenceResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot.SaveSequenceResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -4148,7 +4142,7 @@ proto.bosdyn.api.spot.SaveSequenceResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SaveSequenceResponse}
  */
 proto.bosdyn.api.spot.SaveSequenceResponse.deserializeBinary = function(bytes) {
@@ -4333,10 +4327,10 @@ proto.bosdyn.api.spot.ModifyChoreographyInfoRequest.prototype.toObject = functio
  */
 proto.bosdyn.api.spot.ModifyChoreographyInfoRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    sequenceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    addLabelsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
-    removeLabelsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+sequenceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+addLabelsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
+removeLabelsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -4349,7 +4343,7 @@ proto.bosdyn.api.spot.ModifyChoreographyInfoRequest.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ModifyChoreographyInfoRequest}
  */
 proto.bosdyn.api.spot.ModifyChoreographyInfoRequest.deserializeBinary = function(bytes) {
@@ -4379,15 +4373,15 @@ proto.bosdyn.api.spot.ModifyChoreographyInfoRequest.deserializeBinaryFromReader 
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSequenceName(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addAddLabels(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addRemoveLabels(value);
       break;
     default:
@@ -4612,8 +4606,8 @@ proto.bosdyn.api.spot.ModifyChoreographyInfoResponse.prototype.toObject = functi
  */
 proto.bosdyn.api.spot.ModifyChoreographyInfoResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -4626,7 +4620,7 @@ proto.bosdyn.api.spot.ModifyChoreographyInfoResponse.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ModifyChoreographyInfoResponse}
  */
 proto.bosdyn.api.spot.ModifyChoreographyInfoResponse.deserializeBinary = function(bytes) {
@@ -4804,7 +4798,7 @@ proto.bosdyn.api.spot.ClearAllSequenceFilesRequest.prototype.toObject = function
  */
 proto.bosdyn.api.spot.ClearAllSequenceFilesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4817,7 +4811,7 @@ proto.bosdyn.api.spot.ClearAllSequenceFilesRequest.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ClearAllSequenceFilesRequest}
  */
 proto.bosdyn.api.spot.ClearAllSequenceFilesRequest.deserializeBinary = function(bytes) {
@@ -4955,8 +4949,8 @@ proto.bosdyn.api.spot.ClearAllSequenceFilesResponse.prototype.toObject = functio
  */
 proto.bosdyn.api.spot.ClearAllSequenceFilesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -4969,7 +4963,7 @@ proto.bosdyn.api.spot.ClearAllSequenceFilesResponse.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ClearAllSequenceFilesResponse}
  */
 proto.bosdyn.api.spot.ClearAllSequenceFilesResponse.deserializeBinary = function(bytes) {
@@ -5145,9 +5139,9 @@ proto.bosdyn.api.spot.UploadChoreographyRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot.UploadChoreographyRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    choreographySequence: (f = msg.getChoreographySequence()) && proto.bosdyn.api.spot.ChoreographySequence.toObject(includeInstance, f),
-    nonStrictParsing: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+choreographySequence: (f = msg.getChoreographySequence()) && proto.bosdyn.api.spot.ChoreographySequence.toObject(includeInstance, f),
+nonStrictParsing: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
   };
 
   if (includeInstance) {
@@ -5160,7 +5154,7 @@ proto.bosdyn.api.spot.UploadChoreographyRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.UploadChoreographyRequest}
  */
 proto.bosdyn.api.spot.UploadChoreographyRequest.deserializeBinary = function(bytes) {
@@ -5384,8 +5378,8 @@ proto.bosdyn.api.spot.UploadChoreographyResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot.UploadChoreographyResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    warningsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+warningsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -5398,7 +5392,7 @@ proto.bosdyn.api.spot.UploadChoreographyResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.UploadChoreographyResponse}
  */
 proto.bosdyn.api.spot.UploadChoreographyResponse.deserializeBinary = function(bytes) {
@@ -5428,7 +5422,7 @@ proto.bosdyn.api.spot.UploadChoreographyResponse.deserializeBinaryFromReader = f
       msg.setHeader(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addWarnings(value);
       break;
     default:
@@ -5584,9 +5578,9 @@ proto.bosdyn.api.spot.UploadAnimatedMoveRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot.UploadAnimatedMoveRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    animatedMoveGeneratedId: (f = msg.getAnimatedMoveGeneratedId()) && google_protobuf_wrappers_pb.StringValue.toObject(includeInstance, f),
-    animatedMove: (f = msg.getAnimatedMove()) && proto.bosdyn.api.spot.Animation.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+animatedMoveGeneratedId: (f = msg.getAnimatedMoveGeneratedId()) && google_protobuf_wrappers_pb.StringValue.toObject(includeInstance, f),
+animatedMove: (f = msg.getAnimatedMove()) && proto.bosdyn.api.spot.Animation.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5599,7 +5593,7 @@ proto.bosdyn.api.spot.UploadAnimatedMoveRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.UploadAnimatedMoveRequest}
  */
 proto.bosdyn.api.spot.UploadAnimatedMoveRequest.deserializeBinary = function(bytes) {
@@ -5844,9 +5838,9 @@ proto.bosdyn.api.spot.UploadAnimatedMoveResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot.UploadAnimatedMoveResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    warningsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+warningsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -5859,7 +5853,7 @@ proto.bosdyn.api.spot.UploadAnimatedMoveResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.UploadAnimatedMoveResponse}
  */
 proto.bosdyn.api.spot.UploadAnimatedMoveResponse.deserializeBinary = function(bytes) {
@@ -5893,7 +5887,7 @@ proto.bosdyn.api.spot.UploadAnimatedMoveResponse.deserializeBinaryFromReader = f
       msg.setStatus(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addWarnings(value);
       break;
     default:
@@ -6085,11 +6079,11 @@ proto.bosdyn.api.spot.ExecuteChoreographyRequest.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot.ExecuteChoreographyRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    choreographySequenceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    startTime: (f = msg.getStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    choreographyStartingSlice: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+choreographySequenceName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+startTime: (f = msg.getStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+choreographyStartingSlice: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6102,7 +6096,7 @@ proto.bosdyn.api.spot.ExecuteChoreographyRequest.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ExecuteChoreographyRequest}
  */
 proto.bosdyn.api.spot.ExecuteChoreographyRequest.deserializeBinary = function(bytes) {
@@ -6132,7 +6126,7 @@ proto.bosdyn.api.spot.ExecuteChoreographyRequest.deserializeBinaryFromReader = f
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setChoreographySequenceName(value);
       break;
     case 3:
@@ -6398,10 +6392,10 @@ proto.bosdyn.api.spot.ExecuteChoreographyResponse.prototype.toObject = function(
  */
 proto.bosdyn.api.spot.ExecuteChoreographyResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    executionId: jspb.Message.getFieldWithDefault(msg, 4, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+executionId: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -6414,7 +6408,7 @@ proto.bosdyn.api.spot.ExecuteChoreographyResponse.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ExecuteChoreographyResponse}
  */
 proto.bosdyn.api.spot.ExecuteChoreographyResponse.deserializeBinary = function(bytes) {
@@ -6672,9 +6666,9 @@ proto.bosdyn.api.spot.StartRecordingStateRequest.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot.StartRecordingStateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    continueRecordingDuration: (f = msg.getContinueRecordingDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    recordingSessionId: jspb.Message.getFieldWithDefault(msg, 3, "0")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+continueRecordingDuration: (f = msg.getContinueRecordingDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+recordingSessionId: jspb.Message.getFieldWithDefault(msg, 3, "0")
   };
 
   if (includeInstance) {
@@ -6687,7 +6681,7 @@ proto.bosdyn.api.spot.StartRecordingStateRequest.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.StartRecordingStateRequest}
  */
 proto.bosdyn.api.spot.StartRecordingStateRequest.deserializeBinary = function(bytes) {
@@ -6904,9 +6898,9 @@ proto.bosdyn.api.spot.StartRecordingStateResponse.prototype.toObject = function(
  */
 proto.bosdyn.api.spot.StartRecordingStateResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    recordingSessionId: jspb.Message.getFieldWithDefault(msg, 3, "0")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+recordingSessionId: jspb.Message.getFieldWithDefault(msg, 3, "0")
   };
 
   if (includeInstance) {
@@ -6919,7 +6913,7 @@ proto.bosdyn.api.spot.StartRecordingStateResponse.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.StartRecordingStateResponse}
  */
 proto.bosdyn.api.spot.StartRecordingStateResponse.deserializeBinary = function(bytes) {
@@ -7125,7 +7119,7 @@ proto.bosdyn.api.spot.StopRecordingStateRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot.StopRecordingStateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7138,7 +7132,7 @@ proto.bosdyn.api.spot.StopRecordingStateRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.StopRecordingStateRequest}
  */
 proto.bosdyn.api.spot.StopRecordingStateRequest.deserializeBinary = function(bytes) {
@@ -7276,7 +7270,7 @@ proto.bosdyn.api.spot.StopRecordingStateResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot.StopRecordingStateResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7289,7 +7283,7 @@ proto.bosdyn.api.spot.StopRecordingStateResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.StopRecordingStateResponse}
  */
 proto.bosdyn.api.spot.StopRecordingStateResponse.deserializeBinary = function(bytes) {
@@ -7427,8 +7421,8 @@ proto.bosdyn.api.spot.DownloadRobotStateLogRequest.prototype.toObject = function
  */
 proto.bosdyn.api.spot.DownloadRobotStateLogRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    logType: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+logType: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -7441,7 +7435,7 @@ proto.bosdyn.api.spot.DownloadRobotStateLogRequest.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DownloadRobotStateLogRequest}
  */
 proto.bosdyn.api.spot.DownloadRobotStateLogRequest.deserializeBinary = function(bytes) {
@@ -7617,12 +7611,12 @@ proto.bosdyn.api.spot.LoggedJoints.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.spot.LoggedJoints.toObject = function(includeInstance, msg) {
   var f, obj = {
-    fl: (f = msg.getFl()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
-    fr: (f = msg.getFr()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
-    hl: (f = msg.getHl()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
-    hr: (f = msg.getHr()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
-    arm: (f = msg.getArm()) && proto.bosdyn.api.spot.ArmJointAngles.toObject(includeInstance, f),
-    gripperAngle: (f = msg.getGripperAngle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+fl: (f = msg.getFl()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
+fr: (f = msg.getFr()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
+hl: (f = msg.getHl()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
+hr: (f = msg.getHr()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
+arm: (f = msg.getArm()) && proto.bosdyn.api.spot.ArmJointAngles.toObject(includeInstance, f),
+gripperAngle: (f = msg.getGripperAngle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7635,7 +7629,7 @@ proto.bosdyn.api.spot.LoggedJoints.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LoggedJoints}
  */
 proto.bosdyn.api.spot.LoggedJoints.deserializeBinary = function(bytes) {
@@ -8023,10 +8017,10 @@ proto.bosdyn.api.spot.LoggedFootContacts.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.spot.LoggedFootContacts.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frContact: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    flContact: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    hrContact: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    hlContact: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+frContact: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+flContact: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+hrContact: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+hlContact: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
   };
 
   if (includeInstance) {
@@ -8039,7 +8033,7 @@ proto.bosdyn.api.spot.LoggedFootContacts.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LoggedFootContacts}
  */
 proto.bosdyn.api.spot.LoggedFootContacts.deserializeBinary = function(bytes) {
@@ -8243,10 +8237,10 @@ proto.bosdyn.api.spot.LoggedStateKeyFrame.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot.LoggedStateKeyFrame.toObject = function(includeInstance, msg) {
   var f, obj = {
-    jointAngles: (f = msg.getJointAngles()) && proto.bosdyn.api.spot.LoggedJoints.toObject(includeInstance, f),
-    footContactState: (f = msg.getFootContactState()) && proto.bosdyn.api.spot.LoggedFootContacts.toObject(includeInstance, f),
-    animationTformBody: (f = msg.getAnimationTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+jointAngles: (f = msg.getJointAngles()) && proto.bosdyn.api.spot.LoggedJoints.toObject(includeInstance, f),
+footContactState: (f = msg.getFootContactState()) && proto.bosdyn.api.spot.LoggedFootContacts.toObject(includeInstance, f),
+animationTformBody: (f = msg.getAnimationTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8259,7 +8253,7 @@ proto.bosdyn.api.spot.LoggedStateKeyFrame.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LoggedStateKeyFrame}
  */
 proto.bosdyn.api.spot.LoggedStateKeyFrame.deserializeBinary = function(bytes) {
@@ -8554,7 +8548,7 @@ proto.bosdyn.api.spot.ChoreographyStateLog.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot.ChoreographyStateLog.toObject = function(includeInstance, msg) {
   var f, obj = {
-    keyFramesList: jspb.Message.toObjectList(msg.getKeyFramesList(),
+keyFramesList: jspb.Message.toObjectList(msg.getKeyFramesList(),
     proto.bosdyn.api.spot.LoggedStateKeyFrame.toObject, includeInstance)
   };
 
@@ -8568,7 +8562,7 @@ proto.bosdyn.api.spot.ChoreographyStateLog.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographyStateLog}
  */
 proto.bosdyn.api.spot.ChoreographyStateLog.deserializeBinary = function(bytes) {
@@ -8707,9 +8701,9 @@ proto.bosdyn.api.spot.DownloadRobotStateLogResponse.prototype.toObject = functio
  */
 proto.bosdyn.api.spot.DownloadRobotStateLogResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+chunk: (f = msg.getChunk()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8722,7 +8716,7 @@ proto.bosdyn.api.spot.DownloadRobotStateLogResponse.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DownloadRobotStateLogResponse}
  */
 proto.bosdyn.api.spot.DownloadRobotStateLogResponse.deserializeBinary = function(bytes) {
@@ -9011,48 +9005,48 @@ proto.bosdyn.api.spot.MoveParams.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.MoveParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    type: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    startSlice: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    requestedSlices: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    id: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    jumpParams: (f = msg.getJumpParams()) && bosdyn_api_spot_choreography_params_pb.JumpParams.toObject(includeInstance, f),
-    rotateBodyParams: (f = msg.getRotateBodyParams()) && bosdyn_api_spot_choreography_params_pb.RotateBodyParams.toObject(includeInstance, f),
-    stepParams: (f = msg.getStepParams()) && bosdyn_api_spot_choreography_params_pb.StepParams.toObject(includeInstance, f),
-    buttCircleParams: (f = msg.getButtCircleParams()) && bosdyn_api_spot_choreography_params_pb.ButtCircleParams.toObject(includeInstance, f),
-    turnParams: (f = msg.getTurnParams()) && bosdyn_api_spot_choreography_params_pb.TurnParams.toObject(includeInstance, f),
-    pace2stepParams: (f = msg.getPace2stepParams()) && bosdyn_api_spot_choreography_params_pb.Pace2StepParams.toObject(includeInstance, f),
-    twerkParams: (f = msg.getTwerkParams()) && bosdyn_api_spot_choreography_params_pb.TwerkParams.toObject(includeInstance, f),
-    chickenHeadParams: (f = msg.getChickenHeadParams()) && bosdyn_api_spot_choreography_params_pb.ChickenHeadParams.toObject(includeInstance, f),
-    clapParams: (f = msg.getClapParams()) && bosdyn_api_spot_choreography_params_pb.ClapParams.toObject(includeInstance, f),
-    frontUpParams: (f = msg.getFrontUpParams()) && bosdyn_api_spot_choreography_params_pb.FrontUpParams.toObject(includeInstance, f),
-    swayParams: (f = msg.getSwayParams()) && bosdyn_api_spot_choreography_params_pb.SwayParams.toObject(includeInstance, f),
-    bodyHoldParams: (f = msg.getBodyHoldParams()) && bosdyn_api_spot_choreography_params_pb.BodyHoldParams.toObject(includeInstance, f),
-    armMoveParams: (f = msg.getArmMoveParams()) && bosdyn_api_spot_choreography_params_pb.ArmMoveParams.toObject(includeInstance, f),
-    kneelLegMoveParams: (f = msg.getKneelLegMoveParams()) && bosdyn_api_spot_choreography_params_pb.KneelLegMoveParams.toObject(includeInstance, f),
-    runningManParams: (f = msg.getRunningManParams()) && bosdyn_api_spot_choreography_params_pb.RunningManParams.toObject(includeInstance, f),
-    kneelCircleParams: (f = msg.getKneelCircleParams()) && bosdyn_api_spot_choreography_params_pb.KneelCircleParams.toObject(includeInstance, f),
-    gripperParams: (f = msg.getGripperParams()) && bosdyn_api_spot_choreography_params_pb.GripperParams.toObject(includeInstance, f),
-    hopParams: (f = msg.getHopParams()) && bosdyn_api_spot_choreography_params_pb.HopParams.toObject(includeInstance, f),
-    randomRotateParams: (f = msg.getRandomRotateParams()) && bosdyn_api_spot_choreography_params_pb.RandomRotateParams.toObject(includeInstance, f),
-    crawlParams: (f = msg.getCrawlParams()) && bosdyn_api_spot_choreography_params_pb.CrawlParams.toObject(includeInstance, f),
-    sideParams: (f = msg.getSideParams()) && bosdyn_api_spot_choreography_params_pb.SideParams.toObject(includeInstance, f),
-    bourreeParams: (f = msg.getBourreeParams()) && bosdyn_api_spot_choreography_params_pb.BourreeParams.toObject(includeInstance, f),
-    workspaceArmMoveParams: (f = msg.getWorkspaceArmMoveParams()) && bosdyn_api_spot_choreography_params_pb.WorkspaceArmMoveParams.toObject(includeInstance, f),
-    figure8Params: (f = msg.getFigure8Params()) && bosdyn_api_spot_choreography_params_pb.Figure8Params.toObject(includeInstance, f),
-    kneelLegMove2Params: (f = msg.getKneelLegMove2Params()) && bosdyn_api_spot_choreography_params_pb.KneelLegMove2Params.toObject(includeInstance, f),
-    fidgetStandParams: (f = msg.getFidgetStandParams()) && bosdyn_api_spot_choreography_params_pb.FidgetStandParams.toObject(includeInstance, f),
-    gotoParams: (f = msg.getGotoParams()) && bosdyn_api_spot_choreography_params_pb.GotoParams.toObject(includeInstance, f),
-    frameSnapshotParams: (f = msg.getFrameSnapshotParams()) && bosdyn_api_spot_choreography_params_pb.FrameSnapshotParams.toObject(includeInstance, f),
-    setColorParams: (f = msg.getSetColorParams()) && bosdyn_api_spot_choreography_params_pb.SetColorParams.toObject(includeInstance, f),
-    rippleColorParams: (f = msg.getRippleColorParams()) && bosdyn_api_spot_choreography_params_pb.RippleColorParams.toObject(includeInstance, f),
-    fadeColorParams: (f = msg.getFadeColorParams()) && bosdyn_api_spot_choreography_params_pb.FadeColorParams.toObject(includeInstance, f),
-    independentColorParams: (f = msg.getIndependentColorParams()) && bosdyn_api_spot_choreography_params_pb.IndependentColorParams.toObject(includeInstance, f),
-    customGaitParams: (f = msg.getCustomGaitParams()) && bosdyn_api_spot_choreography_params_pb.CustomGaitParams.toObject(includeInstance, f),
-    setAudioVisualColorParams: (f = msg.getSetAudioVisualColorParams()) && bosdyn_api_spot_choreography_params_pb.SetAudioVisualColorParams.toObject(includeInstance, f),
-    setAllColorParams: (f = msg.getSetAllColorParams()) && bosdyn_api_spot_choreography_params_pb.SetAllColorParams.toObject(includeInstance, f),
-    buzzerNoteParams: (f = msg.getBuzzerNoteParams()) && bosdyn_api_spot_choreography_params_pb.BuzzerNoteParams.toObject(includeInstance, f),
-    legJointParams: (f = msg.getLegJointParams()) && bosdyn_api_spot_choreography_params_pb.LegJointParams.toObject(includeInstance, f),
-    animateParams: (f = msg.getAnimateParams()) && bosdyn_api_spot_choreography_params_pb.AnimateParams.toObject(includeInstance, f)
+type: jspb.Message.getFieldWithDefault(msg, 1, ""),
+startSlice: jspb.Message.getFieldWithDefault(msg, 2, 0),
+requestedSlices: jspb.Message.getFieldWithDefault(msg, 3, 0),
+id: jspb.Message.getFieldWithDefault(msg, 4, 0),
+jumpParams: (f = msg.getJumpParams()) && bosdyn_api_spot_choreography_params_pb.JumpParams.toObject(includeInstance, f),
+rotateBodyParams: (f = msg.getRotateBodyParams()) && bosdyn_api_spot_choreography_params_pb.RotateBodyParams.toObject(includeInstance, f),
+stepParams: (f = msg.getStepParams()) && bosdyn_api_spot_choreography_params_pb.StepParams.toObject(includeInstance, f),
+buttCircleParams: (f = msg.getButtCircleParams()) && bosdyn_api_spot_choreography_params_pb.ButtCircleParams.toObject(includeInstance, f),
+turnParams: (f = msg.getTurnParams()) && bosdyn_api_spot_choreography_params_pb.TurnParams.toObject(includeInstance, f),
+pace2stepParams: (f = msg.getPace2stepParams()) && bosdyn_api_spot_choreography_params_pb.Pace2StepParams.toObject(includeInstance, f),
+twerkParams: (f = msg.getTwerkParams()) && bosdyn_api_spot_choreography_params_pb.TwerkParams.toObject(includeInstance, f),
+chickenHeadParams: (f = msg.getChickenHeadParams()) && bosdyn_api_spot_choreography_params_pb.ChickenHeadParams.toObject(includeInstance, f),
+clapParams: (f = msg.getClapParams()) && bosdyn_api_spot_choreography_params_pb.ClapParams.toObject(includeInstance, f),
+frontUpParams: (f = msg.getFrontUpParams()) && bosdyn_api_spot_choreography_params_pb.FrontUpParams.toObject(includeInstance, f),
+swayParams: (f = msg.getSwayParams()) && bosdyn_api_spot_choreography_params_pb.SwayParams.toObject(includeInstance, f),
+bodyHoldParams: (f = msg.getBodyHoldParams()) && bosdyn_api_spot_choreography_params_pb.BodyHoldParams.toObject(includeInstance, f),
+armMoveParams: (f = msg.getArmMoveParams()) && bosdyn_api_spot_choreography_params_pb.ArmMoveParams.toObject(includeInstance, f),
+kneelLegMoveParams: (f = msg.getKneelLegMoveParams()) && bosdyn_api_spot_choreography_params_pb.KneelLegMoveParams.toObject(includeInstance, f),
+runningManParams: (f = msg.getRunningManParams()) && bosdyn_api_spot_choreography_params_pb.RunningManParams.toObject(includeInstance, f),
+kneelCircleParams: (f = msg.getKneelCircleParams()) && bosdyn_api_spot_choreography_params_pb.KneelCircleParams.toObject(includeInstance, f),
+gripperParams: (f = msg.getGripperParams()) && bosdyn_api_spot_choreography_params_pb.GripperParams.toObject(includeInstance, f),
+hopParams: (f = msg.getHopParams()) && bosdyn_api_spot_choreography_params_pb.HopParams.toObject(includeInstance, f),
+randomRotateParams: (f = msg.getRandomRotateParams()) && bosdyn_api_spot_choreography_params_pb.RandomRotateParams.toObject(includeInstance, f),
+crawlParams: (f = msg.getCrawlParams()) && bosdyn_api_spot_choreography_params_pb.CrawlParams.toObject(includeInstance, f),
+sideParams: (f = msg.getSideParams()) && bosdyn_api_spot_choreography_params_pb.SideParams.toObject(includeInstance, f),
+bourreeParams: (f = msg.getBourreeParams()) && bosdyn_api_spot_choreography_params_pb.BourreeParams.toObject(includeInstance, f),
+workspaceArmMoveParams: (f = msg.getWorkspaceArmMoveParams()) && bosdyn_api_spot_choreography_params_pb.WorkspaceArmMoveParams.toObject(includeInstance, f),
+figure8Params: (f = msg.getFigure8Params()) && bosdyn_api_spot_choreography_params_pb.Figure8Params.toObject(includeInstance, f),
+kneelLegMove2Params: (f = msg.getKneelLegMove2Params()) && bosdyn_api_spot_choreography_params_pb.KneelLegMove2Params.toObject(includeInstance, f),
+fidgetStandParams: (f = msg.getFidgetStandParams()) && bosdyn_api_spot_choreography_params_pb.FidgetStandParams.toObject(includeInstance, f),
+gotoParams: (f = msg.getGotoParams()) && bosdyn_api_spot_choreography_params_pb.GotoParams.toObject(includeInstance, f),
+frameSnapshotParams: (f = msg.getFrameSnapshotParams()) && bosdyn_api_spot_choreography_params_pb.FrameSnapshotParams.toObject(includeInstance, f),
+setColorParams: (f = msg.getSetColorParams()) && bosdyn_api_spot_choreography_params_pb.SetColorParams.toObject(includeInstance, f),
+rippleColorParams: (f = msg.getRippleColorParams()) && bosdyn_api_spot_choreography_params_pb.RippleColorParams.toObject(includeInstance, f),
+fadeColorParams: (f = msg.getFadeColorParams()) && bosdyn_api_spot_choreography_params_pb.FadeColorParams.toObject(includeInstance, f),
+independentColorParams: (f = msg.getIndependentColorParams()) && bosdyn_api_spot_choreography_params_pb.IndependentColorParams.toObject(includeInstance, f),
+customGaitParams: (f = msg.getCustomGaitParams()) && bosdyn_api_spot_choreography_params_pb.CustomGaitParams.toObject(includeInstance, f),
+setAudioVisualColorParams: (f = msg.getSetAudioVisualColorParams()) && bosdyn_api_spot_choreography_params_pb.SetAudioVisualColorParams.toObject(includeInstance, f),
+setAllColorParams: (f = msg.getSetAllColorParams()) && bosdyn_api_spot_choreography_params_pb.SetAllColorParams.toObject(includeInstance, f),
+buzzerNoteParams: (f = msg.getBuzzerNoteParams()) && bosdyn_api_spot_choreography_params_pb.BuzzerNoteParams.toObject(includeInstance, f),
+legJointParams: (f = msg.getLegJointParams()) && bosdyn_api_spot_choreography_params_pb.LegJointParams.toObject(includeInstance, f),
+animateParams: (f = msg.getAnimateParams()) && bosdyn_api_spot_choreography_params_pb.AnimateParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9065,7 +9059,7 @@ proto.bosdyn.api.spot.MoveParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.MoveParams}
  */
 proto.bosdyn.api.spot.MoveParams.deserializeBinary = function(bytes) {
@@ -9090,7 +9084,7 @@ proto.bosdyn.api.spot.MoveParams.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setType(value);
       break;
     case 2:
@@ -11194,9 +11188,9 @@ proto.bosdyn.api.spot.MoveCommand.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.spot.MoveCommand.toObject = function(includeInstance, msg) {
   var f, obj = {
-    moveType: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    moveId: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    customGaitCommand: (f = msg.getCustomGaitCommand()) && bosdyn_api_spot_choreography_params_pb.CustomGaitCommand.toObject(includeInstance, f)
+moveType: jspb.Message.getFieldWithDefault(msg, 1, ""),
+moveId: jspb.Message.getFieldWithDefault(msg, 2, 0),
+customGaitCommand: (f = msg.getCustomGaitCommand()) && bosdyn_api_spot_choreography_params_pb.CustomGaitCommand.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -11209,7 +11203,7 @@ proto.bosdyn.api.spot.MoveCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.MoveCommand}
  */
 proto.bosdyn.api.spot.MoveCommand.deserializeBinary = function(bytes) {
@@ -11234,7 +11228,7 @@ proto.bosdyn.api.spot.MoveCommand.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMoveType(value);
       break;
     case 2:
@@ -11412,11 +11406,11 @@ proto.bosdyn.api.spot.ChoreographyCommandRequest.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot.ChoreographyCommandRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    commandsList: jspb.Message.toObjectList(msg.getCommandsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+commandsList: jspb.Message.toObjectList(msg.getCommandsList(),
     proto.bosdyn.api.spot.MoveCommand.toObject, includeInstance),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    commandEndTime: (f = msg.getCommandEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+commandEndTime: (f = msg.getCommandEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -11429,7 +11423,7 @@ proto.bosdyn.api.spot.ChoreographyCommandRequest.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographyCommandRequest}
  */
 proto.bosdyn.api.spot.ChoreographyCommandRequest.deserializeBinary = function(bytes) {
@@ -11725,9 +11719,9 @@ proto.bosdyn.api.spot.ChoreographyCommandResponse.prototype.toObject = function(
  */
 proto.bosdyn.api.spot.ChoreographyCommandResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    statusList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+statusList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -11740,7 +11734,7 @@ proto.bosdyn.api.spot.ChoreographyCommandResponse.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographyCommandResponse}
  */
 proto.bosdyn.api.spot.ChoreographyCommandResponse.deserializeBinary = function(bytes) {
@@ -11775,10 +11769,7 @@ proto.bosdyn.api.spot.ChoreographyCommandResponse.deserializeBinaryFromReader = 
       msg.setLeaseUseResult(value);
       break;
     case 3:
-      var values = /** @type {!Array<!proto.bosdyn.api.spot.ChoreographyCommandResponse.Status>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addStatus(values[i]);
-      }
+      reader.readPackableEnumInto(msg.getStatusList());
       break;
     default:
       reader.skipField();
@@ -11998,27 +11989,27 @@ proto.bosdyn.api.spot.MoveInfo.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.spot.MoveInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    moveLengthSlices: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    moveLengthTime: jspb.Message.getFloatingPointFieldWithDefault(msg, 15, 0.0),
-    isExtendable: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    minMoveLengthSlices: jspb.Message.getFieldWithDefault(msg, 13, 0),
-    maxMoveLengthSlices: jspb.Message.getFieldWithDefault(msg, 14, 0),
-    minTime: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    maxTime: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
-    entranceStatesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
-    exitState: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    controlsArm: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
-    controlsLegs: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
-    controlsBody: jspb.Message.getBooleanFieldWithDefault(msg, 10, false),
-    controlsGripper: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
-    controlsLights: jspb.Message.getBooleanFieldWithDefault(msg, 17, false),
-    controlsAnnotations: jspb.Message.getBooleanFieldWithDefault(msg, 18, false),
-    controlsAudioVisualLights: jspb.Message.getBooleanFieldWithDefault(msg, 20, false),
-    controlsAudioVisualBuzzer: jspb.Message.getBooleanFieldWithDefault(msg, 21, false),
-    isLooping: jspb.Message.getBooleanFieldWithDefault(msg, 19, false),
-    display: (f = msg.getDisplay()) && proto.bosdyn.api.spot.ChoreographerDisplayInfo.toObject(includeInstance, f),
-    animatedMoveGeneratedId: (f = msg.getAnimatedMoveGeneratedId()) && google_protobuf_wrappers_pb.StringValue.toObject(includeInstance, f)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+moveLengthSlices: jspb.Message.getFieldWithDefault(msg, 2, 0),
+moveLengthTime: jspb.Message.getFloatingPointFieldWithDefault(msg, 15, 0.0),
+isExtendable: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+minMoveLengthSlices: jspb.Message.getFieldWithDefault(msg, 13, 0),
+maxMoveLengthSlices: jspb.Message.getFieldWithDefault(msg, 14, 0),
+minTime: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
+maxTime: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
+entranceStatesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
+exitState: jspb.Message.getFieldWithDefault(msg, 5, 0),
+controlsArm: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
+controlsLegs: jspb.Message.getBooleanFieldWithDefault(msg, 9, false),
+controlsBody: jspb.Message.getBooleanFieldWithDefault(msg, 10, false),
+controlsGripper: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
+controlsLights: jspb.Message.getBooleanFieldWithDefault(msg, 17, false),
+controlsAnnotations: jspb.Message.getBooleanFieldWithDefault(msg, 18, false),
+controlsAudioVisualLights: jspb.Message.getBooleanFieldWithDefault(msg, 20, false),
+controlsAudioVisualBuzzer: jspb.Message.getBooleanFieldWithDefault(msg, 21, false),
+isLooping: jspb.Message.getBooleanFieldWithDefault(msg, 19, false),
+display: (f = msg.getDisplay()) && proto.bosdyn.api.spot.ChoreographerDisplayInfo.toObject(includeInstance, f),
+animatedMoveGeneratedId: (f = msg.getAnimatedMoveGeneratedId()) && google_protobuf_wrappers_pb.StringValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -12031,7 +12022,7 @@ proto.bosdyn.api.spot.MoveInfo.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.MoveInfo}
  */
 proto.bosdyn.api.spot.MoveInfo.deserializeBinary = function(bytes) {
@@ -12056,7 +12047,7 @@ proto.bosdyn.api.spot.MoveInfo.deserializeBinaryFromReader = function(msg, reade
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -12088,10 +12079,7 @@ proto.bosdyn.api.spot.MoveInfo.deserializeBinaryFromReader = function(msg, reade
       msg.setMaxTime(value);
       break;
     case 4:
-      var values = /** @type {!Array<!proto.bosdyn.api.spot.MoveInfo.TransitionState>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addEntranceStates(values[i]);
-      }
+      reader.readPackableEnumInto(msg.getEntranceStatesList());
       break;
     case 5:
       var value = /** @type {!proto.bosdyn.api.spot.MoveInfo.TransitionState} */ (reader.readEnum());
@@ -12809,11 +12797,11 @@ proto.bosdyn.api.spot.ChoreographerDisplayInfo.prototype.toObject = function(opt
  */
 proto.bosdyn.api.spot.ChoreographerDisplayInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
-    color: (f = msg.getColor()) && proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.toObject(includeInstance, f),
-    markersList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f,
-    description: jspb.Message.getFieldWithDefault(msg, 14, ""),
-    image: jspb.Message.getFieldWithDefault(msg, 15, ""),
-    category: jspb.Message.getFieldWithDefault(msg, 16, 0)
+color: (f = msg.getColor()) && proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.toObject(includeInstance, f),
+markersList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f,
+description: jspb.Message.getFieldWithDefault(msg, 14, ""),
+image: jspb.Message.getFieldWithDefault(msg, 15, ""),
+category: jspb.Message.getFieldWithDefault(msg, 16, 0)
   };
 
   if (includeInstance) {
@@ -12826,7 +12814,7 @@ proto.bosdyn.api.spot.ChoreographerDisplayInfo.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographerDisplayInfo}
  */
 proto.bosdyn.api.spot.ChoreographerDisplayInfo.deserializeBinary = function(bytes) {
@@ -12856,17 +12844,14 @@ proto.bosdyn.api.spot.ChoreographerDisplayInfo.deserializeBinaryFromReader = fun
       msg.setColor(value);
       break;
     case 13:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addMarkers(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getMarkersList());
       break;
     case 14:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDescription(value);
       break;
     case 15:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setImage(value);
       break;
     case 16:
@@ -12992,10 +12977,10 @@ proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.prototype.toObject = functi
  */
 proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.toObject = function(includeInstance, msg) {
   var f, obj = {
-    r: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    g: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    b: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    a: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
+r: jspb.Message.getFieldWithDefault(msg, 1, 0),
+g: jspb.Message.getFieldWithDefault(msg, 2, 0),
+b: jspb.Message.getFieldWithDefault(msg, 3, 0),
+a: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
   };
 
   if (includeInstance) {
@@ -13008,7 +12993,7 @@ proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color}
  */
 proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.deserializeBinary = function(bytes) {
@@ -13347,12 +13332,12 @@ proto.bosdyn.api.spot.ChoreographySequence.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot.ChoreographySequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    slicesPerMinute: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    movesList: jspb.Message.toObjectList(msg.getMovesList(),
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+slicesPerMinute: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+movesList: jspb.Message.toObjectList(msg.getMovesList(),
     proto.bosdyn.api.spot.MoveParams.toObject, includeInstance),
-    choreographyInfo: (f = msg.getChoreographyInfo()) && proto.bosdyn.api.spot.ChoreographyInfo.toObject(includeInstance, f),
-    entranceState: jspb.Message.getFieldWithDefault(msg, 5, 0)
+choreographyInfo: (f = msg.getChoreographyInfo()) && proto.bosdyn.api.spot.ChoreographyInfo.toObject(includeInstance, f),
+entranceState: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -13365,7 +13350,7 @@ proto.bosdyn.api.spot.ChoreographySequence.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographySequence}
  */
 proto.bosdyn.api.spot.ChoreographySequence.deserializeBinary = function(bytes) {
@@ -13390,7 +13375,7 @@ proto.bosdyn.api.spot.ChoreographySequence.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -13648,10 +13633,10 @@ proto.bosdyn.api.spot.ChoreographyInfo.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.spot.ChoreographyInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
-    description: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    startPosition: (f = msg.getStartPosition()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
-    color: (f = msg.getColor()) && proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.toObject(includeInstance, f),
-    labelsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
+description: jspb.Message.getFieldWithDefault(msg, 1, ""),
+startPosition: (f = msg.getStartPosition()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
+color: (f = msg.getColor()) && proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.toObject(includeInstance, f),
+labelsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -13664,7 +13649,7 @@ proto.bosdyn.api.spot.ChoreographyInfo.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographyInfo}
  */
 proto.bosdyn.api.spot.ChoreographyInfo.deserializeBinary = function(bytes) {
@@ -13689,7 +13674,7 @@ proto.bosdyn.api.spot.ChoreographyInfo.deserializeBinaryFromReader = function(ms
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDescription(value);
       break;
     case 2:
@@ -13703,7 +13688,7 @@ proto.bosdyn.api.spot.ChoreographyInfo.deserializeBinaryFromReader = function(ms
       msg.setColor(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addLabels(value);
       break;
     default:
@@ -13929,10 +13914,10 @@ proto.bosdyn.api.spot.ChoreographerSave.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.ChoreographerSave.toObject = function(includeInstance, msg) {
   var f, obj = {
-    choreographySequence: (f = msg.getChoreographySequence()) && proto.bosdyn.api.spot.ChoreographySequence.toObject(includeInstance, f),
-    musicFile: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    musicStartSlice: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    choreographyStartSlice: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
+choreographySequence: (f = msg.getChoreographySequence()) && proto.bosdyn.api.spot.ChoreographySequence.toObject(includeInstance, f),
+musicFile: jspb.Message.getFieldWithDefault(msg, 2, ""),
+musicStartSlice: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+choreographyStartSlice: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
   };
 
   if (includeInstance) {
@@ -13945,7 +13930,7 @@ proto.bosdyn.api.spot.ChoreographerSave.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographerSave}
  */
 proto.bosdyn.api.spot.ChoreographerSave.deserializeBinary = function(bytes) {
@@ -13975,7 +13960,7 @@ proto.bosdyn.api.spot.ChoreographerSave.deserializeBinaryFromReader = function(m
       msg.setChoreographySequence(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMusicFile(value);
       break;
     case 3:
@@ -14177,32 +14162,32 @@ proto.bosdyn.api.spot.Animation.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.spot.Animation.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    animationKeyframesList: jspb.Message.toObjectList(msg.getAnimationKeyframesList(),
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+animationKeyframesList: jspb.Message.toObjectList(msg.getAnimationKeyframesList(),
     proto.bosdyn.api.spot.AnimationKeyframe.toObject, includeInstance),
-    controlsArm: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    controlsLegs: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    controlsBody: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
-    controlsGripper: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
-    trackSwingTrajectories: jspb.Message.getBooleanFieldWithDefault(msg, 16, false),
-    assumeZeroRollAndPitch: jspb.Message.getBooleanFieldWithDefault(msg, 19, false),
-    armPlayback: jspb.Message.getFieldWithDefault(msg, 17, 0),
-    bpm: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
-    retimeToIntegerSlices: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
-    minimumParameters: (f = msg.getMinimumParameters()) && bosdyn_api_spot_choreography_params_pb.AnimateParams.toObject(includeInstance, f),
-    defaultParameters: (f = msg.getDefaultParameters()) && bosdyn_api_spot_choreography_params_pb.AnimateParams.toObject(includeInstance, f),
-    maximumParameters: (f = msg.getMaximumParameters()) && bosdyn_api_spot_choreography_params_pb.AnimateParams.toObject(includeInstance, f),
-    truncatable: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
-    extendable: jspb.Message.getBooleanFieldWithDefault(msg, 13, false),
-    neutralStart: jspb.Message.getBooleanFieldWithDefault(msg, 14, false),
-    preciseSteps: jspb.Message.getBooleanFieldWithDefault(msg, 15, false),
-    preciseTiming: jspb.Message.getBooleanFieldWithDefault(msg, 18, false),
-    timingAdjustability: jspb.Message.getFloatingPointFieldWithDefault(msg, 23, 0.0),
-    armRequired: jspb.Message.getBooleanFieldWithDefault(msg, 20, false),
-    armProhibited: jspb.Message.getBooleanFieldWithDefault(msg, 22, false),
-    noLooping: jspb.Message.getBooleanFieldWithDefault(msg, 21, false),
-    startsSitting: jspb.Message.getBooleanFieldWithDefault(msg, 24, false),
-    customGaitCycle: jspb.Message.getBooleanFieldWithDefault(msg, 27, false)
+controlsArm: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+controlsLegs: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+controlsBody: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+controlsGripper: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
+trackSwingTrajectories: jspb.Message.getBooleanFieldWithDefault(msg, 16, false),
+assumeZeroRollAndPitch: jspb.Message.getBooleanFieldWithDefault(msg, 19, false),
+armPlayback: jspb.Message.getFieldWithDefault(msg, 17, 0),
+bpm: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
+retimeToIntegerSlices: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
+minimumParameters: (f = msg.getMinimumParameters()) && bosdyn_api_spot_choreography_params_pb.AnimateParams.toObject(includeInstance, f),
+defaultParameters: (f = msg.getDefaultParameters()) && bosdyn_api_spot_choreography_params_pb.AnimateParams.toObject(includeInstance, f),
+maximumParameters: (f = msg.getMaximumParameters()) && bosdyn_api_spot_choreography_params_pb.AnimateParams.toObject(includeInstance, f),
+truncatable: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
+extendable: jspb.Message.getBooleanFieldWithDefault(msg, 13, false),
+neutralStart: jspb.Message.getBooleanFieldWithDefault(msg, 14, false),
+preciseSteps: jspb.Message.getBooleanFieldWithDefault(msg, 15, false),
+preciseTiming: jspb.Message.getBooleanFieldWithDefault(msg, 18, false),
+timingAdjustability: jspb.Message.getFloatingPointFieldWithDefault(msg, 23, 0.0),
+armRequired: jspb.Message.getBooleanFieldWithDefault(msg, 20, false),
+armProhibited: jspb.Message.getBooleanFieldWithDefault(msg, 22, false),
+noLooping: jspb.Message.getBooleanFieldWithDefault(msg, 21, false),
+startsSitting: jspb.Message.getBooleanFieldWithDefault(msg, 24, false),
+customGaitCycle: jspb.Message.getBooleanFieldWithDefault(msg, 27, false)
   };
 
   if (includeInstance) {
@@ -14215,7 +14200,7 @@ proto.bosdyn.api.spot.Animation.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.Animation}
  */
 proto.bosdyn.api.spot.Animation.deserializeBinary = function(bytes) {
@@ -14240,7 +14225,7 @@ proto.bosdyn.api.spot.Animation.deserializeBinaryFromReader = function(msg, read
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -15123,11 +15108,11 @@ proto.bosdyn.api.spot.AnimationKeyframe.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.AnimationKeyframe.toObject = function(includeInstance, msg) {
   var f, obj = {
-    time: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    gripper: (f = msg.getGripper()) && proto.bosdyn.api.spot.AnimateGripper.toObject(includeInstance, f),
-    arm: (f = msg.getArm()) && proto.bosdyn.api.spot.AnimateArm.toObject(includeInstance, f),
-    body: (f = msg.getBody()) && proto.bosdyn.api.spot.AnimateBody.toObject(includeInstance, f),
-    legs: (f = msg.getLegs()) && proto.bosdyn.api.spot.AnimateLegs.toObject(includeInstance, f)
+time: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+gripper: (f = msg.getGripper()) && proto.bosdyn.api.spot.AnimateGripper.toObject(includeInstance, f),
+arm: (f = msg.getArm()) && proto.bosdyn.api.spot.AnimateArm.toObject(includeInstance, f),
+body: (f = msg.getBody()) && proto.bosdyn.api.spot.AnimateBody.toObject(includeInstance, f),
+legs: (f = msg.getLegs()) && proto.bosdyn.api.spot.AnimateLegs.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15140,7 +15125,7 @@ proto.bosdyn.api.spot.AnimationKeyframe.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AnimationKeyframe}
  */
 proto.bosdyn.api.spot.AnimationKeyframe.deserializeBinary = function(bytes) {
@@ -15457,7 +15442,7 @@ proto.bosdyn.api.spot.AnimateGripper.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.spot.AnimateGripper.toObject = function(includeInstance, msg) {
   var f, obj = {
-    gripperAngle: (f = msg.getGripperAngle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+gripperAngle: (f = msg.getGripperAngle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15470,7 +15455,7 @@ proto.bosdyn.api.spot.AnimateGripper.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AnimateGripper}
  */
 proto.bosdyn.api.spot.AnimateGripper.deserializeBinary = function(bytes) {
@@ -15634,8 +15619,8 @@ proto.bosdyn.api.spot.AnimateArm.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.AnimateArm.toObject = function(includeInstance, msg) {
   var f, obj = {
-    jointAngles: (f = msg.getJointAngles()) && proto.bosdyn.api.spot.ArmJointAngles.toObject(includeInstance, f),
-    handPose: (f = msg.getHandPose()) && proto.bosdyn.api.spot.AnimateArm.HandPose.toObject(includeInstance, f)
+jointAngles: (f = msg.getJointAngles()) && proto.bosdyn.api.spot.ArmJointAngles.toObject(includeInstance, f),
+handPose: (f = msg.getHandPose()) && proto.bosdyn.api.spot.AnimateArm.HandPose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15648,7 +15633,7 @@ proto.bosdyn.api.spot.AnimateArm.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AnimateArm}
  */
 proto.bosdyn.api.spot.AnimateArm.deserializeBinary = function(bytes) {
@@ -15788,9 +15773,9 @@ proto.bosdyn.api.spot.AnimateArm.HandPose.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot.AnimateArm.HandPose.toObject = function(includeInstance, msg) {
   var f, obj = {
-    position: (f = msg.getPosition()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    eulerAngles: (f = msg.getEulerAngles()) && bosdyn_api_spot_choreography_params_pb.EulerZYXValue.toObject(includeInstance, f),
-    quaternion: (f = msg.getQuaternion()) && bosdyn_api_geometry_pb.Quaternion.toObject(includeInstance, f)
+position: (f = msg.getPosition()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+eulerAngles: (f = msg.getEulerAngles()) && bosdyn_api_spot_choreography_params_pb.EulerZYXValue.toObject(includeInstance, f),
+quaternion: (f = msg.getQuaternion()) && bosdyn_api_geometry_pb.Quaternion.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15803,7 +15788,7 @@ proto.bosdyn.api.spot.AnimateArm.HandPose.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AnimateArm.HandPose}
  */
 proto.bosdyn.api.spot.AnimateArm.HandPose.deserializeBinary = function(bytes) {
@@ -16115,12 +16100,12 @@ proto.bosdyn.api.spot.ArmJointAngles.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.spot.ArmJointAngles.toObject = function(includeInstance, msg) {
   var f, obj = {
-    shoulder0: (f = msg.getShoulder0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    shoulder1: (f = msg.getShoulder1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    elbow0: (f = msg.getElbow0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    elbow1: (f = msg.getElbow1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wrist0: (f = msg.getWrist0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wrist1: (f = msg.getWrist1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+shoulder0: (f = msg.getShoulder0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+shoulder1: (f = msg.getShoulder1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+elbow0: (f = msg.getElbow0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+elbow1: (f = msg.getElbow1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wrist0: (f = msg.getWrist0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wrist1: (f = msg.getWrist1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -16133,7 +16118,7 @@ proto.bosdyn.api.spot.ArmJointAngles.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ArmJointAngles}
  */
 proto.bosdyn.api.spot.ArmJointAngles.deserializeBinary = function(bytes) {
@@ -16563,10 +16548,10 @@ proto.bosdyn.api.spot.AnimateBody.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.spot.AnimateBody.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bodyPos: (f = msg.getBodyPos()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    comPos: (f = msg.getComPos()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    eulerAngles: (f = msg.getEulerAngles()) && bosdyn_api_spot_choreography_params_pb.EulerZYXValue.toObject(includeInstance, f),
-    quaternion: (f = msg.getQuaternion()) && bosdyn_api_geometry_pb.Quaternion.toObject(includeInstance, f)
+bodyPos: (f = msg.getBodyPos()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+comPos: (f = msg.getComPos()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+eulerAngles: (f = msg.getEulerAngles()) && bosdyn_api_spot_choreography_params_pb.EulerZYXValue.toObject(includeInstance, f),
+quaternion: (f = msg.getQuaternion()) && bosdyn_api_geometry_pb.Quaternion.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -16579,7 +16564,7 @@ proto.bosdyn.api.spot.AnimateBody.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AnimateBody}
  */
 proto.bosdyn.api.spot.AnimateBody.deserializeBinary = function(bytes) {
@@ -16867,10 +16852,10 @@ proto.bosdyn.api.spot.AnimateLegs.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.spot.AnimateLegs.toObject = function(includeInstance, msg) {
   var f, obj = {
-    fl: (f = msg.getFl()) && proto.bosdyn.api.spot.AnimateSingleLeg.toObject(includeInstance, f),
-    fr: (f = msg.getFr()) && proto.bosdyn.api.spot.AnimateSingleLeg.toObject(includeInstance, f),
-    hl: (f = msg.getHl()) && proto.bosdyn.api.spot.AnimateSingleLeg.toObject(includeInstance, f),
-    hr: (f = msg.getHr()) && proto.bosdyn.api.spot.AnimateSingleLeg.toObject(includeInstance, f)
+fl: (f = msg.getFl()) && proto.bosdyn.api.spot.AnimateSingleLeg.toObject(includeInstance, f),
+fr: (f = msg.getFr()) && proto.bosdyn.api.spot.AnimateSingleLeg.toObject(includeInstance, f),
+hl: (f = msg.getHl()) && proto.bosdyn.api.spot.AnimateSingleLeg.toObject(includeInstance, f),
+hr: (f = msg.getHr()) && proto.bosdyn.api.spot.AnimateSingleLeg.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -16883,7 +16868,7 @@ proto.bosdyn.api.spot.AnimateLegs.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AnimateLegs}
  */
 proto.bosdyn.api.spot.AnimateLegs.deserializeBinary = function(bytes) {
@@ -17197,9 +17182,9 @@ proto.bosdyn.api.spot.AnimateSingleLeg.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.spot.AnimateSingleLeg.toObject = function(includeInstance, msg) {
   var f, obj = {
-    jointAngles: (f = msg.getJointAngles()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
-    footPos: (f = msg.getFootPos()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    stance: (f = msg.getStance()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+jointAngles: (f = msg.getJointAngles()) && proto.bosdyn.api.spot.LegJointAngles.toObject(includeInstance, f),
+footPos: (f = msg.getFootPos()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+stance: (f = msg.getStance()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -17212,7 +17197,7 @@ proto.bosdyn.api.spot.AnimateSingleLeg.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AnimateSingleLeg}
  */
 proto.bosdyn.api.spot.AnimateSingleLeg.deserializeBinary = function(bytes) {
@@ -17450,9 +17435,9 @@ proto.bosdyn.api.spot.LegJointAngles.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.spot.LegJointAngles.toObject = function(includeInstance, msg) {
   var f, obj = {
-    hipX: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    hipY: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    knee: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+hipX: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+hipY: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+knee: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -17465,7 +17450,7 @@ proto.bosdyn.api.spot.LegJointAngles.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LegJointAngles}
  */
 proto.bosdyn.api.spot.LegJointAngles.deserializeBinary = function(bytes) {
@@ -17665,8 +17650,8 @@ proto.bosdyn.api.spot.ActiveMove.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.ActiveMove.toObject = function(includeInstance, msg) {
   var f, obj = {
-    move: (f = msg.getMove()) && proto.bosdyn.api.spot.MoveParams.toObject(includeInstance, f),
-    customGaitCommandLimits: (f = msg.getCustomGaitCommandLimits()) && bosdyn_api_spot_choreography_params_pb.CustomGaitCommandLimits.toObject(includeInstance, f)
+move: (f = msg.getMove()) && proto.bosdyn.api.spot.MoveParams.toObject(includeInstance, f),
+customGaitCommandLimits: (f = msg.getCustomGaitCommandLimits()) && bosdyn_api_spot_choreography_params_pb.CustomGaitCommandLimits.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -17679,7 +17664,7 @@ proto.bosdyn.api.spot.ActiveMove.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ActiveMove}
  */
 proto.bosdyn.api.spot.ActiveMove.deserializeBinary = function(bytes) {
@@ -17867,7 +17852,7 @@ proto.bosdyn.api.spot.ChoreographyStatusRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot.ChoreographyStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -17880,7 +17865,7 @@ proto.bosdyn.api.spot.ChoreographyStatusRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographyStatusRequest}
  */
 proto.bosdyn.api.spot.ChoreographyStatusRequest.deserializeBinary = function(bytes) {
@@ -18025,17 +18010,17 @@ proto.bosdyn.api.spot.ChoreographyStatusResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot.ChoreographyStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    executionId: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    currentSlice: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    activeMovesList: jspb.Message.toObjectList(msg.getActiveMovesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+executionId: jspb.Message.getFieldWithDefault(msg, 3, 0),
+currentSlice: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+activeMovesList: jspb.Message.toObjectList(msg.getActiveMovesList(),
     proto.bosdyn.api.spot.ActiveMove.toObject, includeInstance),
-    sequenceSlices: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    sequenceSlicesPerMinute: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
-    validityTime: (f = msg.getValidityTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    sequenceName: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    sequenceStartTime: (f = msg.getSequenceStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+sequenceSlices: jspb.Message.getFieldWithDefault(msg, 6, 0),
+sequenceSlicesPerMinute: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
+validityTime: (f = msg.getValidityTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+sequenceName: jspb.Message.getFieldWithDefault(msg, 9, ""),
+sequenceStartTime: (f = msg.getSequenceStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -18048,7 +18033,7 @@ proto.bosdyn.api.spot.ChoreographyStatusResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographyStatusResponse}
  */
 proto.bosdyn.api.spot.ChoreographyStatusResponse.deserializeBinary = function(bytes) {
@@ -18108,7 +18093,7 @@ proto.bosdyn.api.spot.ChoreographyStatusResponse.deserializeBinaryFromReader = f
       msg.setValidityTime(value);
       break;
     case 9:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSequenceName(value);
       break;
     case 10:
@@ -18527,10 +18512,10 @@ proto.bosdyn.api.spot.ChoreographyTimeAdjustRequest.prototype.toObject = functio
  */
 proto.bosdyn.api.spot.ChoreographyTimeAdjustRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    overrideStartTime: (f = msg.getOverrideStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    acceptableTimeDifference: (f = msg.getAcceptableTimeDifference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    validityTime: (f = msg.getValidityTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+overrideStartTime: (f = msg.getOverrideStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+acceptableTimeDifference: (f = msg.getAcceptableTimeDifference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+validityTime: (f = msg.getValidityTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -18543,7 +18528,7 @@ proto.bosdyn.api.spot.ChoreographyTimeAdjustRequest.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographyTimeAdjustRequest}
  */
 proto.bosdyn.api.spot.ChoreographyTimeAdjustRequest.deserializeBinary = function(bytes) {
@@ -18838,9 +18823,9 @@ proto.bosdyn.api.spot.ChoreographyTimeAdjustResponse.prototype.toObject = functi
  */
 proto.bosdyn.api.spot.ChoreographyTimeAdjustResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    warningsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+warningsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -18853,7 +18838,7 @@ proto.bosdyn.api.spot.ChoreographyTimeAdjustResponse.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChoreographyTimeAdjustResponse}
  */
 proto.bosdyn.api.spot.ChoreographyTimeAdjustResponse.deserializeBinary = function(bytes) {
@@ -18887,7 +18872,7 @@ proto.bosdyn.api.spot.ChoreographyTimeAdjustResponse.deserializeBinaryFromReader
       msg.setStatus(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addWarnings(value);
       break;
     default:
@@ -19079,10 +19064,10 @@ proto.bosdyn.api.spot.LegSize.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.spot.LegSize.toObject = function(includeInstance, msg) {
   var f, obj = {
-    distanceInward: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    distanceOutward: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    distanceForward: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    distanceBackward: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
+distanceInward: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+distanceOutward: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+distanceForward: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+distanceBackward: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
   };
 
   if (includeInstance) {
@@ -19095,7 +19080,7 @@ proto.bosdyn.api.spot.LegSize.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LegSize}
  */
 proto.bosdyn.api.spot.LegSize.deserializeBinary = function(bytes) {
@@ -19299,11 +19284,11 @@ proto.bosdyn.api.spot.LegSizeConfigurationRequest.prototype.toObject = function(
  */
 proto.bosdyn.api.spot.LegSizeConfigurationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    frontLeftSize: (f = msg.getFrontLeftSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
-    frontRightSize: (f = msg.getFrontRightSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
-    hindLeftSize: (f = msg.getHindLeftSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
-    hindRightSize: (f = msg.getHindRightSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+frontLeftSize: (f = msg.getFrontLeftSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
+frontRightSize: (f = msg.getFrontRightSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
+hindLeftSize: (f = msg.getHindLeftSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
+hindRightSize: (f = msg.getHindRightSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -19316,7 +19301,7 @@ proto.bosdyn.api.spot.LegSizeConfigurationRequest.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LegSizeConfigurationRequest}
  */
 proto.bosdyn.api.spot.LegSizeConfigurationRequest.deserializeBinary = function(bytes) {
@@ -19654,8 +19639,8 @@ proto.bosdyn.api.spot.LegSizeConfigurationResponse.prototype.toObject = function
  */
 proto.bosdyn.api.spot.LegSizeConfigurationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -19668,7 +19653,7 @@ proto.bosdyn.api.spot.LegSizeConfigurationResponse.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LegSizeConfigurationResponse}
  */
 proto.bosdyn.api.spot.LegSizeConfigurationResponse.deserializeBinary = function(bytes) {
@@ -19844,7 +19829,7 @@ proto.bosdyn.api.spot.LegSizeConfigurationStateRequest.prototype.toObject = func
  */
 proto.bosdyn.api.spot.LegSizeConfigurationStateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -19857,7 +19842,7 @@ proto.bosdyn.api.spot.LegSizeConfigurationStateRequest.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LegSizeConfigurationStateRequest}
  */
 proto.bosdyn.api.spot.LegSizeConfigurationStateRequest.deserializeBinary = function(bytes) {
@@ -19995,11 +19980,11 @@ proto.bosdyn.api.spot.LegSizeConfigurationStateResponse.prototype.toObject = fun
  */
 proto.bosdyn.api.spot.LegSizeConfigurationStateResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    frontLeftSize: (f = msg.getFrontLeftSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
-    frontRightSize: (f = msg.getFrontRightSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
-    hindLeftSize: (f = msg.getHindLeftSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
-    hindRightSize: (f = msg.getHindRightSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+frontLeftSize: (f = msg.getFrontLeftSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
+frontRightSize: (f = msg.getFrontRightSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
+hindLeftSize: (f = msg.getHindLeftSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f),
+hindRightSize: (f = msg.getHindRightSize()) && proto.bosdyn.api.spot.LegSize.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -20012,7 +19997,7 @@ proto.bosdyn.api.spot.LegSizeConfigurationStateResponse.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LegSizeConfigurationStateResponse}
  */
 proto.bosdyn.api.spot.LegSizeConfigurationStateResponse.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -1126,9 +1120,9 @@ proto.bosdyn.api.spot.EulerZYX.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.spot.EulerZYX.toObject = function(includeInstance, msg) {
   var f, obj = {
-    roll: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    pitch: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    yaw: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+roll: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+pitch: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+yaw: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -1141,7 +1135,7 @@ proto.bosdyn.api.spot.EulerZYX.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.EulerZYX}
  */
 proto.bosdyn.api.spot.EulerZYX.deserializeBinary = function(bytes) {
@@ -1316,9 +1310,9 @@ proto.bosdyn.api.spot.EulerZYXValue.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.spot.EulerZYXValue.toObject = function(includeInstance, msg) {
   var f, obj = {
-    roll: (f = msg.getRoll()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    pitch: (f = msg.getPitch()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+roll: (f = msg.getRoll()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+pitch: (f = msg.getPitch()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1331,7 +1325,7 @@ proto.bosdyn.api.spot.EulerZYXValue.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.EulerZYXValue}
  */
 proto.bosdyn.api.spot.EulerZYXValue.deserializeBinary = function(bytes) {
@@ -1569,9 +1563,9 @@ proto.bosdyn.api.spot.EulerRateZYXValue.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.EulerRateZYXValue.toObject = function(includeInstance, msg) {
   var f, obj = {
-    roll: (f = msg.getRoll()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    pitch: (f = msg.getPitch()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+roll: (f = msg.getRoll()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+pitch: (f = msg.getPitch()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1584,7 +1578,7 @@ proto.bosdyn.api.spot.EulerRateZYXValue.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.EulerRateZYXValue}
  */
 proto.bosdyn.api.spot.EulerRateZYXValue.deserializeBinary = function(bytes) {
@@ -1822,10 +1816,10 @@ proto.bosdyn.api.spot.BodyHoldParams.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.spot.BodyHoldParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rotation: (f = msg.getRotation()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
-    translation: (f = msg.getTranslation()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    entrySlices: (f = msg.getEntrySlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    exitSlices: (f = msg.getExitSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+rotation: (f = msg.getRotation()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
+translation: (f = msg.getTranslation()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+entrySlices: (f = msg.getEntrySlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+exitSlices: (f = msg.getExitSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1838,7 +1832,7 @@ proto.bosdyn.api.spot.BodyHoldParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.BodyHoldParams}
  */
 proto.bosdyn.api.spot.BodyHoldParams.deserializeBinary = function(bytes) {
@@ -2126,13 +2120,13 @@ proto.bosdyn.api.spot.SwayParams.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.SwayParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    vertical: (f = msg.getVertical()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    horizontal: (f = msg.getHorizontal()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    roll: (f = msg.getRoll()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    pivot: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    style: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    pronounced: (f = msg.getPronounced()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    holdZeroAxes: (f = msg.getHoldZeroAxes()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+vertical: (f = msg.getVertical()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+horizontal: (f = msg.getHorizontal()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+roll: (f = msg.getRoll()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+pivot: jspb.Message.getFieldWithDefault(msg, 4, 0),
+style: jspb.Message.getFieldWithDefault(msg, 5, 0),
+pronounced: (f = msg.getPronounced()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+holdZeroAxes: (f = msg.getHoldZeroAxes()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2145,7 +2139,7 @@ proto.bosdyn.api.spot.SwayParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SwayParams}
  */
 proto.bosdyn.api.spot.SwayParams.deserializeBinary = function(bytes) {
@@ -2554,14 +2548,14 @@ proto.bosdyn.api.spot.ArmMoveParams.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.spot.ArmMoveParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    shoulder0: (f = msg.getShoulder0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    shoulder1: (f = msg.getShoulder1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    elbow0: (f = msg.getElbow0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    elbow1: (f = msg.getElbow1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wrist0: (f = msg.getWrist0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wrist1: (f = msg.getWrist1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    easing: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    gripper: (f = msg.getGripper()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+shoulder0: (f = msg.getShoulder0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+shoulder1: (f = msg.getShoulder1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+elbow0: (f = msg.getElbow0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+elbow1: (f = msg.getElbow1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wrist0: (f = msg.getWrist0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wrist1: (f = msg.getWrist1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+easing: jspb.Message.getFieldWithDefault(msg, 7, 0),
+gripper: (f = msg.getGripper()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2574,7 +2568,7 @@ proto.bosdyn.api.spot.ArmMoveParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ArmMoveParams}
  */
 proto.bosdyn.api.spot.ArmMoveParams.deserializeBinary = function(bytes) {
@@ -3041,12 +3035,12 @@ proto.bosdyn.api.spot.WorkspaceArmMoveParams.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.spot.WorkspaceArmMoveParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rotation: (f = msg.getRotation()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
-    translation: (f = msg.getTranslation()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    absolute: (f = msg.getAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    frame: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    easing: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    danceFrameId: (f = msg.getDanceFrameId()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f)
+rotation: (f = msg.getRotation()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
+translation: (f = msg.getTranslation()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+absolute: (f = msg.getAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+frame: jspb.Message.getFieldWithDefault(msg, 4, 0),
+easing: jspb.Message.getFieldWithDefault(msg, 5, 0),
+danceFrameId: (f = msg.getDanceFrameId()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3059,7 +3053,7 @@ proto.bosdyn.api.spot.WorkspaceArmMoveParams.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.WorkspaceArmMoveParams}
  */
 proto.bosdyn.api.spot.WorkspaceArmMoveParams.deserializeBinary = function(bytes) {
@@ -3405,9 +3399,9 @@ proto.bosdyn.api.spot.Figure8Params.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.spot.Figure8Params.toObject = function(includeInstance, msg) {
   var f, obj = {
-    height: (f = msg.getHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    width: (f = msg.getWidth()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    beatsPerCycle: (f = msg.getBeatsPerCycle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+height: (f = msg.getHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+width: (f = msg.getWidth()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+beatsPerCycle: (f = msg.getBeatsPerCycle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3420,7 +3414,7 @@ proto.bosdyn.api.spot.Figure8Params.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.Figure8Params}
  */
 proto.bosdyn.api.spot.Figure8Params.deserializeBinary = function(bytes) {
@@ -3658,8 +3652,8 @@ proto.bosdyn.api.spot.GripperParams.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.spot.GripperParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    angle: (f = msg.getAngle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    speed: (f = msg.getSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+angle: (f = msg.getAngle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+speed: (f = msg.getSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3672,7 +3666,7 @@ proto.bosdyn.api.spot.GripperParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.GripperParams}
  */
 proto.bosdyn.api.spot.GripperParams.deserializeBinary = function(bytes) {
@@ -3860,11 +3854,11 @@ proto.bosdyn.api.spot.KneelLegMoveParams.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.spot.KneelLegMoveParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    hipX: (f = msg.getHipX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    hipY: (f = msg.getHipY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    knee: (f = msg.getKnee()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    mirror: (f = msg.getMirror()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    easing: jspb.Message.getFieldWithDefault(msg, 5, 0)
+hipX: (f = msg.getHipX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+hipY: (f = msg.getHipY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+knee: (f = msg.getKnee()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+mirror: (f = msg.getMirror()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+easing: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -3877,7 +3871,7 @@ proto.bosdyn.api.spot.KneelLegMoveParams.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.KneelLegMoveParams}
  */
 proto.bosdyn.api.spot.KneelLegMoveParams.deserializeBinary = function(bytes) {
@@ -4194,14 +4188,14 @@ proto.bosdyn.api.spot.KneelLegMove2Params.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot.KneelLegMove2Params.toObject = function(includeInstance, msg) {
   var f, obj = {
-    leftHipX: (f = msg.getLeftHipX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    leftHipY: (f = msg.getLeftHipY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    leftKnee: (f = msg.getLeftKnee()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    rightHipX: (f = msg.getRightHipX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    rightHipY: (f = msg.getRightHipY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    rightKnee: (f = msg.getRightKnee()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    easing: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    linkToNext: (f = msg.getLinkToNext()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+leftHipX: (f = msg.getLeftHipX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+leftHipY: (f = msg.getLeftHipY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+leftKnee: (f = msg.getLeftKnee()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+rightHipX: (f = msg.getRightHipX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+rightHipY: (f = msg.getRightHipY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+rightKnee: (f = msg.getRightKnee()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+easing: jspb.Message.getFieldWithDefault(msg, 7, 0),
+linkToNext: (f = msg.getLinkToNext()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4214,7 +4208,7 @@ proto.bosdyn.api.spot.KneelLegMove2Params.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.KneelLegMove2Params}
  */
 proto.bosdyn.api.spot.KneelLegMove2Params.deserializeBinary = function(bytes) {
@@ -4681,14 +4675,14 @@ proto.bosdyn.api.spot.RunningManParams.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.spot.RunningManParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    spread: (f = msg.getSpread()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    reverse: (f = msg.getReverse()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    preMoveCycles: (f = msg.getPreMoveCycles()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
-    speedMultiplier: (f = msg.getSpeedMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    dutyCycle: (f = msg.getDutyCycle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    comHeight: (f = msg.getComHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+spread: (f = msg.getSpread()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+reverse: (f = msg.getReverse()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+preMoveCycles: (f = msg.getPreMoveCycles()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
+speedMultiplier: (f = msg.getSpeedMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+dutyCycle: (f = msg.getDutyCycle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+comHeight: (f = msg.getComHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4701,7 +4695,7 @@ proto.bosdyn.api.spot.RunningManParams.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.RunningManParams}
  */
 proto.bosdyn.api.spot.RunningManParams.deserializeBinary = function(bytes) {
@@ -5189,9 +5183,9 @@ proto.bosdyn.api.spot.HopParams.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.spot.HopParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    yawRate: (f = msg.getYawRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    standTime: (f = msg.getStandTime()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+yawRate: (f = msg.getYawRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+standTime: (f = msg.getStandTime()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5204,7 +5198,7 @@ proto.bosdyn.api.spot.HopParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.HopParams}
  */
 proto.bosdyn.api.spot.HopParams.deserializeBinary = function(bytes) {
@@ -5442,11 +5436,11 @@ proto.bosdyn.api.spot.RandomRotateParams.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.spot.RandomRotateParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    amplitude: (f = msg.getAmplitude()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
-    speed: (f = msg.getSpeed()) && proto.bosdyn.api.spot.EulerRateZYXValue.toObject(includeInstance, f),
-    speedVariation: (f = msg.getSpeedVariation()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    numSpeedTiers: (f = msg.getNumSpeedTiers()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
-    tierVariation: (f = msg.getTierVariation()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+amplitude: (f = msg.getAmplitude()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
+speed: (f = msg.getSpeed()) && proto.bosdyn.api.spot.EulerRateZYXValue.toObject(includeInstance, f),
+speedVariation: (f = msg.getSpeedVariation()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+numSpeedTiers: (f = msg.getNumSpeedTiers()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
+tierVariation: (f = msg.getTierVariation()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5459,7 +5453,7 @@ proto.bosdyn.api.spot.RandomRotateParams.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.RandomRotateParams}
  */
 proto.bosdyn.api.spot.RandomRotateParams.deserializeBinary = function(bytes) {
@@ -5797,10 +5791,10 @@ proto.bosdyn.api.spot.CrawlParams.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.spot.CrawlParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    swingSlices: (f = msg.getSwingSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    stanceWidth: (f = msg.getStanceWidth()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    stanceLength: (f = msg.getStanceLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+swingSlices: (f = msg.getSwingSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+stanceWidth: (f = msg.getStanceWidth()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+stanceLength: (f = msg.getStanceLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5813,7 +5807,7 @@ proto.bosdyn.api.spot.CrawlParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.CrawlParams}
  */
 proto.bosdyn.api.spot.CrawlParams.deserializeBinary = function(bytes) {
@@ -6101,14 +6095,14 @@ proto.bosdyn.api.spot.GotoParams.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.GotoParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    relative: (f = msg.getRelative()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    absolutePosition: (f = msg.getAbsolutePosition()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    absoluteYaw: (f = msg.getAbsoluteYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    relativePosition: (f = msg.getRelativePosition()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    relativeYaw: (f = msg.getRelativeYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    stepPositionStiffness: (f = msg.getStepPositionStiffness()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    dutyCycle: (f = msg.getDutyCycle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    linkToNext: (f = msg.getLinkToNext()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+relative: (f = msg.getRelative()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+absolutePosition: (f = msg.getAbsolutePosition()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+absoluteYaw: (f = msg.getAbsoluteYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+relativePosition: (f = msg.getRelativePosition()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+relativeYaw: (f = msg.getRelativeYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+stepPositionStiffness: (f = msg.getStepPositionStiffness()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+dutyCycle: (f = msg.getDutyCycle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+linkToNext: (f = msg.getLinkToNext()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6121,7 +6115,7 @@ proto.bosdyn.api.spot.GotoParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.GotoParams}
  */
 proto.bosdyn.api.spot.GotoParams.deserializeBinary = function(bytes) {
@@ -6609,9 +6603,9 @@ proto.bosdyn.api.spot.BourreeParams.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.spot.BourreeParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    yawRate: (f = msg.getYawRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    stanceLength: (f = msg.getStanceLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+velocity: (f = msg.getVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+yawRate: (f = msg.getYawRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+stanceLength: (f = msg.getStanceLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6624,7 +6618,7 @@ proto.bosdyn.api.spot.BourreeParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.BourreeParams}
  */
 proto.bosdyn.api.spot.BourreeParams.deserializeBinary = function(bytes) {
@@ -6862,7 +6856,7 @@ proto.bosdyn.api.spot.SideParams.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.SideParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    side: jspb.Message.getFieldWithDefault(msg, 1, 0)
+side: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -6875,7 +6869,7 @@ proto.bosdyn.api.spot.SideParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SideParams}
  */
 proto.bosdyn.api.spot.SideParams.deserializeBinary = function(bytes) {
@@ -7001,19 +6995,19 @@ proto.bosdyn.api.spot.JumpParams.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.JumpParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    flightSlices: (f = msg.getFlightSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    stanceWidth: (f = msg.getStanceWidth()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    stanceLength: (f = msg.getStanceLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    translation: (f = msg.getTranslation()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    splitFraction: (f = msg.getSplitFraction()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    leadLegPair: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    yawIsAbsolute: (f = msg.getYawIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    translationIsAbsolute: (f = msg.getTranslationIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    absoluteYaw: (f = msg.getAbsoluteYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    absoluteTranslation: (f = msg.getAbsoluteTranslation()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    absolute: (f = msg.getAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+flightSlices: (f = msg.getFlightSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+stanceWidth: (f = msg.getStanceWidth()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+stanceLength: (f = msg.getStanceLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+translation: (f = msg.getTranslation()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+splitFraction: (f = msg.getSplitFraction()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+leadLegPair: jspb.Message.getFieldWithDefault(msg, 8, 0),
+yawIsAbsolute: (f = msg.getYawIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+translationIsAbsolute: (f = msg.getTranslationIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+absoluteYaw: (f = msg.getAbsoluteYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+absoluteTranslation: (f = msg.getAbsoluteTranslation()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+absolute: (f = msg.getAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7026,7 +7020,7 @@ proto.bosdyn.api.spot.JumpParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.JumpParams}
  */
 proto.bosdyn.api.spot.JumpParams.deserializeBinary = function(bytes) {
@@ -7755,19 +7749,19 @@ proto.bosdyn.api.spot.StepParams.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.StepParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    foot: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    offset: (f = msg.getOffset()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    secondFoot: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    swingWaypoint: (f = msg.getSwingWaypoint()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    liftoffVelocity: (f = msg.getLiftoffVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    touchdownVelocity: (f = msg.getTouchdownVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    mirrorX: (f = msg.getMirrorX()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    mirrorY: (f = msg.getMirrorY()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    mirror: (f = msg.getMirror()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    waypointDwell: (f = msg.getWaypointDwell()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    touch: (f = msg.getTouch()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    touchOffset: (f = msg.getTouchOffset()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f)
+foot: jspb.Message.getFieldWithDefault(msg, 1, 0),
+offset: (f = msg.getOffset()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+secondFoot: jspb.Message.getFieldWithDefault(msg, 3, 0),
+swingWaypoint: (f = msg.getSwingWaypoint()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+liftoffVelocity: (f = msg.getLiftoffVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+touchdownVelocity: (f = msg.getTouchdownVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+mirrorX: (f = msg.getMirrorX()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+mirrorY: (f = msg.getMirrorY()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+mirror: (f = msg.getMirror()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+waypointDwell: (f = msg.getWaypointDwell()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+touch: (f = msg.getTouch()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+touchOffset: (f = msg.getTouchOffset()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7780,7 +7774,7 @@ proto.bosdyn.api.spot.StepParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.StepParams}
  */
 proto.bosdyn.api.spot.StepParams.deserializeBinary = function(bytes) {
@@ -8476,8 +8470,8 @@ proto.bosdyn.api.spot.RotateBodyParams.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.spot.RotateBodyParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rotation: (f = msg.getRotation()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
-    returnToStartPose: (f = msg.getReturnToStartPose()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+rotation: (f = msg.getRotation()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
+returnToStartPose: (f = msg.getReturnToStartPose()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8490,7 +8484,7 @@ proto.bosdyn.api.spot.RotateBodyParams.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.RotateBodyParams}
  */
 proto.bosdyn.api.spot.RotateBodyParams.deserializeBinary = function(bytes) {
@@ -8678,12 +8672,12 @@ proto.bosdyn.api.spot.ButtCircleParams.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.spot.ButtCircleParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    radius: (f = msg.getRadius()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    beatsPerCircle: (f = msg.getBeatsPerCircle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    numberOfCircles: (f = msg.getNumberOfCircles()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    pivot: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    clockwise: (f = msg.getClockwise()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    startingAngle: (f = msg.getStartingAngle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+radius: (f = msg.getRadius()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+beatsPerCircle: (f = msg.getBeatsPerCircle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+numberOfCircles: (f = msg.getNumberOfCircles()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+pivot: jspb.Message.getFieldWithDefault(msg, 4, 0),
+clockwise: (f = msg.getClockwise()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+startingAngle: (f = msg.getStartingAngle()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8696,7 +8690,7 @@ proto.bosdyn.api.spot.ButtCircleParams.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ButtCircleParams}
  */
 proto.bosdyn.api.spot.ButtCircleParams.deserializeBinary = function(bytes) {
@@ -9063,7 +9057,7 @@ proto.bosdyn.api.spot.TwerkParams.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.spot.TwerkParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    height: (f = msg.getHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+height: (f = msg.getHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9076,7 +9070,7 @@ proto.bosdyn.api.spot.TwerkParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.TwerkParams}
  */
 proto.bosdyn.api.spot.TwerkParams.deserializeBinary = function(bytes) {
@@ -9214,15 +9208,15 @@ proto.bosdyn.api.spot.TurnParams.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.TurnParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    absoluteYaw: (f = msg.getAbsoluteYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    yawIsAbsolute: (f = msg.getYawIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    swingVelocity: (f = msg.getSwingVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    motion: (f = msg.getMotion()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    absoluteMotion: (f = msg.getAbsoluteMotion()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    motionIsAbsolute: (f = msg.getMotionIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    absolute: (f = msg.getAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+absoluteYaw: (f = msg.getAbsoluteYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+yawIsAbsolute: (f = msg.getYawIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+swingVelocity: (f = msg.getSwingVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+motion: (f = msg.getMotion()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+absoluteMotion: (f = msg.getAbsoluteMotion()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+motionIsAbsolute: (f = msg.getMotionIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+absolute: (f = msg.getAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9235,7 +9229,7 @@ proto.bosdyn.api.spot.TurnParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.TurnParams}
  */
 proto.bosdyn.api.spot.TurnParams.deserializeBinary = function(bytes) {
@@ -9773,15 +9767,15 @@ proto.bosdyn.api.spot.Pace2StepParams.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.spot.Pace2StepParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    motion: (f = msg.getMotion()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    absoluteMotion: (f = msg.getAbsoluteMotion()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    motionIsAbsolute: (f = msg.getMotionIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    swingVelocity: (f = msg.getSwingVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    absoluteYaw: (f = msg.getAbsoluteYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    yawIsAbsolute: (f = msg.getYawIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    absolute: (f = msg.getAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+motion: (f = msg.getMotion()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+absoluteMotion: (f = msg.getAbsoluteMotion()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+motionIsAbsolute: (f = msg.getMotionIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+swingHeight: (f = msg.getSwingHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+swingVelocity: (f = msg.getSwingVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+absoluteYaw: (f = msg.getAbsoluteYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+yawIsAbsolute: (f = msg.getYawIsAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+absolute: (f = msg.getAbsolute()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9794,7 +9788,7 @@ proto.bosdyn.api.spot.Pace2StepParams.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.Pace2StepParams}
  */
 proto.bosdyn.api.spot.Pace2StepParams.deserializeBinary = function(bytes) {
@@ -10332,9 +10326,9 @@ proto.bosdyn.api.spot.ChickenHeadParams.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.ChickenHeadParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bobMagnitude: (f = msg.getBobMagnitude()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    beatsPerCycle: (f = msg.getBeatsPerCycle()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
-    follow: (f = msg.getFollow()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+bobMagnitude: (f = msg.getBobMagnitude()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+beatsPerCycle: (f = msg.getBeatsPerCycle()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
+follow: (f = msg.getFollow()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -10347,7 +10341,7 @@ proto.bosdyn.api.spot.ChickenHeadParams.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ChickenHeadParams}
  */
 proto.bosdyn.api.spot.ChickenHeadParams.deserializeBinary = function(bytes) {
@@ -10585,10 +10579,10 @@ proto.bosdyn.api.spot.ClapParams.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot.ClapParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    direction: (f = msg.getDirection()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    location: (f = msg.getLocation()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    speed: (f = msg.getSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    clapDistance: (f = msg.getClapDistance()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+direction: (f = msg.getDirection()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+location: (f = msg.getLocation()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+speed: (f = msg.getSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+clapDistance: (f = msg.getClapDistance()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -10601,7 +10595,7 @@ proto.bosdyn.api.spot.ClapParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.ClapParams}
  */
 proto.bosdyn.api.spot.ClapParams.deserializeBinary = function(bytes) {
@@ -10889,12 +10883,12 @@ proto.bosdyn.api.spot.KneelCircleParams.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.KneelCircleParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    location: (f = msg.getLocation()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    beatsPerCircle: (f = msg.getBeatsPerCircle()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
-    numberOfCircles: (f = msg.getNumberOfCircles()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    offset: (f = msg.getOffset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    radius: (f = msg.getRadius()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    reverse: (f = msg.getReverse()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+location: (f = msg.getLocation()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+beatsPerCircle: (f = msg.getBeatsPerCircle()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
+numberOfCircles: (f = msg.getNumberOfCircles()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+offset: (f = msg.getOffset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+radius: (f = msg.getRadius()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+reverse: (f = msg.getReverse()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -10907,7 +10901,7 @@ proto.bosdyn.api.spot.KneelCircleParams.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.KneelCircleParams}
  */
 proto.bosdyn.api.spot.KneelCircleParams.deserializeBinary = function(bytes) {
@@ -11295,7 +11289,7 @@ proto.bosdyn.api.spot.FrontUpParams.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.spot.FrontUpParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    mirror: (f = msg.getMirror()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+mirror: (f = msg.getMirror()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -11308,7 +11302,7 @@ proto.bosdyn.api.spot.FrontUpParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.FrontUpParams}
  */
 proto.bosdyn.api.spot.FrontUpParams.deserializeBinary = function(bytes) {
@@ -11446,20 +11440,20 @@ proto.bosdyn.api.spot.FidgetStandParams.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.FidgetStandParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    preset: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    minGazePitch: (f = msg.getMinGazePitch()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxGazePitch: (f = msg.getMaxGazePitch()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    gazeMeanPeriod: (f = msg.getGazeMeanPeriod()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    gazeCenterCfp: (f = msg.getGazeCenterCfp()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    shiftMeanPeriod: (f = msg.getShiftMeanPeriod()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    shiftMaxTransitionTime: (f = msg.getShiftMaxTransitionTime()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    breathMinZ: (f = msg.getBreathMinZ()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    breathMaxZ: (f = msg.getBreathMaxZ()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    breathMaxPeriod: (f = msg.getBreathMaxPeriod()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    legGestureMeanPeriod: (f = msg.getLegGestureMeanPeriod()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    gazeSlewRate: (f = msg.getGazeSlewRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    gazePositionGenerationGain: (f = msg.getGazePositionGenerationGain()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    gazeRollGenerationGain: (f = msg.getGazeRollGenerationGain()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+preset: jspb.Message.getFieldWithDefault(msg, 1, 0),
+minGazePitch: (f = msg.getMinGazePitch()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxGazePitch: (f = msg.getMaxGazePitch()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+gazeMeanPeriod: (f = msg.getGazeMeanPeriod()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+gazeCenterCfp: (f = msg.getGazeCenterCfp()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+shiftMeanPeriod: (f = msg.getShiftMeanPeriod()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+shiftMaxTransitionTime: (f = msg.getShiftMaxTransitionTime()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+breathMinZ: (f = msg.getBreathMinZ()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+breathMaxZ: (f = msg.getBreathMaxZ()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+breathMaxPeriod: (f = msg.getBreathMaxPeriod()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+legGestureMeanPeriod: (f = msg.getLegGestureMeanPeriod()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+gazeSlewRate: (f = msg.getGazeSlewRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+gazePositionGenerationGain: (f = msg.getGazePositionGenerationGain()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+gazeRollGenerationGain: (f = msg.getGazeRollGenerationGain()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -11472,7 +11466,7 @@ proto.bosdyn.api.spot.FidgetStandParams.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.FidgetStandParams}
  */
 proto.bosdyn.api.spot.FidgetStandParams.deserializeBinary = function(bytes) {
@@ -12252,13 +12246,13 @@ proto.bosdyn.api.spot.FrameSnapshotParams.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot.FrameSnapshotParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frameId: (f = msg.getFrameId()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
-    fiducialNumber: (f = msg.getFiducialNumber()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
-    includeFrontLeftLeg: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    includeFrontRightLeg: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    includeHindLeftLeg: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    includeHindRightLeg: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    compensated: (f = msg.getCompensated()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+frameId: (f = msg.getFrameId()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
+fiducialNumber: (f = msg.getFiducialNumber()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
+includeFrontLeftLeg: jspb.Message.getFieldWithDefault(msg, 3, 0),
+includeFrontRightLeg: jspb.Message.getFieldWithDefault(msg, 4, 0),
+includeHindLeftLeg: jspb.Message.getFieldWithDefault(msg, 5, 0),
+includeHindRightLeg: jspb.Message.getFieldWithDefault(msg, 6, 0),
+compensated: (f = msg.getCompensated()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -12271,7 +12265,7 @@ proto.bosdyn.api.spot.FrameSnapshotParams.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.FrameSnapshotParams}
  */
 proto.bosdyn.api.spot.FrameSnapshotParams.deserializeBinary = function(bytes) {
@@ -12635,11 +12629,11 @@ proto.bosdyn.api.spot.SetColorParams.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.spot.SetColorParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    leftColor: (f = msg.getLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    rightSameAsLeft: (f = msg.getRightSameAsLeft()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    rightColor: (f = msg.getRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+leftColor: (f = msg.getLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+rightSameAsLeft: (f = msg.getRightSameAsLeft()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+rightColor: (f = msg.getRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -12652,7 +12646,7 @@ proto.bosdyn.api.spot.SetColorParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SetColorParams}
  */
 proto.bosdyn.api.spot.SetColorParams.deserializeBinary = function(bytes) {
@@ -12990,10 +12984,10 @@ proto.bosdyn.api.spot.FadeColorParams.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.spot.FadeColorParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    topColor: (f = msg.getTopColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    bottomColor: (f = msg.getBottomColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+topColor: (f = msg.getTopColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+bottomColor: (f = msg.getBottomColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -13006,7 +13000,7 @@ proto.bosdyn.api.spot.FadeColorParams.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.FadeColorParams}
  */
 proto.bosdyn.api.spot.FadeColorParams.deserializeBinary = function(bytes) {
@@ -13294,16 +13288,16 @@ proto.bosdyn.api.spot.IndependentColorParams.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.spot.IndependentColorParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    topLeft: (f = msg.getTopLeft()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    upperMidLeft: (f = msg.getUpperMidLeft()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    lowerMidLeft: (f = msg.getLowerMidLeft()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    bottomLeft: (f = msg.getBottomLeft()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    topRight: (f = msg.getTopRight()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    upperMidRight: (f = msg.getUpperMidRight()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    lowerMidRight: (f = msg.getLowerMidRight()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    bottomRight: (f = msg.getBottomRight()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+topLeft: (f = msg.getTopLeft()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+upperMidLeft: (f = msg.getUpperMidLeft()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+lowerMidLeft: (f = msg.getLowerMidLeft()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+bottomLeft: (f = msg.getBottomLeft()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+topRight: (f = msg.getTopRight()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+upperMidRight: (f = msg.getUpperMidRight()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+lowerMidRight: (f = msg.getLowerMidRight()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+bottomRight: (f = msg.getBottomRight()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -13316,7 +13310,7 @@ proto.bosdyn.api.spot.IndependentColorParams.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.IndependentColorParams}
  */
 proto.bosdyn.api.spot.IndependentColorParams.deserializeBinary = function(bytes) {
@@ -13904,9 +13898,9 @@ proto.bosdyn.api.spot.Color.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.spot.Color.toObject = function(includeInstance, msg) {
   var f, obj = {
-    red: (f = msg.getRed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    green: (f = msg.getGreen()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    blue: (f = msg.getBlue()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+red: (f = msg.getRed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+green: (f = msg.getGreen()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+blue: (f = msg.getBlue()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -13919,7 +13913,7 @@ proto.bosdyn.api.spot.Color.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.Color}
  */
 proto.bosdyn.api.spot.Color.deserializeBinary = function(bytes) {
@@ -14157,11 +14151,11 @@ proto.bosdyn.api.spot.RippleColorParams.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.RippleColorParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    main: (f = msg.getMain()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    secondary: (f = msg.getSecondary()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    pattern: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    lightSide: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    incrementSlices: (f = msg.getIncrementSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+main: (f = msg.getMain()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+secondary: (f = msg.getSecondary()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+pattern: jspb.Message.getFieldWithDefault(msg, 3, 0),
+lightSide: jspb.Message.getFieldWithDefault(msg, 4, 0),
+incrementSlices: (f = msg.getIncrementSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -14174,7 +14168,7 @@ proto.bosdyn.api.spot.RippleColorParams.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.RippleColorParams}
  */
 proto.bosdyn.api.spot.RippleColorParams.deserializeBinary = function(bytes) {
@@ -14492,14 +14486,14 @@ proto.bosdyn.api.spot.SetAudioVisualColorParams.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot.SetAudioVisualColorParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frontCenterColor: (f = msg.getFrontCenterColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    allSameAsCenter: (f = msg.getAllSameAsCenter()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    frontLeftColor: (f = msg.getFrontLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    frontRightColor: (f = msg.getFrontRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    backLeftColor: (f = msg.getBackLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    backRightColor: (f = msg.getBackRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+frontCenterColor: (f = msg.getFrontCenterColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+allSameAsCenter: (f = msg.getAllSameAsCenter()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+frontLeftColor: (f = msg.getFrontLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+frontRightColor: (f = msg.getFrontRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+backLeftColor: (f = msg.getBackLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+backRightColor: (f = msg.getBackRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -14512,7 +14506,7 @@ proto.bosdyn.api.spot.SetAudioVisualColorParams.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SetAudioVisualColorParams}
  */
 proto.bosdyn.api.spot.SetAudioVisualColorParams.deserializeBinary = function(bytes) {
@@ -15000,16 +14994,16 @@ proto.bosdyn.api.spot.SetAllColorParams.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.SetAllColorParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frontCenterColor: (f = msg.getFrontCenterColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    allSameAsCenter: (f = msg.getAllSameAsCenter()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    statusLeftColor: (f = msg.getStatusLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    statusRightColor: (f = msg.getStatusRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    frontLeftColor: (f = msg.getFrontLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    frontRightColor: (f = msg.getFrontRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    backLeftColor: (f = msg.getBackLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    backRightColor: (f = msg.getBackRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
-    fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+frontCenterColor: (f = msg.getFrontCenterColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+allSameAsCenter: (f = msg.getAllSameAsCenter()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+statusLeftColor: (f = msg.getStatusLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+statusRightColor: (f = msg.getStatusRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+frontLeftColor: (f = msg.getFrontLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+frontRightColor: (f = msg.getFrontRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+backLeftColor: (f = msg.getBackLeftColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+backRightColor: (f = msg.getBackRightColor()) && proto.bosdyn.api.spot.Color.toObject(includeInstance, f),
+fadeInSlices: (f = msg.getFadeInSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+fadeOutSlices: (f = msg.getFadeOutSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15022,7 +15016,7 @@ proto.bosdyn.api.spot.SetAllColorParams.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SetAllColorParams}
  */
 proto.bosdyn.api.spot.SetAllColorParams.deserializeBinary = function(bytes) {
@@ -15610,10 +15604,10 @@ proto.bosdyn.api.spot.BuzzerNoteParams.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.spot.BuzzerNoteParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    note: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    sharp: (f = msg.getSharp()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    flat: (f = msg.getFlat()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    octave: (f = msg.getOctave()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f)
+note: jspb.Message.getFieldWithDefault(msg, 1, 0),
+sharp: (f = msg.getSharp()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+flat: (f = msg.getFlat()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+octave: (f = msg.getOctave()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15626,7 +15620,7 @@ proto.bosdyn.api.spot.BuzzerNoteParams.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.BuzzerNoteParams}
  */
 proto.bosdyn.api.spot.BuzzerNoteParams.deserializeBinary = function(bytes) {
@@ -15909,18 +15903,18 @@ proto.bosdyn.api.spot.LegJointParams.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.spot.LegJointParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    flHx: (f = msg.getFlHx()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    flHy: (f = msg.getFlHy()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    flKn: (f = msg.getFlKn()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    frHx: (f = msg.getFrHx()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    frHy: (f = msg.getFrHy()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    frKn: (f = msg.getFrKn()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    hlHx: (f = msg.getHlHx()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    hlHy: (f = msg.getHlHy()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    hlKn: (f = msg.getHlKn()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    hrHx: (f = msg.getHrHx()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    hrHy: (f = msg.getHrHy()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    hrKn: (f = msg.getHrKn()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+flHx: (f = msg.getFlHx()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+flHy: (f = msg.getFlHy()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+flKn: (f = msg.getFlKn()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+frHx: (f = msg.getFrHx()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+frHy: (f = msg.getFrHy()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+frKn: (f = msg.getFrKn()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+hlHx: (f = msg.getHlHx()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+hlHy: (f = msg.getHlHy()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+hlKn: (f = msg.getHlKn()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+hrHx: (f = msg.getHrHx()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+hrHy: (f = msg.getHrHy()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+hrKn: (f = msg.getHrKn()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15933,7 +15927,7 @@ proto.bosdyn.api.spot.LegJointParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.LegJointParams}
  */
 proto.bosdyn.api.spot.LegJointParams.deserializeBinary = function(bytes) {
@@ -16621,11 +16615,11 @@ proto.bosdyn.api.spot.StanceShape.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.spot.StanceShape.toObject = function(includeInstance, msg) {
   var f, obj = {
-    length: (f = msg.getLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    width: (f = msg.getWidth()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    frontWiderThanHind: (f = msg.getFrontWiderThanHind()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    leftLongerThanRight: (f = msg.getLeftLongerThanRight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    leftForwardOfRight: (f = msg.getLeftForwardOfRight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+length: (f = msg.getLength()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+width: (f = msg.getWidth()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+frontWiderThanHind: (f = msg.getFrontWiderThanHind()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+leftLongerThanRight: (f = msg.getLeftLongerThanRight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+leftForwardOfRight: (f = msg.getLeftForwardOfRight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -16638,7 +16632,7 @@ proto.bosdyn.api.spot.StanceShape.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.StanceShape}
  */
 proto.bosdyn.api.spot.StanceShape.deserializeBinary = function(bytes) {
@@ -16976,8 +16970,8 @@ proto.bosdyn.api.spot.SwingPhases.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.spot.SwingPhases.toObject = function(includeInstance, msg) {
   var f, obj = {
-    liftoffPhase: (f = msg.getLiftoffPhase()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    touchdownPhase: (f = msg.getTouchdownPhase()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+liftoffPhase: (f = msg.getLiftoffPhase()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+touchdownPhase: (f = msg.getTouchdownPhase()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -16990,7 +16984,7 @@ proto.bosdyn.api.spot.SwingPhases.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SwingPhases}
  */
 proto.bosdyn.api.spot.SwingPhases.deserializeBinary = function(bytes) {
@@ -17178,13 +17172,13 @@ proto.bosdyn.api.spot.SwingParams.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.spot.SwingParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    height: (f = msg.getHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    liftoffSpeed: (f = msg.getLiftoffSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    verticalSpeed: (f = msg.getVerticalSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    verticalAcceleration: (f = msg.getVerticalAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    overlayOutside: (f = msg.getOverlayOutside()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    overlayForward: (f = msg.getOverlayForward()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    lowSpeedFraction: (f = msg.getLowSpeedFraction()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+height: (f = msg.getHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+liftoffSpeed: (f = msg.getLiftoffSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+verticalSpeed: (f = msg.getVerticalSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+verticalAcceleration: (f = msg.getVerticalAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+overlayOutside: (f = msg.getOverlayOutside()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+overlayForward: (f = msg.getOverlayForward()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+lowSpeedFraction: (f = msg.getLowSpeedFraction()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -17197,7 +17191,7 @@ proto.bosdyn.api.spot.SwingParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.SwingParams}
  */
 proto.bosdyn.api.spot.SwingParams.deserializeBinary = function(bytes) {
@@ -17635,19 +17629,19 @@ proto.bosdyn.api.spot.AnimatedCycleParams.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot.AnimatedCycleParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    animationName: (f = msg.getAnimationName()) && google_protobuf_wrappers_pb.StringValue.toObject(includeInstance, f),
-    enableAnimationDuration: (f = msg.getEnableAnimationDuration()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    enableLegTiming: (f = msg.getEnableLegTiming()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    enableStanceShape: (f = msg.getEnableStanceShape()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    enableBodyOffset: (f = msg.getEnableBodyOffset()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    enableBodyMotion: (f = msg.getEnableBodyMotion()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    bodyXMultiplier: (f = msg.getBodyXMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    bodyYMultiplier: (f = msg.getBodyYMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    bodyZMultiplier: (f = msg.getBodyZMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    bodyRollMultiplier: (f = msg.getBodyRollMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    bodyPitchMultiplier: (f = msg.getBodyPitchMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    bodyYawMultiplier: (f = msg.getBodyYawMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    enableSwingsXy: (f = msg.getEnableSwingsXy()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+animationName: (f = msg.getAnimationName()) && google_protobuf_wrappers_pb.StringValue.toObject(includeInstance, f),
+enableAnimationDuration: (f = msg.getEnableAnimationDuration()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+enableLegTiming: (f = msg.getEnableLegTiming()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+enableStanceShape: (f = msg.getEnableStanceShape()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+enableBodyOffset: (f = msg.getEnableBodyOffset()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+enableBodyMotion: (f = msg.getEnableBodyMotion()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+bodyXMultiplier: (f = msg.getBodyXMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+bodyYMultiplier: (f = msg.getBodyYMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+bodyZMultiplier: (f = msg.getBodyZMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+bodyRollMultiplier: (f = msg.getBodyRollMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+bodyPitchMultiplier: (f = msg.getBodyPitchMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+bodyYawMultiplier: (f = msg.getBodyYawMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+enableSwingsXy: (f = msg.getEnableSwingsXy()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -17660,7 +17654,7 @@ proto.bosdyn.api.spot.AnimatedCycleParams.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AnimatedCycleParams}
  */
 proto.bosdyn.api.spot.AnimatedCycleParams.deserializeBinary = function(bytes) {
@@ -18398,51 +18392,51 @@ proto.bosdyn.api.spot.CustomGaitParams.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.spot.CustomGaitParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    maxVelocity: (f = msg.getMaxVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
-    maxYawRate: (f = msg.getMaxYawRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    accelerationScaling: (f = msg.getAccelerationScaling()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    cycleDuration: (f = msg.getCycleDuration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    flSwing: (f = msg.getFlSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
-    twoFlSwings: (f = msg.getTwoFlSwings()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    secondFlSwing: (f = msg.getSecondFlSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
-    frSwing: (f = msg.getFrSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
-    twoFrSwings: (f = msg.getTwoFrSwings()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    secondFrSwing: (f = msg.getSecondFrSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
-    hlSwing: (f = msg.getHlSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
-    twoHlSwings: (f = msg.getTwoHlSwings()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    secondHlSwing: (f = msg.getSecondHlSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
-    hrSwing: (f = msg.getHrSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
-    twoHrSwings: (f = msg.getTwoHrSwings()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    secondHrSwing: (f = msg.getSecondHrSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
-    showStanceShape: (f = msg.getShowStanceShape()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    stanceShape: (f = msg.getStanceShape()) && proto.bosdyn.api.spot.StanceShape.toObject(includeInstance, f),
-    comHeight: (f = msg.getComHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    bodyTranslationOffset: (f = msg.getBodyTranslationOffset()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    bodyRotationOffset: (f = msg.getBodyRotationOffset()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
-    lowSpeedBodyFraction: (f = msg.getLowSpeedBodyFraction()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    generalSwingParams: (f = msg.getGeneralSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
-    useFlSwingParams: (f = msg.getUseFlSwingParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    flSwingParams: (f = msg.getFlSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
-    useFrSwingParams: (f = msg.getUseFrSwingParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    frSwingParams: (f = msg.getFrSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
-    useHlSwingParams: (f = msg.getUseHlSwingParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    hlSwingParams: (f = msg.getHlSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
-    useHrSwingParams: (f = msg.getUseHrSwingParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    hrSwingParams: (f = msg.getHrSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
-    standInPlace: (f = msg.getStandInPlace()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    standardFinalStance: (f = msg.getStandardFinalStance()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    showStabilityParams: (f = msg.getShowStabilityParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    mu: (f = msg.getMu()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    timingStiffness: (f = msg.getTimingStiffness()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    stepPositionStiffness: (f = msg.getStepPositionStiffness()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    enablePerceptionObstacleAvoidance: (f = msg.getEnablePerceptionObstacleAvoidance()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    obstacleAvoidancePadding: (f = msg.getObstacleAvoidancePadding()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    enablePerceptionTerrainHeight: (f = msg.getEnablePerceptionTerrainHeight()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    enablePerceptionStepPlacement: (f = msg.getEnablePerceptionStepPlacement()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    maximumStumbleDistance: (f = msg.getMaximumStumbleDistance()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    tripSensitivity: (f = msg.getTripSensitivity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    showAnimatedCycleParams: (f = msg.getShowAnimatedCycleParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    animatedCycleParams: (f = msg.getAnimatedCycleParams()) && proto.bosdyn.api.spot.AnimatedCycleParams.toObject(includeInstance, f)
+maxVelocity: (f = msg.getMaxVelocity()) && bosdyn_api_geometry_pb.Vec2Value.toObject(includeInstance, f),
+maxYawRate: (f = msg.getMaxYawRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+accelerationScaling: (f = msg.getAccelerationScaling()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+cycleDuration: (f = msg.getCycleDuration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+flSwing: (f = msg.getFlSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
+twoFlSwings: (f = msg.getTwoFlSwings()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+secondFlSwing: (f = msg.getSecondFlSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
+frSwing: (f = msg.getFrSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
+twoFrSwings: (f = msg.getTwoFrSwings()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+secondFrSwing: (f = msg.getSecondFrSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
+hlSwing: (f = msg.getHlSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
+twoHlSwings: (f = msg.getTwoHlSwings()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+secondHlSwing: (f = msg.getSecondHlSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
+hrSwing: (f = msg.getHrSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
+twoHrSwings: (f = msg.getTwoHrSwings()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+secondHrSwing: (f = msg.getSecondHrSwing()) && proto.bosdyn.api.spot.SwingPhases.toObject(includeInstance, f),
+showStanceShape: (f = msg.getShowStanceShape()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+stanceShape: (f = msg.getStanceShape()) && proto.bosdyn.api.spot.StanceShape.toObject(includeInstance, f),
+comHeight: (f = msg.getComHeight()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+bodyTranslationOffset: (f = msg.getBodyTranslationOffset()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+bodyRotationOffset: (f = msg.getBodyRotationOffset()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
+lowSpeedBodyFraction: (f = msg.getLowSpeedBodyFraction()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+generalSwingParams: (f = msg.getGeneralSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
+useFlSwingParams: (f = msg.getUseFlSwingParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+flSwingParams: (f = msg.getFlSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
+useFrSwingParams: (f = msg.getUseFrSwingParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+frSwingParams: (f = msg.getFrSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
+useHlSwingParams: (f = msg.getUseHlSwingParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+hlSwingParams: (f = msg.getHlSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
+useHrSwingParams: (f = msg.getUseHrSwingParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+hrSwingParams: (f = msg.getHrSwingParams()) && proto.bosdyn.api.spot.SwingParams.toObject(includeInstance, f),
+standInPlace: (f = msg.getStandInPlace()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+standardFinalStance: (f = msg.getStandardFinalStance()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+showStabilityParams: (f = msg.getShowStabilityParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+mu: (f = msg.getMu()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+timingStiffness: (f = msg.getTimingStiffness()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+stepPositionStiffness: (f = msg.getStepPositionStiffness()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+enablePerceptionObstacleAvoidance: (f = msg.getEnablePerceptionObstacleAvoidance()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+obstacleAvoidancePadding: (f = msg.getObstacleAvoidancePadding()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+enablePerceptionTerrainHeight: (f = msg.getEnablePerceptionTerrainHeight()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+enablePerceptionStepPlacement: (f = msg.getEnablePerceptionStepPlacement()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+maximumStumbleDistance: (f = msg.getMaximumStumbleDistance()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+tripSensitivity: (f = msg.getTripSensitivity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+showAnimatedCycleParams: (f = msg.getShowAnimatedCycleParams()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+animatedCycleParams: (f = msg.getAnimatedCycleParams()) && proto.bosdyn.api.spot.AnimatedCycleParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -18455,7 +18449,7 @@ proto.bosdyn.api.spot.CustomGaitParams.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.CustomGaitParams}
  */
 proto.bosdyn.api.spot.CustomGaitParams.deserializeBinary = function(bytes) {
@@ -20793,10 +20787,10 @@ proto.bosdyn.api.spot.CustomGaitCommand.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.spot.CustomGaitCommand.toObject = function(includeInstance, msg) {
   var f, obj = {
-    driveVelocityBody: (f = msg.getDriveVelocityBody()) && bosdyn_api_geometry_pb.SE2Velocity.toObject(includeInstance, f),
-    finished: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    bodyTranslationOffset: (f = msg.getBodyTranslationOffset()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    bodyOrientationOffset: (f = msg.getBodyOrientationOffset()) && proto.bosdyn.api.spot.EulerZYX.toObject(includeInstance, f)
+driveVelocityBody: (f = msg.getDriveVelocityBody()) && bosdyn_api_geometry_pb.SE2Velocity.toObject(includeInstance, f),
+finished: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+bodyTranslationOffset: (f = msg.getBodyTranslationOffset()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+bodyOrientationOffset: (f = msg.getBodyOrientationOffset()) && proto.bosdyn.api.spot.EulerZYX.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -20809,7 +20803,7 @@ proto.bosdyn.api.spot.CustomGaitCommand.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.CustomGaitCommand}
  */
 proto.bosdyn.api.spot.CustomGaitCommand.deserializeBinary = function(bytes) {
@@ -21076,9 +21070,9 @@ proto.bosdyn.api.spot.CustomGaitCommandLimits.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot.CustomGaitCommandLimits.toObject = function(includeInstance, msg) {
   var f, obj = {
-    maximumDriveVelocityBody: (f = msg.getMaximumDriveVelocityBody()) && bosdyn_api_geometry_pb.SE2Velocity.toObject(includeInstance, f),
-    maximumBodyTranslationOffset: (f = msg.getMaximumBodyTranslationOffset()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    maximumBodyOrientationOffset: (f = msg.getMaximumBodyOrientationOffset()) && proto.bosdyn.api.spot.EulerZYX.toObject(includeInstance, f)
+maximumDriveVelocityBody: (f = msg.getMaximumDriveVelocityBody()) && bosdyn_api_geometry_pb.SE2Velocity.toObject(includeInstance, f),
+maximumBodyTranslationOffset: (f = msg.getMaximumBodyTranslationOffset()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+maximumBodyOrientationOffset: (f = msg.getMaximumBodyOrientationOffset()) && proto.bosdyn.api.spot.EulerZYX.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -21091,7 +21085,7 @@ proto.bosdyn.api.spot.CustomGaitCommandLimits.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.CustomGaitCommandLimits}
  */
 proto.bosdyn.api.spot.CustomGaitCommandLimits.deserializeBinary = function(bytes) {
@@ -21329,25 +21323,25 @@ proto.bosdyn.api.spot.AnimateParams.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.spot.AnimateParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    animationName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    bodyEntrySlices: (f = msg.getBodyEntrySlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    bodyExitSlices: (f = msg.getBodyExitSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    translationMultiplier: (f = msg.getTranslationMultiplier()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
-    rotationMultiplier: (f = msg.getRotationMultiplier()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
-    armEntrySlices: (f = msg.getArmEntrySlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    shoulder0Offset: (f = msg.getShoulder0Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    shoulder1Offset: (f = msg.getShoulder1Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    elbow0Offset: (f = msg.getElbow0Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    elbow1Offset: (f = msg.getElbow1Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wrist0Offset: (f = msg.getWrist0Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wrist1Offset: (f = msg.getWrist1Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    gripperOffset: (f = msg.getGripperOffset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    speed: (f = msg.getSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    offsetSlices: (f = msg.getOffsetSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    gripperMultiplier: (f = msg.getGripperMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    gripperStrengthFraction: (f = msg.getGripperStrengthFraction()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    armDanceFrameId: (f = msg.getArmDanceFrameId()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
-    bodyTrackingStiffness: (f = msg.getBodyTrackingStiffness()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+animationName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+bodyEntrySlices: (f = msg.getBodyEntrySlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+bodyExitSlices: (f = msg.getBodyExitSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+translationMultiplier: (f = msg.getTranslationMultiplier()) && bosdyn_api_geometry_pb.Vec3Value.toObject(includeInstance, f),
+rotationMultiplier: (f = msg.getRotationMultiplier()) && proto.bosdyn.api.spot.EulerZYXValue.toObject(includeInstance, f),
+armEntrySlices: (f = msg.getArmEntrySlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+shoulder0Offset: (f = msg.getShoulder0Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+shoulder1Offset: (f = msg.getShoulder1Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+elbow0Offset: (f = msg.getElbow0Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+elbow1Offset: (f = msg.getElbow1Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wrist0Offset: (f = msg.getWrist0Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wrist1Offset: (f = msg.getWrist1Offset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+gripperOffset: (f = msg.getGripperOffset()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+speed: (f = msg.getSpeed()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+offsetSlices: (f = msg.getOffsetSlices()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+gripperMultiplier: (f = msg.getGripperMultiplier()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+gripperStrengthFraction: (f = msg.getGripperStrengthFraction()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+armDanceFrameId: (f = msg.getArmDanceFrameId()) && google_protobuf_wrappers_pb.Int32Value.toObject(includeInstance, f),
+bodyTrackingStiffness: (f = msg.getBodyTrackingStiffness()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -21360,7 +21354,7 @@ proto.bosdyn.api.spot.AnimateParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AnimateParams}
  */
 proto.bosdyn.api.spot.AnimateParams.deserializeBinary = function(bytes) {
@@ -21385,7 +21379,7 @@ proto.bosdyn.api.spot.AnimateParams.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setAnimationName(value);
       break;
     case 2:

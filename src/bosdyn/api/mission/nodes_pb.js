@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 goog.object.extend(proto, google_protobuf_any_pb);
@@ -1422,64 +1416,64 @@ proto.bosdyn.api.mission.Node.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.mission.Node.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    userData: (f = msg.getUserData()) && bosdyn_api_mission_util_pb.UserData.toObject(includeInstance, f),
-    referenceId: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    impl: (f = msg.getImpl()) && google_protobuf_any_pb.Any.toObject(includeInstance, f),
-    nodeReference: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    condition: (f = msg.getCondition()) && proto.bosdyn.api.mission.Condition.toObject(includeInstance, f),
-    sequence: (f = msg.getSequence()) && proto.bosdyn.api.mission.Sequence.toObject(includeInstance, f),
-    selector: (f = msg.getSelector()) && proto.bosdyn.api.mission.Selector.toObject(includeInstance, f),
-    repeat: (f = msg.getRepeat()) && proto.bosdyn.api.mission.Repeat.toObject(includeInstance, f),
-    retainLease: (f = msg.getRetainLease()) && proto.bosdyn.api.mission.RetainLease.toObject(includeInstance, f),
-    retry: (f = msg.getRetry()) && proto.bosdyn.api.mission.Retry.toObject(includeInstance, f),
-    forDuration: (f = msg.getForDuration()) && proto.bosdyn.api.mission.ForDuration.toObject(includeInstance, f),
-    bosdynDockState: (f = msg.getBosdynDockState()) && proto.bosdyn.api.mission.BosdynDockState.toObject(includeInstance, f),
-    bosdynPowerRequest: (f = msg.getBosdynPowerRequest()) && proto.bosdyn.api.mission.BosdynPowerRequest.toObject(includeInstance, f),
-    bosdynRobotState: (f = msg.getBosdynRobotState()) && proto.bosdyn.api.mission.BosdynRobotState.toObject(includeInstance, f),
-    bosdynRobotCommand: (f = msg.getBosdynRobotCommand()) && proto.bosdyn.api.mission.BosdynRobotCommand.toObject(includeInstance, f),
-    remoteGrpc: (f = msg.getRemoteGrpc()) && proto.bosdyn.api.mission.RemoteGrpc.toObject(includeInstance, f),
-    sleep: (f = msg.getSleep()) && proto.bosdyn.api.mission.Sleep.toObject(includeInstance, f),
-    prompt: (f = msg.getPrompt()) && proto.bosdyn.api.mission.Prompt.toObject(includeInstance, f),
-    setBlackboard: (f = msg.getSetBlackboard()) && proto.bosdyn.api.mission.SetBlackboard.toObject(includeInstance, f),
-    dateToBlackboard: (f = msg.getDateToBlackboard()) && proto.bosdyn.api.mission.DateToBlackboard.toObject(includeInstance, f),
-    defineBlackboard: (f = msg.getDefineBlackboard()) && proto.bosdyn.api.mission.DefineBlackboard.toObject(includeInstance, f),
-    formatBlackboard: (f = msg.getFormatBlackboard()) && proto.bosdyn.api.mission.FormatBlackboard.toObject(includeInstance, f),
-    constantResult: (f = msg.getConstantResult()) && proto.bosdyn.api.mission.ConstantResult.toObject(includeInstance, f),
-    bosdynNavigateRoute: (f = msg.getBosdynNavigateRoute()) && proto.bosdyn.api.mission.BosdynNavigateRoute.toObject(includeInstance, f),
-    bosdynNavigateTo: (f = msg.getBosdynNavigateTo()) && proto.bosdyn.api.mission.BosdynNavigateTo.toObject(includeInstance, f),
-    bosdynGraphNavState: (f = msg.getBosdynGraphNavState()) && proto.bosdyn.api.mission.BosdynGraphNavState.toObject(includeInstance, f),
-    bosdynGraphNavLocalize: (f = msg.getBosdynGraphNavLocalize()) && proto.bosdyn.api.mission.BosdynGraphNavLocalize.toObject(includeInstance, f),
-    bosdynRecordEvent: (f = msg.getBosdynRecordEvent()) && proto.bosdyn.api.mission.BosdynRecordEvent.toObject(includeInstance, f),
-    simpleParallel: (f = msg.getSimpleParallel()) && proto.bosdyn.api.mission.SimpleParallel.toObject(includeInstance, f),
-    spotCamPtz: (f = msg.getSpotCamPtz()) && proto.bosdyn.api.mission.SpotCamPtz.toObject(includeInstance, f),
-    spotCamStoreMedia: (f = msg.getSpotCamStoreMedia()) && proto.bosdyn.api.mission.SpotCamStoreMedia.toObject(includeInstance, f),
-    spotCamLed: (f = msg.getSpotCamLed()) && proto.bosdyn.api.mission.SpotCamLed.toObject(includeInstance, f),
-    spotCamFocusState: (f = msg.getSpotCamFocusState()) && proto.bosdyn.api.mission.SpotCamFocusState.toObject(includeInstance, f),
-    spotCamResetAutofocus: (f = msg.getSpotCamResetAutofocus()) && proto.bosdyn.api.mission.SpotCamResetAutofocus.toObject(includeInstance, f),
-    spotCamNamedPosition: (f = msg.getSpotCamNamedPosition()) && proto.bosdyn.api.mission.SpotCamNamedPosition.toObject(includeInstance, f),
-    storeMetadata: (f = msg.getStoreMetadata()) && proto.bosdyn.api.mission.StoreMetadata.toObject(includeInstance, f),
-    pb_switch: (f = msg.getSwitch()) && proto.bosdyn.api.mission.Switch.toObject(includeInstance, f),
-    dataAcquisition: (f = msg.getDataAcquisition()) && proto.bosdyn.api.mission.DataAcquisition.toObject(includeInstance, f),
-    dataAcquisitionOnInterruption: (f = msg.getDataAcquisitionOnInterruption()) && proto.bosdyn.api.mission.DataAcquisitionOnInterruption.toObject(includeInstance, f),
-    dock: (f = msg.getDock()) && proto.bosdyn.api.mission.Dock.toObject(includeInstance, f),
-    restartWhenPaused: (f = msg.getRestartWhenPaused()) && proto.bosdyn.api.mission.RestartWhenPaused.toObject(includeInstance, f),
-    clearBehaviorFaults: (f = msg.getClearBehaviorFaults()) && proto.bosdyn.api.mission.ClearBehaviorFaults.toObject(includeInstance, f),
-    bosdynGripperCameraParamsState: (f = msg.getBosdynGripperCameraParamsState()) && proto.bosdyn.api.mission.BosdynGripperCameraParamsState.toObject(includeInstance, f),
-    setGripperCameraParams: (f = msg.getSetGripperCameraParams()) && proto.bosdyn.api.mission.SetGripperCameraParams.toObject(includeInstance, f),
-    parallelAnd: (f = msg.getParallelAnd()) && proto.bosdyn.api.mission.ParallelAnd.toObject(includeInstance, f),
-    setGraspOverride: (f = msg.getSetGraspOverride()) && proto.bosdyn.api.mission.SetGraspOverride.toObject(includeInstance, f),
-    executeChoreography: (f = msg.getExecuteChoreography()) && proto.bosdyn.api.mission.ExecuteChoreography.toObject(includeInstance, f),
-    missionUploadChoreography: (f = msg.getMissionUploadChoreography()) && proto.bosdyn.api.mission.MissionUploadChoreography.toObject(includeInstance, f),
-    createMissionText: (f = msg.getCreateMissionText()) && proto.bosdyn.api.mission.CreateMissionText.toObject(includeInstance, f),
-    bosdynQueryStoredCaptures: (f = msg.getBosdynQueryStoredCaptures()) && proto.bosdyn.api.mission.BosdynQueryStoredCaptures.toObject(includeInstance, f),
-    dataAcquisitionLiveData: (f = msg.getDataAcquisitionLiveData()) && proto.bosdyn.api.mission.DataAcquisitionLiveData.toObject(includeInstance, f),
-    bosdynRecordEventOnInterruption: (f = msg.getBosdynRecordEventOnInterruption()) && proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.toObject(includeInstance, f),
-    parameterValuesList: jspb.Message.toObjectList(msg.getParameterValuesList(),
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+userData: (f = msg.getUserData()) && bosdyn_api_mission_util_pb.UserData.toObject(includeInstance, f),
+referenceId: jspb.Message.getFieldWithDefault(msg, 3, ""),
+impl: (f = msg.getImpl()) && google_protobuf_any_pb.Any.toObject(includeInstance, f),
+nodeReference: (f = jspb.Message.getField(msg, 5)) == null ? undefined : f,
+condition: (f = msg.getCondition()) && proto.bosdyn.api.mission.Condition.toObject(includeInstance, f),
+sequence: (f = msg.getSequence()) && proto.bosdyn.api.mission.Sequence.toObject(includeInstance, f),
+selector: (f = msg.getSelector()) && proto.bosdyn.api.mission.Selector.toObject(includeInstance, f),
+repeat: (f = msg.getRepeat()) && proto.bosdyn.api.mission.Repeat.toObject(includeInstance, f),
+retainLease: (f = msg.getRetainLease()) && proto.bosdyn.api.mission.RetainLease.toObject(includeInstance, f),
+retry: (f = msg.getRetry()) && proto.bosdyn.api.mission.Retry.toObject(includeInstance, f),
+forDuration: (f = msg.getForDuration()) && proto.bosdyn.api.mission.ForDuration.toObject(includeInstance, f),
+bosdynDockState: (f = msg.getBosdynDockState()) && proto.bosdyn.api.mission.BosdynDockState.toObject(includeInstance, f),
+bosdynPowerRequest: (f = msg.getBosdynPowerRequest()) && proto.bosdyn.api.mission.BosdynPowerRequest.toObject(includeInstance, f),
+bosdynRobotState: (f = msg.getBosdynRobotState()) && proto.bosdyn.api.mission.BosdynRobotState.toObject(includeInstance, f),
+bosdynRobotCommand: (f = msg.getBosdynRobotCommand()) && proto.bosdyn.api.mission.BosdynRobotCommand.toObject(includeInstance, f),
+remoteGrpc: (f = msg.getRemoteGrpc()) && proto.bosdyn.api.mission.RemoteGrpc.toObject(includeInstance, f),
+sleep: (f = msg.getSleep()) && proto.bosdyn.api.mission.Sleep.toObject(includeInstance, f),
+prompt: (f = msg.getPrompt()) && proto.bosdyn.api.mission.Prompt.toObject(includeInstance, f),
+setBlackboard: (f = msg.getSetBlackboard()) && proto.bosdyn.api.mission.SetBlackboard.toObject(includeInstance, f),
+dateToBlackboard: (f = msg.getDateToBlackboard()) && proto.bosdyn.api.mission.DateToBlackboard.toObject(includeInstance, f),
+defineBlackboard: (f = msg.getDefineBlackboard()) && proto.bosdyn.api.mission.DefineBlackboard.toObject(includeInstance, f),
+formatBlackboard: (f = msg.getFormatBlackboard()) && proto.bosdyn.api.mission.FormatBlackboard.toObject(includeInstance, f),
+constantResult: (f = msg.getConstantResult()) && proto.bosdyn.api.mission.ConstantResult.toObject(includeInstance, f),
+bosdynNavigateRoute: (f = msg.getBosdynNavigateRoute()) && proto.bosdyn.api.mission.BosdynNavigateRoute.toObject(includeInstance, f),
+bosdynNavigateTo: (f = msg.getBosdynNavigateTo()) && proto.bosdyn.api.mission.BosdynNavigateTo.toObject(includeInstance, f),
+bosdynGraphNavState: (f = msg.getBosdynGraphNavState()) && proto.bosdyn.api.mission.BosdynGraphNavState.toObject(includeInstance, f),
+bosdynGraphNavLocalize: (f = msg.getBosdynGraphNavLocalize()) && proto.bosdyn.api.mission.BosdynGraphNavLocalize.toObject(includeInstance, f),
+bosdynRecordEvent: (f = msg.getBosdynRecordEvent()) && proto.bosdyn.api.mission.BosdynRecordEvent.toObject(includeInstance, f),
+simpleParallel: (f = msg.getSimpleParallel()) && proto.bosdyn.api.mission.SimpleParallel.toObject(includeInstance, f),
+spotCamPtz: (f = msg.getSpotCamPtz()) && proto.bosdyn.api.mission.SpotCamPtz.toObject(includeInstance, f),
+spotCamStoreMedia: (f = msg.getSpotCamStoreMedia()) && proto.bosdyn.api.mission.SpotCamStoreMedia.toObject(includeInstance, f),
+spotCamLed: (f = msg.getSpotCamLed()) && proto.bosdyn.api.mission.SpotCamLed.toObject(includeInstance, f),
+spotCamFocusState: (f = msg.getSpotCamFocusState()) && proto.bosdyn.api.mission.SpotCamFocusState.toObject(includeInstance, f),
+spotCamResetAutofocus: (f = msg.getSpotCamResetAutofocus()) && proto.bosdyn.api.mission.SpotCamResetAutofocus.toObject(includeInstance, f),
+spotCamNamedPosition: (f = msg.getSpotCamNamedPosition()) && proto.bosdyn.api.mission.SpotCamNamedPosition.toObject(includeInstance, f),
+storeMetadata: (f = msg.getStoreMetadata()) && proto.bosdyn.api.mission.StoreMetadata.toObject(includeInstance, f),
+pb_switch: (f = msg.getSwitch()) && proto.bosdyn.api.mission.Switch.toObject(includeInstance, f),
+dataAcquisition: (f = msg.getDataAcquisition()) && proto.bosdyn.api.mission.DataAcquisition.toObject(includeInstance, f),
+dataAcquisitionOnInterruption: (f = msg.getDataAcquisitionOnInterruption()) && proto.bosdyn.api.mission.DataAcquisitionOnInterruption.toObject(includeInstance, f),
+dock: (f = msg.getDock()) && proto.bosdyn.api.mission.Dock.toObject(includeInstance, f),
+restartWhenPaused: (f = msg.getRestartWhenPaused()) && proto.bosdyn.api.mission.RestartWhenPaused.toObject(includeInstance, f),
+clearBehaviorFaults: (f = msg.getClearBehaviorFaults()) && proto.bosdyn.api.mission.ClearBehaviorFaults.toObject(includeInstance, f),
+bosdynGripperCameraParamsState: (f = msg.getBosdynGripperCameraParamsState()) && proto.bosdyn.api.mission.BosdynGripperCameraParamsState.toObject(includeInstance, f),
+setGripperCameraParams: (f = msg.getSetGripperCameraParams()) && proto.bosdyn.api.mission.SetGripperCameraParams.toObject(includeInstance, f),
+parallelAnd: (f = msg.getParallelAnd()) && proto.bosdyn.api.mission.ParallelAnd.toObject(includeInstance, f),
+setGraspOverride: (f = msg.getSetGraspOverride()) && proto.bosdyn.api.mission.SetGraspOverride.toObject(includeInstance, f),
+executeChoreography: (f = msg.getExecuteChoreography()) && proto.bosdyn.api.mission.ExecuteChoreography.toObject(includeInstance, f),
+missionUploadChoreography: (f = msg.getMissionUploadChoreography()) && proto.bosdyn.api.mission.MissionUploadChoreography.toObject(includeInstance, f),
+createMissionText: (f = msg.getCreateMissionText()) && proto.bosdyn.api.mission.CreateMissionText.toObject(includeInstance, f),
+bosdynQueryStoredCaptures: (f = msg.getBosdynQueryStoredCaptures()) && proto.bosdyn.api.mission.BosdynQueryStoredCaptures.toObject(includeInstance, f),
+dataAcquisitionLiveData: (f = msg.getDataAcquisitionLiveData()) && proto.bosdyn.api.mission.DataAcquisitionLiveData.toObject(includeInstance, f),
+bosdynRecordEventOnInterruption: (f = msg.getBosdynRecordEventOnInterruption()) && proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.toObject(includeInstance, f),
+parameterValuesList: jspb.Message.toObjectList(msg.getParameterValuesList(),
     bosdyn_api_mission_util_pb.KeyValue.toObject, includeInstance),
-    overridesList: jspb.Message.toObjectList(msg.getOverridesList(),
+overridesList: jspb.Message.toObjectList(msg.getOverridesList(),
     bosdyn_api_mission_util_pb.KeyValue.toObject, includeInstance),
-    parametersList: jspb.Message.toObjectList(msg.getParametersList(),
+parametersList: jspb.Message.toObjectList(msg.getParametersList(),
     bosdyn_api_mission_util_pb.VariableDeclaration.toObject, includeInstance)
   };
 
@@ -1493,7 +1487,7 @@ proto.bosdyn.api.mission.Node.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Node}
  */
 proto.bosdyn.api.mission.Node.deserializeBinary = function(bytes) {
@@ -1518,7 +1512,7 @@ proto.bosdyn.api.mission.Node.deserializeBinaryFromReader = function(msg, reader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -1527,7 +1521,7 @@ proto.bosdyn.api.mission.Node.deserializeBinaryFromReader = function(msg, reader
       msg.setUserData(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setReferenceId(value);
       break;
     case 4:
@@ -1536,7 +1530,7 @@ proto.bosdyn.api.mission.Node.deserializeBinaryFromReader = function(msg, reader
       msg.setImpl(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNodeReference(value);
       break;
     case 9:
@@ -4346,8 +4340,8 @@ proto.bosdyn.api.mission.Sequence.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.mission.Sequence.toObject = function(includeInstance, msg) {
   var f, obj = {
-    alwaysRestart: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    childrenList: jspb.Message.toObjectList(msg.getChildrenList(),
+alwaysRestart: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+childrenList: jspb.Message.toObjectList(msg.getChildrenList(),
     proto.bosdyn.api.mission.Node.toObject, includeInstance)
   };
 
@@ -4361,7 +4355,7 @@ proto.bosdyn.api.mission.Sequence.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Sequence}
  */
 proto.bosdyn.api.mission.Sequence.deserializeBinary = function(bytes) {
@@ -4536,8 +4530,8 @@ proto.bosdyn.api.mission.Selector.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.mission.Selector.toObject = function(includeInstance, msg) {
   var f, obj = {
-    alwaysRestart: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    childrenList: jspb.Message.toObjectList(msg.getChildrenList(),
+alwaysRestart: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+childrenList: jspb.Message.toObjectList(msg.getChildrenList(),
     proto.bosdyn.api.mission.Node.toObject, includeInstance)
   };
 
@@ -4551,7 +4545,7 @@ proto.bosdyn.api.mission.Selector.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Selector}
  */
 proto.bosdyn.api.mission.Selector.deserializeBinary = function(bytes) {
@@ -4719,10 +4713,10 @@ proto.bosdyn.api.mission.Switch.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.mission.Switch.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pivotValue: (f = msg.getPivotValue()) && bosdyn_api_mission_util_pb.Value.toObject(includeInstance, f),
-    alwaysRestart: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    intChildrenMap: (f = msg.getIntChildrenMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Node.toObject) : [],
-    defaultChild: (f = msg.getDefaultChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
+pivotValue: (f = msg.getPivotValue()) && bosdyn_api_mission_util_pb.Value.toObject(includeInstance, f),
+alwaysRestart: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+intChildrenMap: (f = msg.getIntChildrenMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Node.toObject) : [],
+defaultChild: (f = msg.getDefaultChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4735,7 +4729,7 @@ proto.bosdyn.api.mission.Switch.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Switch}
  */
 proto.bosdyn.api.mission.Switch.deserializeBinary = function(bytes) {
@@ -4825,7 +4819,13 @@ proto.bosdyn.api.mission.Switch.serializeBinaryToWriter = function(message, writ
   }
   f = message.getIntChildrenMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(3, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Node.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getIntChildrenMap(true),
+    3,
+    writer,
+    jspb.BinaryWriter.prototype.writeInt32,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Node.serializeBinaryToWriter);
   }
   f = message.getDefaultChild();
   if (f != null) {
@@ -4912,7 +4912,8 @@ proto.bosdyn.api.mission.Switch.prototype.getIntChildrenMap = function(opt_noLaz
  */
 proto.bosdyn.api.mission.Switch.prototype.clearIntChildrenMap = function() {
   this.getIntChildrenMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -4984,10 +4985,10 @@ proto.bosdyn.api.mission.Repeat.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.mission.Repeat.toObject = function(includeInstance, msg) {
   var f, obj = {
-    maxStarts: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    startCounterStateName: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    respectChildFailure: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
+maxStarts: jspb.Message.getFieldWithDefault(msg, 1, 0),
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+startCounterStateName: jspb.Message.getFieldWithDefault(msg, 5, ""),
+respectChildFailure: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
   };
 
   if (includeInstance) {
@@ -5000,7 +5001,7 @@ proto.bosdyn.api.mission.Repeat.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Repeat}
  */
 proto.bosdyn.api.mission.Repeat.deserializeBinary = function(bytes) {
@@ -5034,7 +5035,7 @@ proto.bosdyn.api.mission.Repeat.deserializeBinaryFromReader = function(msg, read
       msg.setChild(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setStartCounterStateName(value);
       break;
     case 6:
@@ -5225,9 +5226,9 @@ proto.bosdyn.api.mission.Retry.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.mission.Retry.toObject = function(includeInstance, msg) {
   var f, obj = {
-    maxAttempts: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    attemptCounterStateName: jspb.Message.getFieldWithDefault(msg, 5, "")
+maxAttempts: jspb.Message.getFieldWithDefault(msg, 1, 0),
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+attemptCounterStateName: jspb.Message.getFieldWithDefault(msg, 5, "")
   };
 
   if (includeInstance) {
@@ -5240,7 +5241,7 @@ proto.bosdyn.api.mission.Retry.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Retry}
  */
 proto.bosdyn.api.mission.Retry.deserializeBinary = function(bytes) {
@@ -5274,7 +5275,7 @@ proto.bosdyn.api.mission.Retry.deserializeBinaryFromReader = function(msg, reade
       msg.setChild(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setAttemptCounterStateName(value);
       break;
     default:
@@ -5462,11 +5463,11 @@ proto.bosdyn.api.mission.ForDuration.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.mission.ForDuration.toObject = function(includeInstance, msg) {
   var f, obj = {
-    duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    durationNameInBlackboard: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    timeRemainingName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    timeoutChild: (f = msg.getTimeoutChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
+duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+durationNameInBlackboard: (f = jspb.Message.getField(msg, 5)) == null ? undefined : f,
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+timeRemainingName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+timeoutChild: (f = msg.getTimeoutChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5479,7 +5480,7 @@ proto.bosdyn.api.mission.ForDuration.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.ForDuration}
  */
 proto.bosdyn.api.mission.ForDuration.deserializeBinary = function(bytes) {
@@ -5509,7 +5510,7 @@ proto.bosdyn.api.mission.ForDuration.deserializeBinaryFromReader = function(msg,
       msg.setDuration(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDurationNameInBlackboard(value);
       break;
     case 2:
@@ -5518,7 +5519,7 @@ proto.bosdyn.api.mission.ForDuration.deserializeBinaryFromReader = function(msg,
       msg.setChild(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setTimeRemainingName(value);
       break;
     case 4:
@@ -5793,10 +5794,10 @@ proto.bosdyn.api.mission.SimpleParallel.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.mission.SimpleParallel.toObject = function(includeInstance, msg) {
   var f, obj = {
-    primary: (f = msg.getPrimary()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    secondary: (f = msg.getSecondary()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    runSecondaryNodeOnce: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    tickSecondaryNodeFirst: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+primary: (f = msg.getPrimary()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+secondary: (f = msg.getSecondary()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+runSecondaryNodeOnce: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+tickSecondaryNodeFirst: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
   };
 
   if (includeInstance) {
@@ -5809,7 +5810,7 @@ proto.bosdyn.api.mission.SimpleParallel.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SimpleParallel}
  */
 proto.bosdyn.api.mission.SimpleParallel.deserializeBinary = function(bytes) {
@@ -6062,9 +6063,9 @@ proto.bosdyn.api.mission.ParallelAnd.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.mission.ParallelAnd.toObject = function(includeInstance, msg) {
   var f, obj = {
-    childrenList: jspb.Message.toObjectList(msg.getChildrenList(),
+childrenList: jspb.Message.toObjectList(msg.getChildrenList(),
     proto.bosdyn.api.mission.Node.toObject, includeInstance),
-    finishEveryNode: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+finishEveryNode: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -6077,7 +6078,7 @@ proto.bosdyn.api.mission.ParallelAnd.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.ParallelAnd}
  */
 proto.bosdyn.api.mission.ParallelAnd.deserializeBinary = function(bytes) {
@@ -6245,10 +6246,10 @@ proto.bosdyn.api.mission.Condition.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.mission.Condition.toObject = function(includeInstance, msg) {
   var f, obj = {
-    lhs: (f = msg.getLhs()) && proto.bosdyn.api.mission.Condition.Operand.toObject(includeInstance, f),
-    rhs: (f = msg.getRhs()) && proto.bosdyn.api.mission.Condition.Operand.toObject(includeInstance, f),
-    operation: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    handleStaleness: jspb.Message.getFieldWithDefault(msg, 6, 0)
+lhs: (f = msg.getLhs()) && proto.bosdyn.api.mission.Condition.Operand.toObject(includeInstance, f),
+rhs: (f = msg.getRhs()) && proto.bosdyn.api.mission.Condition.Operand.toObject(includeInstance, f),
+operation: jspb.Message.getFieldWithDefault(msg, 5, 0),
+handleStaleness: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -6261,7 +6262,7 @@ proto.bosdyn.api.mission.Condition.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Condition}
  */
 proto.bosdyn.api.mission.Condition.deserializeBinary = function(bytes) {
@@ -6446,8 +6447,8 @@ proto.bosdyn.api.mission.Condition.Operand.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.mission.Condition.Operand.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pb_var: (f = msg.getVar()) && bosdyn_api_mission_util_pb.VariableDeclaration.toObject(includeInstance, f),
-    pb_const: (f = msg.getConst()) && bosdyn_api_mission_util_pb.ConstantValue.toObject(includeInstance, f)
+pb_var: (f = msg.getVar()) && bosdyn_api_mission_util_pb.VariableDeclaration.toObject(includeInstance, f),
+pb_const: (f = msg.getConst()) && bosdyn_api_mission_util_pb.ConstantValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6460,7 +6461,7 @@ proto.bosdyn.api.mission.Condition.Operand.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Condition.Operand}
  */
 proto.bosdyn.api.mission.Condition.Operand.deserializeBinary = function(bytes) {
@@ -6758,10 +6759,10 @@ proto.bosdyn.api.mission.BosdynRobotState.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.mission.BosdynRobotState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    stateName: jspb.Message.getFieldWithDefault(msg, 4, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+stateName: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -6774,7 +6775,7 @@ proto.bosdyn.api.mission.BosdynRobotState.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynRobotState}
  */
 proto.bosdyn.api.mission.BosdynRobotState.deserializeBinary = function(bytes) {
@@ -6799,11 +6800,11 @@ proto.bosdyn.api.mission.BosdynRobotState.deserializeBinaryFromReader = function
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -6812,7 +6813,7 @@ proto.bosdyn.api.mission.BosdynRobotState.deserializeBinaryFromReader = function
       msg.setChild(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setStateName(value);
       break;
     default:
@@ -6999,10 +7000,10 @@ proto.bosdyn.api.mission.BosdynDockState.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.mission.BosdynDockState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    stateName: jspb.Message.getFieldWithDefault(msg, 4, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+stateName: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -7015,7 +7016,7 @@ proto.bosdyn.api.mission.BosdynDockState.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynDockState}
  */
 proto.bosdyn.api.mission.BosdynDockState.deserializeBinary = function(bytes) {
@@ -7040,11 +7041,11 @@ proto.bosdyn.api.mission.BosdynDockState.deserializeBinaryFromReader = function(
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -7053,7 +7054,7 @@ proto.bosdyn.api.mission.BosdynDockState.deserializeBinaryFromReader = function(
       msg.setChild(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setStateName(value);
       break;
     default:
@@ -7240,9 +7241,9 @@ proto.bosdyn.api.mission.BosdynRobotCommand.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.mission.BosdynRobotCommand.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    command: (f = msg.getCommand()) && bosdyn_api_robot_command_pb.RobotCommand.toObject(includeInstance, f)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+command: (f = msg.getCommand()) && bosdyn_api_robot_command_pb.RobotCommand.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7255,7 +7256,7 @@ proto.bosdyn.api.mission.BosdynRobotCommand.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynRobotCommand}
  */
 proto.bosdyn.api.mission.BosdynRobotCommand.deserializeBinary = function(bytes) {
@@ -7280,11 +7281,11 @@ proto.bosdyn.api.mission.BosdynRobotCommand.deserializeBinaryFromReader = functi
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -7451,9 +7452,9 @@ proto.bosdyn.api.mission.BosdynPowerRequest.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.mission.BosdynPowerRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    request: jspb.Message.getFieldWithDefault(msg, 4, 0)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+request: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -7466,7 +7467,7 @@ proto.bosdyn.api.mission.BosdynPowerRequest.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynPowerRequest}
  */
 proto.bosdyn.api.mission.BosdynPowerRequest.deserializeBinary = function(bytes) {
@@ -7491,11 +7492,11 @@ proto.bosdyn.api.mission.BosdynPowerRequest.deserializeBinaryFromReader = functi
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 4:
@@ -7641,15 +7642,15 @@ proto.bosdyn.api.mission.BosdynNavigateTo.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.mission.BosdynNavigateTo.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    destinationWaypointId: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    routeGenParams: (f = msg.getRouteGenParams()) && bosdyn_api_graph_nav_graph_nav_pb.RouteGenParams.toObject(includeInstance, f),
-    travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
-    navigationFeedbackResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    navigateToResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    navigateToRequestBlackboardKey: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    routeBlockedBehavior: jspb.Message.getFieldWithDefault(msg, 8, 0)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+destinationWaypointId: jspb.Message.getFieldWithDefault(msg, 3, ""),
+routeGenParams: (f = msg.getRouteGenParams()) && bosdyn_api_graph_nav_graph_nav_pb.RouteGenParams.toObject(includeInstance, f),
+travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
+navigationFeedbackResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 6, ""),
+navigateToResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 7, ""),
+navigateToRequestBlackboardKey: jspb.Message.getFieldWithDefault(msg, 9, ""),
+routeBlockedBehavior: jspb.Message.getFieldWithDefault(msg, 8, 0)
   };
 
   if (includeInstance) {
@@ -7662,7 +7663,7 @@ proto.bosdyn.api.mission.BosdynNavigateTo.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynNavigateTo}
  */
 proto.bosdyn.api.mission.BosdynNavigateTo.deserializeBinary = function(bytes) {
@@ -7687,15 +7688,15 @@ proto.bosdyn.api.mission.BosdynNavigateTo.deserializeBinaryFromReader = function
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDestinationWaypointId(value);
       break;
     case 4:
@@ -7709,15 +7710,15 @@ proto.bosdyn.api.mission.BosdynNavigateTo.deserializeBinaryFromReader = function
       msg.setTravelParams(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNavigationFeedbackResponseBlackboardKey(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNavigateToResponseBlackboardKey(value);
       break;
     case 9:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNavigateToRequestBlackboardKey(value);
       break;
     case 8:
@@ -8053,14 +8054,14 @@ proto.bosdyn.api.mission.BosdynNavigateToAnchor.prototype.toObject = function(op
  */
 proto.bosdyn.api.mission.BosdynNavigateToAnchor.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    seedTformGoal: (f = msg.getSeedTformGoal()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    routeGenParams: (f = msg.getRouteGenParams()) && bosdyn_api_graph_nav_graph_nav_pb.RouteGenParams.toObject(includeInstance, f),
-    travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
-    navigationFeedbackResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    navigateToAnchorResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    navigateToAnchorRequestBlackboardKey: jspb.Message.getFieldWithDefault(msg, 8, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+seedTformGoal: (f = msg.getSeedTformGoal()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+routeGenParams: (f = msg.getRouteGenParams()) && bosdyn_api_graph_nav_graph_nav_pb.RouteGenParams.toObject(includeInstance, f),
+travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
+navigationFeedbackResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 6, ""),
+navigateToAnchorResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 7, ""),
+navigateToAnchorRequestBlackboardKey: jspb.Message.getFieldWithDefault(msg, 8, "")
   };
 
   if (includeInstance) {
@@ -8073,7 +8074,7 @@ proto.bosdyn.api.mission.BosdynNavigateToAnchor.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynNavigateToAnchor}
  */
 proto.bosdyn.api.mission.BosdynNavigateToAnchor.deserializeBinary = function(bytes) {
@@ -8098,11 +8099,11 @@ proto.bosdyn.api.mission.BosdynNavigateToAnchor.deserializeBinaryFromReader = fu
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -8121,15 +8122,15 @@ proto.bosdyn.api.mission.BosdynNavigateToAnchor.deserializeBinaryFromReader = fu
       msg.setTravelParams(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNavigationFeedbackResponseBlackboardKey(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNavigateToAnchorResponseBlackboardKey(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNavigateToAnchorRequestBlackboardKey(value);
       break;
     default:
@@ -8456,14 +8457,14 @@ proto.bosdyn.api.mission.BosdynNavigateRoute.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.mission.BosdynNavigateRoute.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    route: (f = msg.getRoute()) && bosdyn_api_graph_nav_nav_pb.Route.toObject(includeInstance, f),
-    routeFollowParams: (f = msg.getRouteFollowParams()) && bosdyn_api_graph_nav_graph_nav_pb.RouteFollowingParams.toObject(includeInstance, f),
-    travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
-    navigationFeedbackResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    navigateRouteResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    navigateRouteRequestBlackboardKey: jspb.Message.getFieldWithDefault(msg, 8, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+route: (f = msg.getRoute()) && bosdyn_api_graph_nav_nav_pb.Route.toObject(includeInstance, f),
+routeFollowParams: (f = msg.getRouteFollowParams()) && bosdyn_api_graph_nav_graph_nav_pb.RouteFollowingParams.toObject(includeInstance, f),
+travelParams: (f = msg.getTravelParams()) && bosdyn_api_graph_nav_graph_nav_pb.TravelParams.toObject(includeInstance, f),
+navigationFeedbackResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 6, ""),
+navigateRouteResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 7, ""),
+navigateRouteRequestBlackboardKey: jspb.Message.getFieldWithDefault(msg, 8, "")
   };
 
   if (includeInstance) {
@@ -8476,7 +8477,7 @@ proto.bosdyn.api.mission.BosdynNavigateRoute.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynNavigateRoute}
  */
 proto.bosdyn.api.mission.BosdynNavigateRoute.deserializeBinary = function(bytes) {
@@ -8501,11 +8502,11 @@ proto.bosdyn.api.mission.BosdynNavigateRoute.deserializeBinaryFromReader = funct
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -8524,15 +8525,15 @@ proto.bosdyn.api.mission.BosdynNavigateRoute.deserializeBinaryFromReader = funct
       msg.setTravelParams(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNavigationFeedbackResponseBlackboardKey(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNavigateRouteResponseBlackboardKey(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNavigateRouteRequestBlackboardKey(value);
       break;
     default:
@@ -8859,11 +8860,11 @@ proto.bosdyn.api.mission.BosdynGraphNavState.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.mission.BosdynGraphNavState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    stateName: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    waypointId: jspb.Message.getFieldWithDefault(msg, 5, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+stateName: jspb.Message.getFieldWithDefault(msg, 4, ""),
+waypointId: jspb.Message.getFieldWithDefault(msg, 5, "")
   };
 
   if (includeInstance) {
@@ -8876,7 +8877,7 @@ proto.bosdyn.api.mission.BosdynGraphNavState.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynGraphNavState}
  */
 proto.bosdyn.api.mission.BosdynGraphNavState.deserializeBinary = function(bytes) {
@@ -8901,11 +8902,11 @@ proto.bosdyn.api.mission.BosdynGraphNavState.deserializeBinaryFromReader = funct
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -8914,11 +8915,11 @@ proto.bosdyn.api.mission.BosdynGraphNavState.deserializeBinaryFromReader = funct
       msg.setChild(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setStateName(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setWaypointId(value);
       break;
     default:
@@ -9130,12 +9131,12 @@ proto.bosdyn.api.mission.BosdynGraphNavLocalize.prototype.toObject = function(op
  */
 proto.bosdyn.api.mission.BosdynGraphNavLocalize.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    localizationRequest: (f = msg.getLocalizationRequest()) && bosdyn_api_graph_nav_graph_nav_pb.SetLocalizationRequest.toObject(includeInstance, f),
-    allowBadQuality: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    responseBbKey: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    localizationRequestBbKey: jspb.Message.getFieldWithDefault(msg, 6, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+localizationRequest: (f = msg.getLocalizationRequest()) && bosdyn_api_graph_nav_graph_nav_pb.SetLocalizationRequest.toObject(includeInstance, f),
+allowBadQuality: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+responseBbKey: jspb.Message.getFieldWithDefault(msg, 5, ""),
+localizationRequestBbKey: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -9148,7 +9149,7 @@ proto.bosdyn.api.mission.BosdynGraphNavLocalize.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynGraphNavLocalize}
  */
 proto.bosdyn.api.mission.BosdynGraphNavLocalize.deserializeBinary = function(bytes) {
@@ -9173,11 +9174,11 @@ proto.bosdyn.api.mission.BosdynGraphNavLocalize.deserializeBinaryFromReader = fu
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -9190,11 +9191,11 @@ proto.bosdyn.api.mission.BosdynGraphNavLocalize.deserializeBinaryFromReader = fu
       msg.setAllowBadQuality(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setResponseBbKey(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setLocalizationRequestBbKey(value);
       break;
     default:
@@ -9431,11 +9432,11 @@ proto.bosdyn.api.mission.BosdynRecordEvent.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.mission.BosdynRecordEvent.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    event: (f = msg.getEvent()) && bosdyn_api_data_buffer_pb.Event.toObject(includeInstance, f),
-    succeedEarly: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    additionalParametersMap: (f = msg.getAdditionalParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : []
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+event: (f = msg.getEvent()) && bosdyn_api_data_buffer_pb.Event.toObject(includeInstance, f),
+succeedEarly: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+additionalParametersMap: (f = msg.getAdditionalParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : []
   };
 
   if (includeInstance) {
@@ -9448,7 +9449,7 @@ proto.bosdyn.api.mission.BosdynRecordEvent.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynRecordEvent}
  */
 proto.bosdyn.api.mission.BosdynRecordEvent.deserializeBinary = function(bytes) {
@@ -9473,11 +9474,11 @@ proto.bosdyn.api.mission.BosdynRecordEvent.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -9492,7 +9493,7 @@ proto.bosdyn.api.mission.BosdynRecordEvent.deserializeBinaryFromReader = functio
     case 5:
       var value = msg.getAdditionalParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     default:
@@ -9555,7 +9556,13 @@ proto.bosdyn.api.mission.BosdynRecordEvent.serializeBinaryToWriter = function(me
   }
   f = message.getAdditionalParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(5, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getAdditionalParametersMap(true),
+    5,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
 };
 
@@ -9670,7 +9677,8 @@ proto.bosdyn.api.mission.BosdynRecordEvent.prototype.getAdditionalParametersMap 
  */
 proto.bosdyn.api.mission.BosdynRecordEvent.prototype.clearAdditionalParametersMap = function() {
   this.getAdditionalParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 
@@ -9712,14 +9720,14 @@ proto.bosdyn.api.mission.RemoteGrpc.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.mission.RemoteGrpc.toObject = function(includeInstance, msg) {
   var f, obj = {
-    host: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    serviceName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    timeout: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    leaseResourcesList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
-    inputsList: jspb.Message.toObjectList(msg.getInputsList(),
+host: jspb.Message.getFieldWithDefault(msg, 1, ""),
+serviceName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+timeout: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+leaseResourcesList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+inputsList: jspb.Message.toObjectList(msg.getInputsList(),
     bosdyn_api_mission_util_pb.KeyValue.toObject, includeInstance),
-    groupNameFormat: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    params: (f = msg.getParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f)
+groupNameFormat: jspb.Message.getFieldWithDefault(msg, 8, ""),
+params: (f = msg.getParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9732,7 +9740,7 @@ proto.bosdyn.api.mission.RemoteGrpc.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.RemoteGrpc}
  */
 proto.bosdyn.api.mission.RemoteGrpc.deserializeBinary = function(bytes) {
@@ -9757,11 +9765,11 @@ proto.bosdyn.api.mission.RemoteGrpc.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 4:
@@ -9769,7 +9777,7 @@ proto.bosdyn.api.mission.RemoteGrpc.deserializeBinaryFromReader = function(msg, 
       msg.setTimeout(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addLeaseResources(value);
       break;
     case 6:
@@ -9778,7 +9786,7 @@ proto.bosdyn.api.mission.RemoteGrpc.deserializeBinaryFromReader = function(msg, 
       msg.addInputs(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setGroupNameFormat(value);
       break;
     case 9:
@@ -10111,9 +10119,9 @@ proto.bosdyn.api.mission.Sleep.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.mission.Sleep.toObject = function(includeInstance, msg) {
   var f, obj = {
-    seconds: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    durationNameInBlackboard: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    restartAfterStop: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+seconds: (f = jspb.Message.getOptionalFloatingPointField(msg, 1)) == null ? undefined : f,
+durationNameInBlackboard: (f = jspb.Message.getField(msg, 5)) == null ? undefined : f,
+restartAfterStop: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -10126,7 +10134,7 @@ proto.bosdyn.api.mission.Sleep.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Sleep}
  */
 proto.bosdyn.api.mission.Sleep.deserializeBinary = function(bytes) {
@@ -10155,7 +10163,7 @@ proto.bosdyn.api.mission.Sleep.deserializeBinaryFromReader = function(msg, reade
       msg.setSeconds(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDurationNameInBlackboard(value);
       break;
     case 2:
@@ -10337,10 +10345,10 @@ proto.bosdyn.api.mission.ExecuteChoreography.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.mission.ExecuteChoreography.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    sequenceName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    startTimeInBlackboard: jspb.Message.getFieldWithDefault(msg, 4, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+sequenceName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+startTimeInBlackboard: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -10353,7 +10361,7 @@ proto.bosdyn.api.mission.ExecuteChoreography.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.ExecuteChoreography}
  */
 proto.bosdyn.api.mission.ExecuteChoreography.deserializeBinary = function(bytes) {
@@ -10378,19 +10386,19 @@ proto.bosdyn.api.mission.ExecuteChoreography.deserializeBinaryFromReader = funct
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSequenceName(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setStartTimeInBlackboard(value);
       break;
     default:
@@ -10564,11 +10572,11 @@ proto.bosdyn.api.mission.MissionUploadChoreography.prototype.toObject = function
  */
 proto.bosdyn.api.mission.MissionUploadChoreography.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    choreographySequencesList: jspb.Message.toObjectList(msg.getChoreographySequencesList(),
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+choreographySequencesList: jspb.Message.toObjectList(msg.getChoreographySequencesList(),
     bosdyn_api_spot_choreography_sequence_pb.ChoreographySequence.toObject, includeInstance),
-    animatedMovesList: jspb.Message.toObjectList(msg.getAnimatedMovesList(),
+animatedMovesList: jspb.Message.toObjectList(msg.getAnimatedMovesList(),
     bosdyn_api_spot_choreography_sequence_pb.Animation.toObject, includeInstance)
   };
 
@@ -10582,7 +10590,7 @@ proto.bosdyn.api.mission.MissionUploadChoreography.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.MissionUploadChoreography}
  */
 proto.bosdyn.api.mission.MissionUploadChoreography.deserializeBinary = function(bytes) {
@@ -10607,11 +10615,11 @@ proto.bosdyn.api.mission.MissionUploadChoreography.deserializeBinaryFromReader =
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -10881,21 +10889,21 @@ proto.bosdyn.api.mission.Prompt.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.mission.Prompt.toObject = function(includeInstance, msg) {
   var f, obj = {
-    alwaysReprompt: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    text: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    source: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    optionsList: jspb.Message.toObjectList(msg.getOptionsList(),
+alwaysReprompt: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+text: jspb.Message.getFieldWithDefault(msg, 2, ""),
+source: jspb.Message.getFieldWithDefault(msg, 3, ""),
+optionsList: jspb.Message.toObjectList(msg.getOptionsList(),
     proto.bosdyn.api.mission.Prompt.Option.toObject, includeInstance),
-    optionsList: (f = msg.getOptionsList()) && proto.bosdyn.api.mission.Prompt.OptionsList.toObject(includeInstance, f),
-    optionsListInBlackboard: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.Spec.toObject(includeInstance, f),
-    customParamsInBlackboard: jspb.Message.getFieldWithDefault(msg, 13, ""),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    forAutonomousProcessing: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
-    autonomyKey: jspb.Message.getFieldWithDefault(msg, 14, ""),
-    severity: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    severityInBlackboard: jspb.Message.getFieldWithDefault(msg, 12, ""),
-    questionNameInBlackboard: jspb.Message.getFieldWithDefault(msg, 8, "")
+optionsList: (f = msg.getOptionsList()) && proto.bosdyn.api.mission.Prompt.OptionsList.toObject(includeInstance, f),
+optionsListInBlackboard: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f,
+customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.Spec.toObject(includeInstance, f),
+customParamsInBlackboard: (f = jspb.Message.getField(msg, 13)) == null ? undefined : f,
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+forAutonomousProcessing: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
+autonomyKey: jspb.Message.getFieldWithDefault(msg, 14, ""),
+severity: (f = jspb.Message.getField(msg, 7)) == null ? undefined : f,
+severityInBlackboard: (f = jspb.Message.getField(msg, 12)) == null ? undefined : f,
+questionNameInBlackboard: jspb.Message.getFieldWithDefault(msg, 8, "")
   };
 
   if (includeInstance) {
@@ -10908,7 +10916,7 @@ proto.bosdyn.api.mission.Prompt.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Prompt}
  */
 proto.bosdyn.api.mission.Prompt.deserializeBinary = function(bytes) {
@@ -10937,11 +10945,11 @@ proto.bosdyn.api.mission.Prompt.deserializeBinaryFromReader = function(msg, read
       msg.setAlwaysReprompt(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setText(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSource(value);
       break;
     case 4:
@@ -10955,7 +10963,7 @@ proto.bosdyn.api.mission.Prompt.deserializeBinaryFromReader = function(msg, read
       msg.setOptionsList(value);
       break;
     case 11:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setOptionsListInBlackboard(value);
       break;
     case 10:
@@ -10964,7 +10972,7 @@ proto.bosdyn.api.mission.Prompt.deserializeBinaryFromReader = function(msg, read
       msg.setCustomParams(value);
       break;
     case 13:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setCustomParamsInBlackboard(value);
       break;
     case 5:
@@ -10977,7 +10985,7 @@ proto.bosdyn.api.mission.Prompt.deserializeBinaryFromReader = function(msg, read
       msg.setForAutonomousProcessing(value);
       break;
     case 14:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setAutonomyKey(value);
       break;
     case 7:
@@ -10985,11 +10993,11 @@ proto.bosdyn.api.mission.Prompt.deserializeBinaryFromReader = function(msg, read
       msg.setSeverity(value);
       break;
     case 12:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSeverityInBlackboard(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setQuestionNameInBlackboard(value);
       break;
     default:
@@ -11158,8 +11166,8 @@ proto.bosdyn.api.mission.Prompt.Option.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.mission.Prompt.Option.toObject = function(includeInstance, msg) {
   var f, obj = {
-    text: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    answerCode: jspb.Message.getFieldWithDefault(msg, 2, 0)
+text: jspb.Message.getFieldWithDefault(msg, 1, ""),
+answerCode: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -11172,7 +11180,7 @@ proto.bosdyn.api.mission.Prompt.Option.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Prompt.Option}
  */
 proto.bosdyn.api.mission.Prompt.Option.deserializeBinary = function(bytes) {
@@ -11197,7 +11205,7 @@ proto.bosdyn.api.mission.Prompt.Option.deserializeBinaryFromReader = function(ms
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setText(value);
       break;
     case 2:
@@ -11325,7 +11333,7 @@ proto.bosdyn.api.mission.Prompt.OptionsList.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.mission.Prompt.OptionsList.toObject = function(includeInstance, msg) {
   var f, obj = {
-    optionsList: jspb.Message.toObjectList(msg.getOptionsList(),
+optionsList: jspb.Message.toObjectList(msg.getOptionsList(),
     proto.bosdyn.api.mission.Prompt.Option.toObject, includeInstance)
   };
 
@@ -11339,7 +11347,7 @@ proto.bosdyn.api.mission.Prompt.OptionsList.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Prompt.OptionsList}
  */
 proto.bosdyn.api.mission.Prompt.OptionsList.deserializeBinary = function(bytes) {
@@ -11879,10 +11887,10 @@ proto.bosdyn.api.mission.BosdynGripperCameraParamsState.prototype.toObject = fun
  */
 proto.bosdyn.api.mission.BosdynGripperCameraParamsState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    stateName: jspb.Message.getFieldWithDefault(msg, 4, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+stateName: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -11895,7 +11903,7 @@ proto.bosdyn.api.mission.BosdynGripperCameraParamsState.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynGripperCameraParamsState}
  */
 proto.bosdyn.api.mission.BosdynGripperCameraParamsState.deserializeBinary = function(bytes) {
@@ -11920,11 +11928,11 @@ proto.bosdyn.api.mission.BosdynGripperCameraParamsState.deserializeBinaryFromRea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -11933,7 +11941,7 @@ proto.bosdyn.api.mission.BosdynGripperCameraParamsState.deserializeBinaryFromRea
       msg.setChild(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setStateName(value);
       break;
     default:
@@ -12146,10 +12154,10 @@ proto.bosdyn.api.mission.SetGripperCameraParams.prototype.toObject = function(op
  */
 proto.bosdyn.api.mission.SetGripperCameraParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    paramsInBlackboardKey: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    newParams: (f = msg.getNewParams()) && bosdyn_api_gripper_camera_param_pb.GripperCameraParams.toObject(includeInstance, f)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+paramsInBlackboardKey: (f = jspb.Message.getField(msg, 3)) == null ? undefined : f,
+newParams: (f = msg.getNewParams()) && bosdyn_api_gripper_camera_param_pb.GripperCameraParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -12162,7 +12170,7 @@ proto.bosdyn.api.mission.SetGripperCameraParams.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SetGripperCameraParams}
  */
 proto.bosdyn.api.mission.SetGripperCameraParams.deserializeBinary = function(bytes) {
@@ -12187,15 +12195,15 @@ proto.bosdyn.api.mission.SetGripperCameraParams.deserializeBinaryFromReader = fu
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setParamsInBlackboardKey(value);
       break;
     case 4:
@@ -12405,9 +12413,9 @@ proto.bosdyn.api.mission.SetGraspOverride.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.mission.SetGraspOverride.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    graspOverrideRequest: (f = msg.getGraspOverrideRequest()) && bosdyn_api_manipulation_api_pb.ApiGraspOverrideRequest.toObject(includeInstance, f)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+graspOverrideRequest: (f = msg.getGraspOverrideRequest()) && bosdyn_api_manipulation_api_pb.ApiGraspOverrideRequest.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -12420,7 +12428,7 @@ proto.bosdyn.api.mission.SetGraspOverride.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SetGraspOverride}
  */
 proto.bosdyn.api.mission.SetGraspOverride.deserializeBinary = function(bytes) {
@@ -12445,11 +12453,11 @@ proto.bosdyn.api.mission.SetGraspOverride.deserializeBinaryFromReader = function
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -12616,10 +12624,10 @@ proto.bosdyn.api.mission.SpotCamPtz.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.mission.SpotCamPtz.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    ptzPosition: (f = msg.getPtzPosition()) && bosdyn_api_spot_cam_ptz_pb.PtzPosition.toObject(includeInstance, f),
-    adjustParameters: (f = msg.getAdjustParameters()) && proto.bosdyn.api.mission.SpotCamPtz.AdjustParameters.toObject(includeInstance, f)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+ptzPosition: (f = msg.getPtzPosition()) && bosdyn_api_spot_cam_ptz_pb.PtzPosition.toObject(includeInstance, f),
+adjustParameters: (f = msg.getAdjustParameters()) && proto.bosdyn.api.mission.SpotCamPtz.AdjustParameters.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -12632,7 +12640,7 @@ proto.bosdyn.api.mission.SpotCamPtz.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SpotCamPtz}
  */
 proto.bosdyn.api.mission.SpotCamPtz.deserializeBinary = function(bytes) {
@@ -12657,11 +12665,11 @@ proto.bosdyn.api.mission.SpotCamPtz.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -12768,9 +12776,9 @@ proto.bosdyn.api.mission.SpotCamPtz.AdjustParameters.prototype.toObject = functi
  */
 proto.bosdyn.api.mission.SpotCamPtz.AdjustParameters.toObject = function(includeInstance, msg) {
   var f, obj = {
-    localizationVarname: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    waypointId: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    waypointTformBody: (f = msg.getWaypointTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
+localizationVarname: jspb.Message.getFieldWithDefault(msg, 4, ""),
+waypointId: jspb.Message.getFieldWithDefault(msg, 5, ""),
+waypointTformBody: (f = msg.getWaypointTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -12783,7 +12791,7 @@ proto.bosdyn.api.mission.SpotCamPtz.AdjustParameters.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SpotCamPtz.AdjustParameters}
  */
 proto.bosdyn.api.mission.SpotCamPtz.AdjustParameters.deserializeBinary = function(bytes) {
@@ -12808,11 +12816,11 @@ proto.bosdyn.api.mission.SpotCamPtz.AdjustParameters.deserializeBinaryFromReader
     var field = reader.getFieldNumber();
     switch (field) {
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setLocalizationVarname(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setWaypointId(value);
       break;
     case 6:
@@ -13089,10 +13097,10 @@ proto.bosdyn.api.mission.SpotCamNamedPosition.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.mission.SpotCamNamedPosition.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    ptzName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    namedPosition: jspb.Message.getFieldWithDefault(msg, 4, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+ptzName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+namedPosition: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -13105,7 +13113,7 @@ proto.bosdyn.api.mission.SpotCamNamedPosition.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SpotCamNamedPosition}
  */
 proto.bosdyn.api.mission.SpotCamNamedPosition.deserializeBinary = function(bytes) {
@@ -13130,19 +13138,19 @@ proto.bosdyn.api.mission.SpotCamNamedPosition.deserializeBinaryFromReader = func
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setPtzName(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNamedPosition(value);
       break;
     default:
@@ -13309,11 +13317,11 @@ proto.bosdyn.api.mission.SpotCamStoreMedia.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.mission.SpotCamStoreMedia.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    camera: (f = msg.getCamera()) && bosdyn_api_spot_cam_camera_pb.Camera.toObject(includeInstance, f),
-    type: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    tag: jspb.Message.getFieldWithDefault(msg, 5, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+camera: (f = msg.getCamera()) && bosdyn_api_spot_cam_camera_pb.Camera.toObject(includeInstance, f),
+type: jspb.Message.getFieldWithDefault(msg, 4, 0),
+tag: jspb.Message.getFieldWithDefault(msg, 5, "")
   };
 
   if (includeInstance) {
@@ -13326,7 +13334,7 @@ proto.bosdyn.api.mission.SpotCamStoreMedia.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SpotCamStoreMedia}
  */
 proto.bosdyn.api.mission.SpotCamStoreMedia.deserializeBinary = function(bytes) {
@@ -13351,11 +13359,11 @@ proto.bosdyn.api.mission.SpotCamStoreMedia.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -13368,7 +13376,7 @@ proto.bosdyn.api.mission.SpotCamStoreMedia.deserializeBinaryFromReader = functio
       msg.setType(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setTag(value);
       break;
     default:
@@ -13580,9 +13588,9 @@ proto.bosdyn.api.mission.SpotCamLed.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.mission.SpotCamLed.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -13595,7 +13603,7 @@ proto.bosdyn.api.mission.SpotCamLed.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SpotCamLed}
  */
 proto.bosdyn.api.mission.SpotCamLed.deserializeBinary = function(bytes) {
@@ -13620,11 +13628,11 @@ proto.bosdyn.api.mission.SpotCamLed.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -13678,7 +13686,12 @@ proto.bosdyn.api.mission.SpotCamLed.serializeBinaryToWriter = function(message, 
   }
   f = message.getBrightnessesMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(3, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeFloat);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getBrightnessesMap(true),
+    3,
+    writer,
+    jspb.BinaryWriter.prototype.writeInt32,
+    jspb.BinaryWriter.prototype.writeFloat);
   }
 };
 
@@ -13738,7 +13751,8 @@ proto.bosdyn.api.mission.SpotCamLed.prototype.getBrightnessesMap = function(opt_
  */
 proto.bosdyn.api.mission.SpotCamLed.prototype.clearBrightnessesMap = function() {
   this.getBrightnessesMap().clear();
-  return this;};
+  return this;
+};
 
 
 
@@ -13773,9 +13787,9 @@ proto.bosdyn.api.mission.SpotCamFocusState.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.mission.SpotCamFocusState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    focusState: (f = msg.getFocusState()) && bosdyn_api_spot_cam_ptz_pb.PtzFocusState.toObject(includeInstance, f)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+focusState: (f = msg.getFocusState()) && bosdyn_api_spot_cam_ptz_pb.PtzFocusState.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -13788,7 +13802,7 @@ proto.bosdyn.api.mission.SpotCamFocusState.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SpotCamFocusState}
  */
 proto.bosdyn.api.mission.SpotCamFocusState.deserializeBinary = function(bytes) {
@@ -13813,11 +13827,11 @@ proto.bosdyn.api.mission.SpotCamFocusState.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -13984,8 +13998,8 @@ proto.bosdyn.api.mission.SpotCamResetAutofocus.prototype.toObject = function(opt
  */
 proto.bosdyn.api.mission.SpotCamResetAutofocus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -13998,7 +14012,7 @@ proto.bosdyn.api.mission.SpotCamResetAutofocus.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SpotCamResetAutofocus}
  */
 proto.bosdyn.api.mission.SpotCamResetAutofocus.deserializeBinary = function(bytes) {
@@ -14023,11 +14037,11 @@ proto.bosdyn.api.mission.SpotCamResetAutofocus.deserializeBinaryFromReader = fun
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     default:
@@ -14170,17 +14184,17 @@ proto.bosdyn.api.mission.Dock.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.mission.Dock.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    dockingStationId: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    dockingStationIdBlackboardKey: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    commandStatusName: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    feedbackStatusName: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    prepPoseBehavior: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    dockingCommandFeedbackResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    dockingCommandResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    requireFiducial: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+dockingStationId: (f = jspb.Message.getField(msg, 3)) == null ? undefined : f,
+dockingStationIdBlackboardKey: (f = jspb.Message.getField(msg, 11)) == null ? undefined : f,
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+commandStatusName: jspb.Message.getFieldWithDefault(msg, 5, ""),
+feedbackStatusName: jspb.Message.getFieldWithDefault(msg, 6, ""),
+prepPoseBehavior: jspb.Message.getFieldWithDefault(msg, 7, 0),
+dockingCommandFeedbackResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 8, ""),
+dockingCommandResponseBlackboardKey: jspb.Message.getFieldWithDefault(msg, 9, ""),
+requireFiducial: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
   };
 
   if (includeInstance) {
@@ -14193,7 +14207,7 @@ proto.bosdyn.api.mission.Dock.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Dock}
  */
 proto.bosdyn.api.mission.Dock.deserializeBinary = function(bytes) {
@@ -14218,11 +14232,11 @@ proto.bosdyn.api.mission.Dock.deserializeBinaryFromReader = function(msg, reader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -14230,7 +14244,7 @@ proto.bosdyn.api.mission.Dock.deserializeBinaryFromReader = function(msg, reader
       msg.setDockingStationId(value);
       break;
     case 11:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDockingStationIdBlackboardKey(value);
       break;
     case 4:
@@ -14239,11 +14253,11 @@ proto.bosdyn.api.mission.Dock.deserializeBinaryFromReader = function(msg, reader
       msg.setChild(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setCommandStatusName(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFeedbackStatusName(value);
       break;
     case 7:
@@ -14251,11 +14265,11 @@ proto.bosdyn.api.mission.Dock.deserializeBinaryFromReader = function(msg, reader
       msg.setPrepPoseBehavior(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDockingCommandFeedbackResponseBlackboardKey(value);
       break;
     case 9:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDockingCommandResponseBlackboardKey(value);
       break;
     case 10:
@@ -14683,12 +14697,12 @@ proto.bosdyn.api.mission.StoreMetadata.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.mission.StoreMetadata.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    acquireDataRequestName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    metadataName: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    metadataJson: (f = msg.getMetadataJson()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f),
-    metadataChannel: jspb.Message.getFieldWithDefault(msg, 6, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+acquireDataRequestName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+metadataName: (f = jspb.Message.getField(msg, 5)) == null ? undefined : f,
+metadataJson: (f = msg.getMetadataJson()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f),
+metadataChannel: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -14701,7 +14715,7 @@ proto.bosdyn.api.mission.StoreMetadata.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.StoreMetadata}
  */
 proto.bosdyn.api.mission.StoreMetadata.deserializeBinary = function(bytes) {
@@ -14726,19 +14740,19 @@ proto.bosdyn.api.mission.StoreMetadata.deserializeBinaryFromReader = function(ms
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setAcquireDataRequestName(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMetadataName(value);
       break;
     case 7:
@@ -14747,7 +14761,7 @@ proto.bosdyn.api.mission.StoreMetadata.deserializeBinaryFromReader = function(ms
       msg.setMetadataJson(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMetadataChannel(value);
       break;
     default:
@@ -15002,16 +15016,16 @@ proto.bosdyn.api.mission.DataAcquisition.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.mission.DataAcquisition.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    request: (f = msg.getRequest()) && bosdyn_api_data_acquisition_pb.AcquireDataRequest.toObject(includeInstance, f),
-    completionBehavior: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    groupNameFormat: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    requestNameInBlackboard: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    metadataNameInBlackboard: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    actionNameFormat: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    disableCancelOnPauseOrStop: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
-    formatMetadata: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+request: (f = msg.getRequest()) && bosdyn_api_data_acquisition_pb.AcquireDataRequest.toObject(includeInstance, f),
+completionBehavior: jspb.Message.getFieldWithDefault(msg, 4, 0),
+groupNameFormat: jspb.Message.getFieldWithDefault(msg, 5, ""),
+requestNameInBlackboard: jspb.Message.getFieldWithDefault(msg, 6, ""),
+metadataNameInBlackboard: jspb.Message.getFieldWithDefault(msg, 9, ""),
+actionNameFormat: jspb.Message.getFieldWithDefault(msg, 7, ""),
+disableCancelOnPauseOrStop: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
+formatMetadata: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
   };
 
   if (includeInstance) {
@@ -15024,7 +15038,7 @@ proto.bosdyn.api.mission.DataAcquisition.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.DataAcquisition}
  */
 proto.bosdyn.api.mission.DataAcquisition.deserializeBinary = function(bytes) {
@@ -15049,11 +15063,11 @@ proto.bosdyn.api.mission.DataAcquisition.deserializeBinaryFromReader = function(
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -15066,19 +15080,19 @@ proto.bosdyn.api.mission.DataAcquisition.deserializeBinaryFromReader = function(
       msg.setCompletionBehavior(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setGroupNameFormat(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRequestNameInBlackboard(value);
       break;
     case 9:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMetadataNameInBlackboard(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setActionNameFormat(value);
       break;
     case 8:
@@ -15440,11 +15454,11 @@ proto.bosdyn.api.mission.DataAcquisitionLiveData.prototype.toObject = function(o
  */
 proto.bosdyn.api.mission.DataAcquisitionLiveData.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    dataCapturesList: jspb.Message.toObjectList(msg.getDataCapturesList(),
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+dataCapturesList: jspb.Message.toObjectList(msg.getDataCapturesList(),
     proto.bosdyn.api.mission.DataAcquisitionLiveData.DataCaptureAndBlackboardName.toObject, includeInstance),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -15457,7 +15471,7 @@ proto.bosdyn.api.mission.DataAcquisitionLiveData.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.DataAcquisitionLiveData}
  */
 proto.bosdyn.api.mission.DataAcquisitionLiveData.deserializeBinary = function(bytes) {
@@ -15482,11 +15496,11 @@ proto.bosdyn.api.mission.DataAcquisitionLiveData.deserializeBinaryFromReader = f
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -15593,8 +15607,8 @@ proto.bosdyn.api.mission.DataAcquisitionLiveData.DataCaptureAndBlackboardName.pr
  */
 proto.bosdyn.api.mission.DataAcquisitionLiveData.DataCaptureAndBlackboardName.toObject = function(includeInstance, msg) {
   var f, obj = {
-    dataCapture: (f = msg.getDataCapture()) && bosdyn_api_data_acquisition_pb.DataCapture.toObject(includeInstance, f),
-    blackboardName: jspb.Message.getFieldWithDefault(msg, 2, "")
+dataCapture: (f = msg.getDataCapture()) && bosdyn_api_data_acquisition_pb.DataCapture.toObject(includeInstance, f),
+blackboardName: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -15607,7 +15621,7 @@ proto.bosdyn.api.mission.DataAcquisitionLiveData.DataCaptureAndBlackboardName.to
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.DataAcquisitionLiveData.DataCaptureAndBlackboardName}
  */
 proto.bosdyn.api.mission.DataAcquisitionLiveData.DataCaptureAndBlackboardName.deserializeBinary = function(bytes) {
@@ -15637,7 +15651,7 @@ proto.bosdyn.api.mission.DataAcquisitionLiveData.DataCaptureAndBlackboardName.de
       msg.setDataCapture(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setBlackboardName(value);
       break;
     default:
@@ -15885,8 +15899,8 @@ proto.bosdyn.api.mission.RetainLease.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.mission.RetainLease.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -15899,7 +15913,7 @@ proto.bosdyn.api.mission.RetainLease.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.RetainLease}
  */
 proto.bosdyn.api.mission.RetainLease.deserializeBinary = function(bytes) {
@@ -15924,11 +15938,11 @@ proto.bosdyn.api.mission.RetainLease.deserializeBinaryFromReader = function(msg,
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     default:
@@ -16052,9 +16066,9 @@ proto.bosdyn.api.mission.DefineBlackboard.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.mission.DefineBlackboard.toObject = function(includeInstance, msg) {
   var f, obj = {
-    blackboardVariablesList: jspb.Message.toObjectList(msg.getBlackboardVariablesList(),
+blackboardVariablesList: jspb.Message.toObjectList(msg.getBlackboardVariablesList(),
     bosdyn_api_mission_util_pb.KeyValue.toObject, includeInstance),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -16067,7 +16081,7 @@ proto.bosdyn.api.mission.DefineBlackboard.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.DefineBlackboard}
  */
 proto.bosdyn.api.mission.DefineBlackboard.deserializeBinary = function(bytes) {
@@ -16263,7 +16277,7 @@ proto.bosdyn.api.mission.SetBlackboard.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.mission.SetBlackboard.toObject = function(includeInstance, msg) {
   var f, obj = {
-    blackboardVariablesList: jspb.Message.toObjectList(msg.getBlackboardVariablesList(),
+blackboardVariablesList: jspb.Message.toObjectList(msg.getBlackboardVariablesList(),
     bosdyn_api_mission_util_pb.KeyValue.toObject, includeInstance)
   };
 
@@ -16277,7 +16291,7 @@ proto.bosdyn.api.mission.SetBlackboard.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.SetBlackboard}
  */
 proto.bosdyn.api.mission.SetBlackboard.deserializeBinary = function(bytes) {
@@ -16416,8 +16430,8 @@ proto.bosdyn.api.mission.FormatBlackboard.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.mission.FormatBlackboard.toObject = function(includeInstance, msg) {
   var f, obj = {
-    key: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    format: jspb.Message.getFieldWithDefault(msg, 2, "")
+key: jspb.Message.getFieldWithDefault(msg, 1, ""),
+format: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -16430,7 +16444,7 @@ proto.bosdyn.api.mission.FormatBlackboard.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.FormatBlackboard}
  */
 proto.bosdyn.api.mission.FormatBlackboard.deserializeBinary = function(bytes) {
@@ -16455,11 +16469,11 @@ proto.bosdyn.api.mission.FormatBlackboard.deserializeBinaryFromReader = function
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setKey(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFormat(value);
       break;
     default:
@@ -16576,8 +16590,8 @@ proto.bosdyn.api.mission.DateToBlackboard.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.mission.DateToBlackboard.toObject = function(includeInstance, msg) {
   var f, obj = {
-    key: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    writeAsTimestamp: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+key: jspb.Message.getFieldWithDefault(msg, 1, ""),
+writeAsTimestamp: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -16590,7 +16604,7 @@ proto.bosdyn.api.mission.DateToBlackboard.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.DateToBlackboard}
  */
 proto.bosdyn.api.mission.DateToBlackboard.deserializeBinary = function(bytes) {
@@ -16615,7 +16629,7 @@ proto.bosdyn.api.mission.DateToBlackboard.deserializeBinaryFromReader = function
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setKey(value);
       break;
     case 2:
@@ -16743,11 +16757,11 @@ proto.bosdyn.api.mission.BosdynQueryStoredCaptures.prototype.toObject = function
  */
 proto.bosdyn.api.mission.BosdynQueryStoredCaptures.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    key: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    queryParams: (f = msg.getQueryParams()) && bosdyn_api_data_acquisition_store_pb.QueryParameters.toObject(includeInstance, f),
-    captureActionIdsFormatList: jspb.Message.toObjectList(msg.getCaptureActionIdsFormatList(),
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+key: jspb.Message.getFieldWithDefault(msg, 3, ""),
+queryParams: (f = msg.getQueryParams()) && bosdyn_api_data_acquisition_store_pb.QueryParameters.toObject(includeInstance, f),
+captureActionIdsFormatList: jspb.Message.toObjectList(msg.getCaptureActionIdsFormatList(),
     proto.bosdyn.api.mission.BosdynQueryStoredCaptures.CaptureActionIdFormat.toObject, includeInstance)
   };
 
@@ -16761,7 +16775,7 @@ proto.bosdyn.api.mission.BosdynQueryStoredCaptures.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynQueryStoredCaptures}
  */
 proto.bosdyn.api.mission.BosdynQueryStoredCaptures.deserializeBinary = function(bytes) {
@@ -16786,15 +16800,15 @@ proto.bosdyn.api.mission.BosdynQueryStoredCaptures.deserializeBinaryFromReader =
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setKey(value);
       break;
     case 4:
@@ -16908,8 +16922,8 @@ proto.bosdyn.api.mission.BosdynQueryStoredCaptures.CaptureActionIdFormat.prototy
  */
 proto.bosdyn.api.mission.BosdynQueryStoredCaptures.CaptureActionIdFormat.toObject = function(includeInstance, msg) {
   var f, obj = {
-    actionNameFormat: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    groupNameFormat: jspb.Message.getFieldWithDefault(msg, 2, "")
+actionNameFormat: jspb.Message.getFieldWithDefault(msg, 1, ""),
+groupNameFormat: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -16922,7 +16936,7 @@ proto.bosdyn.api.mission.BosdynQueryStoredCaptures.CaptureActionIdFormat.toObjec
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynQueryStoredCaptures.CaptureActionIdFormat}
  */
 proto.bosdyn.api.mission.BosdynQueryStoredCaptures.CaptureActionIdFormat.deserializeBinary = function(bytes) {
@@ -16947,11 +16961,11 @@ proto.bosdyn.api.mission.BosdynQueryStoredCaptures.CaptureActionIdFormat.deseria
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setActionNameFormat(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setGroupNameFormat(value);
       break;
     default:
@@ -17197,7 +17211,7 @@ proto.bosdyn.api.mission.ConstantResult.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.mission.ConstantResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    result: jspb.Message.getFieldWithDefault(msg, 1, 0)
+result: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -17210,7 +17224,7 @@ proto.bosdyn.api.mission.ConstantResult.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.ConstantResult}
  */
 proto.bosdyn.api.mission.ConstantResult.deserializeBinary = function(bytes) {
@@ -17327,7 +17341,7 @@ proto.bosdyn.api.mission.RestartWhenPaused.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.mission.RestartWhenPaused.toObject = function(includeInstance, msg) {
   var f, obj = {
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -17340,7 +17354,7 @@ proto.bosdyn.api.mission.RestartWhenPaused.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.RestartWhenPaused}
  */
 proto.bosdyn.api.mission.RestartWhenPaused.deserializeBinary = function(bytes) {
@@ -17485,19 +17499,19 @@ proto.bosdyn.api.mission.DataAcquisitionOnInterruption.prototype.toObject = func
  */
 proto.bosdyn.api.mission.DataAcquisitionOnInterruption.toObject = function(includeInstance, msg) {
   var f, obj = {
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    requestWhenInterrupted: (f = msg.getRequestWhenInterrupted()) && proto.bosdyn.api.mission.DataAcquisition.toObject(includeInstance, f),
-    pauseMissionMetadata: (f = msg.getPauseMissionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
-    restartMissionMetadata: (f = msg.getRestartMissionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
-    loadMissionMetadata: (f = msg.getLoadMissionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
-    stopMissionMetadata: (f = msg.getStopMissionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
-    leaseUseErrorMetadata: (f = msg.getLeaseUseErrorMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
-    playMissionTimeoutMetadata: (f = msg.getPlayMissionTimeoutMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
-    childNodeErrorMetadata: (f = msg.getChildNodeErrorMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
-    childNodeExceptionMetadata: (f = msg.getChildNodeExceptionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
-    defaultMetadata: (f = msg.getDefaultMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
-    keysForLeaseUseErrorMessageList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f,
-    childNodeFailureMetadata: (f = msg.getChildNodeFailureMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f)
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+requestWhenInterrupted: (f = msg.getRequestWhenInterrupted()) && proto.bosdyn.api.mission.DataAcquisition.toObject(includeInstance, f),
+pauseMissionMetadata: (f = msg.getPauseMissionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
+restartMissionMetadata: (f = msg.getRestartMissionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
+loadMissionMetadata: (f = msg.getLoadMissionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
+stopMissionMetadata: (f = msg.getStopMissionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
+leaseUseErrorMetadata: (f = msg.getLeaseUseErrorMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
+playMissionTimeoutMetadata: (f = msg.getPlayMissionTimeoutMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
+childNodeErrorMetadata: (f = msg.getChildNodeErrorMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
+childNodeExceptionMetadata: (f = msg.getChildNodeExceptionMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
+defaultMetadata: (f = msg.getDefaultMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f),
+keysForLeaseUseErrorMessageList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f,
+childNodeFailureMetadata: (f = msg.getChildNodeFailureMetadata()) && bosdyn_api_data_acquisition_pb.Metadata.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -17510,7 +17524,7 @@ proto.bosdyn.api.mission.DataAcquisitionOnInterruption.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.DataAcquisitionOnInterruption}
  */
 proto.bosdyn.api.mission.DataAcquisitionOnInterruption.deserializeBinary = function(bytes) {
@@ -17590,7 +17604,7 @@ proto.bosdyn.api.mission.DataAcquisitionOnInterruption.deserializeBinaryFromRead
       msg.setDefaultMetadata(value);
       break;
     case 13:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addKeysForLeaseUseErrorMessage(value);
       break;
     case 16:
@@ -18253,23 +18267,23 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.toObject = fu
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
-    event: (f = msg.getEvent()) && bosdyn_api_data_buffer_pb.Event.toObject(includeInstance, f),
-    pauseMissionParametersMap: (f = msg.getPauseMissionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    restartMissionParametersMap: (f = msg.getRestartMissionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    loadMissionParametersMap: (f = msg.getLoadMissionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    stopMissionParametersMap: (f = msg.getStopMissionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    leaseUseErrorParametersMap: (f = msg.getLeaseUseErrorParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    playMissionTimeoutParametersMap: (f = msg.getPlayMissionTimeoutParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    childNodeErrorParametersMap: (f = msg.getChildNodeErrorParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    childNodeExceptionParametersMap: (f = msg.getChildNodeExceptionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    defaultParametersMap: (f = msg.getDefaultParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    executorSetupFailureParametersMap: (f = msg.getExecutorSetupFailureParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    systemShutdownParametersMap: (f = msg.getSystemShutdownParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
-    keysForLeaseUseErrorMessageList: (f = jspb.Message.getRepeatedField(msg, 14)) == null ? undefined : f,
-    childNodeFailureParametersMap: (f = msg.getChildNodeFailureParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : []
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f),
+event: (f = msg.getEvent()) && bosdyn_api_data_buffer_pb.Event.toObject(includeInstance, f),
+pauseMissionParametersMap: (f = msg.getPauseMissionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+restartMissionParametersMap: (f = msg.getRestartMissionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+loadMissionParametersMap: (f = msg.getLoadMissionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+stopMissionParametersMap: (f = msg.getStopMissionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+leaseUseErrorParametersMap: (f = msg.getLeaseUseErrorParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+playMissionTimeoutParametersMap: (f = msg.getPlayMissionTimeoutParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+childNodeErrorParametersMap: (f = msg.getChildNodeErrorParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+childNodeExceptionParametersMap: (f = msg.getChildNodeExceptionParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+defaultParametersMap: (f = msg.getDefaultParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+executorSetupFailureParametersMap: (f = msg.getExecutorSetupFailureParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+systemShutdownParametersMap: (f = msg.getSystemShutdownParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : [],
+keysForLeaseUseErrorMessageList: (f = jspb.Message.getRepeatedField(msg, 14)) == null ? undefined : f,
+childNodeFailureParametersMap: (f = msg.getChildNodeFailureParametersMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.Value.toObject) : []
   };
 
   if (includeInstance) {
@@ -18282,7 +18296,7 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.toObject = function(inc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.BosdynRecordEventOnInterruption}
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.deserializeBinary = function(bytes) {
@@ -18307,11 +18321,11 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.deserializeBinaryFromRe
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
@@ -18327,77 +18341,77 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.deserializeBinaryFromRe
     case 5:
       var value = msg.getPauseMissionParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 6:
       var value = msg.getRestartMissionParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 7:
       var value = msg.getLoadMissionParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 8:
       var value = msg.getStopMissionParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 9:
       var value = msg.getLeaseUseErrorParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 10:
       var value = msg.getPlayMissionTimeoutParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 11:
       var value = msg.getChildNodeErrorParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 12:
       var value = msg.getChildNodeExceptionParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 13:
       var value = msg.getDefaultParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 16:
       var value = msg.getExecutorSetupFailureParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 17:
       var value = msg.getSystemShutdownParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     case 14:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addKeysForLeaseUseErrorMessage(value);
       break;
     case 19:
       var value = msg.getChildNodeFailureParametersMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.Value.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.Value());
          });
       break;
     default:
@@ -18461,47 +18475,113 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.serializeBinaryToWriter
   }
   f = message.getPauseMissionParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(5, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getPauseMissionParametersMap(true),
+    5,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getRestartMissionParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(6, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getRestartMissionParametersMap(true),
+    6,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getLoadMissionParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(7, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getLoadMissionParametersMap(true),
+    7,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getStopMissionParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(8, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getStopMissionParametersMap(true),
+    8,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getLeaseUseErrorParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(9, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getLeaseUseErrorParametersMap(true),
+    9,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getPlayMissionTimeoutParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(10, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getPlayMissionTimeoutParametersMap(true),
+    10,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getChildNodeErrorParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(11, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getChildNodeErrorParametersMap(true),
+    11,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getChildNodeExceptionParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(12, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getChildNodeExceptionParametersMap(true),
+    12,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getDefaultParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(13, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getDefaultParametersMap(true),
+    13,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getExecutorSetupFailureParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(16, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getExecutorSetupFailureParametersMap(true),
+    16,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getSystemShutdownParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(17, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getSystemShutdownParametersMap(true),
+    17,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
   f = message.getKeysForLeaseUseErrorMessageList();
   if (f.length > 0) {
@@ -18512,7 +18592,13 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.serializeBinaryToWriter
   }
   f = message.getChildNodeFailureParametersMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(19, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getChildNodeFailureParametersMap(true),
+    19,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.Value.serializeBinaryToWriter);
   }
 };
 
@@ -18646,7 +18732,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getPauseMissi
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearPauseMissionParametersMap = function() {
   this.getPauseMissionParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18668,7 +18755,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getRestartMis
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearRestartMissionParametersMap = function() {
   this.getRestartMissionParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18690,7 +18778,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getLoadMissio
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearLoadMissionParametersMap = function() {
   this.getLoadMissionParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18712,7 +18801,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getStopMissio
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearStopMissionParametersMap = function() {
   this.getStopMissionParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18734,7 +18824,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getLeaseUseEr
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearLeaseUseErrorParametersMap = function() {
   this.getLeaseUseErrorParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18756,7 +18847,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getPlayMissio
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearPlayMissionTimeoutParametersMap = function() {
   this.getPlayMissionTimeoutParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18778,7 +18870,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getChildNodeE
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearChildNodeErrorParametersMap = function() {
   this.getChildNodeErrorParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18800,7 +18893,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getChildNodeE
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearChildNodeExceptionParametersMap = function() {
   this.getChildNodeExceptionParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18822,7 +18916,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getDefaultPar
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearDefaultParametersMap = function() {
   this.getDefaultParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18844,7 +18939,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getExecutorSe
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearExecutorSetupFailureParametersMap = function() {
   this.getExecutorSetupFailureParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18866,7 +18962,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getSystemShut
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearSystemShutdownParametersMap = function() {
   this.getSystemShutdownParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -18925,7 +19022,8 @@ proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.getChildNodeF
  */
 proto.bosdyn.api.mission.BosdynRecordEventOnInterruption.prototype.clearChildNodeFailureParametersMap = function() {
   this.getChildNodeFailureParametersMap().clear();
-  return this;};
+  return this;
+};
 
 
 
@@ -18960,12 +19058,12 @@ proto.bosdyn.api.mission.ClearBehaviorFaults.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.mission.ClearBehaviorFaults.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    host: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    robotStateBlackboardName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    clearedCauseFallBlackboardName: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    clearedCauseHardwareBlackboardName: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    clearedCauseLeaseTimeoutBlackboardName: jspb.Message.getFieldWithDefault(msg, 6, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+host: jspb.Message.getFieldWithDefault(msg, 2, ""),
+robotStateBlackboardName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+clearedCauseFallBlackboardName: jspb.Message.getFieldWithDefault(msg, 4, ""),
+clearedCauseHardwareBlackboardName: jspb.Message.getFieldWithDefault(msg, 5, ""),
+clearedCauseLeaseTimeoutBlackboardName: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -18978,7 +19076,7 @@ proto.bosdyn.api.mission.ClearBehaviorFaults.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.ClearBehaviorFaults}
  */
 proto.bosdyn.api.mission.ClearBehaviorFaults.deserializeBinary = function(bytes) {
@@ -19003,27 +19101,27 @@ proto.bosdyn.api.mission.ClearBehaviorFaults.deserializeBinaryFromReader = funct
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHost(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRobotStateBlackboardName(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClearedCauseFallBlackboardName(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClearedCauseHardwareBlackboardName(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClearedCauseLeaseTimeoutBlackboardName(value);
       break;
     default:
@@ -19240,9 +19338,9 @@ proto.bosdyn.api.mission.CreateMissionText.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.mission.CreateMissionText.toObject = function(includeInstance, msg) {
   var f, obj = {
-    missionText: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    severity: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
+missionText: jspb.Message.getFieldWithDefault(msg, 1, ""),
+severity: jspb.Message.getFieldWithDefault(msg, 2, 0),
+child: (f = msg.getChild()) && proto.bosdyn.api.mission.Node.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -19255,7 +19353,7 @@ proto.bosdyn.api.mission.CreateMissionText.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.CreateMissionText}
  */
 proto.bosdyn.api.mission.CreateMissionText.deserializeBinary = function(bytes) {
@@ -19280,7 +19378,7 @@ proto.bosdyn.api.mission.CreateMissionText.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMissionText(value);
       break;
     case 2:

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 goog.exportSymbol('proto.bosdyn.api.metrics_logging.SignedProto', null, global);
 /**
@@ -75,7 +69,7 @@ proto.bosdyn.api.metrics_logging.SignedProto.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.metrics_logging.SignedProto.toObject = function(includeInstance, msg) {
   var f, obj = {
-    data: msg.getData_asB64()
+data: msg.getData_asB64()
   };
 
   if (includeInstance) {
@@ -88,7 +82,7 @@ proto.bosdyn.api.metrics_logging.SignedProto.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.metrics_logging.SignedProto}
  */
 proto.bosdyn.api.metrics_logging.SignedProto.deserializeBinary = function(bytes) {

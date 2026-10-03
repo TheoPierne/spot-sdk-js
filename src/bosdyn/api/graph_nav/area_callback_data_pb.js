@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 goog.object.extend(proto, google_protobuf_any_pb);
@@ -114,7 +108,7 @@ proto.bosdyn.api.graph_nav.AreaCallbackMapConfig.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.AreaCallbackMapConfig}
  */
 proto.bosdyn.api.graph_nav.AreaCallbackMapConfig.deserializeBinary = function(bytes) {
@@ -202,10 +196,10 @@ proto.bosdyn.api.graph_nav.AreaCallbackData.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.graph_nav.AreaCallbackData.toObject = function(includeInstance, msg) {
   var f, obj = {
-    configData: (f = msg.getConfigData()) && google_protobuf_any_pb.Any.toObject(includeInstance, f),
-    customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f),
-    parameters: (f = msg.getParameters()) && bosdyn_api_service_customization_pb.CustomParamCollection.toObject(includeInstance, f),
-    mapConfig: (f = msg.getMapConfig()) && proto.bosdyn.api.graph_nav.AreaCallbackMapConfig.toObject(includeInstance, f)
+configData: (f = msg.getConfigData()) && google_protobuf_any_pb.Any.toObject(includeInstance, f),
+customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f),
+parameters: (f = msg.getParameters()) && bosdyn_api_service_customization_pb.CustomParamCollection.toObject(includeInstance, f),
+mapConfig: (f = msg.getMapConfig()) && proto.bosdyn.api.graph_nav.AreaCallbackMapConfig.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -218,7 +212,7 @@ proto.bosdyn.api.graph_nav.AreaCallbackData.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.AreaCallbackData}
  */
 proto.bosdyn.api.graph_nav.AreaCallbackData.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
 goog.object.extend(proto, google_protobuf_wrappers_pb);
@@ -849,8 +843,8 @@ proto.bosdyn.api.Vec2.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Vec2.toObject = function(includeInstance, msg) {
   var f, obj = {
-    x: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    y: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+x: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+y: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -863,7 +857,7 @@ proto.bosdyn.api.Vec2.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Vec2}
  */
 proto.bosdyn.api.Vec2.deserializeBinary = function(bytes) {
@@ -1009,9 +1003,9 @@ proto.bosdyn.api.Vec3.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Vec3.toObject = function(includeInstance, msg) {
   var f, obj = {
-    x: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    y: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    z: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+x: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+y: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+z: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -1024,7 +1018,7 @@ proto.bosdyn.api.Vec3.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Vec3}
  */
 proto.bosdyn.api.Vec3.deserializeBinary = function(bytes) {
@@ -1199,9 +1193,9 @@ proto.bosdyn.api.CylindricalCoordinate.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.CylindricalCoordinate.toObject = function(includeInstance, msg) {
   var f, obj = {
-    r: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    theta: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    z: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+r: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+theta: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+z: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -1214,7 +1208,7 @@ proto.bosdyn.api.CylindricalCoordinate.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.CylindricalCoordinate}
  */
 proto.bosdyn.api.CylindricalCoordinate.deserializeBinary = function(bytes) {
@@ -1389,10 +1383,10 @@ proto.bosdyn.api.Quaternion.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Quaternion.toObject = function(includeInstance, msg) {
   var f, obj = {
-    x: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    y: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    z: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    w: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
+x: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+y: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+z: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+w: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
   };
 
   if (includeInstance) {
@@ -1405,7 +1399,7 @@ proto.bosdyn.api.Quaternion.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Quaternion}
  */
 proto.bosdyn.api.Quaternion.deserializeBinary = function(bytes) {
@@ -1609,8 +1603,8 @@ proto.bosdyn.api.Plane.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Plane.toObject = function(includeInstance, msg) {
   var f, obj = {
-    point: (f = msg.getPoint()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
-    normal: (f = msg.getNormal()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
+point: (f = msg.getPoint()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
+normal: (f = msg.getNormal()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1623,7 +1617,7 @@ proto.bosdyn.api.Plane.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Plane}
  */
 proto.bosdyn.api.Plane.deserializeBinary = function(bytes) {
@@ -1811,8 +1805,8 @@ proto.bosdyn.api.Quad.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Quad.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pose: (f = msg.getPose()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f),
-    size: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+pose: (f = msg.getPose()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f),
+size: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -1825,7 +1819,7 @@ proto.bosdyn.api.Quad.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Quad}
  */
 proto.bosdyn.api.Quad.deserializeBinary = function(bytes) {
@@ -1992,8 +1986,8 @@ proto.bosdyn.api.Ray.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Ray.toObject = function(includeInstance, msg) {
   var f, obj = {
-    origin: (f = msg.getOrigin()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
-    direction: (f = msg.getDirection()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
+origin: (f = msg.getOrigin()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
+direction: (f = msg.getDirection()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2006,7 +2000,7 @@ proto.bosdyn.api.Ray.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Ray}
  */
 proto.bosdyn.api.Ray.deserializeBinary = function(bytes) {
@@ -2194,8 +2188,8 @@ proto.bosdyn.api.SE2Pose.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.SE2Pose.toObject = function(includeInstance, msg) {
   var f, obj = {
-    position: (f = msg.getPosition()) && proto.bosdyn.api.Vec2.toObject(includeInstance, f),
-    angle: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+position: (f = msg.getPosition()) && proto.bosdyn.api.Vec2.toObject(includeInstance, f),
+angle: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -2208,7 +2202,7 @@ proto.bosdyn.api.SE2Pose.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE2Pose}
  */
 proto.bosdyn.api.SE2Pose.deserializeBinary = function(bytes) {
@@ -2375,8 +2369,8 @@ proto.bosdyn.api.SE2Velocity.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.SE2Velocity.toObject = function(includeInstance, msg) {
   var f, obj = {
-    linear: (f = msg.getLinear()) && proto.bosdyn.api.Vec2.toObject(includeInstance, f),
-    angular: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+linear: (f = msg.getLinear()) && proto.bosdyn.api.Vec2.toObject(includeInstance, f),
+angular: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -2389,7 +2383,7 @@ proto.bosdyn.api.SE2Velocity.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE2Velocity}
  */
 proto.bosdyn.api.SE2Velocity.deserializeBinary = function(bytes) {
@@ -2556,8 +2550,8 @@ proto.bosdyn.api.SE2VelocityLimit.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.SE2VelocityLimit.toObject = function(includeInstance, msg) {
   var f, obj = {
-    maxVel: (f = msg.getMaxVel()) && proto.bosdyn.api.SE2Velocity.toObject(includeInstance, f),
-    minVel: (f = msg.getMinVel()) && proto.bosdyn.api.SE2Velocity.toObject(includeInstance, f)
+maxVel: (f = msg.getMaxVel()) && proto.bosdyn.api.SE2Velocity.toObject(includeInstance, f),
+minVel: (f = msg.getMinVel()) && proto.bosdyn.api.SE2Velocity.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2570,7 +2564,7 @@ proto.bosdyn.api.SE2VelocityLimit.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE2VelocityLimit}
  */
 proto.bosdyn.api.SE2VelocityLimit.deserializeBinary = function(bytes) {
@@ -2758,8 +2752,8 @@ proto.bosdyn.api.SE3Pose.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.SE3Pose.toObject = function(includeInstance, msg) {
   var f, obj = {
-    position: (f = msg.getPosition()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
-    rotation: (f = msg.getRotation()) && proto.bosdyn.api.Quaternion.toObject(includeInstance, f)
+position: (f = msg.getPosition()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
+rotation: (f = msg.getRotation()) && proto.bosdyn.api.Quaternion.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2772,7 +2766,7 @@ proto.bosdyn.api.SE3Pose.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE3Pose}
  */
 proto.bosdyn.api.SE3Pose.deserializeBinary = function(bytes) {
@@ -2960,8 +2954,8 @@ proto.bosdyn.api.SE3Velocity.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.SE3Velocity.toObject = function(includeInstance, msg) {
   var f, obj = {
-    linear: (f = msg.getLinear()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
-    angular: (f = msg.getAngular()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
+linear: (f = msg.getLinear()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
+angular: (f = msg.getAngular()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2974,7 +2968,7 @@ proto.bosdyn.api.SE3Velocity.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE3Velocity}
  */
 proto.bosdyn.api.SE3Velocity.deserializeBinary = function(bytes) {
@@ -3162,8 +3156,8 @@ proto.bosdyn.api.Wrench.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Wrench.toObject = function(includeInstance, msg) {
   var f, obj = {
-    force: (f = msg.getForce()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
-    torque: (f = msg.getTorque()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
+force: (f = msg.getForce()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f),
+torque: (f = msg.getTorque()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3176,7 +3170,7 @@ proto.bosdyn.api.Wrench.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Wrench}
  */
 proto.bosdyn.api.Wrench.deserializeBinary = function(bytes) {
@@ -3364,7 +3358,7 @@ proto.bosdyn.api.FrameTreeSnapshot.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.FrameTreeSnapshot.toObject = function(includeInstance, msg) {
   var f, obj = {
-    childToParentEdgeMapMap: (f = msg.getChildToParentEdgeMapMap()) ? f.toObject(includeInstance, proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.toObject) : []
+childToParentEdgeMapMap: (f = msg.getChildToParentEdgeMapMap()) ? f.toObject(includeInstance, proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.toObject) : []
   };
 
   if (includeInstance) {
@@ -3377,7 +3371,7 @@ proto.bosdyn.api.FrameTreeSnapshot.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.FrameTreeSnapshot}
  */
 proto.bosdyn.api.FrameTreeSnapshot.deserializeBinary = function(bytes) {
@@ -3404,7 +3398,7 @@ proto.bosdyn.api.FrameTreeSnapshot.deserializeBinaryFromReader = function(msg, r
     case 1:
       var value = msg.getChildToParentEdgeMapMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.deserializeBinaryFromReader, "", new proto.bosdyn.api.FrameTreeSnapshot.ParentEdge());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.deserializeBinaryFromReader, "", new proto.bosdyn.api.FrameTreeSnapshot.ParentEdge());
          });
       break;
     default:
@@ -3438,7 +3432,13 @@ proto.bosdyn.api.FrameTreeSnapshot.serializeBinaryToWriter = function(message, w
   var f = undefined;
   f = message.getChildToParentEdgeMapMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getChildToParentEdgeMapMap(true),
+    1,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.serializeBinaryToWriter);
   }
 };
 
@@ -3475,8 +3475,8 @@ proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.toObject = function(includeInstance, msg) {
   var f, obj = {
-    parentFrameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    parentTformChild: (f = msg.getParentTformChild()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f)
+parentFrameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+parentTformChild: (f = msg.getParentTformChild()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3489,7 +3489,7 @@ proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.FrameTreeSnapshot.ParentEdge}
  */
 proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.deserializeBinary = function(bytes) {
@@ -3514,7 +3514,7 @@ proto.bosdyn.api.FrameTreeSnapshot.ParentEdge.deserializeBinaryFromReader = func
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setParentFrameName(value);
       break;
     case 2:
@@ -3643,7 +3643,8 @@ proto.bosdyn.api.FrameTreeSnapshot.prototype.getChildToParentEdgeMapMap = functi
  */
 proto.bosdyn.api.FrameTreeSnapshot.prototype.clearChildToParentEdgeMapMap = function() {
   this.getChildToParentEdgeMapMap().clear();
-  return this;};
+  return this;
+};
 
 
 
@@ -3678,7 +3679,7 @@ proto.bosdyn.api.Box2.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Box2.toObject = function(includeInstance, msg) {
   var f, obj = {
-    size: (f = msg.getSize()) && proto.bosdyn.api.Vec2.toObject(includeInstance, f)
+size: (f = msg.getSize()) && proto.bosdyn.api.Vec2.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3691,7 +3692,7 @@ proto.bosdyn.api.Box2.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Box2}
  */
 proto.bosdyn.api.Box2.deserializeBinary = function(bytes) {
@@ -3829,8 +3830,8 @@ proto.bosdyn.api.OrientedBox2.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.OrientedBox2.toObject = function(includeInstance, msg) {
   var f, obj = {
-    box: (f = msg.getBox()) && proto.bosdyn.api.Box2.toObject(includeInstance, f),
-    angle: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+box: (f = msg.getBox()) && proto.bosdyn.api.Box2.toObject(includeInstance, f),
+angle: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -3843,7 +3844,7 @@ proto.bosdyn.api.OrientedBox2.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.OrientedBox2}
  */
 proto.bosdyn.api.OrientedBox2.deserializeBinary = function(bytes) {
@@ -4010,9 +4011,9 @@ proto.bosdyn.api.Box2WithFrame.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.Box2WithFrame.toObject = function(includeInstance, msg) {
   var f, obj = {
-    box: (f = msg.getBox()) && proto.bosdyn.api.Box2.toObject(includeInstance, f),
-    frameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    frameNameTformBox: (f = msg.getFrameNameTformBox()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f)
+box: (f = msg.getBox()) && proto.bosdyn.api.Box2.toObject(includeInstance, f),
+frameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+frameNameTformBox: (f = msg.getFrameNameTformBox()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4025,7 +4026,7 @@ proto.bosdyn.api.Box2WithFrame.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Box2WithFrame}
  */
 proto.bosdyn.api.Box2WithFrame.deserializeBinary = function(bytes) {
@@ -4055,7 +4056,7 @@ proto.bosdyn.api.Box2WithFrame.deserializeBinaryFromReader = function(msg, reade
       msg.setBox(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 3:
@@ -4242,7 +4243,7 @@ proto.bosdyn.api.Box3.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Box3.toObject = function(includeInstance, msg) {
   var f, obj = {
-    size: (f = msg.getSize()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
+size: (f = msg.getSize()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4255,7 +4256,7 @@ proto.bosdyn.api.Box3.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Box3}
  */
 proto.bosdyn.api.Box3.deserializeBinary = function(bytes) {
@@ -4393,9 +4394,9 @@ proto.bosdyn.api.Box3WithFrame.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.Box3WithFrame.toObject = function(includeInstance, msg) {
   var f, obj = {
-    box: (f = msg.getBox()) && proto.bosdyn.api.Box3.toObject(includeInstance, f),
-    frameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    frameNameTformBox: (f = msg.getFrameNameTformBox()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f)
+box: (f = msg.getBox()) && proto.bosdyn.api.Box3.toObject(includeInstance, f),
+frameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+frameNameTformBox: (f = msg.getFrameNameTformBox()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4408,7 +4409,7 @@ proto.bosdyn.api.Box3WithFrame.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Box3WithFrame}
  */
 proto.bosdyn.api.Box3WithFrame.deserializeBinary = function(bytes) {
@@ -4438,7 +4439,7 @@ proto.bosdyn.api.Box3WithFrame.deserializeBinaryFromReader = function(msg, reade
       msg.setBox(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 3:
@@ -4632,9 +4633,9 @@ proto.bosdyn.api.Matrix.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Matrix.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rows: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    valuesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 3)) == null ? undefined : f
+rows: jspb.Message.getFieldWithDefault(msg, 1, 0),
+cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
+valuesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -4647,7 +4648,7 @@ proto.bosdyn.api.Matrix.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Matrix}
  */
 proto.bosdyn.api.Matrix.deserializeBinary = function(bytes) {
@@ -4680,10 +4681,7 @@ proto.bosdyn.api.Matrix.deserializeBinaryFromReader = function(msg, reader) {
       msg.setCols(value);
       break;
     case 3:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedDouble() : [reader.readDouble()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addValues(values[i]);
-      }
+      reader.readPackableDoubleInto(msg.getValuesList());
       break;
     default:
       reader.skipField();
@@ -4850,9 +4848,9 @@ proto.bosdyn.api.Matrixf.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Matrixf.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rows: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    valuesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 3)) == null ? undefined : f
+rows: jspb.Message.getFieldWithDefault(msg, 1, 0),
+cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
+valuesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -4865,7 +4863,7 @@ proto.bosdyn.api.Matrixf.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Matrixf}
  */
 proto.bosdyn.api.Matrixf.deserializeBinary = function(bytes) {
@@ -4898,10 +4896,7 @@ proto.bosdyn.api.Matrixf.deserializeBinaryFromReader = function(msg, reader) {
       msg.setCols(value);
       break;
     case 3:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedFloat() : [reader.readFloat()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addValues(values[i]);
-      }
+      reader.readPackableFloatInto(msg.getValuesList());
       break;
     default:
       reader.skipField();
@@ -5068,9 +5063,9 @@ proto.bosdyn.api.MatrixInt64.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.MatrixInt64.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rows: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    valuesList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+rows: jspb.Message.getFieldWithDefault(msg, 1, 0),
+cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
+valuesList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -5083,7 +5078,7 @@ proto.bosdyn.api.MatrixInt64.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.MatrixInt64}
  */
 proto.bosdyn.api.MatrixInt64.deserializeBinary = function(bytes) {
@@ -5116,10 +5111,7 @@ proto.bosdyn.api.MatrixInt64.deserializeBinaryFromReader = function(msg, reader)
       msg.setCols(value);
       break;
     case 3:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt64() : [reader.readInt64()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addValues(values[i]);
-      }
+      reader.readPackableInt64Into(msg.getValuesList());
       break;
     default:
       reader.skipField();
@@ -5286,9 +5278,9 @@ proto.bosdyn.api.MatrixInt32.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.MatrixInt32.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rows: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    valuesList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+rows: jspb.Message.getFieldWithDefault(msg, 1, 0),
+cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
+valuesList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -5301,7 +5293,7 @@ proto.bosdyn.api.MatrixInt32.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.MatrixInt32}
  */
 proto.bosdyn.api.MatrixInt32.deserializeBinary = function(bytes) {
@@ -5334,10 +5326,7 @@ proto.bosdyn.api.MatrixInt32.deserializeBinaryFromReader = function(msg, reader)
       msg.setCols(value);
       break;
     case 3:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addValues(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getValuesList());
       break;
     default:
       reader.skipField();
@@ -5504,7 +5493,7 @@ proto.bosdyn.api.Vector.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Vector.toObject = function(includeInstance, msg) {
   var f, obj = {
-    valuesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 1)) == null ? undefined : f
+valuesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 1)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -5517,7 +5506,7 @@ proto.bosdyn.api.Vector.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Vector}
  */
 proto.bosdyn.api.Vector.deserializeBinary = function(bytes) {
@@ -5542,10 +5531,7 @@ proto.bosdyn.api.Vector.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedDouble() : [reader.readDouble()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addValues(values[i]);
-      }
+      reader.readPackableDoubleInto(msg.getValuesList());
       break;
     default:
       reader.skipField();
@@ -5655,17 +5641,17 @@ proto.bosdyn.api.SE3Covariance.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.SE3Covariance.toObject = function(includeInstance, msg) {
   var f, obj = {
-    matrix: (f = msg.getMatrix()) && proto.bosdyn.api.Matrix.toObject(includeInstance, f),
-    yawVariance: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    covXx: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    covXy: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    covXz: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    covYx: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    covYy: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
-    covYz: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
-    covZx: jspb.Message.getFloatingPointFieldWithDefault(msg, 9, 0.0),
-    covZy: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
-    covZz: jspb.Message.getFloatingPointFieldWithDefault(msg, 11, 0.0)
+matrix: (f = msg.getMatrix()) && proto.bosdyn.api.Matrix.toObject(includeInstance, f),
+yawVariance: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+covXx: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+covXy: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+covXz: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+covYx: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
+covYy: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
+covYz: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
+covZx: jspb.Message.getFloatingPointFieldWithDefault(msg, 9, 0.0),
+covZy: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
+covZz: jspb.Message.getFloatingPointFieldWithDefault(msg, 11, 0.0)
   };
 
   if (includeInstance) {
@@ -5678,7 +5664,7 @@ proto.bosdyn.api.SE3Covariance.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SE3Covariance}
  */
 proto.bosdyn.api.SE3Covariance.deserializeBinary = function(bytes) {
@@ -6113,7 +6099,7 @@ proto.bosdyn.api.PolyLine.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.PolyLine.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pointsList: jspb.Message.toObjectList(msg.getPointsList(),
+pointsList: jspb.Message.toObjectList(msg.getPointsList(),
     proto.bosdyn.api.Vec2.toObject, includeInstance)
   };
 
@@ -6127,7 +6113,7 @@ proto.bosdyn.api.PolyLine.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PolyLine}
  */
 proto.bosdyn.api.PolyLine.deserializeBinary = function(bytes) {
@@ -6273,7 +6259,7 @@ proto.bosdyn.api.Polygon.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Polygon.toObject = function(includeInstance, msg) {
   var f, obj = {
-    vertexesList: jspb.Message.toObjectList(msg.getVertexesList(),
+vertexesList: jspb.Message.toObjectList(msg.getVertexesList(),
     proto.bosdyn.api.Vec2.toObject, includeInstance)
   };
 
@@ -6287,7 +6273,7 @@ proto.bosdyn.api.Polygon.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Polygon}
  */
 proto.bosdyn.api.Polygon.deserializeBinary = function(bytes) {
@@ -6433,8 +6419,8 @@ proto.bosdyn.api.PolygonWithExclusions.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.PolygonWithExclusions.toObject = function(includeInstance, msg) {
   var f, obj = {
-    inclusion: (f = msg.getInclusion()) && proto.bosdyn.api.Polygon.toObject(includeInstance, f),
-    exclusionsList: jspb.Message.toObjectList(msg.getExclusionsList(),
+inclusion: (f = msg.getInclusion()) && proto.bosdyn.api.Polygon.toObject(includeInstance, f),
+exclusionsList: jspb.Message.toObjectList(msg.getExclusionsList(),
     proto.bosdyn.api.Polygon.toObject, includeInstance)
   };
 
@@ -6448,7 +6434,7 @@ proto.bosdyn.api.PolygonWithExclusions.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PolygonWithExclusions}
  */
 proto.bosdyn.api.PolygonWithExclusions.deserializeBinary = function(bytes) {
@@ -6637,8 +6623,8 @@ proto.bosdyn.api.Circle.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Circle.toObject = function(includeInstance, msg) {
   var f, obj = {
-    centerPt: (f = msg.getCenterPt()) && proto.bosdyn.api.Vec2.toObject(includeInstance, f),
-    radius: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+centerPt: (f = msg.getCenterPt()) && proto.bosdyn.api.Vec2.toObject(includeInstance, f),
+radius: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -6651,7 +6637,7 @@ proto.bosdyn.api.Circle.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Circle}
  */
 proto.bosdyn.api.Circle.deserializeBinary = function(bytes) {
@@ -6818,9 +6804,9 @@ proto.bosdyn.api.CircleWithFrame.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.CircleWithFrame.toObject = function(includeInstance, msg) {
   var f, obj = {
-    circle: (f = msg.getCircle()) && proto.bosdyn.api.Circle.toObject(includeInstance, f),
-    frameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    frameNameTformCircle: (f = msg.getFrameNameTformCircle()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f)
+circle: (f = msg.getCircle()) && proto.bosdyn.api.Circle.toObject(includeInstance, f),
+frameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+frameNameTformCircle: (f = msg.getFrameNameTformCircle()) && proto.bosdyn.api.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6833,7 +6819,7 @@ proto.bosdyn.api.CircleWithFrame.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.CircleWithFrame}
  */
 proto.bosdyn.api.CircleWithFrame.deserializeBinary = function(bytes) {
@@ -6863,7 +6849,7 @@ proto.bosdyn.api.CircleWithFrame.deserializeBinaryFromReader = function(msg, rea
       msg.setCircle(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 3:
@@ -7076,8 +7062,8 @@ proto.bosdyn.api.Area.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Area.toObject = function(includeInstance, msg) {
   var f, obj = {
-    polygon: (f = msg.getPolygon()) && proto.bosdyn.api.Polygon.toObject(includeInstance, f),
-    circle: (f = msg.getCircle()) && proto.bosdyn.api.Circle.toObject(includeInstance, f)
+polygon: (f = msg.getPolygon()) && proto.bosdyn.api.Polygon.toObject(includeInstance, f),
+circle: (f = msg.getCircle()) && proto.bosdyn.api.Circle.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7090,7 +7076,7 @@ proto.bosdyn.api.Area.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Area}
  */
 proto.bosdyn.api.Area.deserializeBinary = function(bytes) {
@@ -7303,7 +7289,7 @@ proto.bosdyn.api.Volume.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Volume.toObject = function(includeInstance, msg) {
   var f, obj = {
-    box: (f = msg.getBox()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
+box: (f = msg.getBox()) && proto.bosdyn.api.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7316,7 +7302,7 @@ proto.bosdyn.api.Volume.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Volume}
  */
 proto.bosdyn.api.Volume.deserializeBinary = function(bytes) {
@@ -7454,8 +7440,8 @@ proto.bosdyn.api.Bounds.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Bounds.toObject = function(includeInstance, msg) {
   var f, obj = {
-    lower: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    upper: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+lower: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+upper: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -7468,7 +7454,7 @@ proto.bosdyn.api.Bounds.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Bounds}
  */
 proto.bosdyn.api.Bounds.deserializeBinary = function(bytes) {
@@ -7614,8 +7600,8 @@ proto.bosdyn.api.Vec2Value.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Vec2Value.toObject = function(includeInstance, msg) {
   var f, obj = {
-    x: (f = msg.getX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    y: (f = msg.getY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+x: (f = msg.getX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+y: (f = msg.getY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7628,7 +7614,7 @@ proto.bosdyn.api.Vec2Value.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Vec2Value}
  */
 proto.bosdyn.api.Vec2Value.deserializeBinary = function(bytes) {
@@ -7816,9 +7802,9 @@ proto.bosdyn.api.Vec3Value.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Vec3Value.toObject = function(includeInstance, msg) {
   var f, obj = {
-    x: (f = msg.getX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    y: (f = msg.getY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    z: (f = msg.getZ()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+x: (f = msg.getX()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+y: (f = msg.getY()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+z: (f = msg.getZ()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7831,7 +7817,7 @@ proto.bosdyn.api.Vec3Value.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Vec3Value}
  */
 proto.bosdyn.api.Vec3Value.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -220,9 +214,9 @@ proto.bosdyn.api.SignalDisplayInfo.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.SignalDisplayInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    description: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    order: jspb.Message.getFieldWithDefault(msg, 3, 0)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+description: jspb.Message.getFieldWithDefault(msg, 2, ""),
+order: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -235,7 +229,7 @@ proto.bosdyn.api.SignalDisplayInfo.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SignalDisplayInfo}
  */
 proto.bosdyn.api.SignalDisplayInfo.deserializeBinary = function(bytes) {
@@ -260,11 +254,11 @@ proto.bosdyn.api.SignalDisplayInfo.deserializeBinaryFromReader = function(msg, r
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDescription(value);
       break;
     case 3:
@@ -410,10 +404,10 @@ proto.bosdyn.api.SensorOutputSpec.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.SensorOutputSpec.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bounds: (f = msg.getBounds()) && bosdyn_api_geometry_pb.Bounds.toObject(includeInstance, f),
-    resolution: (f = msg.getResolution()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    units: (f = msg.getUnits()) && bosdyn_api_units_pb.Units.toObject(includeInstance, f),
-    sampleRate: (f = msg.getSampleRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+bounds: (f = msg.getBounds()) && bosdyn_api_geometry_pb.Bounds.toObject(includeInstance, f),
+resolution: (f = msg.getResolution()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+units: (f = msg.getUnits()) && bosdyn_api_units_pb.Units.toObject(includeInstance, f),
+sampleRate: (f = msg.getSampleRate()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -426,7 +420,7 @@ proto.bosdyn.api.SensorOutputSpec.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SensorOutputSpec}
  */
 proto.bosdyn.api.SensorOutputSpec.deserializeBinary = function(bytes) {
@@ -742,11 +736,11 @@ proto.bosdyn.api.AlertConditionSpec.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.AlertConditionSpec.toObject = function(includeInstance, msg) {
   var f, obj = {
-    alertData: (f = msg.getAlertData()) && bosdyn_api_alerts_pb.AlertData.toObject(includeInstance, f),
-    min: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    max: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    bounds: (f = msg.getBounds()) && bosdyn_api_geometry_pb.Bounds.toObject(includeInstance, f),
-    condition: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
+alertData: (f = msg.getAlertData()) && bosdyn_api_alerts_pb.AlertData.toObject(includeInstance, f),
+min: (f = jspb.Message.getOptionalFloatingPointField(msg, 2)) == null ? undefined : f,
+max: (f = jspb.Message.getOptionalFloatingPointField(msg, 3)) == null ? undefined : f,
+bounds: (f = msg.getBounds()) && bosdyn_api_geometry_pb.Bounds.toObject(includeInstance, f),
+condition: (f = jspb.Message.getBooleanField(msg, 5)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -759,7 +753,7 @@ proto.bosdyn.api.AlertConditionSpec.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AlertConditionSpec}
  */
 proto.bosdyn.api.AlertConditionSpec.deserializeBinary = function(bytes) {
@@ -1095,11 +1089,11 @@ proto.bosdyn.api.SignalSpec.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.SignalSpec.toObject = function(includeInstance, msg) {
   var f, obj = {
-    info: (f = msg.getInfo()) && proto.bosdyn.api.SignalDisplayInfo.toObject(includeInstance, f),
-    sensor: (f = msg.getSensor()) && proto.bosdyn.api.SensorOutputSpec.toObject(includeInstance, f),
-    alertsList: jspb.Message.toObjectList(msg.getAlertsList(),
+info: (f = msg.getInfo()) && proto.bosdyn.api.SignalDisplayInfo.toObject(includeInstance, f),
+sensor: (f = msg.getSensor()) && proto.bosdyn.api.SensorOutputSpec.toObject(includeInstance, f),
+alertsList: jspb.Message.toObjectList(msg.getAlertsList(),
     proto.bosdyn.api.AlertConditionSpec.toObject, includeInstance),
-    dataType: jspb.Message.getFieldWithDefault(msg, 4, 0)
+dataType: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -1112,7 +1106,7 @@ proto.bosdyn.api.SignalSpec.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SignalSpec}
  */
 proto.bosdyn.api.SignalSpec.deserializeBinary = function(bytes) {
@@ -1391,8 +1385,8 @@ proto.bosdyn.api.SignalData.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.SignalData.toObject = function(includeInstance, msg) {
   var f, obj = {
-    data: (f = msg.getData()) && proto.bosdyn.api.SignalData.Data.toObject(includeInstance, f),
-    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+data: (f = msg.getData()) && proto.bosdyn.api.SignalData.Data.toObject(includeInstance, f),
+timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1405,7 +1399,7 @@ proto.bosdyn.api.SignalData.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SignalData}
  */
 proto.bosdyn.api.SignalData.deserializeBinary = function(bytes) {
@@ -1547,10 +1541,10 @@ proto.bosdyn.api.SignalData.Data.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.SignalData.Data.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pb_double: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    pb_int: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    string: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    bool: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+pb_double: (f = jspb.Message.getOptionalFloatingPointField(msg, 1)) == null ? undefined : f,
+pb_int: (f = jspb.Message.getField(msg, 2)) == null ? undefined : f,
+string: (f = jspb.Message.getField(msg, 3)) == null ? undefined : f,
+bool: (f = jspb.Message.getBooleanField(msg, 4)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -1563,7 +1557,7 @@ proto.bosdyn.api.SignalData.Data.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SignalData.Data}
  */
 proto.bosdyn.api.SignalData.Data.deserializeBinary = function(bytes) {
@@ -1596,7 +1590,7 @@ proto.bosdyn.api.SignalData.Data.deserializeBinaryFromReader = function(msg, rea
       msg.setInt(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setString(value);
       break;
     case 4:
@@ -1913,8 +1907,8 @@ proto.bosdyn.api.Signal.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Signal.toObject = function(includeInstance, msg) {
   var f, obj = {
-    signalSpec: (f = msg.getSignalSpec()) && proto.bosdyn.api.SignalSpec.toObject(includeInstance, f),
-    signalData: (f = msg.getSignalData()) && proto.bosdyn.api.SignalData.toObject(includeInstance, f)
+signalSpec: (f = msg.getSignalSpec()) && proto.bosdyn.api.SignalSpec.toObject(includeInstance, f),
+signalData: (f = msg.getSignalData()) && proto.bosdyn.api.SignalData.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1927,7 +1921,7 @@ proto.bosdyn.api.Signal.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Signal}
  */
 proto.bosdyn.api.Signal.deserializeBinary = function(bytes) {

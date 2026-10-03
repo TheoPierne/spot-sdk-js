@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 goog.exportSymbol('proto.bosdyn.api.AreaI', null, global);
 goog.exportSymbol('proto.bosdyn.api.AreaI.GeometryCase', null, global);
@@ -142,10 +136,10 @@ proto.bosdyn.api.RectangleI.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.RectangleI.toObject = function(includeInstance, msg) {
   var f, obj = {
-    x: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    y: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    cols: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    rows: jspb.Message.getFieldWithDefault(msg, 8, 0)
+x: jspb.Message.getFieldWithDefault(msg, 5, 0),
+y: jspb.Message.getFieldWithDefault(msg, 6, 0),
+cols: jspb.Message.getFieldWithDefault(msg, 7, 0),
+rows: jspb.Message.getFieldWithDefault(msg, 8, 0)
   };
 
   if (includeInstance) {
@@ -158,7 +152,7 @@ proto.bosdyn.api.RectangleI.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RectangleI}
  */
 proto.bosdyn.api.RectangleI.deserializeBinary = function(bytes) {
@@ -362,8 +356,8 @@ proto.bosdyn.api.Vec2I.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Vec2I.toObject = function(includeInstance, msg) {
   var f, obj = {
-    x: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    y: jspb.Message.getFieldWithDefault(msg, 2, 0)
+x: jspb.Message.getFieldWithDefault(msg, 1, 0),
+y: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -376,7 +370,7 @@ proto.bosdyn.api.Vec2I.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Vec2I}
  */
 proto.bosdyn.api.Vec2I.deserializeBinary = function(bytes) {
@@ -529,7 +523,7 @@ proto.bosdyn.api.PolygonI.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.PolygonI.toObject = function(includeInstance, msg) {
   var f, obj = {
-    verticesList: jspb.Message.toObjectList(msg.getVerticesList(),
+verticesList: jspb.Message.toObjectList(msg.getVerticesList(),
     proto.bosdyn.api.Vec2I.toObject, includeInstance)
   };
 
@@ -543,7 +537,7 @@ proto.bosdyn.api.PolygonI.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PolygonI}
  */
 proto.bosdyn.api.PolygonI.deserializeBinary = function(bytes) {
@@ -708,8 +702,8 @@ proto.bosdyn.api.AreaI.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.AreaI.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rectangle: (f = msg.getRectangle()) && proto.bosdyn.api.RectangleI.toObject(includeInstance, f),
-    polygon: (f = msg.getPolygon()) && proto.bosdyn.api.PolygonI.toObject(includeInstance, f)
+rectangle: (f = msg.getRectangle()) && proto.bosdyn.api.RectangleI.toObject(includeInstance, f),
+polygon: (f = msg.getPolygon()) && proto.bosdyn.api.PolygonI.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -722,7 +716,7 @@ proto.bosdyn.api.AreaI.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AreaI}
  */
 proto.bosdyn.api.AreaI.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_alerts_pb = require('../../bosdyn/api/alerts_pb.js');
 goog.object.extend(proto, bosdyn_api_alerts_pb);
@@ -741,12 +735,12 @@ proto.bosdyn.api.DataAcquisitionCapability.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.DataAcquisitionCapability.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    description: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    channelName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    serviceName: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.Spec.toObject(includeInstance, f),
-    hasLiveData: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+description: jspb.Message.getFieldWithDefault(msg, 2, ""),
+channelName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+serviceName: jspb.Message.getFieldWithDefault(msg, 4, ""),
+customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.Spec.toObject(includeInstance, f),
+hasLiveData: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
   };
 
   if (includeInstance) {
@@ -759,7 +753,7 @@ proto.bosdyn.api.DataAcquisitionCapability.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.DataAcquisitionCapability}
  */
 proto.bosdyn.api.DataAcquisitionCapability.deserializeBinary = function(bytes) {
@@ -784,19 +778,19 @@ proto.bosdyn.api.DataAcquisitionCapability.deserializeBinaryFromReader = functio
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDescription(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setChannelName(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 5:
@@ -1049,9 +1043,9 @@ proto.bosdyn.api.ImageAcquisitionCapability.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.ImageAcquisitionCapability.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    imageSourceNamesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
-    imageSourcesList: jspb.Message.toObjectList(msg.getImageSourcesList(),
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+imageSourceNamesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
+imageSourcesList: jspb.Message.toObjectList(msg.getImageSourcesList(),
     bosdyn_api_image_pb.ImageSource.toObject, includeInstance)
   };
 
@@ -1065,7 +1059,7 @@ proto.bosdyn.api.ImageAcquisitionCapability.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageAcquisitionCapability}
  */
 proto.bosdyn.api.ImageAcquisitionCapability.deserializeBinary = function(bytes) {
@@ -1090,11 +1084,11 @@ proto.bosdyn.api.ImageAcquisitionCapability.deserializeBinaryFromReader = functi
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addImageSourceNames(value);
       break;
     case 3:
@@ -1288,11 +1282,11 @@ proto.bosdyn.api.NetworkComputeCapability.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.NetworkComputeCapability.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serverConfig: (f = msg.getServerConfig()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration.toObject(includeInstance, f),
-    availableModelsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
-    labelsList: jspb.Message.toObjectList(msg.getLabelsList(),
+serverConfig: (f = msg.getServerConfig()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration.toObject(includeInstance, f),
+availableModelsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
+labelsList: jspb.Message.toObjectList(msg.getLabelsList(),
     bosdyn_api_network_compute_bridge_pb.ModelLabels.toObject, includeInstance),
-    models: (f = msg.getModels()) && bosdyn_api_network_compute_bridge_pb.AvailableModels.toObject(includeInstance, f)
+models: (f = msg.getModels()) && bosdyn_api_network_compute_bridge_pb.AvailableModels.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1305,7 +1299,7 @@ proto.bosdyn.api.NetworkComputeCapability.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.NetworkComputeCapability}
  */
 proto.bosdyn.api.NetworkComputeCapability.deserializeBinary = function(bytes) {
@@ -1335,7 +1329,7 @@ proto.bosdyn.api.NetworkComputeCapability.deserializeBinaryFromReader = function
       msg.setServerConfig(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addAvailableModels(value);
       break;
     case 6:
@@ -1599,11 +1593,11 @@ proto.bosdyn.api.AcquisitionCapabilityList.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.AcquisitionCapabilityList.toObject = function(includeInstance, msg) {
   var f, obj = {
-    dataSourcesList: jspb.Message.toObjectList(msg.getDataSourcesList(),
+dataSourcesList: jspb.Message.toObjectList(msg.getDataSourcesList(),
     proto.bosdyn.api.DataAcquisitionCapability.toObject, includeInstance),
-    imageSourcesList: jspb.Message.toObjectList(msg.getImageSourcesList(),
+imageSourcesList: jspb.Message.toObjectList(msg.getImageSourcesList(),
     proto.bosdyn.api.ImageAcquisitionCapability.toObject, includeInstance),
-    networkComputeSourcesList: jspb.Message.toObjectList(msg.getNetworkComputeSourcesList(),
+networkComputeSourcesList: jspb.Message.toObjectList(msg.getNetworkComputeSourcesList(),
     proto.bosdyn.api.NetworkComputeCapability.toObject, includeInstance)
   };
 
@@ -1617,7 +1611,7 @@ proto.bosdyn.api.AcquisitionCapabilityList.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AcquisitionCapabilityList}
  */
 proto.bosdyn.api.AcquisitionCapabilityList.deserializeBinary = function(bytes) {
@@ -1858,9 +1852,9 @@ proto.bosdyn.api.CaptureActionId.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.CaptureActionId.toObject = function(includeInstance, msg) {
   var f, obj = {
-    actionName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    groupName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+actionName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+groupName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1873,7 +1867,7 @@ proto.bosdyn.api.CaptureActionId.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.CaptureActionId}
  */
 proto.bosdyn.api.CaptureActionId.deserializeBinary = function(bytes) {
@@ -1898,11 +1892,11 @@ proto.bosdyn.api.CaptureActionId.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setActionName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setGroupName(value);
       break;
     case 3:
@@ -2069,10 +2063,10 @@ proto.bosdyn.api.DataIdentifier.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.DataIdentifier.toObject = function(includeInstance, msg) {
   var f, obj = {
-    actionId: (f = msg.getActionId()) && proto.bosdyn.api.CaptureActionId.toObject(includeInstance, f),
-    channel: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    dataName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    id: jspb.Message.getFieldWithDefault(msg, 4, 0)
+actionId: (f = msg.getActionId()) && proto.bosdyn.api.CaptureActionId.toObject(includeInstance, f),
+channel: jspb.Message.getFieldWithDefault(msg, 2, ""),
+dataName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+id: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -2085,7 +2079,7 @@ proto.bosdyn.api.DataIdentifier.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.DataIdentifier}
  */
 proto.bosdyn.api.DataIdentifier.deserializeBinary = function(bytes) {
@@ -2115,11 +2109,11 @@ proto.bosdyn.api.DataIdentifier.deserializeBinaryFromReader = function(msg, read
       msg.setActionId(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setChannel(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDataName(value);
       break;
     case 4:
@@ -2310,7 +2304,7 @@ proto.bosdyn.api.Metadata.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Metadata.toObject = function(includeInstance, msg) {
   var f, obj = {
-    data: (f = msg.getData()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f)
+data: (f = msg.getData()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2323,7 +2317,7 @@ proto.bosdyn.api.Metadata.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Metadata}
  */
 proto.bosdyn.api.Metadata.deserializeBinary = function(bytes) {
@@ -2461,9 +2455,9 @@ proto.bosdyn.api.AssociatedMetadata.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.AssociatedMetadata.toObject = function(includeInstance, msg) {
   var f, obj = {
-    referenceId: (f = msg.getReferenceId()) && proto.bosdyn.api.DataIdentifier.toObject(includeInstance, f),
-    metadata: (f = msg.getMetadata()) && proto.bosdyn.api.Metadata.toObject(includeInstance, f),
-    isAutowalkReportEntry: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
+referenceId: (f = msg.getReferenceId()) && proto.bosdyn.api.DataIdentifier.toObject(includeInstance, f),
+metadata: (f = msg.getMetadata()) && proto.bosdyn.api.Metadata.toObject(includeInstance, f),
+isAutowalkReportEntry: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
   };
 
   if (includeInstance) {
@@ -2476,7 +2470,7 @@ proto.bosdyn.api.AssociatedMetadata.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AssociatedMetadata}
  */
 proto.bosdyn.api.AssociatedMetadata.deserializeBinary = function(bytes) {
@@ -2693,8 +2687,8 @@ proto.bosdyn.api.AssociatedAlertData.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.AssociatedAlertData.toObject = function(includeInstance, msg) {
   var f, obj = {
-    referenceId: (f = msg.getReferenceId()) && proto.bosdyn.api.DataIdentifier.toObject(includeInstance, f),
-    alertData: (f = msg.getAlertData()) && bosdyn_api_alerts_pb.AlertData.toObject(includeInstance, f)
+referenceId: (f = msg.getReferenceId()) && proto.bosdyn.api.DataIdentifier.toObject(includeInstance, f),
+alertData: (f = msg.getAlertData()) && bosdyn_api_alerts_pb.AlertData.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2707,7 +2701,7 @@ proto.bosdyn.api.AssociatedAlertData.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AssociatedAlertData}
  */
 proto.bosdyn.api.AssociatedAlertData.deserializeBinary = function(bytes) {
@@ -2895,7 +2889,7 @@ proto.bosdyn.api.CaptureOrdering.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.CaptureOrdering.toObject = function(includeInstance, msg) {
   var f, obj = {
-    value: jspb.Message.getFieldWithDefault(msg, 1, 0)
+value: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -2908,7 +2902,7 @@ proto.bosdyn.api.CaptureOrdering.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.CaptureOrdering}
  */
 proto.bosdyn.api.CaptureOrdering.deserializeBinary = function(bytes) {
@@ -3025,11 +3019,11 @@ proto.bosdyn.api.ImageSourceCapture.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.ImageSourceCapture.toObject = function(includeInstance, msg) {
   var f, obj = {
-    imageService: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    imageRequest: (f = msg.getImageRequest()) && bosdyn_api_image_pb.ImageRequest.toObject(includeInstance, f),
-    imageSource: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    pixelFormat: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    order: (f = msg.getOrder()) && proto.bosdyn.api.CaptureOrdering.toObject(includeInstance, f)
+imageService: jspb.Message.getFieldWithDefault(msg, 1, ""),
+imageRequest: (f = msg.getImageRequest()) && bosdyn_api_image_pb.ImageRequest.toObject(includeInstance, f),
+imageSource: jspb.Message.getFieldWithDefault(msg, 2, ""),
+pixelFormat: jspb.Message.getFieldWithDefault(msg, 3, 0),
+order: (f = msg.getOrder()) && proto.bosdyn.api.CaptureOrdering.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3042,7 +3036,7 @@ proto.bosdyn.api.ImageSourceCapture.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageSourceCapture}
  */
 proto.bosdyn.api.ImageSourceCapture.deserializeBinary = function(bytes) {
@@ -3067,7 +3061,7 @@ proto.bosdyn.api.ImageSourceCapture.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setImageService(value);
       break;
     case 4:
@@ -3076,7 +3070,7 @@ proto.bosdyn.api.ImageSourceCapture.deserializeBinaryFromReader = function(msg, 
       msg.setImageRequest(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setImageSource(value);
       break;
     case 3:
@@ -3317,9 +3311,9 @@ proto.bosdyn.api.DataCapture.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.DataCapture.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f),
-    order: (f = msg.getOrder()) && proto.bosdyn.api.CaptureOrdering.toObject(includeInstance, f)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f),
+order: (f = msg.getOrder()) && proto.bosdyn.api.CaptureOrdering.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3332,7 +3326,7 @@ proto.bosdyn.api.DataCapture.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.DataCapture}
  */
 proto.bosdyn.api.DataCapture.deserializeBinary = function(bytes) {
@@ -3357,7 +3351,7 @@ proto.bosdyn.api.DataCapture.deserializeBinaryFromReader = function(msg, reader)
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 9:
@@ -3575,10 +3569,10 @@ proto.bosdyn.api.NetworkComputeCapture.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.NetworkComputeCapture.toObject = function(includeInstance, msg) {
   var f, obj = {
-    inputData: (f = msg.getInputData()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeInputData.toObject(includeInstance, f),
-    inputDataBridge: (f = msg.getInputDataBridge()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeInputDataBridge.toObject(includeInstance, f),
-    serverConfig: (f = msg.getServerConfig()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration.toObject(includeInstance, f),
-    order: (f = msg.getOrder()) && proto.bosdyn.api.CaptureOrdering.toObject(includeInstance, f)
+inputData: (f = msg.getInputData()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeInputData.toObject(includeInstance, f),
+inputDataBridge: (f = msg.getInputDataBridge()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeInputDataBridge.toObject(includeInstance, f),
+serverConfig: (f = msg.getServerConfig()) && bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration.toObject(includeInstance, f),
+order: (f = msg.getOrder()) && proto.bosdyn.api.CaptureOrdering.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3591,7 +3585,7 @@ proto.bosdyn.api.NetworkComputeCapture.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.NetworkComputeCapture}
  */
 proto.bosdyn.api.NetworkComputeCapture.deserializeBinary = function(bytes) {
@@ -3886,11 +3880,11 @@ proto.bosdyn.api.AcquisitionRequestList.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.AcquisitionRequestList.toObject = function(includeInstance, msg) {
   var f, obj = {
-    imageCapturesList: jspb.Message.toObjectList(msg.getImageCapturesList(),
+imageCapturesList: jspb.Message.toObjectList(msg.getImageCapturesList(),
     proto.bosdyn.api.ImageSourceCapture.toObject, includeInstance),
-    dataCapturesList: jspb.Message.toObjectList(msg.getDataCapturesList(),
+dataCapturesList: jspb.Message.toObjectList(msg.getDataCapturesList(),
     proto.bosdyn.api.DataCapture.toObject, includeInstance),
-    networkComputeCapturesList: jspb.Message.toObjectList(msg.getNetworkComputeCapturesList(),
+networkComputeCapturesList: jspb.Message.toObjectList(msg.getNetworkComputeCapturesList(),
     proto.bosdyn.api.NetworkComputeCapture.toObject, includeInstance)
   };
 
@@ -3904,7 +3898,7 @@ proto.bosdyn.api.AcquisitionRequestList.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AcquisitionRequestList}
  */
 proto.bosdyn.api.AcquisitionRequestList.deserializeBinary = function(bytes) {
@@ -4145,9 +4139,9 @@ proto.bosdyn.api.DataError.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.DataError.toObject = function(includeInstance, msg) {
   var f, obj = {
-    dataId: (f = msg.getDataId()) && proto.bosdyn.api.DataIdentifier.toObject(includeInstance, f),
-    errorMessage: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    errorData: (f = msg.getErrorData()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
+dataId: (f = msg.getDataId()) && proto.bosdyn.api.DataIdentifier.toObject(includeInstance, f),
+errorMessage: jspb.Message.getFieldWithDefault(msg, 2, ""),
+errorData: (f = msg.getErrorData()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4160,7 +4154,7 @@ proto.bosdyn.api.DataError.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.DataError}
  */
 proto.bosdyn.api.DataError.deserializeBinary = function(bytes) {
@@ -4190,7 +4184,7 @@ proto.bosdyn.api.DataError.deserializeBinaryFromReader = function(msg, reader) {
       msg.setDataId(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setErrorMessage(value);
       break;
     case 3:
@@ -4377,9 +4371,9 @@ proto.bosdyn.api.PluginServiceError.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.PluginServiceError.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    error: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    message: jspb.Message.getFieldWithDefault(msg, 3, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+error: jspb.Message.getFieldWithDefault(msg, 2, 0),
+message: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -4392,7 +4386,7 @@ proto.bosdyn.api.PluginServiceError.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PluginServiceError}
  */
 proto.bosdyn.api.PluginServiceError.deserializeBinary = function(bytes) {
@@ -4417,7 +4411,7 @@ proto.bosdyn.api.PluginServiceError.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
@@ -4425,7 +4419,7 @@ proto.bosdyn.api.PluginServiceError.deserializeBinaryFromReader = function(msg, 
       msg.setError(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMessage(value);
       break;
     default:
@@ -4577,10 +4571,10 @@ proto.bosdyn.api.NetworkComputeError.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.NetworkComputeError.toObject = function(includeInstance, msg) {
   var f, obj = {
-    serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    error: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    networkComputeStatus: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    message: jspb.Message.getFieldWithDefault(msg, 4, "")
+serviceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+error: jspb.Message.getFieldWithDefault(msg, 2, 0),
+networkComputeStatus: jspb.Message.getFieldWithDefault(msg, 3, 0),
+message: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -4593,7 +4587,7 @@ proto.bosdyn.api.NetworkComputeError.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.NetworkComputeError}
  */
 proto.bosdyn.api.NetworkComputeError.deserializeBinary = function(bytes) {
@@ -4618,7 +4612,7 @@ proto.bosdyn.api.NetworkComputeError.deserializeBinaryFromReader = function(msg,
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setServiceName(value);
       break;
     case 2:
@@ -4630,7 +4624,7 @@ proto.bosdyn.api.NetworkComputeError.deserializeBinaryFromReader = function(msg,
       msg.setNetworkComputeStatus(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMessage(value);
       break;
     default:
@@ -4807,11 +4801,11 @@ proto.bosdyn.api.AcquireDataRequest.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.AcquireDataRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    actionId: (f = msg.getActionId()) && proto.bosdyn.api.CaptureActionId.toObject(includeInstance, f),
-    metadata: (f = msg.getMetadata()) && proto.bosdyn.api.Metadata.toObject(includeInstance, f),
-    acquisitionRequests: (f = msg.getAcquisitionRequests()) && proto.bosdyn.api.AcquisitionRequestList.toObject(includeInstance, f),
-    minTimeout: (f = msg.getMinTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+actionId: (f = msg.getActionId()) && proto.bosdyn.api.CaptureActionId.toObject(includeInstance, f),
+metadata: (f = msg.getMetadata()) && proto.bosdyn.api.Metadata.toObject(includeInstance, f),
+acquisitionRequests: (f = msg.getAcquisitionRequests()) && proto.bosdyn.api.AcquisitionRequestList.toObject(includeInstance, f),
+minTimeout: (f = msg.getMinTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4824,7 +4818,7 @@ proto.bosdyn.api.AcquireDataRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AcquireDataRequest}
  */
 proto.bosdyn.api.AcquireDataRequest.deserializeBinary = function(bytes) {
@@ -5162,9 +5156,9 @@ proto.bosdyn.api.AcquireDataResponse.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.AcquireDataResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    requestId: jspb.Message.getFieldWithDefault(msg, 3, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+requestId: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -5177,7 +5171,7 @@ proto.bosdyn.api.AcquireDataResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AcquireDataResponse}
  */
 proto.bosdyn.api.AcquireDataResponse.deserializeBinary = function(bytes) {
@@ -5389,12 +5383,12 @@ proto.bosdyn.api.AcquirePluginDataRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.AcquirePluginDataRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    dataIdList: jspb.Message.toObjectList(msg.getDataIdList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+dataIdList: jspb.Message.toObjectList(msg.getDataIdList(),
     proto.bosdyn.api.DataIdentifier.toObject, includeInstance),
-    metadata: (f = msg.getMetadata()) && proto.bosdyn.api.Metadata.toObject(includeInstance, f),
-    actionId: (f = msg.getActionId()) && proto.bosdyn.api.CaptureActionId.toObject(includeInstance, f),
-    acquisitionRequests: (f = msg.getAcquisitionRequests()) && proto.bosdyn.api.AcquisitionRequestList.toObject(includeInstance, f)
+metadata: (f = msg.getMetadata()) && proto.bosdyn.api.Metadata.toObject(includeInstance, f),
+actionId: (f = msg.getActionId()) && proto.bosdyn.api.CaptureActionId.toObject(includeInstance, f),
+acquisitionRequests: (f = msg.getAcquisitionRequests()) && proto.bosdyn.api.AcquisitionRequestList.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5407,7 +5401,7 @@ proto.bosdyn.api.AcquirePluginDataRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AcquirePluginDataRequest}
  */
 proto.bosdyn.api.AcquirePluginDataRequest.deserializeBinary = function(bytes) {
@@ -5746,11 +5740,11 @@ proto.bosdyn.api.AcquirePluginDataResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.AcquirePluginDataResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    requestId: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    timeoutDeadline: (f = msg.getTimeoutDeadline()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    customParamError: (f = msg.getCustomParamError()) && bosdyn_api_service_customization_pb.CustomParamError.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+requestId: jspb.Message.getFieldWithDefault(msg, 3, 0),
+timeoutDeadline: (f = msg.getTimeoutDeadline()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+customParamError: (f = msg.getCustomParamError()) && bosdyn_api_service_customization_pb.CustomParamError.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5763,7 +5757,7 @@ proto.bosdyn.api.AcquirePluginDataResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AcquirePluginDataResponse}
  */
 proto.bosdyn.api.AcquirePluginDataResponse.deserializeBinary = function(bytes) {
@@ -6069,8 +6063,8 @@ proto.bosdyn.api.GetStatusRequest.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.GetStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    requestId: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+requestId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -6083,7 +6077,7 @@ proto.bosdyn.api.GetStatusRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetStatusRequest}
  */
 proto.bosdyn.api.GetStatusRequest.deserializeBinary = function(bytes) {
@@ -6257,15 +6251,15 @@ proto.bosdyn.api.GetStatusResponse.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.GetStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    dataSavedList: jspb.Message.toObjectList(msg.getDataSavedList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+dataSavedList: jspb.Message.toObjectList(msg.getDataSavedList(),
     proto.bosdyn.api.DataIdentifier.toObject, includeInstance),
-    dataErrorsList: jspb.Message.toObjectList(msg.getDataErrorsList(),
+dataErrorsList: jspb.Message.toObjectList(msg.getDataErrorsList(),
     proto.bosdyn.api.DataError.toObject, includeInstance),
-    serviceErrorsList: jspb.Message.toObjectList(msg.getServiceErrorsList(),
+serviceErrorsList: jspb.Message.toObjectList(msg.getServiceErrorsList(),
     proto.bosdyn.api.PluginServiceError.toObject, includeInstance),
-    networkComputeErrorsList: jspb.Message.toObjectList(msg.getNetworkComputeErrorsList(),
+networkComputeErrorsList: jspb.Message.toObjectList(msg.getNetworkComputeErrorsList(),
     proto.bosdyn.api.NetworkComputeError.toObject, includeInstance)
   };
 
@@ -6279,7 +6273,7 @@ proto.bosdyn.api.GetStatusResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetStatusResponse}
  */
 proto.bosdyn.api.GetStatusResponse.deserializeBinary = function(bytes) {
@@ -6667,7 +6661,7 @@ proto.bosdyn.api.GetServiceInfoRequest.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.GetServiceInfoRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6680,7 +6674,7 @@ proto.bosdyn.api.GetServiceInfoRequest.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetServiceInfoRequest}
  */
 proto.bosdyn.api.GetServiceInfoRequest.deserializeBinary = function(bytes) {
@@ -6818,8 +6812,8 @@ proto.bosdyn.api.GetServiceInfoResponse.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.GetServiceInfoResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    capabilities: (f = msg.getCapabilities()) && proto.bosdyn.api.AcquisitionCapabilityList.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+capabilities: (f = msg.getCapabilities()) && proto.bosdyn.api.AcquisitionCapabilityList.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6832,7 +6826,7 @@ proto.bosdyn.api.GetServiceInfoResponse.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetServiceInfoResponse}
  */
 proto.bosdyn.api.GetServiceInfoResponse.deserializeBinary = function(bytes) {
@@ -7020,8 +7014,8 @@ proto.bosdyn.api.CancelAcquisitionRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.CancelAcquisitionRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    requestId: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+requestId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -7034,7 +7028,7 @@ proto.bosdyn.api.CancelAcquisitionRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.CancelAcquisitionRequest}
  */
 proto.bosdyn.api.CancelAcquisitionRequest.deserializeBinary = function(bytes) {
@@ -7201,8 +7195,8 @@ proto.bosdyn.api.CancelAcquisitionResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.CancelAcquisitionResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -7215,7 +7209,7 @@ proto.bosdyn.api.CancelAcquisitionResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.CancelAcquisitionResponse}
  */
 proto.bosdyn.api.CancelAcquisitionResponse.deserializeBinary = function(bytes) {
@@ -7399,8 +7393,8 @@ proto.bosdyn.api.LiveDataRequest.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.LiveDataRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    dataCapturesList: jspb.Message.toObjectList(msg.getDataCapturesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+dataCapturesList: jspb.Message.toObjectList(msg.getDataCapturesList(),
     proto.bosdyn.api.DataCapture.toObject, includeInstance)
   };
 
@@ -7414,7 +7408,7 @@ proto.bosdyn.api.LiveDataRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LiveDataRequest}
  */
 proto.bosdyn.api.LiveDataRequest.deserializeBinary = function(bytes) {
@@ -7610,8 +7604,8 @@ proto.bosdyn.api.LiveDataResponse.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.LiveDataResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    liveDataList: jspb.Message.toObjectList(msg.getLiveDataList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+liveDataList: jspb.Message.toObjectList(msg.getLiveDataList(),
     proto.bosdyn.api.LiveDataResponse.CapabilityLiveData.toObject, includeInstance)
   };
 
@@ -7625,7 +7619,7 @@ proto.bosdyn.api.LiveDataResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LiveDataResponse}
  */
 proto.bosdyn.api.LiveDataResponse.deserializeBinary = function(bytes) {
@@ -7739,10 +7733,10 @@ proto.bosdyn.api.LiveDataResponse.CapabilityLiveData.prototype.toObject = functi
  */
 proto.bosdyn.api.LiveDataResponse.CapabilityLiveData.toObject = function(includeInstance, msg) {
   var f, obj = {
-    signalsMap: (f = msg.getSignalsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.Signal.toObject) : [],
-    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    customParamError: (f = msg.getCustomParamError()) && bosdyn_api_service_customization_pb.CustomParamError.toObject(includeInstance, f)
+signalsMap: (f = msg.getSignalsMap()) ? f.toObject(includeInstance, proto.bosdyn.api.Signal.toObject) : [],
+name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+customParamError: (f = msg.getCustomParamError()) && bosdyn_api_service_customization_pb.CustomParamError.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7755,7 +7749,7 @@ proto.bosdyn.api.LiveDataResponse.CapabilityLiveData.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LiveDataResponse.CapabilityLiveData}
  */
 proto.bosdyn.api.LiveDataResponse.CapabilityLiveData.deserializeBinary = function(bytes) {
@@ -7782,11 +7776,11 @@ proto.bosdyn.api.LiveDataResponse.CapabilityLiveData.deserializeBinaryFromReader
     case 1:
       var value = msg.getSignalsMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.Signal.deserializeBinaryFromReader, "", new proto.bosdyn.api.Signal());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.Signal.deserializeBinaryFromReader, "", new proto.bosdyn.api.Signal());
          });
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 3:
@@ -7829,7 +7823,13 @@ proto.bosdyn.api.LiveDataResponse.CapabilityLiveData.serializeBinaryToWriter = f
   var f = undefined;
   f = message.getSignalsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.Signal.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getSignalsMap(true),
+    1,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.Signal.serializeBinaryToWriter);
   }
   f = message.getName();
   if (f.length > 0) {
@@ -7886,7 +7886,8 @@ proto.bosdyn.api.LiveDataResponse.CapabilityLiveData.prototype.getSignalsMap = f
  */
 proto.bosdyn.api.LiveDataResponse.CapabilityLiveData.prototype.clearSignalsMap = function() {
   this.getSignalsMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**

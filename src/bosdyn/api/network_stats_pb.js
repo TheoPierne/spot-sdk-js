@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
 goog.object.extend(proto, google_protobuf_duration_pb);
@@ -122,22 +116,22 @@ proto.bosdyn.api.Association.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.Association.toObject = function(includeInstance, msg) {
   var f, obj = {
-    macAddress: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    connectedTime: (f = msg.getConnectedTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    rxSignalDbm: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    rxSignalAvgDbm: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    rxBeaconSignalAvgDbm: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    expectedBitsPerSecond: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    rxBytes: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    rxPackets: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    rxBitsPerSecond: jspb.Message.getFieldWithDefault(msg, 9, 0),
-    txBytes: jspb.Message.getFieldWithDefault(msg, 10, 0),
-    txPackets: jspb.Message.getFieldWithDefault(msg, 11, 0),
-    txBitsPerSecond: jspb.Message.getFieldWithDefault(msg, 12, 0),
-    txRetries: jspb.Message.getFieldWithDefault(msg, 13, 0),
-    txFailed: jspb.Message.getFieldWithDefault(msg, 14, 0),
-    beaconsReceived: jspb.Message.getFieldWithDefault(msg, 15, 0),
-    beaconLossCount: jspb.Message.getFieldWithDefault(msg, 16, 0)
+macAddress: jspb.Message.getFieldWithDefault(msg, 1, ""),
+connectedTime: (f = msg.getConnectedTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+rxSignalDbm: jspb.Message.getFieldWithDefault(msg, 3, 0),
+rxSignalAvgDbm: jspb.Message.getFieldWithDefault(msg, 4, 0),
+rxBeaconSignalAvgDbm: jspb.Message.getFieldWithDefault(msg, 5, 0),
+expectedBitsPerSecond: jspb.Message.getFieldWithDefault(msg, 6, 0),
+rxBytes: jspb.Message.getFieldWithDefault(msg, 7, 0),
+rxPackets: jspb.Message.getFieldWithDefault(msg, 8, 0),
+rxBitsPerSecond: jspb.Message.getFieldWithDefault(msg, 9, 0),
+txBytes: jspb.Message.getFieldWithDefault(msg, 10, 0),
+txPackets: jspb.Message.getFieldWithDefault(msg, 11, 0),
+txBitsPerSecond: jspb.Message.getFieldWithDefault(msg, 12, 0),
+txRetries: jspb.Message.getFieldWithDefault(msg, 13, 0),
+txFailed: jspb.Message.getFieldWithDefault(msg, 14, 0),
+beaconsReceived: jspb.Message.getFieldWithDefault(msg, 15, 0),
+beaconLossCount: jspb.Message.getFieldWithDefault(msg, 16, 0)
   };
 
   if (includeInstance) {
@@ -150,7 +144,7 @@ proto.bosdyn.api.Association.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Association}
  */
 proto.bosdyn.api.Association.deserializeBinary = function(bytes) {
@@ -175,7 +169,7 @@ proto.bosdyn.api.Association.deserializeBinaryFromReader = function(msg, reader)
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMacAddress(value);
       break;
     case 2:
@@ -730,12 +724,12 @@ proto.bosdyn.api.WifiDevice.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.WifiDevice.toObject = function(includeInstance, msg) {
   var f, obj = {
-    type: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    macAddress: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    ssid: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    txPowerDbm: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    associationsList: jspb.Message.toObjectList(msg.getAssociationsList(),
+type: jspb.Message.getFieldWithDefault(msg, 1, 0),
+name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+macAddress: jspb.Message.getFieldWithDefault(msg, 3, ""),
+ssid: jspb.Message.getFieldWithDefault(msg, 4, ""),
+txPowerDbm: jspb.Message.getFieldWithDefault(msg, 5, 0),
+associationsList: jspb.Message.toObjectList(msg.getAssociationsList(),
     proto.bosdyn.api.Association.toObject, includeInstance)
   };
 
@@ -749,7 +743,7 @@ proto.bosdyn.api.WifiDevice.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.WifiDevice}
  */
 proto.bosdyn.api.WifiDevice.deserializeBinary = function(bytes) {
@@ -778,15 +772,15 @@ proto.bosdyn.api.WifiDevice.deserializeBinaryFromReader = function(msg, reader) 
       msg.setType(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMacAddress(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSsid(value);
       break;
     case 5:
@@ -1049,8 +1043,8 @@ proto.bosdyn.api.WifiStats.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.WifiStats.toObject = function(includeInstance, msg) {
   var f, obj = {
-    hostname: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    devicesList: jspb.Message.toObjectList(msg.getDevicesList(),
+hostname: jspb.Message.getFieldWithDefault(msg, 1, ""),
+devicesList: jspb.Message.toObjectList(msg.getDevicesList(),
     proto.bosdyn.api.WifiDevice.toObject, includeInstance)
   };
 
@@ -1064,7 +1058,7 @@ proto.bosdyn.api.WifiStats.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.WifiStats}
  */
 proto.bosdyn.api.WifiStats.deserializeBinary = function(bytes) {
@@ -1089,7 +1083,7 @@ proto.bosdyn.api.WifiStats.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHostname(value);
       break;
     case 2:

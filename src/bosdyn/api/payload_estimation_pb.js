@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_payload_pb = require('../../bosdyn/api/payload_pb.js');
 goog.object.extend(proto, bosdyn_api_payload_pb);
@@ -136,7 +130,7 @@ proto.bosdyn.api.PayloadEstimationCommand.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PayloadEstimationCommand}
  */
 proto.bosdyn.api.PayloadEstimationCommand.deserializeBinary = function(bytes) {
@@ -237,7 +231,7 @@ proto.bosdyn.api.PayloadEstimationCommand.Request.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PayloadEstimationCommand.Request}
  */
 proto.bosdyn.api.PayloadEstimationCommand.Request.deserializeBinary = function(bytes) {
@@ -325,10 +319,10 @@ proto.bosdyn.api.PayloadEstimationCommand.Feedback.prototype.toObject = function
  */
 proto.bosdyn.api.PayloadEstimationCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    progress: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    error: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    estimatedPayload: (f = msg.getEstimatedPayload()) && bosdyn_api_payload_pb.Payload.toObject(includeInstance, f)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+progress: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+error: jspb.Message.getFieldWithDefault(msg, 3, 0),
+estimatedPayload: (f = msg.getEstimatedPayload()) && bosdyn_api_payload_pb.Payload.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -341,7 +335,7 @@ proto.bosdyn.api.PayloadEstimationCommand.Feedback.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PayloadEstimationCommand.Feedback}
  */
 proto.bosdyn.api.PayloadEstimationCommand.Feedback.deserializeBinary = function(bytes) {

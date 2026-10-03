@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -398,10 +392,10 @@ proto.bosdyn.api.Lease.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Lease.toObject = function(includeInstance, msg) {
   var f, obj = {
-    resource: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    epoch: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    sequenceList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
-    clientNamesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
+resource: jspb.Message.getFieldWithDefault(msg, 1, ""),
+epoch: jspb.Message.getFieldWithDefault(msg, 2, ""),
+sequenceList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
+clientNamesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -414,7 +408,7 @@ proto.bosdyn.api.Lease.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Lease}
  */
 proto.bosdyn.api.Lease.deserializeBinary = function(bytes) {
@@ -439,21 +433,18 @@ proto.bosdyn.api.Lease.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setResource(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setEpoch(value);
       break;
     case 3:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedUint32() : [reader.readUint32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addSequence(values[i]);
-      }
+      reader.readPackableUint32Into(msg.getSequenceList());
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addClientNames(value);
       break;
     default:
@@ -665,8 +656,8 @@ proto.bosdyn.api.ResourceTree.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.ResourceTree.toObject = function(includeInstance, msg) {
   var f, obj = {
-    resource: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    subResourcesList: jspb.Message.toObjectList(msg.getSubResourcesList(),
+resource: jspb.Message.getFieldWithDefault(msg, 1, ""),
+subResourcesList: jspb.Message.toObjectList(msg.getSubResourcesList(),
     proto.bosdyn.api.ResourceTree.toObject, includeInstance)
   };
 
@@ -680,7 +671,7 @@ proto.bosdyn.api.ResourceTree.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ResourceTree}
  */
 proto.bosdyn.api.ResourceTree.deserializeBinary = function(bytes) {
@@ -705,7 +696,7 @@ proto.bosdyn.api.ResourceTree.deserializeBinaryFromReader = function(msg, reader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setResource(value);
       break;
     case 2:
@@ -848,8 +839,8 @@ proto.bosdyn.api.LeaseOwner.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.LeaseOwner.toObject = function(includeInstance, msg) {
   var f, obj = {
-    clientName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    userName: jspb.Message.getFieldWithDefault(msg, 2, "")
+clientName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+userName: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -862,7 +853,7 @@ proto.bosdyn.api.LeaseOwner.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LeaseOwner}
  */
 proto.bosdyn.api.LeaseOwner.deserializeBinary = function(bytes) {
@@ -887,11 +878,11 @@ proto.bosdyn.api.LeaseOwner.deserializeBinaryFromReader = function(msg, reader) 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClientName(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setUserName(value);
       break;
     default:
@@ -1015,12 +1006,12 @@ proto.bosdyn.api.LeaseUseResult.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.LeaseUseResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    owner: (f = msg.getOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f),
-    attemptedLease: (f = msg.getAttemptedLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
-    previousLease: (f = msg.getPreviousLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
-    latestKnownLease: (f = msg.getLatestKnownLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
-    latestResourcesList: jspb.Message.toObjectList(msg.getLatestResourcesList(),
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+owner: (f = msg.getOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f),
+attemptedLease: (f = msg.getAttemptedLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
+previousLease: (f = msg.getPreviousLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
+latestKnownLease: (f = msg.getLatestKnownLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
+latestResourcesList: jspb.Message.toObjectList(msg.getLatestResourcesList(),
     proto.bosdyn.api.Lease.toObject, includeInstance)
   };
 
@@ -1034,7 +1025,7 @@ proto.bosdyn.api.LeaseUseResult.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LeaseUseResult}
  */
 proto.bosdyn.api.LeaseUseResult.deserializeBinary = function(bytes) {
@@ -1415,8 +1406,8 @@ proto.bosdyn.api.AcquireLeaseRequest.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.AcquireLeaseRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    resource: jspb.Message.getFieldWithDefault(msg, 2, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+resource: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1429,7 +1420,7 @@ proto.bosdyn.api.AcquireLeaseRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AcquireLeaseRequest}
  */
 proto.bosdyn.api.AcquireLeaseRequest.deserializeBinary = function(bytes) {
@@ -1459,7 +1450,7 @@ proto.bosdyn.api.AcquireLeaseRequest.deserializeBinaryFromReader = function(msg,
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setResource(value);
       break;
     default:
@@ -1596,10 +1587,10 @@ proto.bosdyn.api.AcquireLeaseResponse.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.AcquireLeaseResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
-    leaseOwner: (f = msg.getLeaseOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
+leaseOwner: (f = msg.getLeaseOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1612,7 +1603,7 @@ proto.bosdyn.api.AcquireLeaseResponse.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AcquireLeaseResponse}
  */
 proto.bosdyn.api.AcquireLeaseResponse.deserializeBinary = function(bytes) {
@@ -1890,8 +1881,8 @@ proto.bosdyn.api.TakeLeaseRequest.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.TakeLeaseRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    resource: jspb.Message.getFieldWithDefault(msg, 2, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+resource: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1904,7 +1895,7 @@ proto.bosdyn.api.TakeLeaseRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TakeLeaseRequest}
  */
 proto.bosdyn.api.TakeLeaseRequest.deserializeBinary = function(bytes) {
@@ -1934,7 +1925,7 @@ proto.bosdyn.api.TakeLeaseRequest.deserializeBinaryFromReader = function(msg, re
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setResource(value);
       break;
     default:
@@ -2071,10 +2062,10 @@ proto.bosdyn.api.TakeLeaseResponse.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.TakeLeaseResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
-    leaseOwner: (f = msg.getLeaseOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
+leaseOwner: (f = msg.getLeaseOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2087,7 +2078,7 @@ proto.bosdyn.api.TakeLeaseResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TakeLeaseResponse}
  */
 proto.bosdyn.api.TakeLeaseResponse.deserializeBinary = function(bytes) {
@@ -2364,8 +2355,8 @@ proto.bosdyn.api.ReturnLeaseRequest.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.ReturnLeaseRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2378,7 +2369,7 @@ proto.bosdyn.api.ReturnLeaseRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ReturnLeaseRequest}
  */
 proto.bosdyn.api.ReturnLeaseRequest.deserializeBinary = function(bytes) {
@@ -2566,8 +2557,8 @@ proto.bosdyn.api.ReturnLeaseResponse.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.ReturnLeaseResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2580,7 +2571,7 @@ proto.bosdyn.api.ReturnLeaseResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ReturnLeaseResponse}
  */
 proto.bosdyn.api.ReturnLeaseResponse.deserializeBinary = function(bytes) {
@@ -2758,8 +2749,8 @@ proto.bosdyn.api.ListLeasesRequest.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.ListLeasesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    includeFullLeaseInfo: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+includeFullLeaseInfo: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -2772,7 +2763,7 @@ proto.bosdyn.api.ListLeasesRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ListLeasesRequest}
  */
 proto.bosdyn.api.ListLeasesRequest.deserializeBinary = function(bytes) {
@@ -2939,11 +2930,11 @@ proto.bosdyn.api.LeaseResource.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.LeaseResource.toObject = function(includeInstance, msg) {
   var f, obj = {
-    resource: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
-    leaseOwner: (f = msg.getLeaseOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f),
-    staleTime: (f = msg.getStaleTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    isStale: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
+resource: jspb.Message.getFieldWithDefault(msg, 1, ""),
+lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f),
+leaseOwner: (f = msg.getLeaseOwner()) && proto.bosdyn.api.LeaseOwner.toObject(includeInstance, f),
+staleTime: (f = msg.getStaleTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+isStale: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -2956,7 +2947,7 @@ proto.bosdyn.api.LeaseResource.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.LeaseResource}
  */
 proto.bosdyn.api.LeaseResource.deserializeBinary = function(bytes) {
@@ -2981,7 +2972,7 @@ proto.bosdyn.api.LeaseResource.deserializeBinaryFromReader = function(msg, reade
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setResource(value);
       break;
     case 2:
@@ -3259,10 +3250,10 @@ proto.bosdyn.api.ListLeasesResponse.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.ListLeasesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    resourcesList: jspb.Message.toObjectList(msg.getResourcesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+resourcesList: jspb.Message.toObjectList(msg.getResourcesList(),
     proto.bosdyn.api.LeaseResource.toObject, includeInstance),
-    resourceTree: (f = msg.getResourceTree()) && proto.bosdyn.api.ResourceTree.toObject(includeInstance, f)
+resourceTree: (f = msg.getResourceTree()) && proto.bosdyn.api.ResourceTree.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3275,7 +3266,7 @@ proto.bosdyn.api.ListLeasesResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ListLeasesResponse}
  */
 proto.bosdyn.api.ListLeasesResponse.deserializeBinary = function(bytes) {
@@ -3514,8 +3505,8 @@ proto.bosdyn.api.RetainLeaseRequest.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.RetainLeaseRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && proto.bosdyn.api.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3528,7 +3519,7 @@ proto.bosdyn.api.RetainLeaseRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RetainLeaseRequest}
  */
 proto.bosdyn.api.RetainLeaseRequest.deserializeBinary = function(bytes) {
@@ -3716,8 +3707,8 @@ proto.bosdyn.api.RetainLeaseResponse.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.RetainLeaseResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && proto.bosdyn.api.LeaseUseResult.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && proto.bosdyn.api.LeaseUseResult.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3730,7 +3721,7 @@ proto.bosdyn.api.RetainLeaseResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RetainLeaseResponse}
  */
 proto.bosdyn.api.RetainLeaseResponse.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -145,11 +139,11 @@ proto.bosdyn.api.Keypoint.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Keypoint.toObject = function(includeInstance, msg) {
   var f, obj = {
-    coordinates: (f = msg.getCoordinates()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    binaryDescriptor: msg.getBinaryDescriptor_asB64(),
-    score: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    size: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    angle: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
+coordinates: (f = msg.getCoordinates()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+binaryDescriptor: msg.getBinaryDescriptor_asB64(),
+score: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+size: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+angle: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
   };
 
   if (includeInstance) {
@@ -162,7 +156,7 @@ proto.bosdyn.api.Keypoint.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Keypoint}
  */
 proto.bosdyn.api.Keypoint.deserializeBinary = function(bytes) {
@@ -447,9 +441,9 @@ proto.bosdyn.api.KeypointSet.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.KeypointSet.toObject = function(includeInstance, msg) {
   var f, obj = {
-    keypointsList: jspb.Message.toObjectList(msg.getKeypointsList(),
+keypointsList: jspb.Message.toObjectList(msg.getKeypointsList(),
     proto.bosdyn.api.Keypoint.toObject, includeInstance),
-    type: jspb.Message.getFieldWithDefault(msg, 3, 0)
+type: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -462,7 +456,7 @@ proto.bosdyn.api.KeypointSet.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.KeypointSet}
  */
 proto.bosdyn.api.KeypointSet.deserializeBinary = function(bytes) {
@@ -640,9 +634,9 @@ proto.bosdyn.api.Match.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Match.toObject = function(includeInstance, msg) {
   var f, obj = {
-    referenceIndex: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    liveIndex: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    distance: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
+referenceIndex: jspb.Message.getFieldWithDefault(msg, 2, 0),
+liveIndex: jspb.Message.getFieldWithDefault(msg, 3, 0),
+distance: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
   };
 
   if (includeInstance) {
@@ -655,7 +649,7 @@ proto.bosdyn.api.Match.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Match}
  */
 proto.bosdyn.api.Match.deserializeBinary = function(bytes) {
@@ -837,11 +831,11 @@ proto.bosdyn.api.KeypointMatches.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.KeypointMatches.toObject = function(includeInstance, msg) {
   var f, obj = {
-    referenceKeypoints: (f = msg.getReferenceKeypoints()) && proto.bosdyn.api.KeypointSet.toObject(includeInstance, f),
-    liveKeypoints: (f = msg.getLiveKeypoints()) && proto.bosdyn.api.KeypointSet.toObject(includeInstance, f),
-    matchesList: jspb.Message.toObjectList(msg.getMatchesList(),
+referenceKeypoints: (f = msg.getReferenceKeypoints()) && proto.bosdyn.api.KeypointSet.toObject(includeInstance, f),
+liveKeypoints: (f = msg.getLiveKeypoints()) && proto.bosdyn.api.KeypointSet.toObject(includeInstance, f),
+matchesList: jspb.Message.toObjectList(msg.getMatchesList(),
     proto.bosdyn.api.Match.toObject, includeInstance),
-    type: jspb.Message.getFieldWithDefault(msg, 5, 0)
+type: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -854,7 +848,7 @@ proto.bosdyn.api.KeypointMatches.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.KeypointMatches}
  */
 proto.bosdyn.api.KeypointMatches.deserializeBinary = function(bytes) {

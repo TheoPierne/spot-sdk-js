@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -80,10 +74,10 @@ proto.bosdyn.api.graph_nav.GPSLocalization.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.graph_nav.GPSLocalization.toObject = function(includeInstance, msg) {
   var f, obj = {
-    liveGpsState: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    mapGpsState: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    ecefTformBody: (f = msg.getEcefTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    latitudeLongitudeHeight: (f = msg.getLatitudeLongitudeHeight()) && bosdyn_api_gps_gps_pb.LLH.toObject(includeInstance, f)
+liveGpsState: jspb.Message.getFieldWithDefault(msg, 1, 0),
+mapGpsState: jspb.Message.getFieldWithDefault(msg, 2, 0),
+ecefTformBody: (f = msg.getEcefTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+latitudeLongitudeHeight: (f = msg.getLatitudeLongitudeHeight()) && bosdyn_api_gps_gps_pb.LLH.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -96,7 +90,7 @@ proto.bosdyn.api.graph_nav.GPSLocalization.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.GPSLocalization}
  */
 proto.bosdyn.api.graph_nav.GPSLocalization.deserializeBinary = function(bytes) {

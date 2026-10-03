@@ -578,7 +578,12 @@ test('acquire request requires sources, and the errors which are not of the SDK 
 test('main() needs a command, and the bin of the package runs it (exit status 1 on failure)', async () => {
   const { result, stdout } = await captured(() => cli.main(['127.0.0.1']));
   assert.strictEqual(result, false);
-  assert.ok(stdout.startsWith('Need to specify a command\nusage: bosdyn.client'), stdout);
+  // argparse colors the usage like Python 3.14 when the output supports it, e.g. with the FORCE_COLOR that node --test
+  // gives to the tests in a terminal.
+  assert.ok(
+    util.stripVTControlCharacters(stdout).startsWith('Need to specify a command\nusage: bosdyn.client'),
+    stdout,
+  );
 
   const bin = path.join(__dirname, '..', 'src', 'bosdyn-client', 'command_line.js');
   assert.ok(fs.readFileSync(bin, 'utf8').startsWith('#!/usr/bin/env node\n'));

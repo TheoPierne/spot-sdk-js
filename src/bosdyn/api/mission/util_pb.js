@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 goog.object.extend(proto, google_protobuf_any_pb);
@@ -261,8 +255,8 @@ proto.bosdyn.api.mission.KeyValue.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.mission.KeyValue.toObject = function(includeInstance, msg) {
   var f, obj = {
-    key: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    value: (f = msg.getValue()) && proto.bosdyn.api.mission.Value.toObject(includeInstance, f)
+key: jspb.Message.getFieldWithDefault(msg, 1, ""),
+value: (f = msg.getValue()) && proto.bosdyn.api.mission.Value.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -275,7 +269,7 @@ proto.bosdyn.api.mission.KeyValue.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.KeyValue}
  */
 proto.bosdyn.api.mission.KeyValue.deserializeBinary = function(bytes) {
@@ -300,7 +294,7 @@ proto.bosdyn.api.mission.KeyValue.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setKey(value);
       break;
     case 2:
@@ -469,9 +463,9 @@ proto.bosdyn.api.mission.Value.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.mission.Value.toObject = function(includeInstance, msg) {
   var f, obj = {
-    constant: (f = msg.getConstant()) && proto.bosdyn.api.mission.ConstantValue.toObject(includeInstance, f),
-    runtimeVar: (f = msg.getRuntimeVar()) && proto.bosdyn.api.mission.VariableDeclaration.toObject(includeInstance, f),
-    parameter: (f = msg.getParameter()) && proto.bosdyn.api.mission.VariableDeclaration.toObject(includeInstance, f)
+constant: (f = msg.getConstant()) && proto.bosdyn.api.mission.ConstantValue.toObject(includeInstance, f),
+runtimeVar: (f = msg.getRuntimeVar()) && proto.bosdyn.api.mission.VariableDeclaration.toObject(includeInstance, f),
+parameter: (f = msg.getParameter()) && proto.bosdyn.api.mission.VariableDeclaration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -484,7 +478,7 @@ proto.bosdyn.api.mission.Value.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.Value}
  */
 proto.bosdyn.api.mission.Value.deserializeBinary = function(bytes) {
@@ -722,9 +716,9 @@ proto.bosdyn.api.mission.VariableDeclaration.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.mission.VariableDeclaration.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    subType: (f = msg.getSubType()) && proto.bosdyn.api.mission.VariableDeclaration.SubType.toObject(includeInstance, f),
-    type: jspb.Message.getFieldWithDefault(msg, 2, 0)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+subType: (f = msg.getSubType()) && proto.bosdyn.api.mission.VariableDeclaration.SubType.toObject(includeInstance, f),
+type: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -737,7 +731,7 @@ proto.bosdyn.api.mission.VariableDeclaration.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.VariableDeclaration}
  */
 proto.bosdyn.api.mission.VariableDeclaration.deserializeBinary = function(bytes) {
@@ -762,7 +756,7 @@ proto.bosdyn.api.mission.VariableDeclaration.deserializeBinaryFromReader = funct
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 3:
@@ -875,8 +869,8 @@ proto.bosdyn.api.mission.VariableDeclaration.SubType.prototype.toObject = functi
  */
 proto.bosdyn.api.mission.VariableDeclaration.SubType.toObject = function(includeInstance, msg) {
   var f, obj = {
-    type: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    subType: (f = msg.getSubType()) && proto.bosdyn.api.mission.VariableDeclaration.SubType.toObject(includeInstance, f)
+type: jspb.Message.getFieldWithDefault(msg, 1, 0),
+subType: (f = msg.getSubType()) && proto.bosdyn.api.mission.VariableDeclaration.SubType.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -889,7 +883,7 @@ proto.bosdyn.api.mission.VariableDeclaration.SubType.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.VariableDeclaration.SubType}
  */
 proto.bosdyn.api.mission.VariableDeclaration.SubType.deserializeBinary = function(bytes) {
@@ -1161,14 +1155,14 @@ proto.bosdyn.api.mission.ConstantValue.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.mission.ConstantValue.toObject = function(includeInstance, msg) {
   var f, obj = {
-    floatValue: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    stringValue: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    intValue: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    boolValue: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    msgValue: (f = msg.getMsgValue()) && google_protobuf_any_pb.Any.toObject(includeInstance, f),
-    listValue: (f = msg.getListValue()) && proto.bosdyn.api.mission.ConstantValue.ListValue.toObject(includeInstance, f),
-    dictValue: (f = msg.getDictValue()) && proto.bosdyn.api.mission.ConstantValue.DictValue.toObject(includeInstance, f),
-    timestampValue: (f = msg.getTimestampValue()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+floatValue: (f = jspb.Message.getOptionalFloatingPointField(msg, 1)) == null ? undefined : f,
+stringValue: (f = jspb.Message.getField(msg, 2)) == null ? undefined : f,
+intValue: (f = jspb.Message.getField(msg, 3)) == null ? undefined : f,
+boolValue: (f = jspb.Message.getBooleanField(msg, 4)) == null ? undefined : f,
+msgValue: (f = msg.getMsgValue()) && google_protobuf_any_pb.Any.toObject(includeInstance, f),
+listValue: (f = msg.getListValue()) && proto.bosdyn.api.mission.ConstantValue.ListValue.toObject(includeInstance, f),
+dictValue: (f = msg.getDictValue()) && proto.bosdyn.api.mission.ConstantValue.DictValue.toObject(includeInstance, f),
+timestampValue: (f = msg.getTimestampValue()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1181,7 +1175,7 @@ proto.bosdyn.api.mission.ConstantValue.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.ConstantValue}
  */
 proto.bosdyn.api.mission.ConstantValue.deserializeBinary = function(bytes) {
@@ -1210,7 +1204,7 @@ proto.bosdyn.api.mission.ConstantValue.deserializeBinaryFromReader = function(ms
       msg.setFloatValue(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setStringValue(value);
       break;
     case 3:
@@ -1372,7 +1366,7 @@ proto.bosdyn.api.mission.ConstantValue.ListValue.prototype.toObject = function(o
  */
 proto.bosdyn.api.mission.ConstantValue.ListValue.toObject = function(includeInstance, msg) {
   var f, obj = {
-    valuesList: jspb.Message.toObjectList(msg.getValuesList(),
+valuesList: jspb.Message.toObjectList(msg.getValuesList(),
     proto.bosdyn.api.mission.ConstantValue.toObject, includeInstance)
   };
 
@@ -1386,7 +1380,7 @@ proto.bosdyn.api.mission.ConstantValue.ListValue.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.ConstantValue.ListValue}
  */
 proto.bosdyn.api.mission.ConstantValue.ListValue.deserializeBinary = function(bytes) {
@@ -1525,7 +1519,7 @@ proto.bosdyn.api.mission.ConstantValue.DictValue.prototype.toObject = function(o
  */
 proto.bosdyn.api.mission.ConstantValue.DictValue.toObject = function(includeInstance, msg) {
   var f, obj = {
-    valuesMap: (f = msg.getValuesMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.ConstantValue.toObject) : []
+valuesMap: (f = msg.getValuesMap()) ? f.toObject(includeInstance, proto.bosdyn.api.mission.ConstantValue.toObject) : []
   };
 
   if (includeInstance) {
@@ -1538,7 +1532,7 @@ proto.bosdyn.api.mission.ConstantValue.DictValue.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.ConstantValue.DictValue}
  */
 proto.bosdyn.api.mission.ConstantValue.DictValue.deserializeBinary = function(bytes) {
@@ -1565,7 +1559,7 @@ proto.bosdyn.api.mission.ConstantValue.DictValue.deserializeBinaryFromReader = f
     case 1:
       var value = msg.getValuesMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.ConstantValue.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.ConstantValue());
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readMessage, proto.bosdyn.api.mission.ConstantValue.deserializeBinaryFromReader, "", new proto.bosdyn.api.mission.ConstantValue());
          });
       break;
     default:
@@ -1599,7 +1593,13 @@ proto.bosdyn.api.mission.ConstantValue.DictValue.serializeBinaryToWriter = funct
   var f = undefined;
   f = message.getValuesMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.bosdyn.api.mission.ConstantValue.serializeBinaryToWriter);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getValuesMap(true),
+    1,
+    writer,
+    jspb.BinaryWriter.prototype.writeString,
+    jspb.BinaryWriter.prototype.writeMessage,
+    proto.bosdyn.api.mission.ConstantValue.serializeBinaryToWriter);
   }
 };
 
@@ -1623,7 +1623,8 @@ proto.bosdyn.api.mission.ConstantValue.DictValue.prototype.getValuesMap = functi
  */
 proto.bosdyn.api.mission.ConstantValue.DictValue.prototype.clearValuesMap = function() {
   this.getValuesMap().clear();
-  return this;};
+  return this;
+};
 
 
 /**
@@ -1950,9 +1951,9 @@ proto.bosdyn.api.mission.MissionText.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.mission.MissionText.toObject = function(includeInstance, msg) {
   var f, obj = {
-    text: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    severity: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    nodeId: jspb.Message.getFieldWithDefault(msg, 3, 0)
+text: jspb.Message.getFieldWithDefault(msg, 1, ""),
+severity: jspb.Message.getFieldWithDefault(msg, 2, 0),
+nodeId: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1965,7 +1966,7 @@ proto.bosdyn.api.mission.MissionText.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.MissionText}
  */
 proto.bosdyn.api.mission.MissionText.deserializeBinary = function(bytes) {
@@ -1990,7 +1991,7 @@ proto.bosdyn.api.mission.MissionText.deserializeBinaryFromReader = function(msg,
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setText(value);
       break;
     case 2:
@@ -2140,9 +2141,9 @@ proto.bosdyn.api.mission.UserData.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.mission.UserData.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    bytestring: msg.getBytestring_asB64(),
-    sourceRepresentation: (f = msg.getSourceRepresentation()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
+id: jspb.Message.getFieldWithDefault(msg, 1, ""),
+bytestring: msg.getBytestring_asB64(),
+sourceRepresentation: (f = msg.getSourceRepresentation()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2155,7 +2156,7 @@ proto.bosdyn.api.mission.UserData.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.mission.UserData}
  */
 proto.bosdyn.api.mission.UserData.deserializeBinary = function(bytes) {
@@ -2180,7 +2181,7 @@ proto.bosdyn.api.mission.UserData.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setId(value);
       break;
     case 3:

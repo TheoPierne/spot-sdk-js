@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_graph_nav_graph_nav_pb = require('../../../bosdyn/api/graph_nav/graph_nav_pb.js');
 goog.object.extend(proto, bosdyn_api_graph_nav_graph_nav_pb);

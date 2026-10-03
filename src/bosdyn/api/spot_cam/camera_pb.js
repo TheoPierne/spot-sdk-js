@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -148,13 +142,13 @@ proto.bosdyn.api.spot_cam.Camera.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.spot_cam.Camera.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    resolution: (f = msg.getResolution()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    baseFrameName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    baseTfromSensor: (f = msg.getBaseTfromSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    baseTformSensor: (f = msg.getBaseTformSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    pinhole: (f = msg.getPinhole()) && proto.bosdyn.api.spot_cam.Camera.PinholeIntrinsics.toObject(includeInstance, f),
-    spherical: (f = msg.getSpherical()) && proto.bosdyn.api.spot_cam.Camera.SphericalLimits.toObject(includeInstance, f)
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+resolution: (f = msg.getResolution()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+baseFrameName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+baseTfromSensor: (f = msg.getBaseTfromSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+baseTformSensor: (f = msg.getBaseTformSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+pinhole: (f = msg.getPinhole()) && proto.bosdyn.api.spot_cam.Camera.PinholeIntrinsics.toObject(includeInstance, f),
+spherical: (f = msg.getSpherical()) && proto.bosdyn.api.spot_cam.Camera.SphericalLimits.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -167,7 +161,7 @@ proto.bosdyn.api.spot_cam.Camera.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.Camera}
  */
 proto.bosdyn.api.spot_cam.Camera.deserializeBinary = function(bytes) {
@@ -192,7 +186,7 @@ proto.bosdyn.api.spot_cam.Camera.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -201,7 +195,7 @@ proto.bosdyn.api.spot_cam.Camera.deserializeBinaryFromReader = function(msg, rea
       msg.setResolution(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setBaseFrameName(value);
       break;
     case 4:
@@ -342,12 +336,12 @@ proto.bosdyn.api.spot_cam.Camera.PinholeIntrinsics.prototype.toObject = function
  */
 proto.bosdyn.api.spot_cam.Camera.PinholeIntrinsics.toObject = function(includeInstance, msg) {
   var f, obj = {
-    focalLength: (f = msg.getFocalLength()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    centerPoint: (f = msg.getCenterPoint()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    k1: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    k2: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    k3: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    k4: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
+focalLength: (f = msg.getFocalLength()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+centerPoint: (f = msg.getCenterPoint()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+k1: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+k2: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+k3: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+k4: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
   };
 
   if (includeInstance) {
@@ -360,7 +354,7 @@ proto.bosdyn.api.spot_cam.Camera.PinholeIntrinsics.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.Camera.PinholeIntrinsics}
  */
 proto.bosdyn.api.spot_cam.Camera.PinholeIntrinsics.deserializeBinary = function(bytes) {
@@ -664,8 +658,8 @@ proto.bosdyn.api.spot_cam.Camera.SphericalLimits.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.Camera.SphericalLimits.toObject = function(includeInstance, msg) {
   var f, obj = {
-    minAngle: (f = msg.getMinAngle()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    maxAngle: (f = msg.getMaxAngle()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f)
+minAngle: (f = msg.getMinAngle()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+maxAngle: (f = msg.getMaxAngle()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -678,7 +672,7 @@ proto.bosdyn.api.spot_cam.Camera.SphericalLimits.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.Camera.SphericalLimits}
  */
 proto.bosdyn.api.spot_cam.Camera.SphericalLimits.deserializeBinary = function(bytes) {

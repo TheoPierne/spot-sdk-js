@@ -4036,11 +4036,13 @@ test('depthImageToPointcloud gives the point cloud of Python (it always threw), 
   const data = Buffer.alloc(values.length * 2);
   values.forEach((value, i) => data.writeUInt16LE(value, 2 * i));
   const { PIXEL_FORMAT_DEPTH_U16 } = imagePb.Image.PixelFormat;
-  // A Uint16Array can not start at an odd offset (RangeError).
-  const response = ['depth', 'depth1']
-    .map(frame => imageResponse('depth', PIXEL_FORMAT_DEPTH_U16, 4, 5, data, { depth, frame }))
-    .find(candidate => candidate.getShot().getImage().getData_asU8().byteOffset % 2 === 1);
-  assert.ok(response, 'no response with its data at an odd offset');
+  // A Uint16Array can not start at an odd offset (RangeError): the data is a view of a larger buffer (google-protobuf 4
+  // copies the bytes fields that it reads, google-protobuf 3 gave views of the serialized message).
+  const response = imageResponse('depth', PIXEL_FORMAT_DEPTH_U16, 4, 5, data, { depth });
+  const oddData = new Uint8Array(data.length + 1).subarray(1);
+  oddData.set(data);
+  response.getShot().getImage().setData(oddData);
+  assert.strictEqual(response.getShot().getImage().getData_asU8().byteOffset % 2, 1);
 
   // 14.5 rounds to 14 like numpy.rint (Math.round gives 15: one more point).
   assert.deepStrictEqual(depthImageToPointcloud(response, 0.0035, 0.0145).tolist(), [

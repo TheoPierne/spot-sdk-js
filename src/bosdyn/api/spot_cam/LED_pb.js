@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -143,7 +137,7 @@ proto.bosdyn.api.spot_cam.GetLEDBrightnessRequest.prototype.toObject = function(
  */
 proto.bosdyn.api.spot_cam.GetLEDBrightnessRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -156,7 +150,7 @@ proto.bosdyn.api.spot_cam.GetLEDBrightnessRequest.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetLEDBrightnessRequest}
  */
 proto.bosdyn.api.spot_cam.GetLEDBrightnessRequest.deserializeBinary = function(bytes) {
@@ -301,8 +295,8 @@ proto.bosdyn.api.spot_cam.GetLEDBrightnessResponse.prototype.toObject = function
  */
 proto.bosdyn.api.spot_cam.GetLEDBrightnessResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    brightnessesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 2)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+brightnessesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 2)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -315,7 +309,7 @@ proto.bosdyn.api.spot_cam.GetLEDBrightnessResponse.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetLEDBrightnessResponse}
  */
 proto.bosdyn.api.spot_cam.GetLEDBrightnessResponse.deserializeBinary = function(bytes) {
@@ -345,10 +339,7 @@ proto.bosdyn.api.spot_cam.GetLEDBrightnessResponse.deserializeBinaryFromReader =
       msg.setHeader(value);
       break;
     case 2:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedFloat() : [reader.readFloat()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addBrightnesses(values[i]);
-      }
+      reader.readPackableFloatInto(msg.getBrightnessesList());
       break;
     default:
       reader.skipField();
@@ -503,8 +494,8 @@ proto.bosdyn.api.spot_cam.SetLEDBrightnessRequest.prototype.toObject = function(
  */
 proto.bosdyn.api.spot_cam.SetLEDBrightnessRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+brightnessesMap: (f = msg.getBrightnessesMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -517,7 +508,7 @@ proto.bosdyn.api.spot_cam.SetLEDBrightnessRequest.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetLEDBrightnessRequest}
  */
 proto.bosdyn.api.spot_cam.SetLEDBrightnessRequest.deserializeBinary = function(bytes) {
@@ -591,7 +582,12 @@ proto.bosdyn.api.spot_cam.SetLEDBrightnessRequest.serializeBinaryToWriter = func
   }
   f = message.getBrightnessesMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(2, writer, jspb.BinaryWriter.prototype.writeInt32, jspb.BinaryWriter.prototype.writeFloat);
+jspb.internal.public_for_gencode.serializeMapToBinary(
+    message.getBrightnessesMap(true),
+    2,
+    writer,
+    jspb.BinaryWriter.prototype.writeInt32,
+    jspb.BinaryWriter.prototype.writeFloat);
   }
 };
 
@@ -652,7 +648,8 @@ proto.bosdyn.api.spot_cam.SetLEDBrightnessRequest.prototype.getBrightnessesMap =
  */
 proto.bosdyn.api.spot_cam.SetLEDBrightnessRequest.prototype.clearBrightnessesMap = function() {
   this.getBrightnessesMap().clear();
-  return this;};
+  return this;
+};
 
 
 
@@ -687,7 +684,7 @@ proto.bosdyn.api.spot_cam.SetLEDBrightnessResponse.prototype.toObject = function
  */
 proto.bosdyn.api.spot_cam.SetLEDBrightnessResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -700,7 +697,7 @@ proto.bosdyn.api.spot_cam.SetLEDBrightnessResponse.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetLEDBrightnessResponse}
  */
 proto.bosdyn.api.spot_cam.SetLEDBrightnessResponse.deserializeBinary = function(bytes) {

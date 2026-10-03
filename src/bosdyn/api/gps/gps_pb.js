@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -216,9 +210,9 @@ proto.bosdyn.api.gps.LLH.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.gps.LLH.toObject = function(includeInstance, msg) {
   var f, obj = {
-    latitude: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    longitude: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    height: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+latitude: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+longitude: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+height: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -231,7 +225,7 @@ proto.bosdyn.api.gps.LLH.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.LLH}
  */
 proto.bosdyn.api.gps.LLH.deserializeBinary = function(bytes) {
@@ -413,19 +407,19 @@ proto.bosdyn.api.gps.GpsDataPoint.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.gps.GpsDataPoint.toObject = function(includeInstance, msg) {
   var f, obj = {
-    llh: (f = msg.getLlh()) && proto.bosdyn.api.gps.LLH.toObject(includeInstance, f),
-    ecef: (f = msg.getEcef()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    heading: (f = msg.getHeading()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    accuracy: (f = msg.getAccuracy()) && proto.bosdyn.api.gps.GpsDataPoint.Accuracy.toObject(includeInstance, f),
-    satellitesList: jspb.Message.toObjectList(msg.getSatellitesList(),
+llh: (f = msg.getLlh()) && proto.bosdyn.api.gps.LLH.toObject(includeInstance, f),
+ecef: (f = msg.getEcef()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+yaw: (f = msg.getYaw()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+heading: (f = msg.getHeading()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+accuracy: (f = msg.getAccuracy()) && proto.bosdyn.api.gps.GpsDataPoint.Accuracy.toObject(includeInstance, f),
+satellitesList: jspb.Message.toObjectList(msg.getSatellitesList(),
     proto.bosdyn.api.gps.GpsDataPoint.Satellite.toObject, includeInstance),
-    mode: (f = msg.getMode()) && proto.bosdyn.api.gps.GpsDataPoint.FixMode.toObject(includeInstance, f),
-    timestampGps: (f = msg.getTimestampGps()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    filter: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    timestampClient: (f = msg.getTimestampClient()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    timestampRobot: (f = msg.getTimestampRobot()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    bodyTformGps: (f = msg.getBodyTformGps()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
+mode: (f = msg.getMode()) && proto.bosdyn.api.gps.GpsDataPoint.FixMode.toObject(includeInstance, f),
+timestampGps: (f = msg.getTimestampGps()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+filter: jspb.Message.getFieldWithDefault(msg, 8, 0),
+timestampClient: (f = msg.getTimestampClient()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+timestampRobot: (f = msg.getTimestampRobot()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+bodyTformGps: (f = msg.getBodyTformGps()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -438,7 +432,7 @@ proto.bosdyn.api.gps.GpsDataPoint.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.GpsDataPoint}
  */
 proto.bosdyn.api.gps.GpsDataPoint.deserializeBinary = function(bytes) {
@@ -689,8 +683,8 @@ proto.bosdyn.api.gps.GpsDataPoint.Accuracy.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.gps.GpsDataPoint.Accuracy.toObject = function(includeInstance, msg) {
   var f, obj = {
-    horizontal: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    vertical: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+horizontal: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+vertical: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -703,7 +697,7 @@ proto.bosdyn.api.gps.GpsDataPoint.Accuracy.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.GpsDataPoint.Accuracy}
  */
 proto.bosdyn.api.gps.GpsDataPoint.Accuracy.deserializeBinary = function(bytes) {
@@ -849,11 +843,11 @@ proto.bosdyn.api.gps.GpsDataPoint.Satellite.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.gps.GpsDataPoint.Satellite.toObject = function(includeInstance, msg) {
   var f, obj = {
-    prn: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    elevation: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    azimuth: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    snr: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    constellation: jspb.Message.getFieldWithDefault(msg, 5, 0)
+prn: jspb.Message.getFieldWithDefault(msg, 1, 0),
+elevation: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+azimuth: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+snr: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+constellation: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -866,7 +860,7 @@ proto.bosdyn.api.gps.GpsDataPoint.Satellite.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.GpsDataPoint.Satellite}
  */
 proto.bosdyn.api.gps.GpsDataPoint.Satellite.deserializeBinary = function(bytes) {
@@ -1117,7 +1111,7 @@ proto.bosdyn.api.gps.GpsDataPoint.FixMode.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.gps.GpsDataPoint.FixMode.toObject = function(includeInstance, msg) {
   var f, obj = {
-    value: jspb.Message.getFieldWithDefault(msg, 1, 0)
+value: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -1130,7 +1124,7 @@ proto.bosdyn.api.gps.GpsDataPoint.FixMode.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.GpsDataPoint.FixMode}
  */
 proto.bosdyn.api.gps.GpsDataPoint.FixMode.deserializeBinary = function(bytes) {
@@ -1689,7 +1683,7 @@ proto.bosdyn.api.gps.GpsDevice.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.gps.GpsDevice.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, "")
+name: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -1702,7 +1696,7 @@ proto.bosdyn.api.gps.GpsDevice.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.GpsDevice}
  */
 proto.bosdyn.api.gps.GpsDevice.deserializeBinary = function(bytes) {
@@ -1727,7 +1721,7 @@ proto.bosdyn.api.gps.GpsDevice.deserializeBinaryFromReader = function(msg, reade
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     default:
@@ -1819,8 +1813,8 @@ proto.bosdyn.api.gps.LocationAndGpsDevice.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.gps.LocationAndGpsDevice.toObject = function(includeInstance, msg) {
   var f, obj = {
-    dataPoint: (f = msg.getDataPoint()) && proto.bosdyn.api.gps.GpsDataPoint.toObject(includeInstance, f),
-    device: (f = msg.getDevice()) && proto.bosdyn.api.gps.GpsDevice.toObject(includeInstance, f)
+dataPoint: (f = msg.getDataPoint()) && proto.bosdyn.api.gps.GpsDataPoint.toObject(includeInstance, f),
+device: (f = msg.getDevice()) && proto.bosdyn.api.gps.GpsDevice.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1833,7 +1827,7 @@ proto.bosdyn.api.gps.LocationAndGpsDevice.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.LocationAndGpsDevice}
  */
 proto.bosdyn.api.gps.LocationAndGpsDevice.deserializeBinary = function(bytes) {

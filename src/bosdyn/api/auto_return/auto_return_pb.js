@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 goog.object.extend(proto, google_protobuf_any_pb);
@@ -217,9 +211,9 @@ proto.bosdyn.api.auto_return.Params.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.auto_return.Params.toObject = function(includeInstance, msg) {
   var f, obj = {
-    mobilityParams: (f = msg.getMobilityParams()) && google_protobuf_any_pb.Any.toObject(includeInstance, f),
-    maxDisplacement: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    maxDuration: (f = msg.getMaxDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+mobilityParams: (f = msg.getMobilityParams()) && google_protobuf_any_pb.Any.toObject(includeInstance, f),
+maxDisplacement: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+maxDuration: (f = msg.getMaxDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -232,7 +226,7 @@ proto.bosdyn.api.auto_return.Params.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.auto_return.Params}
  */
 proto.bosdyn.api.auto_return.Params.deserializeBinary = function(bytes) {
@@ -456,11 +450,11 @@ proto.bosdyn.api.auto_return.ConfigureRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.auto_return.ConfigureRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
     bosdyn_api_lease_pb.Lease.toObject, includeInstance),
-    params: (f = msg.getParams()) && proto.bosdyn.api.auto_return.Params.toObject(includeInstance, f),
-    clearBuffer: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+params: (f = msg.getParams()) && proto.bosdyn.api.auto_return.Params.toObject(includeInstance, f),
+clearBuffer: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
   };
 
   if (includeInstance) {
@@ -473,7 +467,7 @@ proto.bosdyn.api.auto_return.ConfigureRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.auto_return.ConfigureRequest}
  */
 proto.bosdyn.api.auto_return.ConfigureRequest.deserializeBinary = function(bytes) {
@@ -741,9 +735,9 @@ proto.bosdyn.api.auto_return.ConfigureResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.auto_return.ConfigureResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    invalidParams: (f = msg.getInvalidParams()) && proto.bosdyn.api.auto_return.Params.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+invalidParams: (f = msg.getInvalidParams()) && proto.bosdyn.api.auto_return.Params.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -756,7 +750,7 @@ proto.bosdyn.api.auto_return.ConfigureResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.auto_return.ConfigureResponse}
  */
 proto.bosdyn.api.auto_return.ConfigureResponse.deserializeBinary = function(bytes) {
@@ -982,7 +976,7 @@ proto.bosdyn.api.auto_return.GetConfigurationRequest.prototype.toObject = functi
  */
 proto.bosdyn.api.auto_return.GetConfigurationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -995,7 +989,7 @@ proto.bosdyn.api.auto_return.GetConfigurationRequest.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.auto_return.GetConfigurationRequest}
  */
 proto.bosdyn.api.auto_return.GetConfigurationRequest.deserializeBinary = function(bytes) {
@@ -1133,9 +1127,9 @@ proto.bosdyn.api.auto_return.GetConfigurationResponse.prototype.toObject = funct
  */
 proto.bosdyn.api.auto_return.GetConfigurationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    enabled: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    request: (f = msg.getRequest()) && proto.bosdyn.api.auto_return.ConfigureRequest.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+enabled: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+request: (f = msg.getRequest()) && proto.bosdyn.api.auto_return.ConfigureRequest.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1148,7 +1142,7 @@ proto.bosdyn.api.auto_return.GetConfigurationResponse.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.auto_return.GetConfigurationResponse}
  */
 proto.bosdyn.api.auto_return.GetConfigurationResponse.deserializeBinary = function(bytes) {
@@ -1372,10 +1366,10 @@ proto.bosdyn.api.auto_return.StartRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.auto_return.StartRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
     bosdyn_api_lease_pb.Lease.toObject, includeInstance),
-    params: (f = msg.getParams()) && proto.bosdyn.api.auto_return.Params.toObject(includeInstance, f)
+params: (f = msg.getParams()) && proto.bosdyn.api.auto_return.Params.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1388,7 +1382,7 @@ proto.bosdyn.api.auto_return.StartRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.auto_return.StartRequest}
  */
 proto.bosdyn.api.auto_return.StartRequest.deserializeBinary = function(bytes) {
@@ -1627,9 +1621,9 @@ proto.bosdyn.api.auto_return.StartResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.auto_return.StartResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    invalidParams: (f = msg.getInvalidParams()) && proto.bosdyn.api.auto_return.Params.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+invalidParams: (f = msg.getInvalidParams()) && proto.bosdyn.api.auto_return.Params.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1642,7 +1636,7 @@ proto.bosdyn.api.auto_return.StartResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.auto_return.StartResponse}
  */
 proto.bosdyn.api.auto_return.StartResponse.deserializeBinary = function(bytes) {

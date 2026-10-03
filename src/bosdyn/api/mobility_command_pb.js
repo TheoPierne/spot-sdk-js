@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_basic_command_pb = require('../../bosdyn/api/basic_command_pb.js');
 goog.object.extend(proto, bosdyn_api_basic_command_pb);
@@ -138,7 +132,7 @@ proto.bosdyn.api.MobilityCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.MobilityCommand}
  */
 proto.bosdyn.api.MobilityCommand.deserializeBinary = function(bytes) {
@@ -258,15 +252,15 @@ proto.bosdyn.api.MobilityCommand.Request.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.MobilityCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    se2TrajectoryRequest: (f = msg.getSe2TrajectoryRequest()) && bosdyn_api_basic_command_pb.SE2TrajectoryCommand.Request.toObject(includeInstance, f),
-    se2VelocityRequest: (f = msg.getSe2VelocityRequest()) && bosdyn_api_basic_command_pb.SE2VelocityCommand.Request.toObject(includeInstance, f),
-    sitRequest: (f = msg.getSitRequest()) && bosdyn_api_basic_command_pb.SitCommand.Request.toObject(includeInstance, f),
-    standRequest: (f = msg.getStandRequest()) && bosdyn_api_basic_command_pb.StandCommand.Request.toObject(includeInstance, f),
-    stanceRequest: (f = msg.getStanceRequest()) && bosdyn_api_basic_command_pb.StanceCommand.Request.toObject(includeInstance, f),
-    stopRequest: (f = msg.getStopRequest()) && bosdyn_api_basic_command_pb.StopCommand.Request.toObject(includeInstance, f),
-    followArmRequest: (f = msg.getFollowArmRequest()) && bosdyn_api_basic_command_pb.FollowArmCommand.Request.toObject(includeInstance, f),
-    freezeRequest: (f = msg.getFreezeRequest()) && bosdyn_api_basic_command_pb.FreezeCommand.Request.toObject(includeInstance, f),
-    params: (f = msg.getParams()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
+se2TrajectoryRequest: (f = msg.getSe2TrajectoryRequest()) && bosdyn_api_basic_command_pb.SE2TrajectoryCommand.Request.toObject(includeInstance, f),
+se2VelocityRequest: (f = msg.getSe2VelocityRequest()) && bosdyn_api_basic_command_pb.SE2VelocityCommand.Request.toObject(includeInstance, f),
+sitRequest: (f = msg.getSitRequest()) && bosdyn_api_basic_command_pb.SitCommand.Request.toObject(includeInstance, f),
+standRequest: (f = msg.getStandRequest()) && bosdyn_api_basic_command_pb.StandCommand.Request.toObject(includeInstance, f),
+stanceRequest: (f = msg.getStanceRequest()) && bosdyn_api_basic_command_pb.StanceCommand.Request.toObject(includeInstance, f),
+stopRequest: (f = msg.getStopRequest()) && bosdyn_api_basic_command_pb.StopCommand.Request.toObject(includeInstance, f),
+followArmRequest: (f = msg.getFollowArmRequest()) && bosdyn_api_basic_command_pb.FollowArmCommand.Request.toObject(includeInstance, f),
+freezeRequest: (f = msg.getFreezeRequest()) && bosdyn_api_basic_command_pb.FreezeCommand.Request.toObject(includeInstance, f),
+params: (f = msg.getParams()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -279,7 +273,7 @@ proto.bosdyn.api.MobilityCommand.Request.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.MobilityCommand.Request}
  */
 proto.bosdyn.api.MobilityCommand.Request.deserializeBinary = function(bytes) {
@@ -849,15 +843,15 @@ proto.bosdyn.api.MobilityCommand.Feedback.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.MobilityCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    se2TrajectoryFeedback: (f = msg.getSe2TrajectoryFeedback()) && bosdyn_api_basic_command_pb.SE2TrajectoryCommand.Feedback.toObject(includeInstance, f),
-    se2VelocityFeedback: (f = msg.getSe2VelocityFeedback()) && bosdyn_api_basic_command_pb.SE2VelocityCommand.Feedback.toObject(includeInstance, f),
-    sitFeedback: (f = msg.getSitFeedback()) && bosdyn_api_basic_command_pb.SitCommand.Feedback.toObject(includeInstance, f),
-    standFeedback: (f = msg.getStandFeedback()) && bosdyn_api_basic_command_pb.StandCommand.Feedback.toObject(includeInstance, f),
-    stanceFeedback: (f = msg.getStanceFeedback()) && bosdyn_api_basic_command_pb.StanceCommand.Feedback.toObject(includeInstance, f),
-    stopFeedback: (f = msg.getStopFeedback()) && bosdyn_api_basic_command_pb.StopCommand.Feedback.toObject(includeInstance, f),
-    followArmFeedback: (f = msg.getFollowArmFeedback()) && bosdyn_api_basic_command_pb.FollowArmCommand.Feedback.toObject(includeInstance, f),
-    freezeFeedback: (f = msg.getFreezeFeedback()) && bosdyn_api_basic_command_pb.FreezeCommand.Feedback.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 100, 0)
+se2TrajectoryFeedback: (f = msg.getSe2TrajectoryFeedback()) && bosdyn_api_basic_command_pb.SE2TrajectoryCommand.Feedback.toObject(includeInstance, f),
+se2VelocityFeedback: (f = msg.getSe2VelocityFeedback()) && bosdyn_api_basic_command_pb.SE2VelocityCommand.Feedback.toObject(includeInstance, f),
+sitFeedback: (f = msg.getSitFeedback()) && bosdyn_api_basic_command_pb.SitCommand.Feedback.toObject(includeInstance, f),
+standFeedback: (f = msg.getStandFeedback()) && bosdyn_api_basic_command_pb.StandCommand.Feedback.toObject(includeInstance, f),
+stanceFeedback: (f = msg.getStanceFeedback()) && bosdyn_api_basic_command_pb.StanceCommand.Feedback.toObject(includeInstance, f),
+stopFeedback: (f = msg.getStopFeedback()) && bosdyn_api_basic_command_pb.StopCommand.Feedback.toObject(includeInstance, f),
+followArmFeedback: (f = msg.getFollowArmFeedback()) && bosdyn_api_basic_command_pb.FollowArmCommand.Feedback.toObject(includeInstance, f),
+freezeFeedback: (f = msg.getFreezeFeedback()) && bosdyn_api_basic_command_pb.FreezeCommand.Feedback.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 100, 0)
   };
 
   if (includeInstance) {
@@ -870,7 +864,7 @@ proto.bosdyn.api.MobilityCommand.Feedback.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.MobilityCommand.Feedback}
  */
 proto.bosdyn.api.MobilityCommand.Feedback.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -522,7 +516,7 @@ proto.bosdyn.api.spot_cam.Sound.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.spot_cam.Sound.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, "")
+name: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -535,7 +529,7 @@ proto.bosdyn.api.spot_cam.Sound.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.Sound}
  */
 proto.bosdyn.api.spot_cam.Sound.deserializeBinary = function(bytes) {
@@ -560,7 +554,7 @@ proto.bosdyn.api.spot_cam.Sound.deserializeBinaryFromReader = function(msg, read
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     default:
@@ -652,7 +646,7 @@ proto.bosdyn.api.spot_cam.ListSoundsRequest.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.spot_cam.ListSoundsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -665,7 +659,7 @@ proto.bosdyn.api.spot_cam.ListSoundsRequest.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.ListSoundsRequest}
  */
 proto.bosdyn.api.spot_cam.ListSoundsRequest.deserializeBinary = function(bytes) {
@@ -810,8 +804,8 @@ proto.bosdyn.api.spot_cam.ListSoundsResponse.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.spot_cam.ListSoundsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    soundsList: jspb.Message.toObjectList(msg.getSoundsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+soundsList: jspb.Message.toObjectList(msg.getSoundsList(),
     proto.bosdyn.api.spot_cam.Sound.toObject, includeInstance)
   };
 
@@ -825,7 +819,7 @@ proto.bosdyn.api.spot_cam.ListSoundsResponse.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.ListSoundsResponse}
  */
 proto.bosdyn.api.spot_cam.ListSoundsResponse.deserializeBinary = function(bytes) {
@@ -1014,8 +1008,8 @@ proto.bosdyn.api.spot_cam.SetVolumeRequest.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot_cam.SetVolumeRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    volume: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+volume: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -1028,7 +1022,7 @@ proto.bosdyn.api.spot_cam.SetVolumeRequest.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetVolumeRequest}
  */
 proto.bosdyn.api.spot_cam.SetVolumeRequest.deserializeBinary = function(bytes) {
@@ -1195,7 +1189,7 @@ proto.bosdyn.api.spot_cam.SetVolumeResponse.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.spot_cam.SetVolumeResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1208,7 +1202,7 @@ proto.bosdyn.api.spot_cam.SetVolumeResponse.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetVolumeResponse}
  */
 proto.bosdyn.api.spot_cam.SetVolumeResponse.deserializeBinary = function(bytes) {
@@ -1346,7 +1340,7 @@ proto.bosdyn.api.spot_cam.GetVolumeRequest.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot_cam.GetVolumeRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1359,7 +1353,7 @@ proto.bosdyn.api.spot_cam.GetVolumeRequest.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetVolumeRequest}
  */
 proto.bosdyn.api.spot_cam.GetVolumeRequest.deserializeBinary = function(bytes) {
@@ -1497,8 +1491,8 @@ proto.bosdyn.api.spot_cam.GetVolumeResponse.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.spot_cam.GetVolumeResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    volume: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+volume: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -1511,7 +1505,7 @@ proto.bosdyn.api.spot_cam.GetVolumeResponse.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetVolumeResponse}
  */
 proto.bosdyn.api.spot_cam.GetVolumeResponse.deserializeBinary = function(bytes) {
@@ -1678,9 +1672,9 @@ proto.bosdyn.api.spot_cam.PlaySoundRequest.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot_cam.PlaySoundRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    sound: (f = msg.getSound()) && proto.bosdyn.api.spot_cam.Sound.toObject(includeInstance, f),
-    gain: (f = msg.getGain()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+sound: (f = msg.getSound()) && proto.bosdyn.api.spot_cam.Sound.toObject(includeInstance, f),
+gain: (f = msg.getGain()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1693,7 +1687,7 @@ proto.bosdyn.api.spot_cam.PlaySoundRequest.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.PlaySoundRequest}
  */
 proto.bosdyn.api.spot_cam.PlaySoundRequest.deserializeBinary = function(bytes) {
@@ -1931,7 +1925,7 @@ proto.bosdyn.api.spot_cam.PlaySoundResponse.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.spot_cam.PlaySoundResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1944,7 +1938,7 @@ proto.bosdyn.api.spot_cam.PlaySoundResponse.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.PlaySoundResponse}
  */
 proto.bosdyn.api.spot_cam.PlaySoundResponse.deserializeBinary = function(bytes) {
@@ -2082,8 +2076,8 @@ proto.bosdyn.api.spot_cam.DeleteSoundRequest.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.spot_cam.DeleteSoundRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    sound: (f = msg.getSound()) && proto.bosdyn.api.spot_cam.Sound.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+sound: (f = msg.getSound()) && proto.bosdyn.api.spot_cam.Sound.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2096,7 +2090,7 @@ proto.bosdyn.api.spot_cam.DeleteSoundRequest.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.DeleteSoundRequest}
  */
 proto.bosdyn.api.spot_cam.DeleteSoundRequest.deserializeBinary = function(bytes) {
@@ -2284,7 +2278,7 @@ proto.bosdyn.api.spot_cam.DeleteSoundResponse.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot_cam.DeleteSoundResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2297,7 +2291,7 @@ proto.bosdyn.api.spot_cam.DeleteSoundResponse.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.DeleteSoundResponse}
  */
 proto.bosdyn.api.spot_cam.DeleteSoundResponse.deserializeBinary = function(bytes) {
@@ -2435,9 +2429,9 @@ proto.bosdyn.api.spot_cam.LoadSoundRequest.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot_cam.LoadSoundRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    sound: (f = msg.getSound()) && proto.bosdyn.api.spot_cam.Sound.toObject(includeInstance, f),
-    data: (f = msg.getData()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+sound: (f = msg.getSound()) && proto.bosdyn.api.spot_cam.Sound.toObject(includeInstance, f),
+data: (f = msg.getData()) && bosdyn_api_data_chunk_pb.DataChunk.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2450,7 +2444,7 @@ proto.bosdyn.api.spot_cam.LoadSoundRequest.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.LoadSoundRequest}
  */
 proto.bosdyn.api.spot_cam.LoadSoundRequest.deserializeBinary = function(bytes) {
@@ -2688,7 +2682,7 @@ proto.bosdyn.api.spot_cam.LoadSoundResponse.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.spot_cam.LoadSoundResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2701,7 +2695,7 @@ proto.bosdyn.api.spot_cam.LoadSoundResponse.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.LoadSoundResponse}
  */
 proto.bosdyn.api.spot_cam.LoadSoundResponse.deserializeBinary = function(bytes) {
@@ -2839,8 +2833,8 @@ proto.bosdyn.api.spot_cam.SetAudioCaptureChannelRequest.prototype.toObject = fun
  */
 proto.bosdyn.api.spot_cam.SetAudioCaptureChannelRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    channel: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+channel: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2853,7 +2847,7 @@ proto.bosdyn.api.spot_cam.SetAudioCaptureChannelRequest.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetAudioCaptureChannelRequest}
  */
 proto.bosdyn.api.spot_cam.SetAudioCaptureChannelRequest.deserializeBinary = function(bytes) {
@@ -3020,7 +3014,7 @@ proto.bosdyn.api.spot_cam.SetAudioCaptureChannelResponse.prototype.toObject = fu
  */
 proto.bosdyn.api.spot_cam.SetAudioCaptureChannelResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3033,7 +3027,7 @@ proto.bosdyn.api.spot_cam.SetAudioCaptureChannelResponse.toObject = function(inc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetAudioCaptureChannelResponse}
  */
 proto.bosdyn.api.spot_cam.SetAudioCaptureChannelResponse.deserializeBinary = function(bytes) {
@@ -3171,7 +3165,7 @@ proto.bosdyn.api.spot_cam.GetAudioCaptureChannelRequest.prototype.toObject = fun
  */
 proto.bosdyn.api.spot_cam.GetAudioCaptureChannelRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3184,7 +3178,7 @@ proto.bosdyn.api.spot_cam.GetAudioCaptureChannelRequest.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetAudioCaptureChannelRequest}
  */
 proto.bosdyn.api.spot_cam.GetAudioCaptureChannelRequest.deserializeBinary = function(bytes) {
@@ -3322,8 +3316,8 @@ proto.bosdyn.api.spot_cam.GetAudioCaptureChannelResponse.prototype.toObject = fu
  */
 proto.bosdyn.api.spot_cam.GetAudioCaptureChannelResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    channel: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+channel: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -3336,7 +3330,7 @@ proto.bosdyn.api.spot_cam.GetAudioCaptureChannelResponse.toObject = function(inc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetAudioCaptureChannelResponse}
  */
 proto.bosdyn.api.spot_cam.GetAudioCaptureChannelResponse.deserializeBinary = function(bytes) {
@@ -3503,9 +3497,9 @@ proto.bosdyn.api.spot_cam.SetAudioCaptureGainRequest.prototype.toObject = functi
  */
 proto.bosdyn.api.spot_cam.SetAudioCaptureGainRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    channel: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    gain: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+channel: jspb.Message.getFieldWithDefault(msg, 2, 0),
+gain: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -3518,7 +3512,7 @@ proto.bosdyn.api.spot_cam.SetAudioCaptureGainRequest.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetAudioCaptureGainRequest}
  */
 proto.bosdyn.api.spot_cam.SetAudioCaptureGainRequest.deserializeBinary = function(bytes) {
@@ -3714,7 +3708,7 @@ proto.bosdyn.api.spot_cam.SetAudioCaptureGainResponse.prototype.toObject = funct
  */
 proto.bosdyn.api.spot_cam.SetAudioCaptureGainResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3727,7 +3721,7 @@ proto.bosdyn.api.spot_cam.SetAudioCaptureGainResponse.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetAudioCaptureGainResponse}
  */
 proto.bosdyn.api.spot_cam.SetAudioCaptureGainResponse.deserializeBinary = function(bytes) {
@@ -3865,8 +3859,8 @@ proto.bosdyn.api.spot_cam.GetAudioCaptureGainRequest.prototype.toObject = functi
  */
 proto.bosdyn.api.spot_cam.GetAudioCaptureGainRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    channel: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+channel: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -3879,7 +3873,7 @@ proto.bosdyn.api.spot_cam.GetAudioCaptureGainRequest.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetAudioCaptureGainRequest}
  */
 proto.bosdyn.api.spot_cam.GetAudioCaptureGainRequest.deserializeBinary = function(bytes) {
@@ -4046,8 +4040,8 @@ proto.bosdyn.api.spot_cam.GetAudioCaptureGainResponse.prototype.toObject = funct
  */
 proto.bosdyn.api.spot_cam.GetAudioCaptureGainResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    gain: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+gain: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -4060,7 +4054,7 @@ proto.bosdyn.api.spot_cam.GetAudioCaptureGainResponse.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetAudioCaptureGainResponse}
  */
 proto.bosdyn.api.spot_cam.GetAudioCaptureGainResponse.deserializeBinary = function(bytes) {

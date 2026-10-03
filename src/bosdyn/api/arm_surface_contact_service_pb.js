@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -103,9 +97,9 @@ proto.bosdyn.api.ArmSurfaceContactCommand.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.ArmSurfaceContactCommand.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    request: (f = msg.getRequest()) && bosdyn_api_arm_surface_contact_pb.ArmSurfaceContact.Request.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+request: (f = msg.getRequest()) && bosdyn_api_arm_surface_contact_pb.ArmSurfaceContact.Request.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -118,7 +112,7 @@ proto.bosdyn.api.ArmSurfaceContactCommand.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmSurfaceContactCommand}
  */
 proto.bosdyn.api.ArmSurfaceContactCommand.deserializeBinary = function(bytes) {
@@ -356,7 +350,7 @@ proto.bosdyn.api.ArmSurfaceContactResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.ArmSurfaceContactResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -369,7 +363,7 @@ proto.bosdyn.api.ArmSurfaceContactResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmSurfaceContactResponse}
  */
 proto.bosdyn.api.ArmSurfaceContactResponse.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_arm_command_pb = require('../../bosdyn/api/arm_command_pb.js');
 goog.object.extend(proto, bosdyn_api_arm_command_pb);
@@ -138,7 +132,7 @@ proto.bosdyn.api.SynchronizedCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SynchronizedCommand}
  */
 proto.bosdyn.api.SynchronizedCommand.deserializeBinary = function(bytes) {
@@ -226,9 +220,9 @@ proto.bosdyn.api.SynchronizedCommand.Request.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.SynchronizedCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    armCommand: (f = msg.getArmCommand()) && bosdyn_api_arm_command_pb.ArmCommand.Request.toObject(includeInstance, f),
-    mobilityCommand: (f = msg.getMobilityCommand()) && bosdyn_api_mobility_command_pb.MobilityCommand.Request.toObject(includeInstance, f),
-    gripperCommand: (f = msg.getGripperCommand()) && bosdyn_api_gripper_command_pb.GripperCommand.Request.toObject(includeInstance, f)
+armCommand: (f = msg.getArmCommand()) && bosdyn_api_arm_command_pb.ArmCommand.Request.toObject(includeInstance, f),
+mobilityCommand: (f = msg.getMobilityCommand()) && bosdyn_api_mobility_command_pb.MobilityCommand.Request.toObject(includeInstance, f),
+gripperCommand: (f = msg.getGripperCommand()) && bosdyn_api_gripper_command_pb.GripperCommand.Request.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -241,7 +235,7 @@ proto.bosdyn.api.SynchronizedCommand.Request.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SynchronizedCommand.Request}
  */
 proto.bosdyn.api.SynchronizedCommand.Request.deserializeBinary = function(bytes) {
@@ -479,9 +473,9 @@ proto.bosdyn.api.SynchronizedCommand.Feedback.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.SynchronizedCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    armCommandFeedback: (f = msg.getArmCommandFeedback()) && bosdyn_api_arm_command_pb.ArmCommand.Feedback.toObject(includeInstance, f),
-    mobilityCommandFeedback: (f = msg.getMobilityCommandFeedback()) && bosdyn_api_mobility_command_pb.MobilityCommand.Feedback.toObject(includeInstance, f),
-    gripperCommandFeedback: (f = msg.getGripperCommandFeedback()) && bosdyn_api_gripper_command_pb.GripperCommand.Feedback.toObject(includeInstance, f)
+armCommandFeedback: (f = msg.getArmCommandFeedback()) && bosdyn_api_arm_command_pb.ArmCommand.Feedback.toObject(includeInstance, f),
+mobilityCommandFeedback: (f = msg.getMobilityCommandFeedback()) && bosdyn_api_mobility_command_pb.MobilityCommand.Feedback.toObject(includeInstance, f),
+gripperCommandFeedback: (f = msg.getGripperCommandFeedback()) && bosdyn_api_gripper_command_pb.GripperCommand.Feedback.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -494,7 +488,7 @@ proto.bosdyn.api.SynchronizedCommand.Feedback.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SynchronizedCommand.Feedback}
  */
 proto.bosdyn.api.SynchronizedCommand.Feedback.deserializeBinary = function(bytes) {

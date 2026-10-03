@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_data_buffer_pb = require('../../../bosdyn/api/data_buffer_pb.js');
 goog.object.extend(proto, bosdyn_api_data_buffer_pb);
@@ -193,7 +187,7 @@ proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeRequest.prototype.toObject
  */
 proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -206,7 +200,7 @@ proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeRequest.toObject = functio
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeRequest}
  */
 proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeRequest.deserializeBinary = function(bytes) {
@@ -344,9 +338,9 @@ proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeResponse.prototype.toObjec
  */
 proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    firstSequenceNumber: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    lastSequenceNumber: jspb.Message.getFieldWithDefault(msg, 3, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+firstSequenceNumber: jspb.Message.getFieldWithDefault(msg, 2, 0),
+lastSequenceNumber: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -359,7 +353,7 @@ proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeResponse.toObject = functi
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeResponse}
  */
 proto.bosdyn.api.metrics_logging.GetStoreSequenceRangeResponse.deserializeBinary = function(bytes) {
@@ -562,8 +556,8 @@ proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotRequest.prototype.toOb
  */
 proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    sequenceNumbersList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+sequenceNumbersList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -576,7 +570,7 @@ proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotRequest.toObject = fun
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotRequest}
  */
 proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotRequest.deserializeBinary = function(bytes) {
@@ -606,10 +600,7 @@ proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotRequest.deserializeBin
       msg.setHeader(value);
       break;
     case 2:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addSequenceNumbers(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getSequenceNumbersList());
       break;
     default:
       reader.skipField();
@@ -771,8 +762,8 @@ proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotResponse.prototype.toO
  */
 proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    snapshotsList: jspb.Message.toObjectList(msg.getSnapshotsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+snapshotsList: jspb.Message.toObjectList(msg.getSnapshotsList(),
     bosdyn_api_metrics_logging_signed_proto_pb.SignedProto.toObject, includeInstance)
   };
 
@@ -786,7 +777,7 @@ proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotResponse.toObject = fu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotResponse}
  */
 proto.bosdyn.api.metrics_logging.GetAbsoluteMetricSnapshotResponse.deserializeBinary = function(bytes) {
@@ -982,9 +973,9 @@ proto.bosdyn.api.metrics_logging.GetMetricsRequest.prototype.toObject = function
  */
 proto.bosdyn.api.metrics_logging.GetMetricsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    keysList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
-    includeEvents: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+keysList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
+includeEvents: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
   };
 
   if (includeInstance) {
@@ -997,7 +988,7 @@ proto.bosdyn.api.metrics_logging.GetMetricsRequest.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.metrics_logging.GetMetricsRequest}
  */
 proto.bosdyn.api.metrics_logging.GetMetricsRequest.deserializeBinary = function(bytes) {
@@ -1027,7 +1018,7 @@ proto.bosdyn.api.metrics_logging.GetMetricsRequest.deserializeBinaryFromReader =
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addKeys(value);
       break;
     case 3:
@@ -1219,11 +1210,11 @@ proto.bosdyn.api.metrics_logging.GetMetricsResponse.prototype.toObject = functio
  */
 proto.bosdyn.api.metrics_logging.GetMetricsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    parametersList: jspb.Message.toObjectList(msg.getParametersList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+parametersList: jspb.Message.toObjectList(msg.getParametersList(),
     bosdyn_api_parameter_pb.Parameter.toObject, includeInstance),
-    missingKeysList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
-    eventsList: jspb.Message.toObjectList(msg.getEventsList(),
+missingKeysList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
+eventsList: jspb.Message.toObjectList(msg.getEventsList(),
     bosdyn_api_data_buffer_pb.Event.toObject, includeInstance)
   };
 
@@ -1237,7 +1228,7 @@ proto.bosdyn.api.metrics_logging.GetMetricsResponse.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.metrics_logging.GetMetricsResponse}
  */
 proto.bosdyn.api.metrics_logging.GetMetricsResponse.deserializeBinary = function(bytes) {
@@ -1272,7 +1263,7 @@ proto.bosdyn.api.metrics_logging.GetMetricsResponse.deserializeBinaryFromReader 
       msg.addParameters(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addMissingKeys(value);
       break;
     case 4:

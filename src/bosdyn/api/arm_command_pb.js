@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_basic_command_pb = require('../../bosdyn/api/basic_command_pb.js');
 goog.object.extend(proto, bosdyn_api_basic_command_pb);
@@ -773,7 +767,7 @@ proto.bosdyn.api.ArmCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmCommand}
  */
 proto.bosdyn.api.ArmCommand.deserializeBinary = function(bytes) {
@@ -893,15 +887,15 @@ proto.bosdyn.api.ArmCommand.Request.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.ArmCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    armCartesianCommand: (f = msg.getArmCartesianCommand()) && proto.bosdyn.api.ArmCartesianCommand.Request.toObject(includeInstance, f),
-    armJointMoveCommand: (f = msg.getArmJointMoveCommand()) && proto.bosdyn.api.ArmJointMoveCommand.Request.toObject(includeInstance, f),
-    namedArmPositionCommand: (f = msg.getNamedArmPositionCommand()) && proto.bosdyn.api.NamedArmPositionsCommand.Request.toObject(includeInstance, f),
-    armVelocityCommand: (f = msg.getArmVelocityCommand()) && proto.bosdyn.api.ArmVelocityCommand.Request.toObject(includeInstance, f),
-    armGazeCommand: (f = msg.getArmGazeCommand()) && proto.bosdyn.api.GazeCommand.Request.toObject(includeInstance, f),
-    armStopCommand: (f = msg.getArmStopCommand()) && proto.bosdyn.api.ArmStopCommand.Request.toObject(includeInstance, f),
-    armDragCommand: (f = msg.getArmDragCommand()) && bosdyn_api_basic_command_pb.ArmDragCommand.Request.toObject(includeInstance, f),
-    armImpedanceCommand: (f = msg.getArmImpedanceCommand()) && proto.bosdyn.api.ArmImpedanceCommand.Request.toObject(includeInstance, f),
-    params: (f = msg.getParams()) && proto.bosdyn.api.ArmParams.toObject(includeInstance, f)
+armCartesianCommand: (f = msg.getArmCartesianCommand()) && proto.bosdyn.api.ArmCartesianCommand.Request.toObject(includeInstance, f),
+armJointMoveCommand: (f = msg.getArmJointMoveCommand()) && proto.bosdyn.api.ArmJointMoveCommand.Request.toObject(includeInstance, f),
+namedArmPositionCommand: (f = msg.getNamedArmPositionCommand()) && proto.bosdyn.api.NamedArmPositionsCommand.Request.toObject(includeInstance, f),
+armVelocityCommand: (f = msg.getArmVelocityCommand()) && proto.bosdyn.api.ArmVelocityCommand.Request.toObject(includeInstance, f),
+armGazeCommand: (f = msg.getArmGazeCommand()) && proto.bosdyn.api.GazeCommand.Request.toObject(includeInstance, f),
+armStopCommand: (f = msg.getArmStopCommand()) && proto.bosdyn.api.ArmStopCommand.Request.toObject(includeInstance, f),
+armDragCommand: (f = msg.getArmDragCommand()) && bosdyn_api_basic_command_pb.ArmDragCommand.Request.toObject(includeInstance, f),
+armImpedanceCommand: (f = msg.getArmImpedanceCommand()) && proto.bosdyn.api.ArmImpedanceCommand.Request.toObject(includeInstance, f),
+params: (f = msg.getParams()) && proto.bosdyn.api.ArmParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -914,7 +908,7 @@ proto.bosdyn.api.ArmCommand.Request.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmCommand.Request}
  */
 proto.bosdyn.api.ArmCommand.Request.deserializeBinary = function(bytes) {
@@ -1484,15 +1478,15 @@ proto.bosdyn.api.ArmCommand.Feedback.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.ArmCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    armCartesianFeedback: (f = msg.getArmCartesianFeedback()) && proto.bosdyn.api.ArmCartesianCommand.Feedback.toObject(includeInstance, f),
-    armJointMoveFeedback: (f = msg.getArmJointMoveFeedback()) && proto.bosdyn.api.ArmJointMoveCommand.Feedback.toObject(includeInstance, f),
-    namedArmPositionFeedback: (f = msg.getNamedArmPositionFeedback()) && proto.bosdyn.api.NamedArmPositionsCommand.Feedback.toObject(includeInstance, f),
-    armVelocityFeedback: (f = msg.getArmVelocityFeedback()) && proto.bosdyn.api.ArmVelocityCommand.Feedback.toObject(includeInstance, f),
-    armGazeFeedback: (f = msg.getArmGazeFeedback()) && proto.bosdyn.api.GazeCommand.Feedback.toObject(includeInstance, f),
-    armStopFeedback: (f = msg.getArmStopFeedback()) && proto.bosdyn.api.ArmStopCommand.Feedback.toObject(includeInstance, f),
-    armDragFeedback: (f = msg.getArmDragFeedback()) && bosdyn_api_basic_command_pb.ArmDragCommand.Feedback.toObject(includeInstance, f),
-    armImpedanceFeedback: (f = msg.getArmImpedanceFeedback()) && proto.bosdyn.api.ArmImpedanceCommand.Feedback.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 100, 0)
+armCartesianFeedback: (f = msg.getArmCartesianFeedback()) && proto.bosdyn.api.ArmCartesianCommand.Feedback.toObject(includeInstance, f),
+armJointMoveFeedback: (f = msg.getArmJointMoveFeedback()) && proto.bosdyn.api.ArmJointMoveCommand.Feedback.toObject(includeInstance, f),
+namedArmPositionFeedback: (f = msg.getNamedArmPositionFeedback()) && proto.bosdyn.api.NamedArmPositionsCommand.Feedback.toObject(includeInstance, f),
+armVelocityFeedback: (f = msg.getArmVelocityFeedback()) && proto.bosdyn.api.ArmVelocityCommand.Feedback.toObject(includeInstance, f),
+armGazeFeedback: (f = msg.getArmGazeFeedback()) && proto.bosdyn.api.GazeCommand.Feedback.toObject(includeInstance, f),
+armStopFeedback: (f = msg.getArmStopFeedback()) && proto.bosdyn.api.ArmStopCommand.Feedback.toObject(includeInstance, f),
+armDragFeedback: (f = msg.getArmDragFeedback()) && bosdyn_api_basic_command_pb.ArmDragCommand.Feedback.toObject(includeInstance, f),
+armImpedanceFeedback: (f = msg.getArmImpedanceFeedback()) && proto.bosdyn.api.ArmImpedanceCommand.Feedback.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 100, 0)
   };
 
   if (includeInstance) {
@@ -1505,7 +1499,7 @@ proto.bosdyn.api.ArmCommand.Feedback.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmCommand.Feedback}
  */
 proto.bosdyn.api.ArmCommand.Feedback.deserializeBinary = function(bytes) {
@@ -2022,7 +2016,7 @@ proto.bosdyn.api.ArmParams.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.ArmParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    disableBodyForceLimiter: (f = msg.getDisableBodyForceLimiter()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+disableBodyForceLimiter: (f = msg.getDisableBodyForceLimiter()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2035,7 +2029,7 @@ proto.bosdyn.api.ArmParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmParams}
  */
 proto.bosdyn.api.ArmParams.deserializeBinary = function(bytes) {
@@ -2186,7 +2180,7 @@ proto.bosdyn.api.ArmVelocityCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmVelocityCommand}
  */
 proto.bosdyn.api.ArmVelocityCommand.deserializeBinary = function(bytes) {
@@ -2274,8 +2268,8 @@ proto.bosdyn.api.ArmVelocityCommand.CylindricalVelocity.prototype.toObject = fun
  */
 proto.bosdyn.api.ArmVelocityCommand.CylindricalVelocity.toObject = function(includeInstance, msg) {
   var f, obj = {
-    linearVelocity: (f = msg.getLinearVelocity()) && bosdyn_api_geometry_pb.CylindricalCoordinate.toObject(includeInstance, f),
-    maxLinearVelocity: (f = msg.getMaxLinearVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+linearVelocity: (f = msg.getLinearVelocity()) && bosdyn_api_geometry_pb.CylindricalCoordinate.toObject(includeInstance, f),
+maxLinearVelocity: (f = msg.getMaxLinearVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2288,7 +2282,7 @@ proto.bosdyn.api.ArmVelocityCommand.CylindricalVelocity.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmVelocityCommand.CylindricalVelocity}
  */
 proto.bosdyn.api.ArmVelocityCommand.CylindricalVelocity.deserializeBinary = function(bytes) {
@@ -2476,8 +2470,8 @@ proto.bosdyn.api.ArmVelocityCommand.CartesianVelocity.prototype.toObject = funct
  */
 proto.bosdyn.api.ArmVelocityCommand.CartesianVelocity.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    velocityInFrameName: (f = msg.getVelocityInFrameName()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f)
+frameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+velocityInFrameName: (f = msg.getVelocityInFrameName()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2490,7 +2484,7 @@ proto.bosdyn.api.ArmVelocityCommand.CartesianVelocity.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmVelocityCommand.CartesianVelocity}
  */
 proto.bosdyn.api.ArmVelocityCommand.CartesianVelocity.deserializeBinary = function(bytes) {
@@ -2515,7 +2509,7 @@ proto.bosdyn.api.ArmVelocityCommand.CartesianVelocity.deserializeBinaryFromReade
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 2:
@@ -2683,11 +2677,11 @@ proto.bosdyn.api.ArmVelocityCommand.Request.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.ArmVelocityCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    cylindricalVelocity: (f = msg.getCylindricalVelocity()) && proto.bosdyn.api.ArmVelocityCommand.CylindricalVelocity.toObject(includeInstance, f),
-    cartesianVelocity: (f = msg.getCartesianVelocity()) && proto.bosdyn.api.ArmVelocityCommand.CartesianVelocity.toObject(includeInstance, f),
-    angularVelocityOfHandRtOdomInHand: (f = msg.getAngularVelocityOfHandRtOdomInHand()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+cylindricalVelocity: (f = msg.getCylindricalVelocity()) && proto.bosdyn.api.ArmVelocityCommand.CylindricalVelocity.toObject(includeInstance, f),
+cartesianVelocity: (f = msg.getCartesianVelocity()) && proto.bosdyn.api.ArmVelocityCommand.CartesianVelocity.toObject(includeInstance, f),
+angularVelocityOfHandRtOdomInHand: (f = msg.getAngularVelocityOfHandRtOdomInHand()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2700,7 +2694,7 @@ proto.bosdyn.api.ArmVelocityCommand.Request.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmVelocityCommand.Request}
  */
 proto.bosdyn.api.ArmVelocityCommand.Request.deserializeBinary = function(bytes) {
@@ -3051,7 +3045,7 @@ proto.bosdyn.api.ArmVelocityCommand.Feedback.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmVelocityCommand.Feedback}
  */
 proto.bosdyn.api.ArmVelocityCommand.Feedback.deserializeBinary = function(bytes) {
@@ -3152,7 +3146,7 @@ proto.bosdyn.api.NamedArmPositionsCommand.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.NamedArmPositionsCommand}
  */
 proto.bosdyn.api.NamedArmPositionsCommand.deserializeBinary = function(bytes) {
@@ -3250,7 +3244,7 @@ proto.bosdyn.api.NamedArmPositionsCommand.Request.prototype.toObject = function(
  */
 proto.bosdyn.api.NamedArmPositionsCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    position: jspb.Message.getFieldWithDefault(msg, 1, 0)
+position: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -3263,7 +3257,7 @@ proto.bosdyn.api.NamedArmPositionsCommand.Request.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.NamedArmPositionsCommand.Request}
  */
 proto.bosdyn.api.NamedArmPositionsCommand.Request.deserializeBinary = function(bytes) {
@@ -3380,7 +3374,7 @@ proto.bosdyn.api.NamedArmPositionsCommand.Feedback.prototype.toObject = function
  */
 proto.bosdyn.api.NamedArmPositionsCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -3393,7 +3387,7 @@ proto.bosdyn.api.NamedArmPositionsCommand.Feedback.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.NamedArmPositionsCommand.Feedback}
  */
 proto.bosdyn.api.NamedArmPositionsCommand.Feedback.deserializeBinary = function(bytes) {
@@ -3533,7 +3527,7 @@ proto.bosdyn.api.ArmCartesianCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmCartesianCommand}
  */
 proto.bosdyn.api.ArmCartesianCommand.deserializeBinary = function(bytes) {
@@ -3647,25 +3641,25 @@ proto.bosdyn.api.ArmCartesianCommand.Request.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.ArmCartesianCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rootFrameName: jspb.Message.getFieldWithDefault(msg, 19, ""),
-    wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    rootTformTask: (f = msg.getRootTformTask()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    poseTrajectoryInTask: (f = msg.getPoseTrajectoryInTask()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
-    maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxLinearVelocity: (f = msg.getMaxLinearVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxAngularVelocity: (f = msg.getMaxAngularVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxPosTrackingError: (f = msg.getMaxPosTrackingError()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxRotTrackingError: (f = msg.getMaxRotTrackingError()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    forceRemainNearCurrentJointConfiguration: jspb.Message.getBooleanFieldWithDefault(msg, 17, false),
-    preferredJointConfiguration: (f = msg.getPreferredJointConfiguration()) && proto.bosdyn.api.ArmJointPosition.toObject(includeInstance, f),
-    xAxis: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    yAxis: jspb.Message.getFieldWithDefault(msg, 9, 0),
-    zAxis: jspb.Message.getFieldWithDefault(msg, 10, 0),
-    rxAxis: jspb.Message.getFieldWithDefault(msg, 11, 0),
-    ryAxis: jspb.Message.getFieldWithDefault(msg, 12, 0),
-    rzAxis: jspb.Message.getFieldWithDefault(msg, 13, 0),
-    wrenchTrajectoryInTask: (f = msg.getWrenchTrajectoryInTask()) && bosdyn_api_trajectory_pb.WrenchTrajectory.toObject(includeInstance, f),
-    disableVelocityLimiting: (f = msg.getDisableVelocityLimiting()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+rootFrameName: jspb.Message.getFieldWithDefault(msg, 19, ""),
+wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+rootTformTask: (f = msg.getRootTformTask()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+poseTrajectoryInTask: (f = msg.getPoseTrajectoryInTask()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
+maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxLinearVelocity: (f = msg.getMaxLinearVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxAngularVelocity: (f = msg.getMaxAngularVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxPosTrackingError: (f = msg.getMaxPosTrackingError()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxRotTrackingError: (f = msg.getMaxRotTrackingError()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+forceRemainNearCurrentJointConfiguration: (f = jspb.Message.getBooleanField(msg, 17)) == null ? undefined : f,
+preferredJointConfiguration: (f = msg.getPreferredJointConfiguration()) && proto.bosdyn.api.ArmJointPosition.toObject(includeInstance, f),
+xAxis: jspb.Message.getFieldWithDefault(msg, 8, 0),
+yAxis: jspb.Message.getFieldWithDefault(msg, 9, 0),
+zAxis: jspb.Message.getFieldWithDefault(msg, 10, 0),
+rxAxis: jspb.Message.getFieldWithDefault(msg, 11, 0),
+ryAxis: jspb.Message.getFieldWithDefault(msg, 12, 0),
+rzAxis: jspb.Message.getFieldWithDefault(msg, 13, 0),
+wrenchTrajectoryInTask: (f = msg.getWrenchTrajectoryInTask()) && bosdyn_api_trajectory_pb.WrenchTrajectory.toObject(includeInstance, f),
+disableVelocityLimiting: (f = msg.getDisableVelocityLimiting()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3678,7 +3672,7 @@ proto.bosdyn.api.ArmCartesianCommand.Request.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmCartesianCommand.Request}
  */
 proto.bosdyn.api.ArmCartesianCommand.Request.deserializeBinary = function(bytes) {
@@ -3703,7 +3697,7 @@ proto.bosdyn.api.ArmCartesianCommand.Request.deserializeBinaryFromReader = funct
     var field = reader.getFieldNumber();
     switch (field) {
     case 19:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRootFrameName(value);
       break;
     case 6:
@@ -4574,11 +4568,11 @@ proto.bosdyn.api.ArmCartesianCommand.Feedback.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.ArmCartesianCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    measuredPosTrackingError: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    measuredRotTrackingError: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    measuredPosDistanceToGoal: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    measuredRotDistanceToGoal: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+measuredPosTrackingError: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+measuredRotTrackingError: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+measuredPosDistanceToGoal: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+measuredRotDistanceToGoal: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0)
   };
 
   if (includeInstance) {
@@ -4591,7 +4585,7 @@ proto.bosdyn.api.ArmCartesianCommand.Feedback.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmCartesianCommand.Feedback}
  */
 proto.bosdyn.api.ArmCartesianCommand.Feedback.deserializeBinary = function(bytes) {
@@ -4848,7 +4842,7 @@ proto.bosdyn.api.ArmJointMoveCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmJointMoveCommand}
  */
 proto.bosdyn.api.ArmJointMoveCommand.deserializeBinary = function(bytes) {
@@ -4936,8 +4930,8 @@ proto.bosdyn.api.ArmJointMoveCommand.Request.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.ArmJointMoveCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    trajectory: (f = msg.getTrajectory()) && proto.bosdyn.api.ArmJointTrajectory.toObject(includeInstance, f),
-    trackingMode: jspb.Message.getFieldWithDefault(msg, 3, 0)
+trajectory: (f = msg.getTrajectory()) && proto.bosdyn.api.ArmJointTrajectory.toObject(includeInstance, f),
+trackingMode: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -4950,7 +4944,7 @@ proto.bosdyn.api.ArmJointMoveCommand.Request.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmJointMoveCommand.Request}
  */
 proto.bosdyn.api.ArmJointMoveCommand.Request.deserializeBinary = function(bytes) {
@@ -5124,11 +5118,11 @@ proto.bosdyn.api.ArmJointMoveCommand.Feedback.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.ArmJointMoveCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    plannerStatus: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    plannedPointsList: jspb.Message.toObjectList(msg.getPlannedPointsList(),
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+plannerStatus: jspb.Message.getFieldWithDefault(msg, 2, 0),
+plannedPointsList: jspb.Message.toObjectList(msg.getPlannedPointsList(),
     proto.bosdyn.api.ArmJointTrajectoryPoint.toObject, includeInstance),
-    timeToGoal: (f = msg.getTimeToGoal()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+timeToGoal: (f = msg.getTimeToGoal()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5141,7 +5135,7 @@ proto.bosdyn.api.ArmJointMoveCommand.Feedback.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmJointMoveCommand.Feedback}
  */
 proto.bosdyn.api.ArmJointMoveCommand.Feedback.deserializeBinary = function(bytes) {
@@ -5408,12 +5402,12 @@ proto.bosdyn.api.ArmJointPosition.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.ArmJointPosition.toObject = function(includeInstance, msg) {
   var f, obj = {
-    sh0: (f = msg.getSh0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    sh1: (f = msg.getSh1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    el0: (f = msg.getEl0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    el1: (f = msg.getEl1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wr0: (f = msg.getWr0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wr1: (f = msg.getWr1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+sh0: (f = msg.getSh0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+sh1: (f = msg.getSh1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+el0: (f = msg.getEl0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+el1: (f = msg.getEl1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wr0: (f = msg.getWr0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wr1: (f = msg.getWr1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5426,7 +5420,7 @@ proto.bosdyn.api.ArmJointPosition.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmJointPosition}
  */
 proto.bosdyn.api.ArmJointPosition.deserializeBinary = function(bytes) {
@@ -5814,12 +5808,12 @@ proto.bosdyn.api.ArmJointVelocity.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.ArmJointVelocity.toObject = function(includeInstance, msg) {
   var f, obj = {
-    sh0: (f = msg.getSh0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    sh1: (f = msg.getSh1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    el0: (f = msg.getEl0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    el1: (f = msg.getEl1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wr0: (f = msg.getWr0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    wr1: (f = msg.getWr1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+sh0: (f = msg.getSh0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+sh1: (f = msg.getSh1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+el0: (f = msg.getEl0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+el1: (f = msg.getEl1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wr0: (f = msg.getWr0()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+wr1: (f = msg.getWr1()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5832,7 +5826,7 @@ proto.bosdyn.api.ArmJointVelocity.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmJointVelocity}
  */
 proto.bosdyn.api.ArmJointVelocity.deserializeBinary = function(bytes) {
@@ -6220,9 +6214,9 @@ proto.bosdyn.api.ArmJointTrajectoryPoint.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.ArmJointTrajectoryPoint.toObject = function(includeInstance, msg) {
   var f, obj = {
-    position: (f = msg.getPosition()) && proto.bosdyn.api.ArmJointPosition.toObject(includeInstance, f),
-    velocity: (f = msg.getVelocity()) && proto.bosdyn.api.ArmJointVelocity.toObject(includeInstance, f),
-    timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+position: (f = msg.getPosition()) && proto.bosdyn.api.ArmJointPosition.toObject(includeInstance, f),
+velocity: (f = msg.getVelocity()) && proto.bosdyn.api.ArmJointVelocity.toObject(includeInstance, f),
+timeSinceReference: (f = msg.getTimeSinceReference()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6235,7 +6229,7 @@ proto.bosdyn.api.ArmJointTrajectoryPoint.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmJointTrajectoryPoint}
  */
 proto.bosdyn.api.ArmJointTrajectoryPoint.deserializeBinary = function(bytes) {
@@ -6480,11 +6474,11 @@ proto.bosdyn.api.ArmJointTrajectory.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.ArmJointTrajectory.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pointsList: jspb.Message.toObjectList(msg.getPointsList(),
+pointsList: jspb.Message.toObjectList(msg.getPointsList(),
     proto.bosdyn.api.ArmJointTrajectoryPoint.toObject, includeInstance),
-    referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    maximumVelocity: (f = msg.getMaximumVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+referenceTime: (f = msg.getReferenceTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+maximumVelocity: (f = msg.getMaximumVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6497,7 +6491,7 @@ proto.bosdyn.api.ArmJointTrajectory.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmJointTrajectory}
  */
 proto.bosdyn.api.ArmJointTrajectory.deserializeBinary = function(bytes) {
@@ -6799,7 +6793,7 @@ proto.bosdyn.api.GazeCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GazeCommand}
  */
 proto.bosdyn.api.GazeCommand.deserializeBinary = function(bytes) {
@@ -6887,15 +6881,15 @@ proto.bosdyn.api.GazeCommand.Request.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.GazeCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    targetTrajectoryInFrame1: (f = msg.getTargetTrajectoryInFrame1()) && bosdyn_api_trajectory_pb.Vec3Trajectory.toObject(includeInstance, f),
-    frame1Name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    toolTrajectoryInFrame2: (f = msg.getToolTrajectoryInFrame2()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
-    frame2Name: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    targetTrajectoryInitialVelocity: (f = msg.getTargetTrajectoryInitialVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxLinearVelocity: (f = msg.getMaxLinearVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxAngularVelocity: (f = msg.getMaxAngularVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+targetTrajectoryInFrame1: (f = msg.getTargetTrajectoryInFrame1()) && bosdyn_api_trajectory_pb.Vec3Trajectory.toObject(includeInstance, f),
+frame1Name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+toolTrajectoryInFrame2: (f = msg.getToolTrajectoryInFrame2()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
+frame2Name: jspb.Message.getFieldWithDefault(msg, 11, ""),
+wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+targetTrajectoryInitialVelocity: (f = msg.getTargetTrajectoryInitialVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maximumAcceleration: (f = msg.getMaximumAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxLinearVelocity: (f = msg.getMaxLinearVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxAngularVelocity: (f = msg.getMaxAngularVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6908,7 +6902,7 @@ proto.bosdyn.api.GazeCommand.Request.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GazeCommand.Request}
  */
 proto.bosdyn.api.GazeCommand.Request.deserializeBinary = function(bytes) {
@@ -6938,7 +6932,7 @@ proto.bosdyn.api.GazeCommand.Request.deserializeBinaryFromReader = function(msg,
       msg.setTargetTrajectoryInFrame1(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrame1Name(value);
       break;
     case 10:
@@ -6947,7 +6941,7 @@ proto.bosdyn.api.GazeCommand.Request.deserializeBinaryFromReader = function(msg,
       msg.setToolTrajectoryInFrame2(value);
       break;
     case 11:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrame2Name(value);
       break;
     case 9:
@@ -7404,13 +7398,13 @@ proto.bosdyn.api.GazeCommand.Feedback.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.GazeCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    gazingAtTarget: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    gazeToTargetRotationMeasured: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    handPositionAtGoal: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    handDistanceToGoalMeasured: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    handRollAtGoal: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    handRollToTargetRollMeasured: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+gazingAtTarget: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+gazeToTargetRotationMeasured: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+handPositionAtGoal: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+handDistanceToGoalMeasured: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
+handRollAtGoal: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+handRollToTargetRollMeasured: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0)
   };
 
   if (includeInstance) {
@@ -7423,7 +7417,7 @@ proto.bosdyn.api.GazeCommand.Feedback.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GazeCommand.Feedback}
  */
 proto.bosdyn.api.GazeCommand.Feedback.deserializeBinary = function(bytes) {
@@ -7737,7 +7731,7 @@ proto.bosdyn.api.ArmStopCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmStopCommand}
  */
 proto.bosdyn.api.ArmStopCommand.deserializeBinary = function(bytes) {
@@ -7838,7 +7832,7 @@ proto.bosdyn.api.ArmStopCommand.Request.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmStopCommand.Request}
  */
 proto.bosdyn.api.ArmStopCommand.Request.deserializeBinary = function(bytes) {
@@ -7939,7 +7933,7 @@ proto.bosdyn.api.ArmStopCommand.Feedback.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmStopCommand.Feedback}
  */
 proto.bosdyn.api.ArmStopCommand.Feedback.deserializeBinary = function(bytes) {
@@ -8040,7 +8034,7 @@ proto.bosdyn.api.ArmImpedanceCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmImpedanceCommand}
  */
 proto.bosdyn.api.ArmImpedanceCommand.deserializeBinary = function(bytes) {
@@ -8128,16 +8122,16 @@ proto.bosdyn.api.ArmImpedanceCommand.Request.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.ArmImpedanceCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rootFrameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    rootTformTask: (f = msg.getRootTformTask()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    taskTformDesiredTool: (f = msg.getTaskTformDesiredTool()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
-    feedForwardWrenchAtToolInDesiredTool: (f = msg.getFeedForwardWrenchAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
-    diagonalStiffnessMatrix: (f = msg.getDiagonalStiffnessMatrix()) && bosdyn_api_geometry_pb.Vector.toObject(includeInstance, f),
-    diagonalDampingMatrix: (f = msg.getDiagonalDampingMatrix()) && bosdyn_api_geometry_pb.Vector.toObject(includeInstance, f),
-    maxForceMag: (f = msg.getMaxForceMag()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maxTorqueMag: (f = msg.getMaxTorqueMag()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    disableSafetyCheck: (f = msg.getDisableSafetyCheck()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+rootFrameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+rootTformTask: (f = msg.getRootTformTask()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+taskTformDesiredTool: (f = msg.getTaskTformDesiredTool()) && bosdyn_api_trajectory_pb.SE3Trajectory.toObject(includeInstance, f),
+feedForwardWrenchAtToolInDesiredTool: (f = msg.getFeedForwardWrenchAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+diagonalStiffnessMatrix: (f = msg.getDiagonalStiffnessMatrix()) && bosdyn_api_geometry_pb.Vector.toObject(includeInstance, f),
+diagonalDampingMatrix: (f = msg.getDiagonalDampingMatrix()) && bosdyn_api_geometry_pb.Vector.toObject(includeInstance, f),
+maxForceMag: (f = msg.getMaxForceMag()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maxTorqueMag: (f = msg.getMaxTorqueMag()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+disableSafetyCheck: (f = msg.getDisableSafetyCheck()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8150,7 +8144,7 @@ proto.bosdyn.api.ArmImpedanceCommand.Request.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmImpedanceCommand.Request}
  */
 proto.bosdyn.api.ArmImpedanceCommand.Request.deserializeBinary = function(bytes) {
@@ -8175,7 +8169,7 @@ proto.bosdyn.api.ArmImpedanceCommand.Request.deserializeBinaryFromReader = funct
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRootFrameName(value);
       break;
     case 2:
@@ -8717,13 +8711,13 @@ proto.bosdyn.api.ArmImpedanceCommand.Feedback.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.ArmImpedanceCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
-    commandedWrenchFromStiffnessAtToolInDesiredTool: (f = msg.getCommandedWrenchFromStiffnessAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
-    commandedWrenchFromDampingAtToolInDesiredTool: (f = msg.getCommandedWrenchFromDampingAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
-    commandedWrenchFromFeedForwardAtToolInDesiredTool: (f = msg.getCommandedWrenchFromFeedForwardAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
-    totalCommandedWrenchAtToolInDesiredTool: (f = msg.getTotalCommandedWrenchAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
-    totalMeasuredWrenchAtToolInDesiredTool: (f = msg.getTotalMeasuredWrenchAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
+commandedWrenchFromStiffnessAtToolInDesiredTool: (f = msg.getCommandedWrenchFromStiffnessAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+commandedWrenchFromDampingAtToolInDesiredTool: (f = msg.getCommandedWrenchFromDampingAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+commandedWrenchFromFeedForwardAtToolInDesiredTool: (f = msg.getCommandedWrenchFromFeedForwardAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+totalCommandedWrenchAtToolInDesiredTool: (f = msg.getTotalCommandedWrenchAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f),
+totalMeasuredWrenchAtToolInDesiredTool: (f = msg.getTotalMeasuredWrenchAtToolInDesiredTool()) && bosdyn_api_geometry_pb.Wrench.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -8736,7 +8730,7 @@ proto.bosdyn.api.ArmImpedanceCommand.Feedback.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ArmImpedanceCommand.Feedback}
  */
 proto.bosdyn.api.ArmImpedanceCommand.Feedback.deserializeBinary = function(bytes) {

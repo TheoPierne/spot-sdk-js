@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -132,11 +126,11 @@ proto.bosdyn.api.RaycastRequest.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.RaycastRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    rayFrameName: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    ray: (f = msg.getRay()) && bosdyn_api_geometry_pb.Ray.toObject(includeInstance, f),
-    minIntersectionDistance: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    intersectionTypesList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+rayFrameName: jspb.Message.getFieldWithDefault(msg, 5, ""),
+ray: (f = msg.getRay()) && bosdyn_api_geometry_pb.Ray.toObject(includeInstance, f),
+minIntersectionDistance: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+intersectionTypesList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -149,7 +143,7 @@ proto.bosdyn.api.RaycastRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RaycastRequest}
  */
 proto.bosdyn.api.RaycastRequest.deserializeBinary = function(bytes) {
@@ -179,7 +173,7 @@ proto.bosdyn.api.RaycastRequest.deserializeBinaryFromReader = function(msg, read
       msg.setHeader(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRayFrameName(value);
       break;
     case 2:
@@ -192,10 +186,7 @@ proto.bosdyn.api.RaycastRequest.deserializeBinaryFromReader = function(msg, read
       msg.setMinIntersectionDistance(value);
       break;
     case 7:
-      var values = /** @type {!Array<!proto.bosdyn.api.RayIntersection.Type>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addIntersectionTypes(values[i]);
-      }
+      reader.readPackableEnumInto(msg.getIntersectionTypesList());
       break;
     default:
       reader.skipField();
@@ -445,9 +436,9 @@ proto.bosdyn.api.RayIntersection.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.RayIntersection.toObject = function(includeInstance, msg) {
   var f, obj = {
-    type: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    hitPositionInHitFrame: (f = msg.getHitPositionInHitFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    distanceMeters: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+type: jspb.Message.getFieldWithDefault(msg, 1, 0),
+hitPositionInHitFrame: (f = msg.getHitPositionInHitFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+distanceMeters: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -460,7 +451,7 @@ proto.bosdyn.api.RayIntersection.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RayIntersection}
  */
 proto.bosdyn.api.RayIntersection.deserializeBinary = function(bytes) {
@@ -674,13 +665,13 @@ proto.bosdyn.api.RaycastResponse.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.RaycastResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    message: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    hitFrameName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    hitsList: jspb.Message.toObjectList(msg.getHitsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 5, 0),
+message: jspb.Message.getFieldWithDefault(msg, 6, ""),
+hitFrameName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+hitsList: jspb.Message.toObjectList(msg.getHitsList(),
     proto.bosdyn.api.RayIntersection.toObject, includeInstance),
-    transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f)
+transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -693,7 +684,7 @@ proto.bosdyn.api.RaycastResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RaycastResponse}
  */
 proto.bosdyn.api.RaycastResponse.deserializeBinary = function(bytes) {
@@ -727,11 +718,11 @@ proto.bosdyn.api.RaycastResponse.deserializeBinaryFromReader = function(msg, rea
       msg.setStatus(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMessage(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHitFrameName(value);
       break;
     case 2:

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.object.extend(proto, google_protobuf_timestamp_pb);
@@ -125,10 +119,10 @@ proto.bosdyn.api.SoftwarePackageVersion.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.SoftwarePackageVersion.toObject = function(includeInstance, msg) {
   var f, obj = {
-    packageName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    version: (f = msg.getVersion()) && bosdyn_api_robot_id_pb.SoftwareVersion.toObject(includeInstance, f),
-    releaseDate: (f = msg.getReleaseDate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    buildId: jspb.Message.getFieldWithDefault(msg, 4, "")
+packageName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+version: (f = msg.getVersion()) && bosdyn_api_robot_id_pb.SoftwareVersion.toObject(includeInstance, f),
+releaseDate: (f = msg.getReleaseDate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+buildId: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -141,7 +135,7 @@ proto.bosdyn.api.SoftwarePackageVersion.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SoftwarePackageVersion}
  */
 proto.bosdyn.api.SoftwarePackageVersion.deserializeBinary = function(bytes) {
@@ -166,7 +160,7 @@ proto.bosdyn.api.SoftwarePackageVersion.deserializeBinaryFromReader = function(m
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setPackageName(value);
       break;
     case 2:
@@ -180,7 +174,7 @@ proto.bosdyn.api.SoftwarePackageVersion.deserializeBinaryFromReader = function(m
       msg.setReleaseDate(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setBuildId(value);
       break;
     default:
@@ -387,9 +381,9 @@ proto.bosdyn.api.StagedSoftwarePackage.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.StagedSoftwarePackage.toObject = function(includeInstance, msg) {
   var f, obj = {
-    versionInfo: (f = msg.getVersionInfo()) && proto.bosdyn.api.SoftwarePackageVersion.toObject(includeInstance, f),
-    fileSize: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    url: jspb.Message.getFieldWithDefault(msg, 3, "")
+versionInfo: (f = msg.getVersionInfo()) && proto.bosdyn.api.SoftwarePackageVersion.toObject(includeInstance, f),
+fileSize: jspb.Message.getFieldWithDefault(msg, 2, 0),
+url: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -402,7 +396,7 @@ proto.bosdyn.api.StagedSoftwarePackage.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.StagedSoftwarePackage}
  */
 proto.bosdyn.api.StagedSoftwarePackage.deserializeBinary = function(bytes) {
@@ -436,7 +430,7 @@ proto.bosdyn.api.StagedSoftwarePackage.deserializeBinaryFromReader = function(ms
       msg.setFileSize(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setUrl(value);
       break;
     default:
@@ -598,9 +592,9 @@ proto.bosdyn.api.SoftwareUpdateStatus.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.SoftwareUpdateStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    packageName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    errorCode: jspb.Message.getFieldWithDefault(msg, 3, 0)
+packageName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+errorCode: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -613,7 +607,7 @@ proto.bosdyn.api.SoftwareUpdateStatus.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SoftwareUpdateStatus}
  */
 proto.bosdyn.api.SoftwareUpdateStatus.deserializeBinary = function(bytes) {
@@ -638,7 +632,7 @@ proto.bosdyn.api.SoftwareUpdateStatus.deserializeBinaryFromReader = function(msg
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setPackageName(value);
       break;
     case 2:

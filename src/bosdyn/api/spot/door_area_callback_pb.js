@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_spot_door_pb = require('../../../bosdyn/api/spot/door_pb.js');
 goog.object.extend(proto, bosdyn_api_spot_door_pb);
@@ -77,8 +71,8 @@ proto.bosdyn.api.spot.AreaCallbackDoorConfig.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.spot.AreaCallbackDoorConfig.toObject = function(includeInstance, msg) {
   var f, obj = {
-    forwardCommand: (f = msg.getForwardCommand()) && bosdyn_api_spot_door_pb.DoorCommand.Request.toObject(includeInstance, f),
-    reverseCommand: (f = msg.getReverseCommand()) && bosdyn_api_spot_door_pb.DoorCommand.Request.toObject(includeInstance, f)
+forwardCommand: (f = msg.getForwardCommand()) && bosdyn_api_spot_door_pb.DoorCommand.Request.toObject(includeInstance, f),
+reverseCommand: (f = msg.getReverseCommand()) && bosdyn_api_spot_door_pb.DoorCommand.Request.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -91,7 +85,7 @@ proto.bosdyn.api.spot.AreaCallbackDoorConfig.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.AreaCallbackDoorConfig}
  */
 proto.bosdyn.api.spot.AreaCallbackDoorConfig.deserializeBinary = function(bytes) {

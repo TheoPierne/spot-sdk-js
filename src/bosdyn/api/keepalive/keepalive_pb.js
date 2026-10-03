@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
 goog.object.extend(proto, google_protobuf_duration_pb);
@@ -428,12 +422,12 @@ proto.bosdyn.api.keepalive.Policy.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.keepalive.Policy.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    actionsList: jspb.Message.toObjectList(msg.getActionsList(),
+name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+actionsList: jspb.Message.toObjectList(msg.getActionsList(),
     proto.bosdyn.api.keepalive.ActionAfter.toObject, includeInstance),
-    associatedLeasesList: jspb.Message.toObjectList(msg.getAssociatedLeasesList(),
+associatedLeasesList: jspb.Message.toObjectList(msg.getAssociatedLeasesList(),
     bosdyn_api_lease_pb.Lease.toObject, includeInstance),
-    userId: jspb.Message.getFieldWithDefault(msg, 4, "")
+userId: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -446,7 +440,7 @@ proto.bosdyn.api.keepalive.Policy.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.Policy}
  */
 proto.bosdyn.api.keepalive.Policy.deserializeBinary = function(bytes) {
@@ -471,7 +465,7 @@ proto.bosdyn.api.keepalive.Policy.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:
@@ -485,7 +479,7 @@ proto.bosdyn.api.keepalive.Policy.deserializeBinaryFromReader = function(msg, re
       msg.addAssociatedLeases(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setUserId(value);
       break;
     default:
@@ -725,14 +719,14 @@ proto.bosdyn.api.keepalive.ActionAfter.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.keepalive.ActionAfter.toObject = function(includeInstance, msg) {
   var f, obj = {
-    recordEvent: (f = msg.getRecordEvent()) && proto.bosdyn.api.keepalive.ActionAfter.RecordEvent.toObject(includeInstance, f),
-    autoReturn: (f = msg.getAutoReturn()) && proto.bosdyn.api.keepalive.ActionAfter.AutoReturn.toObject(includeInstance, f),
-    controlledMotorsOff: (f = msg.getControlledMotorsOff()) && proto.bosdyn.api.keepalive.ActionAfter.ControlledMotorsOff.toObject(includeInstance, f),
-    immediateMotorsOff: (f = msg.getImmediateMotorsOff()) && proto.bosdyn.api.keepalive.ActionAfter.ImmediateMotorsOff.toObject(includeInstance, f),
-    immediateRobotOff: (f = msg.getImmediateRobotOff()) && proto.bosdyn.api.keepalive.ActionAfter.ImmediateRobotOff.toObject(includeInstance, f),
-    leaseStale: (f = msg.getLeaseStale()) && proto.bosdyn.api.keepalive.ActionAfter.LeaseStale.toObject(includeInstance, f),
-    haltRobot: (f = msg.getHaltRobot()) && proto.bosdyn.api.keepalive.ActionAfter.HaltRobot.toObject(includeInstance, f),
-    after: (f = msg.getAfter()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+recordEvent: (f = msg.getRecordEvent()) && proto.bosdyn.api.keepalive.ActionAfter.RecordEvent.toObject(includeInstance, f),
+autoReturn: (f = msg.getAutoReturn()) && proto.bosdyn.api.keepalive.ActionAfter.AutoReturn.toObject(includeInstance, f),
+controlledMotorsOff: (f = msg.getControlledMotorsOff()) && proto.bosdyn.api.keepalive.ActionAfter.ControlledMotorsOff.toObject(includeInstance, f),
+immediateMotorsOff: (f = msg.getImmediateMotorsOff()) && proto.bosdyn.api.keepalive.ActionAfter.ImmediateMotorsOff.toObject(includeInstance, f),
+immediateRobotOff: (f = msg.getImmediateRobotOff()) && proto.bosdyn.api.keepalive.ActionAfter.ImmediateRobotOff.toObject(includeInstance, f),
+leaseStale: (f = msg.getLeaseStale()) && proto.bosdyn.api.keepalive.ActionAfter.LeaseStale.toObject(includeInstance, f),
+haltRobot: (f = msg.getHaltRobot()) && proto.bosdyn.api.keepalive.ActionAfter.HaltRobot.toObject(includeInstance, f),
+after: (f = msg.getAfter()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -745,7 +739,7 @@ proto.bosdyn.api.keepalive.ActionAfter.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ActionAfter}
  */
 proto.bosdyn.api.keepalive.ActionAfter.deserializeBinary = function(bytes) {
@@ -944,7 +938,7 @@ proto.bosdyn.api.keepalive.ActionAfter.RecordEvent.prototype.toObject = function
  */
 proto.bosdyn.api.keepalive.ActionAfter.RecordEvent.toObject = function(includeInstance, msg) {
   var f, obj = {
-    eventsList: jspb.Message.toObjectList(msg.getEventsList(),
+eventsList: jspb.Message.toObjectList(msg.getEventsList(),
     bosdyn_api_data_buffer_pb.Event.toObject, includeInstance)
   };
 
@@ -958,7 +952,7 @@ proto.bosdyn.api.keepalive.ActionAfter.RecordEvent.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ActionAfter.RecordEvent}
  */
 proto.bosdyn.api.keepalive.ActionAfter.RecordEvent.deserializeBinary = function(bytes) {
@@ -1104,9 +1098,9 @@ proto.bosdyn.api.keepalive.ActionAfter.AutoReturn.prototype.toObject = function(
  */
 proto.bosdyn.api.keepalive.ActionAfter.AutoReturn.toObject = function(includeInstance, msg) {
   var f, obj = {
-    leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
+leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
     bosdyn_api_lease_pb.Lease.toObject, includeInstance),
-    params: (f = msg.getParams()) && bosdyn_api_auto_return_auto_return_pb.Params.toObject(includeInstance, f)
+params: (f = msg.getParams()) && bosdyn_api_auto_return_auto_return_pb.Params.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1119,7 +1113,7 @@ proto.bosdyn.api.keepalive.ActionAfter.AutoReturn.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ActionAfter.AutoReturn}
  */
 proto.bosdyn.api.keepalive.ActionAfter.AutoReturn.deserializeBinary = function(bytes) {
@@ -1321,7 +1315,7 @@ proto.bosdyn.api.keepalive.ActionAfter.ControlledMotorsOff.toObject = function(i
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ActionAfter.ControlledMotorsOff}
  */
 proto.bosdyn.api.keepalive.ActionAfter.ControlledMotorsOff.deserializeBinary = function(bytes) {
@@ -1422,7 +1416,7 @@ proto.bosdyn.api.keepalive.ActionAfter.ImmediateMotorsOff.toObject = function(in
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ActionAfter.ImmediateMotorsOff}
  */
 proto.bosdyn.api.keepalive.ActionAfter.ImmediateMotorsOff.deserializeBinary = function(bytes) {
@@ -1523,7 +1517,7 @@ proto.bosdyn.api.keepalive.ActionAfter.ImmediateRobotOff.toObject = function(inc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ActionAfter.ImmediateRobotOff}
  */
 proto.bosdyn.api.keepalive.ActionAfter.ImmediateRobotOff.deserializeBinary = function(bytes) {
@@ -1618,7 +1612,7 @@ proto.bosdyn.api.keepalive.ActionAfter.LeaseStale.prototype.toObject = function(
  */
 proto.bosdyn.api.keepalive.ActionAfter.LeaseStale.toObject = function(includeInstance, msg) {
   var f, obj = {
-    leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
+leasesList: jspb.Message.toObjectList(msg.getLeasesList(),
     bosdyn_api_lease_pb.Lease.toObject, includeInstance)
   };
 
@@ -1632,7 +1626,7 @@ proto.bosdyn.api.keepalive.ActionAfter.LeaseStale.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ActionAfter.LeaseStale}
  */
 proto.bosdyn.api.keepalive.ActionAfter.LeaseStale.deserializeBinary = function(bytes) {
@@ -1784,7 +1778,7 @@ proto.bosdyn.api.keepalive.ActionAfter.HaltRobot.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ActionAfter.HaltRobot}
  */
 proto.bosdyn.api.keepalive.ActionAfter.HaltRobot.deserializeBinary = function(bytes) {
@@ -2175,9 +2169,9 @@ proto.bosdyn.api.keepalive.ModifyPolicyRequest.prototype.toObject = function(opt
  */
 proto.bosdyn.api.keepalive.ModifyPolicyRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    toAdd: (f = msg.getToAdd()) && proto.bosdyn.api.keepalive.Policy.toObject(includeInstance, f),
-    policyIdsToRemoveList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+toAdd: (f = msg.getToAdd()) && proto.bosdyn.api.keepalive.Policy.toObject(includeInstance, f),
+policyIdsToRemoveList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -2190,7 +2184,7 @@ proto.bosdyn.api.keepalive.ModifyPolicyRequest.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ModifyPolicyRequest}
  */
 proto.bosdyn.api.keepalive.ModifyPolicyRequest.deserializeBinary = function(bytes) {
@@ -2225,10 +2219,7 @@ proto.bosdyn.api.keepalive.ModifyPolicyRequest.deserializeBinaryFromReader = fun
       msg.setToAdd(value);
       break;
     case 3:
-      var values = /** @type {!Array<string>} */ (reader.isDelimited() ? reader.readPackedUint64String() : [reader.readUint64String()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addPolicyIdsToRemove(values[i]);
-      }
+      reader.readPackableUint64StringInto(msg.getPolicyIdsToRemoveList());
       break;
     default:
       reader.skipField();
@@ -2435,10 +2426,10 @@ proto.bosdyn.api.keepalive.ModifyPolicyResponse.prototype.toObject = function(op
  */
 proto.bosdyn.api.keepalive.ModifyPolicyResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    addedPolicy: (f = msg.getAddedPolicy()) && proto.bosdyn.api.keepalive.LivePolicy.toObject(includeInstance, f),
-    removedPoliciesList: jspb.Message.toObjectList(msg.getRemovedPoliciesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+addedPolicy: (f = msg.getAddedPolicy()) && proto.bosdyn.api.keepalive.LivePolicy.toObject(includeInstance, f),
+removedPoliciesList: jspb.Message.toObjectList(msg.getRemovedPoliciesList(),
     proto.bosdyn.api.keepalive.LivePolicy.toObject, includeInstance)
   };
 
@@ -2452,7 +2443,7 @@ proto.bosdyn.api.keepalive.ModifyPolicyResponse.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.ModifyPolicyResponse}
  */
 proto.bosdyn.api.keepalive.ModifyPolicyResponse.deserializeBinary = function(bytes) {
@@ -2730,8 +2721,8 @@ proto.bosdyn.api.keepalive.CheckInRequest.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.keepalive.CheckInRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    policyId: jspb.Message.getFieldWithDefault(msg, 2, "0")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+policyId: jspb.Message.getFieldWithDefault(msg, 2, "0")
   };
 
   if (includeInstance) {
@@ -2744,7 +2735,7 @@ proto.bosdyn.api.keepalive.CheckInRequest.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.CheckInRequest}
  */
 proto.bosdyn.api.keepalive.CheckInRequest.deserializeBinary = function(bytes) {
@@ -2911,9 +2902,9 @@ proto.bosdyn.api.keepalive.CheckInResponse.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.keepalive.CheckInResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    lastCheckin: (f = msg.getLastCheckin()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+lastCheckin: (f = msg.getLastCheckin()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -2926,7 +2917,7 @@ proto.bosdyn.api.keepalive.CheckInResponse.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.CheckInResponse}
  */
 proto.bosdyn.api.keepalive.CheckInResponse.deserializeBinary = function(bytes) {
@@ -3152,7 +3143,7 @@ proto.bosdyn.api.keepalive.GetStatusRequest.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.keepalive.GetStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3165,7 +3156,7 @@ proto.bosdyn.api.keepalive.GetStatusRequest.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.GetStatusRequest}
  */
 proto.bosdyn.api.keepalive.GetStatusRequest.deserializeBinary = function(bytes) {
@@ -3303,10 +3294,10 @@ proto.bosdyn.api.keepalive.LivePolicy.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.keepalive.LivePolicy.toObject = function(includeInstance, msg) {
   var f, obj = {
-    policyId: jspb.Message.getFieldWithDefault(msg, 1, "0"),
-    policy: (f = msg.getPolicy()) && proto.bosdyn.api.keepalive.Policy.toObject(includeInstance, f),
-    lastCheckin: (f = msg.getLastCheckin()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    clientName: jspb.Message.getFieldWithDefault(msg, 4, "")
+policyId: jspb.Message.getFieldWithDefault(msg, 1, "0"),
+policy: (f = msg.getPolicy()) && proto.bosdyn.api.keepalive.Policy.toObject(includeInstance, f),
+lastCheckin: (f = msg.getLastCheckin()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+clientName: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -3319,7 +3310,7 @@ proto.bosdyn.api.keepalive.LivePolicy.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.LivePolicy}
  */
 proto.bosdyn.api.keepalive.LivePolicy.deserializeBinary = function(bytes) {
@@ -3358,7 +3349,7 @@ proto.bosdyn.api.keepalive.LivePolicy.deserializeBinaryFromReader = function(msg
       msg.setLastCheckin(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClientName(value);
       break;
     default:
@@ -3572,10 +3563,10 @@ proto.bosdyn.api.keepalive.GetStatusResponse.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.keepalive.GetStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    statusList: jspb.Message.toObjectList(msg.getStatusList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+statusList: jspb.Message.toObjectList(msg.getStatusList(),
     proto.bosdyn.api.keepalive.LivePolicy.toObject, includeInstance),
-    activeControlActionsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
+activeControlActionsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -3588,7 +3579,7 @@ proto.bosdyn.api.keepalive.GetStatusResponse.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.keepalive.GetStatusResponse}
  */
 proto.bosdyn.api.keepalive.GetStatusResponse.deserializeBinary = function(bytes) {
@@ -3623,10 +3614,7 @@ proto.bosdyn.api.keepalive.GetStatusResponse.deserializeBinaryFromReader = funct
       msg.addStatus(value);
       break;
     case 3:
-      var values = /** @type {!Array<!proto.bosdyn.api.keepalive.GetStatusResponse.PolicyControlAction>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addActiveControlActions(values[i]);
-      }
+      reader.readPackableEnumInto(msg.getActiveControlActionsList());
       break;
     default:
       reader.skipField();

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -101,7 +95,7 @@ proto.bosdyn.api.spot_cam.GetSoftwareVersionRequest.prototype.toObject = functio
  */
 proto.bosdyn.api.spot_cam.GetSoftwareVersionRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -114,7 +108,7 @@ proto.bosdyn.api.spot_cam.GetSoftwareVersionRequest.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetSoftwareVersionRequest}
  */
 proto.bosdyn.api.spot_cam.GetSoftwareVersionRequest.deserializeBinary = function(bytes) {
@@ -252,9 +246,9 @@ proto.bosdyn.api.spot_cam.GetSoftwareVersionResponse.prototype.toObject = functi
  */
 proto.bosdyn.api.spot_cam.GetSoftwareVersionResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    version: (f = msg.getVersion()) && bosdyn_api_robot_id_pb.SoftwareVersion.toObject(includeInstance, f),
-    detail: jspb.Message.getFieldWithDefault(msg, 3, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+version: (f = msg.getVersion()) && bosdyn_api_robot_id_pb.SoftwareVersion.toObject(includeInstance, f),
+detail: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -267,7 +261,7 @@ proto.bosdyn.api.spot_cam.GetSoftwareVersionResponse.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetSoftwareVersionResponse}
  */
 proto.bosdyn.api.spot_cam.GetSoftwareVersionResponse.deserializeBinary = function(bytes) {
@@ -302,7 +296,7 @@ proto.bosdyn.api.spot_cam.GetSoftwareVersionResponse.deserializeBinaryFromReader
       msg.setVersion(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setDetail(value);
       break;
     default:

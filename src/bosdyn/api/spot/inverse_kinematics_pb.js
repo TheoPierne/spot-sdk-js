@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_arm_command_pb = require('../../../bosdyn/api/arm_command_pb.js');
 goog.object.extend(proto, bosdyn_api_arm_command_pb);
@@ -300,19 +294,19 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.prototype.toObject = function(opt
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    rootFrameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    rootTformScene: (f = msg.getRootTformScene()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    sceneTformTask: (f = msg.getSceneTformTask()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    nominalArmConfiguration: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    nominalArmConfigurationOverrides: (f = msg.getNominalArmConfigurationOverrides()) && bosdyn_api_arm_command_pb.ArmJointPosition.toObject(includeInstance, f),
-    sceneTformBodyNominal: (f = msg.getSceneTformBodyNominal()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    fixedStance: (f = msg.getFixedStance()) && proto.bosdyn.api.spot.InverseKinematicsRequest.FixedStance.toObject(includeInstance, f),
-    onGroundPlaneStance: (f = msg.getOnGroundPlaneStance()) && proto.bosdyn.api.spot.InverseKinematicsRequest.OnGroundPlaneStance.toObject(includeInstance, f),
-    wristMountedTool: (f = msg.getWristMountedTool()) && proto.bosdyn.api.spot.InverseKinematicsRequest.WristMountedTool.toObject(includeInstance, f),
-    bodyMountedTool: (f = msg.getBodyMountedTool()) && proto.bosdyn.api.spot.InverseKinematicsRequest.BodyMountedTool.toObject(includeInstance, f),
-    toolPoseTask: (f = msg.getToolPoseTask()) && proto.bosdyn.api.spot.InverseKinematicsRequest.ToolPoseTask.toObject(includeInstance, f),
-    toolGazeTask: (f = msg.getToolGazeTask()) && proto.bosdyn.api.spot.InverseKinematicsRequest.ToolGazeTask.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+rootFrameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+rootTformScene: (f = msg.getRootTformScene()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+sceneTformTask: (f = msg.getSceneTformTask()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+nominalArmConfiguration: jspb.Message.getFieldWithDefault(msg, 6, 0),
+nominalArmConfigurationOverrides: (f = msg.getNominalArmConfigurationOverrides()) && bosdyn_api_arm_command_pb.ArmJointPosition.toObject(includeInstance, f),
+sceneTformBodyNominal: (f = msg.getSceneTformBodyNominal()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+fixedStance: (f = msg.getFixedStance()) && proto.bosdyn.api.spot.InverseKinematicsRequest.FixedStance.toObject(includeInstance, f),
+onGroundPlaneStance: (f = msg.getOnGroundPlaneStance()) && proto.bosdyn.api.spot.InverseKinematicsRequest.OnGroundPlaneStance.toObject(includeInstance, f),
+wristMountedTool: (f = msg.getWristMountedTool()) && proto.bosdyn.api.spot.InverseKinematicsRequest.WristMountedTool.toObject(includeInstance, f),
+bodyMountedTool: (f = msg.getBodyMountedTool()) && proto.bosdyn.api.spot.InverseKinematicsRequest.BodyMountedTool.toObject(includeInstance, f),
+toolPoseTask: (f = msg.getToolPoseTask()) && proto.bosdyn.api.spot.InverseKinematicsRequest.ToolPoseTask.toObject(includeInstance, f),
+toolGazeTask: (f = msg.getToolGazeTask()) && proto.bosdyn.api.spot.InverseKinematicsRequest.ToolGazeTask.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -325,7 +319,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.InverseKinematicsRequest}
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.deserializeBinary = function(bytes) {
@@ -355,7 +349,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.deserializeBinaryFromReader = fun
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRootFrameName(value);
       break;
     case 3:
@@ -587,10 +581,10 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.FixedStance.prototype.toObject = 
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.FixedStance.toObject = function(includeInstance, msg) {
   var f, obj = {
-    flRtScene: (f = msg.getFlRtScene()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    frRtScene: (f = msg.getFrRtScene()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    hlRtScene: (f = msg.getHlRtScene()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    hrRtScene: (f = msg.getHrRtScene()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f)
+flRtScene: (f = msg.getFlRtScene()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+frRtScene: (f = msg.getFrRtScene()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+hlRtScene: (f = msg.getHlRtScene()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+hrRtScene: (f = msg.getHrRtScene()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -603,7 +597,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.FixedStance.toObject = function(i
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.InverseKinematicsRequest.FixedStance}
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.FixedStance.deserializeBinary = function(bytes) {
@@ -891,7 +885,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.OnGroundPlaneStance.prototype.toO
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.OnGroundPlaneStance.toObject = function(includeInstance, msg) {
   var f, obj = {
-    sceneTformGround: (f = msg.getSceneTformGround()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
+sceneTformGround: (f = msg.getSceneTformGround()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -904,7 +898,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.OnGroundPlaneStance.toObject = fu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.InverseKinematicsRequest.OnGroundPlaneStance}
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.OnGroundPlaneStance.deserializeBinary = function(bytes) {
@@ -1042,7 +1036,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.WristMountedTool.prototype.toObje
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.WristMountedTool.toObject = function(includeInstance, msg) {
   var f, obj = {
-    wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
+wristTformTool: (f = msg.getWristTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1055,7 +1049,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.WristMountedTool.toObject = funct
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.InverseKinematicsRequest.WristMountedTool}
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.WristMountedTool.deserializeBinary = function(bytes) {
@@ -1193,7 +1187,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.BodyMountedTool.prototype.toObjec
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.BodyMountedTool.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bodyTformTool: (f = msg.getBodyTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
+bodyTformTool: (f = msg.getBodyTformTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1206,7 +1200,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.BodyMountedTool.toObject = functi
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.InverseKinematicsRequest.BodyMountedTool}
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.BodyMountedTool.deserializeBinary = function(bytes) {
@@ -1344,7 +1338,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.ToolPoseTask.prototype.toObject =
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.ToolPoseTask.toObject = function(includeInstance, msg) {
   var f, obj = {
-    taskTformDesiredTool: (f = msg.getTaskTformDesiredTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
+taskTformDesiredTool: (f = msg.getTaskTformDesiredTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1357,7 +1351,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.ToolPoseTask.toObject = function(
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.InverseKinematicsRequest.ToolPoseTask}
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.ToolPoseTask.deserializeBinary = function(bytes) {
@@ -1495,8 +1489,8 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.ToolGazeTask.prototype.toObject =
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.ToolGazeTask.toObject = function(includeInstance, msg) {
   var f, obj = {
-    targetInTask: (f = msg.getTargetInTask()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    taskTformDesiredTool: (f = msg.getTaskTformDesiredTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
+targetInTask: (f = msg.getTargetInTask()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+taskTformDesiredTool: (f = msg.getTaskTformDesiredTool()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1509,7 +1503,7 @@ proto.bosdyn.api.spot.InverseKinematicsRequest.ToolGazeTask.toObject = function(
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.InverseKinematicsRequest.ToolGazeTask}
  */
 proto.bosdyn.api.spot.InverseKinematicsRequest.ToolGazeTask.deserializeBinary = function(bytes) {
@@ -2140,9 +2134,9 @@ proto.bosdyn.api.spot.InverseKinematicsResponse.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot.InverseKinematicsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    robotConfiguration: (f = msg.getRobotConfiguration()) && bosdyn_api_robot_state_pb.KinematicState.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+robotConfiguration: (f = msg.getRobotConfiguration()) && bosdyn_api_robot_state_pb.KinematicState.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2155,7 +2149,7 @@ proto.bosdyn.api.spot.InverseKinematicsResponse.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.InverseKinematicsResponse}
  */
 proto.bosdyn.api.spot.InverseKinematicsResponse.deserializeBinary = function(bytes) {

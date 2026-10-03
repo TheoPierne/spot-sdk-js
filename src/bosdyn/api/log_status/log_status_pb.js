@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_data_buffer_pb = require('../../../bosdyn/api/data_buffer_pb.js');
 goog.object.extend(proto, bosdyn_api_data_buffer_pb);
@@ -400,13 +394,13 @@ proto.bosdyn.api.log_status.LogStatus.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.log_status.LogStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    type: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    startTime: (f = msg.getStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    runTime: (f = msg.getRunTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    eventKey: jspb.Message.getFieldWithDefault(msg, 7, "")
+id: jspb.Message.getFieldWithDefault(msg, 1, ""),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+type: jspb.Message.getFieldWithDefault(msg, 3, 0),
+startTime: (f = msg.getStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+runTime: (f = msg.getRunTime()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+eventKey: jspb.Message.getFieldWithDefault(msg, 7, "")
   };
 
   if (includeInstance) {
@@ -419,7 +413,7 @@ proto.bosdyn.api.log_status.LogStatus.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.LogStatus}
  */
 proto.bosdyn.api.log_status.LogStatus.deserializeBinary = function(bytes) {
@@ -444,7 +438,7 @@ proto.bosdyn.api.log_status.LogStatus.deserializeBinaryFromReader = function(msg
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setId(value);
       break;
     case 2:
@@ -471,7 +465,7 @@ proto.bosdyn.api.log_status.LogStatus.deserializeBinaryFromReader = function(msg
       msg.setRunTime(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setEventKey(value);
       break;
     default:
@@ -799,8 +793,8 @@ proto.bosdyn.api.log_status.GetLogStatusRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.log_status.GetLogStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    id: jspb.Message.getFieldWithDefault(msg, 2, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+id: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -813,7 +807,7 @@ proto.bosdyn.api.log_status.GetLogStatusRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.GetLogStatusRequest}
  */
 proto.bosdyn.api.log_status.GetLogStatusRequest.deserializeBinary = function(bytes) {
@@ -843,7 +837,7 @@ proto.bosdyn.api.log_status.GetLogStatusRequest.deserializeBinaryFromReader = fu
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setId(value);
       break;
     default:
@@ -980,9 +974,9 @@ proto.bosdyn.api.log_status.GetLogStatusResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.log_status.GetLogStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -995,7 +989,7 @@ proto.bosdyn.api.log_status.GetLogStatusResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.GetLogStatusResponse}
  */
 proto.bosdyn.api.log_status.GetLogStatusResponse.deserializeBinary = function(bytes) {
@@ -1221,7 +1215,7 @@ proto.bosdyn.api.log_status.GetActiveLogStatusesRequest.prototype.toObject = fun
  */
 proto.bosdyn.api.log_status.GetActiveLogStatusesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1234,7 +1228,7 @@ proto.bosdyn.api.log_status.GetActiveLogStatusesRequest.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.GetActiveLogStatusesRequest}
  */
 proto.bosdyn.api.log_status.GetActiveLogStatusesRequest.deserializeBinary = function(bytes) {
@@ -1379,9 +1373,9 @@ proto.bosdyn.api.log_status.GetActiveLogStatusesResponse.prototype.toObject = fu
  */
 proto.bosdyn.api.log_status.GetActiveLogStatusesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    logStatusesList: jspb.Message.toObjectList(msg.getLogStatusesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+logStatusesList: jspb.Message.toObjectList(msg.getLogStatusesList(),
     proto.bosdyn.api.log_status.LogStatus.toObject, includeInstance)
   };
 
@@ -1395,7 +1389,7 @@ proto.bosdyn.api.log_status.GetActiveLogStatusesResponse.toObject = function(inc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.GetActiveLogStatusesResponse}
  */
 proto.bosdyn.api.log_status.GetActiveLogStatusesResponse.deserializeBinary = function(bytes) {
@@ -1621,10 +1615,10 @@ proto.bosdyn.api.log_status.StartConcurrentLogRequest.prototype.toObject = funct
  */
 proto.bosdyn.api.log_status.StartConcurrentLogRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    keepAlive: (f = msg.getKeepAlive()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    pastTextlogDuration: (f = msg.getPastTextlogDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    event: (f = msg.getEvent()) && bosdyn_api_data_buffer_pb.Event.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+keepAlive: (f = msg.getKeepAlive()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+pastTextlogDuration: (f = msg.getPastTextlogDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+event: (f = msg.getEvent()) && bosdyn_api_data_buffer_pb.Event.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1637,7 +1631,7 @@ proto.bosdyn.api.log_status.StartConcurrentLogRequest.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.StartConcurrentLogRequest}
  */
 proto.bosdyn.api.log_status.StartConcurrentLogRequest.deserializeBinary = function(bytes) {
@@ -1925,10 +1919,10 @@ proto.bosdyn.api.log_status.StartConcurrentLogResponse.prototype.toObject = func
  */
 proto.bosdyn.api.log_status.StartConcurrentLogResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1941,7 +1935,7 @@ proto.bosdyn.api.log_status.StartConcurrentLogResponse.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.StartConcurrentLogResponse}
  */
 proto.bosdyn.api.log_status.StartConcurrentLogResponse.deserializeBinary = function(bytes) {
@@ -2219,8 +2213,8 @@ proto.bosdyn.api.log_status.StartRetroLogRequest.prototype.toObject = function(o
  */
 proto.bosdyn.api.log_status.StartRetroLogRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    pastDuration: (f = msg.getPastDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+pastDuration: (f = msg.getPastDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2233,7 +2227,7 @@ proto.bosdyn.api.log_status.StartRetroLogRequest.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.StartRetroLogRequest}
  */
 proto.bosdyn.api.log_status.StartRetroLogRequest.deserializeBinary = function(bytes) {
@@ -2421,10 +2415,10 @@ proto.bosdyn.api.log_status.StartRetroLogResponse.prototype.toObject = function(
  */
 proto.bosdyn.api.log_status.StartRetroLogResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2437,7 +2431,7 @@ proto.bosdyn.api.log_status.StartRetroLogResponse.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.StartRetroLogResponse}
  */
 proto.bosdyn.api.log_status.StartRetroLogResponse.deserializeBinary = function(bytes) {
@@ -2714,9 +2708,9 @@ proto.bosdyn.api.log_status.StartExperimentLogRequest.prototype.toObject = funct
  */
 proto.bosdyn.api.log_status.StartExperimentLogRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    keepAlive: (f = msg.getKeepAlive()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    pastTextlogDuration: (f = msg.getPastTextlogDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+keepAlive: (f = msg.getKeepAlive()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+pastTextlogDuration: (f = msg.getPastTextlogDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2729,7 +2723,7 @@ proto.bosdyn.api.log_status.StartExperimentLogRequest.toObject = function(includ
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.StartExperimentLogRequest}
  */
 proto.bosdyn.api.log_status.StartExperimentLogRequest.deserializeBinary = function(bytes) {
@@ -2967,10 +2961,10 @@ proto.bosdyn.api.log_status.StartExperimentLogResponse.prototype.toObject = func
  */
 proto.bosdyn.api.log_status.StartExperimentLogResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2983,7 +2977,7 @@ proto.bosdyn.api.log_status.StartExperimentLogResponse.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.StartExperimentLogResponse}
  */
 proto.bosdyn.api.log_status.StartExperimentLogResponse.deserializeBinary = function(bytes) {
@@ -3259,9 +3253,9 @@ proto.bosdyn.api.log_status.UpdateExperimentLogRequest.prototype.toObject = func
  */
 proto.bosdyn.api.log_status.UpdateExperimentLogRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    keepAlive: (f = msg.getKeepAlive()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    id: jspb.Message.getFieldWithDefault(msg, 3, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+keepAlive: (f = msg.getKeepAlive()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+id: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -3274,7 +3268,7 @@ proto.bosdyn.api.log_status.UpdateExperimentLogRequest.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.UpdateExperimentLogRequest}
  */
 proto.bosdyn.api.log_status.UpdateExperimentLogRequest.deserializeBinary = function(bytes) {
@@ -3309,7 +3303,7 @@ proto.bosdyn.api.log_status.UpdateExperimentLogRequest.deserializeBinaryFromRead
       msg.setKeepAlive(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setId(value);
       break;
     default:
@@ -3491,10 +3485,10 @@ proto.bosdyn.api.log_status.UpdateExperimentLogResponse.prototype.toObject = fun
  */
 proto.bosdyn.api.log_status.UpdateExperimentLogResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3507,7 +3501,7 @@ proto.bosdyn.api.log_status.UpdateExperimentLogResponse.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.UpdateExperimentLogResponse}
  */
 proto.bosdyn.api.log_status.UpdateExperimentLogResponse.deserializeBinary = function(bytes) {
@@ -3784,8 +3778,8 @@ proto.bosdyn.api.log_status.TerminateLogRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.log_status.TerminateLogRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    id: jspb.Message.getFieldWithDefault(msg, 2, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+id: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -3798,7 +3792,7 @@ proto.bosdyn.api.log_status.TerminateLogRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.TerminateLogRequest}
  */
 proto.bosdyn.api.log_status.TerminateLogRequest.deserializeBinary = function(bytes) {
@@ -3828,7 +3822,7 @@ proto.bosdyn.api.log_status.TerminateLogRequest.deserializeBinaryFromReader = fu
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setId(value);
       break;
     default:
@@ -3965,9 +3959,9 @@ proto.bosdyn.api.log_status.TerminateLogResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.log_status.TerminateLogResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+logStatus: (f = msg.getLogStatus()) && proto.bosdyn.api.log_status.LogStatus.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3980,7 +3974,7 @@ proto.bosdyn.api.log_status.TerminateLogResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.log_status.TerminateLogResponse}
  */
 proto.bosdyn.api.log_status.TerminateLogResponse.deserializeBinary = function(bytes) {

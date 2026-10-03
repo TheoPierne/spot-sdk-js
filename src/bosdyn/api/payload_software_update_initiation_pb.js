@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 goog.exportSymbol('proto.bosdyn.api.TriggerInitiateUpdateRequest', null, global);
 goog.exportSymbol('proto.bosdyn.api.TriggerInitiateUpdateResponse', null, global);
@@ -154,7 +148,7 @@ proto.bosdyn.api.TriggerSendPayloadSoftwareInfoRequest.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TriggerSendPayloadSoftwareInfoRequest}
  */
 proto.bosdyn.api.TriggerSendPayloadSoftwareInfoRequest.deserializeBinary = function(bytes) {
@@ -255,7 +249,7 @@ proto.bosdyn.api.TriggerSendPayloadSoftwareInfoResponse.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TriggerSendPayloadSoftwareInfoResponse}
  */
 proto.bosdyn.api.TriggerSendPayloadSoftwareInfoResponse.deserializeBinary = function(bytes) {
@@ -356,7 +350,7 @@ proto.bosdyn.api.TriggerInitiateUpdateRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TriggerInitiateUpdateRequest}
  */
 proto.bosdyn.api.TriggerInitiateUpdateRequest.deserializeBinary = function(bytes) {
@@ -457,7 +451,7 @@ proto.bosdyn.api.TriggerInitiateUpdateResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.TriggerInitiateUpdateResponse}
  */
 proto.bosdyn.api.TriggerInitiateUpdateResponse.deserializeBinary = function(bytes) {

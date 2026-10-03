@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 goog.exportSymbol('proto.bosdyn.api.DataChunk', null, global);
 /**
@@ -75,8 +69,8 @@ proto.bosdyn.api.DataChunk.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.DataChunk.toObject = function(includeInstance, msg) {
   var f, obj = {
-    totalSize: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    data: msg.getData_asB64()
+totalSize: jspb.Message.getFieldWithDefault(msg, 1, 0),
+data: msg.getData_asB64()
   };
 
   if (includeInstance) {
@@ -89,7 +83,7 @@ proto.bosdyn.api.DataChunk.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.DataChunk}
  */
 proto.bosdyn.api.DataChunk.deserializeBinary = function(bytes) {

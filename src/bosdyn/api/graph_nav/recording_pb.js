@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.object.extend(proto, google_protobuf_timestamp_pb);
@@ -359,9 +353,9 @@ proto.bosdyn.api.graph_nav.RecordingEnvironment.prototype.toObject = function(op
  */
 proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject = function(includeInstance, msg) {
   var f, obj = {
-    namePrefix: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    waypointEnvironment: (f = msg.getWaypointEnvironment()) && bosdyn_api_graph_nav_map_pb.Waypoint.Annotations.toObject(includeInstance, f),
-    edgeEnvironment: (f = msg.getEdgeEnvironment()) && bosdyn_api_graph_nav_map_pb.Edge.Annotations.toObject(includeInstance, f)
+namePrefix: jspb.Message.getFieldWithDefault(msg, 1, ""),
+waypointEnvironment: (f = msg.getWaypointEnvironment()) && bosdyn_api_graph_nav_map_pb.Waypoint.Annotations.toObject(includeInstance, f),
+edgeEnvironment: (f = msg.getEdgeEnvironment()) && bosdyn_api_graph_nav_map_pb.Edge.Annotations.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -374,7 +368,7 @@ proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.RecordingEnvironment}
  */
 proto.bosdyn.api.graph_nav.RecordingEnvironment.deserializeBinary = function(bytes) {
@@ -399,7 +393,7 @@ proto.bosdyn.api.graph_nav.RecordingEnvironment.deserializeBinaryFromReader = fu
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNamePrefix(value);
       break;
     case 2:
@@ -591,9 +585,9 @@ proto.bosdyn.api.graph_nav.SetRecordingEnvironmentRequest.prototype.toObject = f
  */
 proto.bosdyn.api.graph_nav.SetRecordingEnvironmentRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    environment: (f = msg.getEnvironment()) && proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+environment: (f = msg.getEnvironment()) && proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -606,7 +600,7 @@ proto.bosdyn.api.graph_nav.SetRecordingEnvironmentRequest.toObject = function(in
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.SetRecordingEnvironmentRequest}
  */
 proto.bosdyn.api.graph_nav.SetRecordingEnvironmentRequest.deserializeBinary = function(bytes) {
@@ -844,8 +838,8 @@ proto.bosdyn.api.graph_nav.SetRecordingEnvironmentResponse.prototype.toObject = 
  */
 proto.bosdyn.api.graph_nav.SetRecordingEnvironmentResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -858,7 +852,7 @@ proto.bosdyn.api.graph_nav.SetRecordingEnvironmentResponse.toObject = function(i
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.SetRecordingEnvironmentResponse}
  */
 proto.bosdyn.api.graph_nav.SetRecordingEnvironmentResponse.deserializeBinary = function(bytes) {
@@ -1053,11 +1047,11 @@ proto.bosdyn.api.graph_nav.StartRecordingRequest.prototype.toObject = function(o
  */
 proto.bosdyn.api.graph_nav.StartRecordingRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    recordingEnvironment: (f = msg.getRecordingEnvironment()) && proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject(includeInstance, f),
-    requireFiducialsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
-    sessionStartTime: (f = msg.getSessionStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+recordingEnvironment: (f = msg.getRecordingEnvironment()) && proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject(includeInstance, f),
+requireFiducialsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
+sessionStartTime: (f = msg.getSessionStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1070,7 +1064,7 @@ proto.bosdyn.api.graph_nav.StartRecordingRequest.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.StartRecordingRequest}
  */
 proto.bosdyn.api.graph_nav.StartRecordingRequest.deserializeBinary = function(bytes) {
@@ -1110,10 +1104,7 @@ proto.bosdyn.api.graph_nav.StartRecordingRequest.deserializeBinaryFromReader = f
       msg.setRecordingEnvironment(value);
       break;
     case 4:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addRequireFiducials(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getRequireFiducialsList());
       break;
     case 5:
       var value = new google_protobuf_timestamp_pb.Timestamp;
@@ -1415,16 +1406,16 @@ proto.bosdyn.api.graph_nav.StartRecordingResponse.prototype.toObject = function(
  */
 proto.bosdyn.api.graph_nav.StartRecordingResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    createdWaypoint: (f = msg.getCreatedWaypoint()) && bosdyn_api_graph_nav_map_pb.Waypoint.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    missingFiducialsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
-    badPoseFiducialsList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
-    licenseStatus: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
-    sessionStartTime: (f = msg.getSessionStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+createdWaypoint: (f = msg.getCreatedWaypoint()) && bosdyn_api_graph_nav_map_pb.Waypoint.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 4, 0),
+missingFiducialsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+badPoseFiducialsList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
+licenseStatus: jspb.Message.getFieldWithDefault(msg, 6, 0),
+impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
+sessionStartTime: (f = msg.getSessionStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1437,7 +1428,7 @@ proto.bosdyn.api.graph_nav.StartRecordingResponse.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.StartRecordingResponse}
  */
 proto.bosdyn.api.graph_nav.StartRecordingResponse.deserializeBinary = function(bytes) {
@@ -1481,16 +1472,10 @@ proto.bosdyn.api.graph_nav.StartRecordingResponse.deserializeBinaryFromReader = 
       msg.setStatus(value);
       break;
     case 5:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addMissingFiducials(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getMissingFiducialsList());
       break;
     case 7:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addBadPoseFiducials(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getBadPoseFiducialsList());
       break;
     case 6:
       var value = /** @type {!proto.bosdyn.api.LicenseInfo.Status} */ (reader.readEnum());
@@ -2001,8 +1986,8 @@ proto.bosdyn.api.graph_nav.StopRecordingRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.graph_nav.StopRecordingRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2015,7 +2000,7 @@ proto.bosdyn.api.graph_nav.StopRecordingRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.StopRecordingRequest}
  */
 proto.bosdyn.api.graph_nav.StopRecordingRequest.deserializeBinary = function(bytes) {
@@ -2203,12 +2188,12 @@ proto.bosdyn.api.graph_nav.StopRecordingResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.graph_nav.StopRecordingResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    errorWaypointLocalizedId: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    sessionStartTime: (f = msg.getSessionStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+errorWaypointLocalizedId: jspb.Message.getFieldWithDefault(msg, 3, ""),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+sessionStartTime: (f = msg.getSessionStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2221,7 +2206,7 @@ proto.bosdyn.api.graph_nav.StopRecordingResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.StopRecordingResponse}
  */
 proto.bosdyn.api.graph_nav.StopRecordingResponse.deserializeBinary = function(bytes) {
@@ -2255,7 +2240,7 @@ proto.bosdyn.api.graph_nav.StopRecordingResponse.deserializeBinaryFromReader = f
       msg.setStatus(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setErrorWaypointLocalizedId(value);
       break;
     case 4:
@@ -2584,12 +2569,12 @@ proto.bosdyn.api.graph_nav.CreateWaypointRequest.prototype.toObject = function(o
  */
 proto.bosdyn.api.graph_nav.CreateWaypointRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    waypointName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    recordingEnvironment: (f = msg.getRecordingEnvironment()) && proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    requireFiducialsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
-    worldObjectsList: jspb.Message.toObjectList(msg.getWorldObjectsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+waypointName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+recordingEnvironment: (f = msg.getRecordingEnvironment()) && proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+requireFiducialsList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+worldObjectsList: jspb.Message.toObjectList(msg.getWorldObjectsList(),
     bosdyn_api_world_object_pb.WorldObject.toObject, includeInstance)
   };
 
@@ -2603,7 +2588,7 @@ proto.bosdyn.api.graph_nav.CreateWaypointRequest.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.CreateWaypointRequest}
  */
 proto.bosdyn.api.graph_nav.CreateWaypointRequest.deserializeBinary = function(bytes) {
@@ -2633,7 +2618,7 @@ proto.bosdyn.api.graph_nav.CreateWaypointRequest.deserializeBinaryFromReader = f
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setWaypointName(value);
       break;
     case 3:
@@ -2647,10 +2632,7 @@ proto.bosdyn.api.graph_nav.CreateWaypointRequest.deserializeBinaryFromReader = f
       msg.setLease(value);
       break;
     case 5:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addRequireFiducials(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getRequireFiducialsList());
       break;
     case 6:
       var value = new bosdyn_api_world_object_pb.WorldObject;
@@ -2978,15 +2960,15 @@ proto.bosdyn.api.graph_nav.CreateWaypointResponse.prototype.toObject = function(
  */
 proto.bosdyn.api.graph_nav.CreateWaypointResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    createdWaypoint: (f = msg.getCreatedWaypoint()) && bosdyn_api_graph_nav_map_pb.Waypoint.toObject(includeInstance, f),
-    createdEdge: (f = msg.getCreatedEdge()) && bosdyn_api_graph_nav_map_pb.Edge.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    missingFiducialsList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
-    badPoseFiducialsList: (f = jspb.Message.getRepeatedField(msg, 8)) == null ? undefined : f,
-    licenseStatus: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+createdWaypoint: (f = msg.getCreatedWaypoint()) && bosdyn_api_graph_nav_map_pb.Waypoint.toObject(includeInstance, f),
+createdEdge: (f = msg.getCreatedEdge()) && bosdyn_api_graph_nav_map_pb.Edge.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 5, 0),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+missingFiducialsList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
+badPoseFiducialsList: (f = jspb.Message.getRepeatedField(msg, 8)) == null ? undefined : f,
+licenseStatus: jspb.Message.getFieldWithDefault(msg, 7, 0),
+mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2999,7 +2981,7 @@ proto.bosdyn.api.graph_nav.CreateWaypointResponse.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.CreateWaypointResponse}
  */
 proto.bosdyn.api.graph_nav.CreateWaypointResponse.deserializeBinary = function(bytes) {
@@ -3048,16 +3030,10 @@ proto.bosdyn.api.graph_nav.CreateWaypointResponse.deserializeBinaryFromReader = 
       msg.setLeaseUseResult(value);
       break;
     case 6:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addMissingFiducials(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getMissingFiducialsList());
       break;
     case 8:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt32() : [reader.readInt32()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addBadPoseFiducials(values[i]);
-      }
+      reader.readPackableInt32Into(msg.getBadPoseFiducialsList());
       break;
     case 7:
       var value = /** @type {!proto.bosdyn.api.LicenseInfo.Status} */ (reader.readEnum());
@@ -3510,9 +3486,9 @@ proto.bosdyn.api.graph_nav.CreateEdgeRequest.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.graph_nav.CreateEdgeRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    edge: (f = msg.getEdge()) && bosdyn_api_graph_nav_map_pb.Edge.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+edge: (f = msg.getEdge()) && bosdyn_api_graph_nav_map_pb.Edge.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3525,7 +3501,7 @@ proto.bosdyn.api.graph_nav.CreateEdgeRequest.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.CreateEdgeRequest}
  */
 proto.bosdyn.api.graph_nav.CreateEdgeRequest.deserializeBinary = function(bytes) {
@@ -3763,11 +3739,11 @@ proto.bosdyn.api.graph_nav.CreateEdgeResponse.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.graph_nav.CreateEdgeResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    errorExistingEdge: (f = msg.getErrorExistingEdge()) && bosdyn_api_graph_nav_map_pb.Edge.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+errorExistingEdge: (f = msg.getErrorExistingEdge()) && bosdyn_api_graph_nav_map_pb.Edge.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3780,7 +3756,7 @@ proto.bosdyn.api.graph_nav.CreateEdgeResponse.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.CreateEdgeResponse}
  */
 proto.bosdyn.api.graph_nav.CreateEdgeResponse.deserializeBinary = function(bytes) {
@@ -4109,7 +4085,7 @@ proto.bosdyn.api.graph_nav.GetRecordStatusRequest.prototype.toObject = function(
  */
 proto.bosdyn.api.graph_nav.GetRecordStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4122,7 +4098,7 @@ proto.bosdyn.api.graph_nav.GetRecordStatusRequest.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.GetRecordStatusRequest}
  */
 proto.bosdyn.api.graph_nav.GetRecordStatusRequest.deserializeBinary = function(bytes) {
@@ -4260,14 +4236,14 @@ proto.bosdyn.api.graph_nav.GetRecordStatusResponse.prototype.toObject = function
  */
 proto.bosdyn.api.graph_nav.GetRecordStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    isRecording: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
-    recordingEnvironment: (f = msg.getRecordingEnvironment()) && proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject(includeInstance, f),
-    mapState: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    status: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
-    sessionStartTime: (f = msg.getSessionStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+isRecording: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+recordingEnvironment: (f = msg.getRecordingEnvironment()) && proto.bosdyn.api.graph_nav.RecordingEnvironment.toObject(includeInstance, f),
+mapState: jspb.Message.getFieldWithDefault(msg, 4, 0),
+status: jspb.Message.getFieldWithDefault(msg, 5, 0),
+impairedState: (f = msg.getImpairedState()) && bosdyn_api_robot_state_pb.RobotImpairedState.toObject(includeInstance, f),
+sessionStartTime: (f = msg.getSessionStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+mapStats: (f = msg.getMapStats()) && bosdyn_api_graph_nav_map_pb.MapStats.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4280,7 +4256,7 @@ proto.bosdyn.api.graph_nav.GetRecordStatusResponse.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.GetRecordStatusResponse}
  */
 proto.bosdyn.api.graph_nav.GetRecordStatusResponse.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -490,10 +484,10 @@ proto.bosdyn.api.WalkToObjectRayInWorld.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.WalkToObjectRayInWorld.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rayStartRtFrame: (f = msg.getRayStartRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    rayEndRtFrame: (f = msg.getRayEndRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    frameName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    offsetDistance: (f = msg.getOffsetDistance()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
+rayStartRtFrame: (f = msg.getRayStartRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+rayEndRtFrame: (f = msg.getRayEndRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+frameName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+offsetDistance: (f = msg.getOffsetDistance()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -506,7 +500,7 @@ proto.bosdyn.api.WalkToObjectRayInWorld.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.WalkToObjectRayInWorld}
  */
 proto.bosdyn.api.WalkToObjectRayInWorld.deserializeBinary = function(bytes) {
@@ -541,7 +535,7 @@ proto.bosdyn.api.WalkToObjectRayInWorld.deserializeBinaryFromReader = function(m
       msg.setRayEndRtFrame(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 4:
@@ -773,11 +767,11 @@ proto.bosdyn.api.WalkToObjectInImage.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.WalkToObjectInImage.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pixelXy: (f = msg.getPixelXy()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    transformsSnapshotForCamera: (f = msg.getTransformsSnapshotForCamera()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
-    frameNameImageSensor: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    cameraModel: (f = msg.getCameraModel()) && bosdyn_api_image_pb.ImageSource.PinholeModel.toObject(includeInstance, f),
-    offsetDistance: (f = msg.getOffsetDistance()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
+pixelXy: (f = msg.getPixelXy()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+transformsSnapshotForCamera: (f = msg.getTransformsSnapshotForCamera()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
+frameNameImageSensor: jspb.Message.getFieldWithDefault(msg, 3, ""),
+cameraModel: (f = msg.getCameraModel()) && bosdyn_api_image_pb.ImageSource.PinholeModel.toObject(includeInstance, f),
+offsetDistance: (f = msg.getOffsetDistance()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -790,7 +784,7 @@ proto.bosdyn.api.WalkToObjectInImage.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.WalkToObjectInImage}
  */
 proto.bosdyn.api.WalkToObjectInImage.deserializeBinary = function(bytes) {
@@ -825,7 +819,7 @@ proto.bosdyn.api.WalkToObjectInImage.deserializeBinaryFromReader = function(msg,
       msg.setTransformsSnapshotForCamera(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameNameImageSensor(value);
       break;
     case 4:
@@ -1107,11 +1101,11 @@ proto.bosdyn.api.PickObjectRayInWorld.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.PickObjectRayInWorld.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rayStartRtFrame: (f = msg.getRayStartRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    rayEndRtFrame: (f = msg.getRayEndRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    frameName: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    graspParams: (f = msg.getGraspParams()) && proto.bosdyn.api.GraspParams.toObject(includeInstance, f),
-    walkGazeMode: jspb.Message.getFieldWithDefault(msg, 4, 0)
+rayStartRtFrame: (f = msg.getRayStartRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+rayEndRtFrame: (f = msg.getRayEndRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+frameName: jspb.Message.getFieldWithDefault(msg, 6, ""),
+graspParams: (f = msg.getGraspParams()) && proto.bosdyn.api.GraspParams.toObject(includeInstance, f),
+walkGazeMode: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -1124,7 +1118,7 @@ proto.bosdyn.api.PickObjectRayInWorld.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PickObjectRayInWorld}
  */
 proto.bosdyn.api.PickObjectRayInWorld.deserializeBinary = function(bytes) {
@@ -1159,7 +1153,7 @@ proto.bosdyn.api.PickObjectRayInWorld.deserializeBinaryFromReader = function(msg
       msg.setRayEndRtFrame(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 10:
@@ -1433,7 +1427,7 @@ proto.bosdyn.api.PickObjectExecutePlan.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PickObjectExecutePlan}
  */
 proto.bosdyn.api.PickObjectExecutePlan.deserializeBinary = function(bytes) {
@@ -1521,9 +1515,9 @@ proto.bosdyn.api.PickObject.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.PickObject.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    objectRtFrame: (f = msg.getObjectRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    graspParams: (f = msg.getGraspParams()) && proto.bosdyn.api.GraspParams.toObject(includeInstance, f)
+frameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+objectRtFrame: (f = msg.getObjectRtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+graspParams: (f = msg.getGraspParams()) && proto.bosdyn.api.GraspParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1536,7 +1530,7 @@ proto.bosdyn.api.PickObject.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PickObject}
  */
 proto.bosdyn.api.PickObject.deserializeBinary = function(bytes) {
@@ -1561,7 +1555,7 @@ proto.bosdyn.api.PickObject.deserializeBinaryFromReader = function(msg, reader) 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 2:
@@ -1753,12 +1747,12 @@ proto.bosdyn.api.PickObjectInImage.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.PickObjectInImage.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pixelXy: (f = msg.getPixelXy()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    transformsSnapshotForCamera: (f = msg.getTransformsSnapshotForCamera()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
-    frameNameImageSensor: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    cameraModel: (f = msg.getCameraModel()) && bosdyn_api_image_pb.ImageSource.PinholeModel.toObject(includeInstance, f),
-    graspParams: (f = msg.getGraspParams()) && proto.bosdyn.api.GraspParams.toObject(includeInstance, f),
-    walkGazeMode: jspb.Message.getFieldWithDefault(msg, 9, 0)
+pixelXy: (f = msg.getPixelXy()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+transformsSnapshotForCamera: (f = msg.getTransformsSnapshotForCamera()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
+frameNameImageSensor: jspb.Message.getFieldWithDefault(msg, 3, ""),
+cameraModel: (f = msg.getCameraModel()) && bosdyn_api_image_pb.ImageSource.PinholeModel.toObject(includeInstance, f),
+graspParams: (f = msg.getGraspParams()) && proto.bosdyn.api.GraspParams.toObject(includeInstance, f),
+walkGazeMode: jspb.Message.getFieldWithDefault(msg, 9, 0)
   };
 
   if (includeInstance) {
@@ -1771,7 +1765,7 @@ proto.bosdyn.api.PickObjectInImage.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.PickObjectInImage}
  */
 proto.bosdyn.api.PickObjectInImage.deserializeBinary = function(bytes) {
@@ -1806,7 +1800,7 @@ proto.bosdyn.api.PickObjectInImage.deserializeBinaryFromReader = function(msg, r
       msg.setTransformsSnapshotForCamera(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameNameImageSensor(value);
       break;
     case 4:
@@ -2124,12 +2118,12 @@ proto.bosdyn.api.GraspParams.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.GraspParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    graspPalmToFingertip: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    graspParamsFrameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    allowableOrientationList: jspb.Message.toObjectList(msg.getAllowableOrientationList(),
+graspPalmToFingertip: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+graspParamsFrameName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+allowableOrientationList: jspb.Message.toObjectList(msg.getAllowableOrientationList(),
     proto.bosdyn.api.AllowableOrientation.toObject, includeInstance),
-    positionConstraint: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    manipulationCameraSource: jspb.Message.getFieldWithDefault(msg, 5, 0)
+positionConstraint: jspb.Message.getFieldWithDefault(msg, 4, 0),
+manipulationCameraSource: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -2142,7 +2136,7 @@ proto.bosdyn.api.GraspParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GraspParams}
  */
 proto.bosdyn.api.GraspParams.deserializeBinary = function(bytes) {
@@ -2171,7 +2165,7 @@ proto.bosdyn.api.GraspParams.deserializeBinaryFromReader = function(msg, reader)
       msg.setGraspPalmToFingertip(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setGraspParamsFrameName(value);
       break;
     case 3:
@@ -2424,9 +2418,9 @@ proto.bosdyn.api.AllowableOrientation.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.AllowableOrientation.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rotationWithTolerance: (f = msg.getRotationWithTolerance()) && proto.bosdyn.api.RotationWithTolerance.toObject(includeInstance, f),
-    vectorAlignmentWithTolerance: (f = msg.getVectorAlignmentWithTolerance()) && proto.bosdyn.api.VectorAlignmentWithTolerance.toObject(includeInstance, f),
-    squeezeGrasp: (f = msg.getSqueezeGrasp()) && proto.bosdyn.api.SqueezeGrasp.toObject(includeInstance, f)
+rotationWithTolerance: (f = msg.getRotationWithTolerance()) && proto.bosdyn.api.RotationWithTolerance.toObject(includeInstance, f),
+vectorAlignmentWithTolerance: (f = msg.getVectorAlignmentWithTolerance()) && proto.bosdyn.api.VectorAlignmentWithTolerance.toObject(includeInstance, f),
+squeezeGrasp: (f = msg.getSqueezeGrasp()) && proto.bosdyn.api.SqueezeGrasp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2439,7 +2433,7 @@ proto.bosdyn.api.AllowableOrientation.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AllowableOrientation}
  */
 proto.bosdyn.api.AllowableOrientation.deserializeBinary = function(bytes) {
@@ -2677,8 +2671,8 @@ proto.bosdyn.api.RotationWithTolerance.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.RotationWithTolerance.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rotationEwrtFrame: (f = msg.getRotationEwrtFrame()) && bosdyn_api_geometry_pb.Quaternion.toObject(includeInstance, f),
-    thresholdRadians: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+rotationEwrtFrame: (f = msg.getRotationEwrtFrame()) && bosdyn_api_geometry_pb.Quaternion.toObject(includeInstance, f),
+thresholdRadians: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -2691,7 +2685,7 @@ proto.bosdyn.api.RotationWithTolerance.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RotationWithTolerance}
  */
 proto.bosdyn.api.RotationWithTolerance.deserializeBinary = function(bytes) {
@@ -2858,9 +2852,9 @@ proto.bosdyn.api.VectorAlignmentWithTolerance.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.VectorAlignmentWithTolerance.toObject = function(includeInstance, msg) {
   var f, obj = {
-    axisOnGripperEwrtGripper: (f = msg.getAxisOnGripperEwrtGripper()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    axisToAlignWithEwrtFrame: (f = msg.getAxisToAlignWithEwrtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    thresholdRadians: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+axisOnGripperEwrtGripper: (f = msg.getAxisOnGripperEwrtGripper()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+axisToAlignWithEwrtFrame: (f = msg.getAxisToAlignWithEwrtFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+thresholdRadians: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -2873,7 +2867,7 @@ proto.bosdyn.api.VectorAlignmentWithTolerance.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.VectorAlignmentWithTolerance}
  */
 proto.bosdyn.api.VectorAlignmentWithTolerance.deserializeBinary = function(bytes) {
@@ -3090,7 +3084,7 @@ proto.bosdyn.api.SqueezeGrasp.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.SqueezeGrasp.toObject = function(includeInstance, msg) {
   var f, obj = {
-    squeezeGraspDisallowed: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
+squeezeGraspDisallowed: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
   };
 
   if (includeInstance) {
@@ -3103,7 +3097,7 @@ proto.bosdyn.api.SqueezeGrasp.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SqueezeGrasp}
  */
 proto.bosdyn.api.SqueezeGrasp.deserializeBinary = function(bytes) {
@@ -3220,8 +3214,8 @@ proto.bosdyn.api.ManipulationApiFeedbackRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.ManipulationApiFeedbackRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    manipulationCmdId: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+manipulationCmdId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -3234,7 +3228,7 @@ proto.bosdyn.api.ManipulationApiFeedbackRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ManipulationApiFeedbackRequest}
  */
 proto.bosdyn.api.ManipulationApiFeedbackRequest.deserializeBinary = function(bytes) {
@@ -3401,10 +3395,10 @@ proto.bosdyn.api.ManipulationApiFeedbackResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.ManipulationApiFeedbackResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    manipulationCmdId: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    currentState: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    transformsSnapshotManipulationData: (f = msg.getTransformsSnapshotManipulationData()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+manipulationCmdId: jspb.Message.getFieldWithDefault(msg, 4, 0),
+currentState: jspb.Message.getFieldWithDefault(msg, 2, 0),
+transformsSnapshotManipulationData: (f = msg.getTransformsSnapshotManipulationData()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3417,7 +3411,7 @@ proto.bosdyn.api.ManipulationApiFeedbackResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ManipulationApiFeedbackResponse}
  */
 proto.bosdyn.api.ManipulationApiFeedbackResponse.deserializeBinary = function(bytes) {
@@ -3663,9 +3657,9 @@ proto.bosdyn.api.ManipulationApiResponse.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.ManipulationApiResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    manipulationCmdId: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+manipulationCmdId: jspb.Message.getFieldWithDefault(msg, 5, 0),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3678,7 +3672,7 @@ proto.bosdyn.api.ManipulationApiResponse.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ManipulationApiResponse}
  */
 proto.bosdyn.api.ManipulationApiResponse.deserializeBinary = function(bytes) {
@@ -3925,14 +3919,14 @@ proto.bosdyn.api.ManipulationApiRequest.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.ManipulationApiRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    walkToObjectRayInWorld: (f = msg.getWalkToObjectRayInWorld()) && proto.bosdyn.api.WalkToObjectRayInWorld.toObject(includeInstance, f),
-    walkToObjectInImage: (f = msg.getWalkToObjectInImage()) && proto.bosdyn.api.WalkToObjectInImage.toObject(includeInstance, f),
-    pickObject: (f = msg.getPickObject()) && proto.bosdyn.api.PickObject.toObject(includeInstance, f),
-    pickObjectInImage: (f = msg.getPickObjectInImage()) && proto.bosdyn.api.PickObjectInImage.toObject(includeInstance, f),
-    pickObjectRayInWorld: (f = msg.getPickObjectRayInWorld()) && proto.bosdyn.api.PickObjectRayInWorld.toObject(includeInstance, f),
-    pickObjectExecutePlan: (f = msg.getPickObjectExecutePlan()) && proto.bosdyn.api.PickObjectExecutePlan.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+walkToObjectRayInWorld: (f = msg.getWalkToObjectRayInWorld()) && proto.bosdyn.api.WalkToObjectRayInWorld.toObject(includeInstance, f),
+walkToObjectInImage: (f = msg.getWalkToObjectInImage()) && proto.bosdyn.api.WalkToObjectInImage.toObject(includeInstance, f),
+pickObject: (f = msg.getPickObject()) && proto.bosdyn.api.PickObject.toObject(includeInstance, f),
+pickObjectInImage: (f = msg.getPickObjectInImage()) && proto.bosdyn.api.PickObjectInImage.toObject(includeInstance, f),
+pickObjectRayInWorld: (f = msg.getPickObjectRayInWorld()) && proto.bosdyn.api.PickObjectRayInWorld.toObject(includeInstance, f),
+pickObjectExecutePlan: (f = msg.getPickObjectExecutePlan()) && proto.bosdyn.api.PickObjectExecutePlan.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3945,7 +3939,7 @@ proto.bosdyn.api.ManipulationApiRequest.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ManipulationApiRequest}
  */
 proto.bosdyn.api.ManipulationApiRequest.deserializeBinary = function(bytes) {
@@ -4433,7 +4427,7 @@ proto.bosdyn.api.ApiGraspOverride.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.ApiGraspOverride.toObject = function(includeInstance, msg) {
   var f, obj = {
-    overrideRequest: jspb.Message.getFieldWithDefault(msg, 1, 0)
+overrideRequest: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -4446,7 +4440,7 @@ proto.bosdyn.api.ApiGraspOverride.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ApiGraspOverride}
  */
 proto.bosdyn.api.ApiGraspOverride.deserializeBinary = function(bytes) {
@@ -4572,7 +4566,7 @@ proto.bosdyn.api.ApiGraspedCarryStateOverride.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.ApiGraspedCarryStateOverride.toObject = function(includeInstance, msg) {
   var f, obj = {
-    overrideRequest: jspb.Message.getFieldWithDefault(msg, 1, 0)
+overrideRequest: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -4585,7 +4579,7 @@ proto.bosdyn.api.ApiGraspedCarryStateOverride.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ApiGraspedCarryStateOverride}
  */
 proto.bosdyn.api.ApiGraspedCarryStateOverride.deserializeBinary = function(bytes) {
@@ -4702,9 +4696,9 @@ proto.bosdyn.api.ApiGraspOverrideRequest.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.ApiGraspOverrideRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    apiGraspOverride: (f = msg.getApiGraspOverride()) && proto.bosdyn.api.ApiGraspOverride.toObject(includeInstance, f),
-    carryStateOverride: (f = msg.getCarryStateOverride()) && proto.bosdyn.api.ApiGraspedCarryStateOverride.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+apiGraspOverride: (f = msg.getApiGraspOverride()) && proto.bosdyn.api.ApiGraspOverride.toObject(includeInstance, f),
+carryStateOverride: (f = msg.getCarryStateOverride()) && proto.bosdyn.api.ApiGraspedCarryStateOverride.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4717,7 +4711,7 @@ proto.bosdyn.api.ApiGraspOverrideRequest.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ApiGraspOverrideRequest}
  */
 proto.bosdyn.api.ApiGraspOverrideRequest.deserializeBinary = function(bytes) {
@@ -4955,7 +4949,7 @@ proto.bosdyn.api.ApiGraspOverrideResponse.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.ApiGraspOverrideResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4968,7 +4962,7 @@ proto.bosdyn.api.ApiGraspOverrideResponse.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ApiGraspOverrideResponse}
  */
 proto.bosdyn.api.ApiGraspOverrideResponse.deserializeBinary = function(bytes) {

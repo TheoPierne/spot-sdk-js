@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_graph_nav_map_pb = require('../../../bosdyn/api/graph_nav/map_pb.js');
 goog.object.extend(proto, bosdyn_api_graph_nav_map_pb);
@@ -154,8 +148,8 @@ proto.bosdyn.api.graph_nav.Route.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.graph_nav.Route.toObject = function(includeInstance, msg) {
   var f, obj = {
-    waypointIdList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
-    edgeIdList: jspb.Message.toObjectList(msg.getEdgeIdList(),
+waypointIdList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
+edgeIdList: jspb.Message.toObjectList(msg.getEdgeIdList(),
     bosdyn_api_graph_nav_map_pb.Edge.Id.toObject, includeInstance)
   };
 
@@ -169,7 +163,7 @@ proto.bosdyn.api.graph_nav.Route.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.Route}
  */
 proto.bosdyn.api.graph_nav.Route.deserializeBinary = function(bytes) {
@@ -194,7 +188,7 @@ proto.bosdyn.api.graph_nav.Route.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addWaypointId(value);
       break;
     case 3:
@@ -363,8 +357,8 @@ proto.bosdyn.api.graph_nav.CompletedRoute.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.graph_nav.CompletedRoute.toObject = function(includeInstance, msg) {
   var f, obj = {
-    waypointIdsList: (f = jspb.Message.getRepeatedField(msg, 1)) == null ? undefined : f,
-    edgesList: jspb.Message.toObjectList(msg.getEdgesList(),
+waypointIdsList: (f = jspb.Message.getRepeatedField(msg, 1)) == null ? undefined : f,
+edgesList: jspb.Message.toObjectList(msg.getEdgesList(),
     proto.bosdyn.api.graph_nav.CompletedRoute.CompletedEdge.toObject, includeInstance)
   };
 
@@ -378,7 +372,7 @@ proto.bosdyn.api.graph_nav.CompletedRoute.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.CompletedRoute}
  */
 proto.bosdyn.api.graph_nav.CompletedRoute.deserializeBinary = function(bytes) {
@@ -403,7 +397,7 @@ proto.bosdyn.api.graph_nav.CompletedRoute.deserializeBinaryFromReader = function
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.addWaypointIds(value);
       break;
     case 2:
@@ -490,8 +484,8 @@ proto.bosdyn.api.graph_nav.CompletedRoute.CompletedEdge.prototype.toObject = fun
  */
 proto.bosdyn.api.graph_nav.CompletedRoute.CompletedEdge.toObject = function(includeInstance, msg) {
   var f, obj = {
-    edgeId: (f = msg.getEdgeId()) && bosdyn_api_graph_nav_map_pb.Edge.Id.toObject(includeInstance, f),
-    notInMap: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+edgeId: (f = msg.getEdgeId()) && bosdyn_api_graph_nav_map_pb.Edge.Id.toObject(includeInstance, f),
+notInMap: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -504,7 +498,7 @@ proto.bosdyn.api.graph_nav.CompletedRoute.CompletedEdge.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.CompletedRoute.CompletedEdge}
  */
 proto.bosdyn.api.graph_nav.CompletedRoute.CompletedEdge.deserializeBinary = function(bytes) {
@@ -746,10 +740,10 @@ proto.bosdyn.api.graph_nav.Localization.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.graph_nav.Localization.toObject = function(includeInstance, msg) {
   var f, obj = {
-    waypointId: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    waypointTformBody: (f = msg.getWaypointTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    seedTformBody: (f = msg.getSeedTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+waypointId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+waypointTformBody: (f = msg.getWaypointTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+seedTformBody: (f = msg.getSeedTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -762,7 +756,7 @@ proto.bosdyn.api.graph_nav.Localization.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.graph_nav.Localization}
  */
 proto.bosdyn.api.graph_nav.Localization.deserializeBinary = function(bytes) {
@@ -787,7 +781,7 @@ proto.bosdyn.api.graph_nav.Localization.deserializeBinaryFromReader = function(m
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setWaypointId(value);
       break;
     case 2:

@@ -1,7 +1,16 @@
 'use strict';
 
 const { exec } = require('node:child_process');
-const { cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } = require('node:fs');
+const {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} = require('node:fs');
 const { platform, tmpdir } = require('node:os');
 const { join, resolve } = require('node:path');
 const process = require('node:process');
@@ -220,10 +229,21 @@ async function main() {
       .map(name => `${dir}/${name}`),
   );
   const protocGenTsBin = resolve(`./node_modules/.bin/protoc-gen-ts${platform() === 'win32' ? '.cmd' : ''}`);
+  // The generator of google-protobuf 4. The protoc of grpc-tools has the one of google-protobuf 3 built in, under the
+  // name js (its code calls functions removed from google-protobuf 4): the plugin is given the name js4.
+  const protocGenJsBin = require('@protocolbuffers/protoc-gen-js');
+  if (!existsSync(protocGenJsBin)) {
+    throw new Error(
+      `${protocGenJsBin} is missing (its install script downloads it): npm rebuild @protocolbuffers/protoc-gen-js`,
+    );
+  }
   // The paths of the .proto files are relative to the copy (a short command line for cmd.exe).
   const inputs = `--proto_path=. ${protoFiles.join(' ')}`;
   const commands = [
-    [`--js_out=import_style=commonjs,binary:${output} --grpc_out=grpc_js:${output}`, '.JS BUILD COMPLETE!'],
+    [
+      `--plugin=protoc-gen-js4=${protocGenJsBin} --js4_out=import_style=commonjs,binary:${output} --grpc_out=grpc_js:${output}`,
+      '.JS BUILD COMPLETE!',
+    ],
     [`--plugin=protoc-gen-ts=${protocGenTsBin} --ts_out=grpc_js:${output}`, '.D.TS BUILD COMPLETE!'],
     // The descriptors of the messages (the generated code has none), for the text format of bosdyn-core.
     [

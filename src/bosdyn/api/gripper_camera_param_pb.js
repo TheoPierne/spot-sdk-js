@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -396,8 +390,8 @@ proto.bosdyn.api.GripperCameraParamRequest.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.GripperCameraParamRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    params: (f = msg.getParams()) && proto.bosdyn.api.GripperCameraParams.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+params: (f = msg.getParams()) && proto.bosdyn.api.GripperCameraParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -410,7 +404,7 @@ proto.bosdyn.api.GripperCameraParamRequest.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperCameraParamRequest}
  */
 proto.bosdyn.api.GripperCameraParamRequest.deserializeBinary = function(bytes) {
@@ -598,7 +592,7 @@ proto.bosdyn.api.GripperCameraParamResponse.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.GripperCameraParamResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -611,7 +605,7 @@ proto.bosdyn.api.GripperCameraParamResponse.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperCameraParamResponse}
  */
 proto.bosdyn.api.GripperCameraParamResponse.deserializeBinary = function(bytes) {
@@ -749,7 +743,7 @@ proto.bosdyn.api.GripperCameraGetParamRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.GripperCameraGetParamRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -762,7 +756,7 @@ proto.bosdyn.api.GripperCameraGetParamRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperCameraGetParamRequest}
  */
 proto.bosdyn.api.GripperCameraGetParamRequest.deserializeBinary = function(bytes) {
@@ -900,8 +894,8 @@ proto.bosdyn.api.GripperCameraGetParamResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.GripperCameraGetParamResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    params: (f = msg.getParams()) && proto.bosdyn.api.GripperCameraParams.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+params: (f = msg.getParams()) && proto.bosdyn.api.GripperCameraParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -914,7 +908,7 @@ proto.bosdyn.api.GripperCameraGetParamResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperCameraGetParamResponse}
  */
 proto.bosdyn.api.GripperCameraGetParamResponse.deserializeBinary = function(bytes) {
@@ -1102,25 +1096,25 @@ proto.bosdyn.api.GripperCameraParams.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.GripperCameraParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    cameraMode: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    brightness: (f = msg.getBrightness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    contrast: (f = msg.getContrast()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    saturation: (f = msg.getSaturation()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    gain: (f = msg.getGain()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    exposureAuto: (f = msg.getExposureAuto()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    exposureAbsolute: (f = msg.getExposureAbsolute()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    exposureRoi: (f = msg.getExposureRoi()) && proto.bosdyn.api.RoiParameters.toObject(includeInstance, f),
-    focusAuto: (f = msg.getFocusAuto()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    focusAbsolute: (f = msg.getFocusAbsolute()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    focusRoi: (f = msg.getFocusRoi()) && proto.bosdyn.api.RoiParameters.toObject(includeInstance, f),
-    drawFocusRoiRectangle: (f = msg.getDrawFocusRoiRectangle()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    hdr: jspb.Message.getFieldWithDefault(msg, 17, 0),
-    ledMode: jspb.Message.getFieldWithDefault(msg, 19, 0),
-    ledTorchBrightness: (f = msg.getLedTorchBrightness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    whiteBalanceTemperatureAuto: (f = msg.getWhiteBalanceTemperatureAuto()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    gamma: (f = msg.getGamma()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    whiteBalanceTemperature: (f = msg.getWhiteBalanceTemperature()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
-    sharpness: (f = msg.getSharpness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
+cameraMode: jspb.Message.getFieldWithDefault(msg, 1, 0),
+brightness: (f = msg.getBrightness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+contrast: (f = msg.getContrast()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+saturation: (f = msg.getSaturation()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+gain: (f = msg.getGain()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+exposureAuto: (f = msg.getExposureAuto()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+exposureAbsolute: (f = msg.getExposureAbsolute()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+exposureRoi: (f = msg.getExposureRoi()) && proto.bosdyn.api.RoiParameters.toObject(includeInstance, f),
+focusAuto: (f = msg.getFocusAuto()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+focusAbsolute: (f = msg.getFocusAbsolute()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+focusRoi: (f = msg.getFocusRoi()) && proto.bosdyn.api.RoiParameters.toObject(includeInstance, f),
+drawFocusRoiRectangle: (f = msg.getDrawFocusRoiRectangle()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+hdr: jspb.Message.getFieldWithDefault(msg, 17, 0),
+ledMode: jspb.Message.getFieldWithDefault(msg, 19, 0),
+ledTorchBrightness: (f = msg.getLedTorchBrightness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+whiteBalanceTemperatureAuto: (f = msg.getWhiteBalanceTemperatureAuto()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+gamma: (f = msg.getGamma()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+whiteBalanceTemperature: (f = msg.getWhiteBalanceTemperature()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+sharpness: (f = msg.getSharpness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1133,7 +1127,7 @@ proto.bosdyn.api.GripperCameraParams.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperCameraParams}
  */
 proto.bosdyn.api.GripperCameraParams.deserializeBinary = function(bytes) {
@@ -2136,8 +2130,8 @@ proto.bosdyn.api.RoiParameters.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.RoiParameters.toObject = function(includeInstance, msg) {
   var f, obj = {
-    roiPercentageInImage: (f = msg.getRoiPercentageInImage()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    windowSize: jspb.Message.getFieldWithDefault(msg, 2, 0)
+roiPercentageInImage: (f = msg.getRoiPercentageInImage()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+windowSize: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2150,7 +2144,7 @@ proto.bosdyn.api.RoiParameters.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RoiParameters}
  */
 proto.bosdyn.api.RoiParameters.deserializeBinary = function(bytes) {
@@ -2332,8 +2326,8 @@ proto.bosdyn.api.GripperDepthCameraCalibrationParams.prototype.toObject = functi
  */
 proto.bosdyn.api.GripperDepthCameraCalibrationParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    wr1TformSensor: (f = msg.getWr1TformSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    intrinsics: (f = msg.getIntrinsics()) && proto.bosdyn.api.GripperDepthCameraCalibrationParams.DepthCameraIntrinsics.toObject(includeInstance, f)
+wr1TformSensor: (f = msg.getWr1TformSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+intrinsics: (f = msg.getIntrinsics()) && proto.bosdyn.api.GripperDepthCameraCalibrationParams.DepthCameraIntrinsics.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2346,7 +2340,7 @@ proto.bosdyn.api.GripperDepthCameraCalibrationParams.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperDepthCameraCalibrationParams}
  */
 proto.bosdyn.api.GripperDepthCameraCalibrationParams.deserializeBinary = function(bytes) {
@@ -2487,9 +2481,9 @@ proto.bosdyn.api.GripperDepthCameraCalibrationParams.DepthCameraIntrinsics.proto
  */
 proto.bosdyn.api.GripperDepthCameraCalibrationParams.DepthCameraIntrinsics.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pinhole: (f = msg.getPinhole()) && bosdyn_api_image_pb.ImageSource.PinholeModel.toObject(includeInstance, f),
-    pinholeBrownConrady: (f = msg.getPinholeBrownConrady()) && bosdyn_api_image_pb.ImageSource.PinholeBrownConrady.toObject(includeInstance, f),
-    kannalaBrandt: (f = msg.getKannalaBrandt()) && bosdyn_api_image_pb.ImageSource.KannalaBrandtModel.toObject(includeInstance, f)
+pinhole: (f = msg.getPinhole()) && bosdyn_api_image_pb.ImageSource.PinholeModel.toObject(includeInstance, f),
+pinholeBrownConrady: (f = msg.getPinholeBrownConrady()) && bosdyn_api_image_pb.ImageSource.PinholeBrownConrady.toObject(includeInstance, f),
+kannalaBrandt: (f = msg.getKannalaBrandt()) && bosdyn_api_image_pb.ImageSource.KannalaBrandtModel.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2502,7 +2496,7 @@ proto.bosdyn.api.GripperDepthCameraCalibrationParams.DepthCameraIntrinsics.toObj
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperDepthCameraCalibrationParams.DepthCameraIntrinsics}
  */
 proto.bosdyn.api.GripperDepthCameraCalibrationParams.DepthCameraIntrinsics.deserializeBinary = function(bytes) {
@@ -2821,8 +2815,8 @@ proto.bosdyn.api.GripperColorCameraCalibrationParams.prototype.toObject = functi
  */
 proto.bosdyn.api.GripperColorCameraCalibrationParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    wr1TformSensor: (f = msg.getWr1TformSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    intrinsicsList: jspb.Message.toObjectList(msg.getIntrinsicsList(),
+wr1TformSensor: (f = msg.getWr1TformSensor()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+intrinsicsList: jspb.Message.toObjectList(msg.getIntrinsicsList(),
     proto.bosdyn.api.GripperColorCameraCalibrationParams.ColorCameraIntrinsics.toObject, includeInstance)
   };
 
@@ -2836,7 +2830,7 @@ proto.bosdyn.api.GripperColorCameraCalibrationParams.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperColorCameraCalibrationParams}
  */
 proto.bosdyn.api.GripperColorCameraCalibrationParams.deserializeBinary = function(bytes) {
@@ -2950,9 +2944,9 @@ proto.bosdyn.api.GripperColorCameraCalibrationParams.ColorCameraIntrinsics.proto
  */
 proto.bosdyn.api.GripperColorCameraCalibrationParams.ColorCameraIntrinsics.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pinhole: (f = msg.getPinhole()) && bosdyn_api_image_pb.ImageSource.PinholeModel.toObject(includeInstance, f),
-    cameraMode: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    focusAbsolute: (f = msg.getFocusAbsolute()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
+pinhole: (f = msg.getPinhole()) && bosdyn_api_image_pb.ImageSource.PinholeModel.toObject(includeInstance, f),
+cameraMode: jspb.Message.getFieldWithDefault(msg, 2, 0),
+focusAbsolute: (f = msg.getFocusAbsolute()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2965,7 +2959,7 @@ proto.bosdyn.api.GripperColorCameraCalibrationParams.ColorCameraIntrinsics.toObj
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperColorCameraCalibrationParams.ColorCameraIntrinsics}
  */
 proto.bosdyn.api.GripperColorCameraCalibrationParams.ColorCameraIntrinsics.deserializeBinary = function(bytes) {
@@ -3257,8 +3251,8 @@ proto.bosdyn.api.GripperCameraCalibrationProto.prototype.toObject = function(opt
  */
 proto.bosdyn.api.GripperCameraCalibrationProto.toObject = function(includeInstance, msg) {
   var f, obj = {
-    depth: (f = msg.getDepth()) && proto.bosdyn.api.GripperDepthCameraCalibrationParams.toObject(includeInstance, f),
-    color: (f = msg.getColor()) && proto.bosdyn.api.GripperColorCameraCalibrationParams.toObject(includeInstance, f)
+depth: (f = msg.getDepth()) && proto.bosdyn.api.GripperDepthCameraCalibrationParams.toObject(includeInstance, f),
+color: (f = msg.getColor()) && proto.bosdyn.api.GripperColorCameraCalibrationParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3271,7 +3265,7 @@ proto.bosdyn.api.GripperCameraCalibrationProto.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperCameraCalibrationProto}
  */
 proto.bosdyn.api.GripperCameraCalibrationProto.deserializeBinary = function(bytes) {
@@ -3459,8 +3453,8 @@ proto.bosdyn.api.SetGripperCameraCalibrationRequest.prototype.toObject = functio
  */
 proto.bosdyn.api.SetGripperCameraCalibrationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    gripperCamCal: (f = msg.getGripperCamCal()) && proto.bosdyn.api.GripperCameraCalibrationProto.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+gripperCamCal: (f = msg.getGripperCamCal()) && proto.bosdyn.api.GripperCameraCalibrationProto.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3473,7 +3467,7 @@ proto.bosdyn.api.SetGripperCameraCalibrationRequest.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SetGripperCameraCalibrationRequest}
  */
 proto.bosdyn.api.SetGripperCameraCalibrationRequest.deserializeBinary = function(bytes) {
@@ -3661,7 +3655,7 @@ proto.bosdyn.api.SetGripperCameraCalibrationResponse.prototype.toObject = functi
  */
 proto.bosdyn.api.SetGripperCameraCalibrationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3674,7 +3668,7 @@ proto.bosdyn.api.SetGripperCameraCalibrationResponse.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SetGripperCameraCalibrationResponse}
  */
 proto.bosdyn.api.SetGripperCameraCalibrationResponse.deserializeBinary = function(bytes) {
@@ -3812,7 +3806,7 @@ proto.bosdyn.api.GetGripperCameraCalibrationRequest.prototype.toObject = functio
  */
 proto.bosdyn.api.GetGripperCameraCalibrationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3825,7 +3819,7 @@ proto.bosdyn.api.GetGripperCameraCalibrationRequest.toObject = function(includeI
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetGripperCameraCalibrationRequest}
  */
 proto.bosdyn.api.GetGripperCameraCalibrationRequest.deserializeBinary = function(bytes) {
@@ -3963,8 +3957,8 @@ proto.bosdyn.api.GetGripperCameraCalibrationResponse.prototype.toObject = functi
  */
 proto.bosdyn.api.GetGripperCameraCalibrationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    gripperCamCal: (f = msg.getGripperCamCal()) && proto.bosdyn.api.GripperCameraCalibrationProto.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+gripperCamCal: (f = msg.getGripperCamCal()) && proto.bosdyn.api.GripperCameraCalibrationProto.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3977,7 +3971,7 @@ proto.bosdyn.api.GetGripperCameraCalibrationResponse.toObject = function(include
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetGripperCameraCalibrationResponse}
  */
 proto.bosdyn.api.GetGripperCameraCalibrationResponse.deserializeBinary = function(bytes) {

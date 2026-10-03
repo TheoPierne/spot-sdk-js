@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -414,11 +408,11 @@ proto.bosdyn.api.EstopEndpoint.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.EstopEndpoint.toObject = function(includeInstance, msg) {
   var f, obj = {
-    role: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    uniqueId: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    timeout: (f = msg.getTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    cutPowerTimeout: (f = msg.getCutPowerTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+role: jspb.Message.getFieldWithDefault(msg, 1, ""),
+name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+uniqueId: jspb.Message.getFieldWithDefault(msg, 3, ""),
+timeout: (f = msg.getTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+cutPowerTimeout: (f = msg.getCutPowerTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -431,7 +425,7 @@ proto.bosdyn.api.EstopEndpoint.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.EstopEndpoint}
  */
 proto.bosdyn.api.EstopEndpoint.deserializeBinary = function(bytes) {
@@ -456,15 +450,15 @@ proto.bosdyn.api.EstopEndpoint.deserializeBinaryFromReader = function(msg, reade
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRole(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setUniqueId(value);
       break;
     case 4:
@@ -713,9 +707,9 @@ proto.bosdyn.api.EstopConfig.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.EstopConfig.toObject = function(includeInstance, msg) {
   var f, obj = {
-    endpointsList: jspb.Message.toObjectList(msg.getEndpointsList(),
+endpointsList: jspb.Message.toObjectList(msg.getEndpointsList(),
     proto.bosdyn.api.EstopEndpoint.toObject, includeInstance),
-    uniqueId: jspb.Message.getFieldWithDefault(msg, 2, "")
+uniqueId: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -728,7 +722,7 @@ proto.bosdyn.api.EstopConfig.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.EstopConfig}
  */
 proto.bosdyn.api.EstopConfig.deserializeBinary = function(bytes) {
@@ -758,7 +752,7 @@ proto.bosdyn.api.EstopConfig.deserializeBinaryFromReader = function(msg, reader)
       msg.addEndpoints(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setUniqueId(value);
       break;
     default:
@@ -896,9 +890,9 @@ proto.bosdyn.api.EstopEndpointWithStatus.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.EstopEndpointWithStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    endpoint: (f = msg.getEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
-    stopLevel: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    timeSinceValidResponse: (f = msg.getTimeSinceValidResponse()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+endpoint: (f = msg.getEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
+stopLevel: jspb.Message.getFieldWithDefault(msg, 2, 0),
+timeSinceValidResponse: (f = msg.getTimeSinceValidResponse()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -911,7 +905,7 @@ proto.bosdyn.api.EstopEndpointWithStatus.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.EstopEndpointWithStatus}
  */
 proto.bosdyn.api.EstopEndpointWithStatus.deserializeBinary = function(bytes) {
@@ -1135,10 +1129,10 @@ proto.bosdyn.api.EstopSystemStatus.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.EstopSystemStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    endpointsList: jspb.Message.toObjectList(msg.getEndpointsList(),
+endpointsList: jspb.Message.toObjectList(msg.getEndpointsList(),
     proto.bosdyn.api.EstopEndpointWithStatus.toObject, includeInstance),
-    stopLevel: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    stopLevelDetails: jspb.Message.getFieldWithDefault(msg, 5, "")
+stopLevel: jspb.Message.getFieldWithDefault(msg, 4, 0),
+stopLevelDetails: jspb.Message.getFieldWithDefault(msg, 5, "")
   };
 
   if (includeInstance) {
@@ -1151,7 +1145,7 @@ proto.bosdyn.api.EstopSystemStatus.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.EstopSystemStatus}
  */
 proto.bosdyn.api.EstopSystemStatus.deserializeBinary = function(bytes) {
@@ -1185,7 +1179,7 @@ proto.bosdyn.api.EstopSystemStatus.deserializeBinaryFromReader = function(msg, r
       msg.setStopLevel(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setStopLevelDetails(value);
       break;
     default:
@@ -1348,11 +1342,11 @@ proto.bosdyn.api.EstopCheckInRequest.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.EstopCheckInRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    endpoint: (f = msg.getEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
-    challenge: jspb.Message.getFieldWithDefault(msg, 3, "0"),
-    response: jspb.Message.getFieldWithDefault(msg, 4, "0"),
-    stopLevel: jspb.Message.getFieldWithDefault(msg, 5, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+endpoint: (f = msg.getEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
+challenge: jspb.Message.getFieldWithDefault(msg, 3, "0"),
+response: jspb.Message.getFieldWithDefault(msg, 4, "0"),
+stopLevel: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -1365,7 +1359,7 @@ proto.bosdyn.api.EstopCheckInRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.EstopCheckInRequest}
  */
 proto.bosdyn.api.EstopCheckInRequest.deserializeBinary = function(bytes) {
@@ -1640,10 +1634,10 @@ proto.bosdyn.api.EstopCheckInResponse.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.EstopCheckInResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    request: (f = msg.getRequest()) && proto.bosdyn.api.EstopCheckInRequest.toObject(includeInstance, f),
-    challenge: jspb.Message.getFieldWithDefault(msg, 3, "0"),
-    status: jspb.Message.getFieldWithDefault(msg, 4, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+request: (f = msg.getRequest()) && proto.bosdyn.api.EstopCheckInRequest.toObject(includeInstance, f),
+challenge: jspb.Message.getFieldWithDefault(msg, 3, "0"),
+status: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -1656,7 +1650,7 @@ proto.bosdyn.api.EstopCheckInResponse.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.EstopCheckInResponse}
  */
 proto.bosdyn.api.EstopCheckInResponse.deserializeBinary = function(bytes) {
@@ -1912,10 +1906,10 @@ proto.bosdyn.api.RegisterEstopEndpointRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.RegisterEstopEndpointRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    targetEndpoint: (f = msg.getTargetEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
-    targetConfigId: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    newEndpoint: (f = msg.getNewEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+targetEndpoint: (f = msg.getTargetEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
+targetConfigId: jspb.Message.getFieldWithDefault(msg, 3, ""),
+newEndpoint: (f = msg.getNewEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1928,7 +1922,7 @@ proto.bosdyn.api.RegisterEstopEndpointRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RegisterEstopEndpointRequest}
  */
 proto.bosdyn.api.RegisterEstopEndpointRequest.deserializeBinary = function(bytes) {
@@ -1963,7 +1957,7 @@ proto.bosdyn.api.RegisterEstopEndpointRequest.deserializeBinaryFromReader = func
       msg.setTargetEndpoint(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setTargetConfigId(value);
       break;
     case 4:
@@ -2195,10 +2189,10 @@ proto.bosdyn.api.RegisterEstopEndpointResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.RegisterEstopEndpointResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    request: (f = msg.getRequest()) && proto.bosdyn.api.RegisterEstopEndpointRequest.toObject(includeInstance, f),
-    newEndpoint: (f = msg.getNewEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 4, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+request: (f = msg.getRequest()) && proto.bosdyn.api.RegisterEstopEndpointRequest.toObject(includeInstance, f),
+newEndpoint: (f = msg.getNewEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -2211,7 +2205,7 @@ proto.bosdyn.api.RegisterEstopEndpointResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.RegisterEstopEndpointResponse}
  */
 proto.bosdyn.api.RegisterEstopEndpointResponse.deserializeBinary = function(bytes) {
@@ -2489,9 +2483,9 @@ proto.bosdyn.api.DeregisterEstopEndpointRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.DeregisterEstopEndpointRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    targetEndpoint: (f = msg.getTargetEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
-    targetConfigId: jspb.Message.getFieldWithDefault(msg, 3, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+targetEndpoint: (f = msg.getTargetEndpoint()) && proto.bosdyn.api.EstopEndpoint.toObject(includeInstance, f),
+targetConfigId: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -2504,7 +2498,7 @@ proto.bosdyn.api.DeregisterEstopEndpointRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.DeregisterEstopEndpointRequest}
  */
 proto.bosdyn.api.DeregisterEstopEndpointRequest.deserializeBinary = function(bytes) {
@@ -2539,7 +2533,7 @@ proto.bosdyn.api.DeregisterEstopEndpointRequest.deserializeBinaryFromReader = fu
       msg.setTargetEndpoint(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setTargetConfigId(value);
       break;
     default:
@@ -2721,9 +2715,9 @@ proto.bosdyn.api.DeregisterEstopEndpointResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.DeregisterEstopEndpointResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    request: (f = msg.getRequest()) && proto.bosdyn.api.DeregisterEstopEndpointRequest.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 4, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+request: (f = msg.getRequest()) && proto.bosdyn.api.DeregisterEstopEndpointRequest.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -2736,7 +2730,7 @@ proto.bosdyn.api.DeregisterEstopEndpointResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.DeregisterEstopEndpointResponse}
  */
 proto.bosdyn.api.DeregisterEstopEndpointResponse.deserializeBinary = function(bytes) {
@@ -2964,8 +2958,8 @@ proto.bosdyn.api.GetEstopConfigRequest.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.GetEstopConfigRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    targetConfigId: jspb.Message.getFieldWithDefault(msg, 4, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+targetConfigId: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -2978,7 +2972,7 @@ proto.bosdyn.api.GetEstopConfigRequest.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetEstopConfigRequest}
  */
 proto.bosdyn.api.GetEstopConfigRequest.deserializeBinary = function(bytes) {
@@ -3008,7 +3002,7 @@ proto.bosdyn.api.GetEstopConfigRequest.deserializeBinaryFromReader = function(ms
       msg.setHeader(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setTargetConfigId(value);
       break;
     default:
@@ -3145,9 +3139,9 @@ proto.bosdyn.api.GetEstopConfigResponse.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.GetEstopConfigResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    request: (f = msg.getRequest()) && proto.bosdyn.api.GetEstopConfigRequest.toObject(includeInstance, f),
-    activeConfig: (f = msg.getActiveConfig()) && proto.bosdyn.api.EstopConfig.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+request: (f = msg.getRequest()) && proto.bosdyn.api.GetEstopConfigRequest.toObject(includeInstance, f),
+activeConfig: (f = msg.getActiveConfig()) && proto.bosdyn.api.EstopConfig.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3160,7 +3154,7 @@ proto.bosdyn.api.GetEstopConfigResponse.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetEstopConfigResponse}
  */
 proto.bosdyn.api.GetEstopConfigResponse.deserializeBinary = function(bytes) {
@@ -3398,9 +3392,9 @@ proto.bosdyn.api.SetEstopConfigRequest.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.SetEstopConfigRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    config: (f = msg.getConfig()) && proto.bosdyn.api.EstopConfig.toObject(includeInstance, f),
-    targetConfigId: jspb.Message.getFieldWithDefault(msg, 4, "")
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+config: (f = msg.getConfig()) && proto.bosdyn.api.EstopConfig.toObject(includeInstance, f),
+targetConfigId: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -3413,7 +3407,7 @@ proto.bosdyn.api.SetEstopConfigRequest.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SetEstopConfigRequest}
  */
 proto.bosdyn.api.SetEstopConfigRequest.deserializeBinary = function(bytes) {
@@ -3448,7 +3442,7 @@ proto.bosdyn.api.SetEstopConfigRequest.deserializeBinaryFromReader = function(ms
       msg.setConfig(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setTargetConfigId(value);
       break;
     default:
@@ -3630,10 +3624,10 @@ proto.bosdyn.api.SetEstopConfigResponse.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.SetEstopConfigResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    request: (f = msg.getRequest()) && proto.bosdyn.api.SetEstopConfigRequest.toObject(includeInstance, f),
-    activeConfig: (f = msg.getActiveConfig()) && proto.bosdyn.api.EstopConfig.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 4, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+request: (f = msg.getRequest()) && proto.bosdyn.api.SetEstopConfigRequest.toObject(includeInstance, f),
+activeConfig: (f = msg.getActiveConfig()) && proto.bosdyn.api.EstopConfig.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -3646,7 +3640,7 @@ proto.bosdyn.api.SetEstopConfigResponse.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.SetEstopConfigResponse}
  */
 proto.bosdyn.api.SetEstopConfigResponse.deserializeBinary = function(bytes) {
@@ -3923,7 +3917,7 @@ proto.bosdyn.api.GetEstopSystemStatusRequest.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.GetEstopSystemStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3936,7 +3930,7 @@ proto.bosdyn.api.GetEstopSystemStatusRequest.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetEstopSystemStatusRequest}
  */
 proto.bosdyn.api.GetEstopSystemStatusRequest.deserializeBinary = function(bytes) {
@@ -4074,8 +4068,8 @@ proto.bosdyn.api.GetEstopSystemStatusResponse.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.GetEstopSystemStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: (f = msg.getStatus()) && proto.bosdyn.api.EstopSystemStatus.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: (f = msg.getStatus()) && proto.bosdyn.api.EstopSystemStatus.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4088,7 +4082,7 @@ proto.bosdyn.api.GetEstopSystemStatusResponse.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetEstopSystemStatusResponse}
  */
 proto.bosdyn.api.GetEstopSystemStatusResponse.deserializeBinary = function(bytes) {

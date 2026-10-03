@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -442,11 +436,11 @@ proto.bosdyn.api.Image.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Image.toObject = function(includeInstance, msg) {
   var f, obj = {
-    cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    rows: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    data: msg.getData_asB64(),
-    format: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    pixelFormat: jspb.Message.getFieldWithDefault(msg, 6, 0)
+cols: jspb.Message.getFieldWithDefault(msg, 2, 0),
+rows: jspb.Message.getFieldWithDefault(msg, 3, 0),
+data: msg.getData_asB64(),
+format: jspb.Message.getFieldWithDefault(msg, 5, 0),
+pixelFormat: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -459,7 +453,7 @@ proto.bosdyn.api.Image.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Image}
  */
 proto.bosdyn.api.Image.deserializeBinary = function(bytes) {
@@ -738,9 +732,9 @@ proto.bosdyn.api.CaptureParameters.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.CaptureParameters.toObject = function(includeInstance, msg) {
   var f, obj = {
-    exposureDuration: (f = msg.getExposureDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    gain: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f)
+exposureDuration: (f = msg.getExposureDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+gain: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -753,7 +747,7 @@ proto.bosdyn.api.CaptureParameters.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.CaptureParameters}
  */
 proto.bosdyn.api.CaptureParameters.deserializeBinary = function(bytes) {
@@ -970,11 +964,11 @@ proto.bosdyn.api.ImageCapture.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.ImageCapture.toObject = function(includeInstance, msg) {
   var f, obj = {
-    acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
-    frameNameImageSensor: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    image: (f = msg.getImage()) && proto.bosdyn.api.Image.toObject(includeInstance, f),
-    captureParams: (f = msg.getCaptureParams()) && proto.bosdyn.api.CaptureParameters.toObject(includeInstance, f)
+acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
+frameNameImageSensor: jspb.Message.getFieldWithDefault(msg, 5, ""),
+image: (f = msg.getImage()) && proto.bosdyn.api.Image.toObject(includeInstance, f),
+captureParams: (f = msg.getCaptureParams()) && proto.bosdyn.api.CaptureParameters.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -987,7 +981,7 @@ proto.bosdyn.api.ImageCapture.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageCapture}
  */
 proto.bosdyn.api.ImageCapture.deserializeBinary = function(bytes) {
@@ -1022,7 +1016,7 @@ proto.bosdyn.api.ImageCapture.deserializeBinaryFromReader = function(msg, reader
       msg.setTransformsSnapshot(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameNameImageSensor(value);
       break;
     case 3:
@@ -1338,17 +1332,17 @@ proto.bosdyn.api.ImageSource.prototype.toObject = function(opt_includeInstance) 
  */
 proto.bosdyn.api.ImageSource.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    cols: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    rows: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    depthScale: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    pinhole: (f = msg.getPinhole()) && proto.bosdyn.api.ImageSource.PinholeModel.toObject(includeInstance, f),
-    pinholeBrownConrady: (f = msg.getPinholeBrownConrady()) && proto.bosdyn.api.ImageSource.PinholeBrownConrady.toObject(includeInstance, f),
-    kannalaBrandt: (f = msg.getKannalaBrandt()) && proto.bosdyn.api.ImageSource.KannalaBrandtModel.toObject(includeInstance, f),
-    imageType: jspb.Message.getFieldWithDefault(msg, 9, 0),
-    pixelFormatsList: (f = jspb.Message.getRepeatedField(msg, 10)) == null ? undefined : f,
-    imageFormatsList: (f = jspb.Message.getRepeatedField(msg, 11)) == null ? undefined : f,
-    customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.Spec.toObject(includeInstance, f)
+name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+cols: jspb.Message.getFieldWithDefault(msg, 4, 0),
+rows: jspb.Message.getFieldWithDefault(msg, 5, 0),
+depthScale: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
+pinhole: (f = msg.getPinhole()) && proto.bosdyn.api.ImageSource.PinholeModel.toObject(includeInstance, f),
+pinholeBrownConrady: (f = msg.getPinholeBrownConrady()) && proto.bosdyn.api.ImageSource.PinholeBrownConrady.toObject(includeInstance, f),
+kannalaBrandt: (f = msg.getKannalaBrandt()) && proto.bosdyn.api.ImageSource.KannalaBrandtModel.toObject(includeInstance, f),
+imageType: jspb.Message.getFieldWithDefault(msg, 9, 0),
+pixelFormatsList: (f = jspb.Message.getRepeatedField(msg, 10)) == null ? undefined : f,
+imageFormatsList: (f = jspb.Message.getRepeatedField(msg, 11)) == null ? undefined : f,
+customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.Spec.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1361,7 +1355,7 @@ proto.bosdyn.api.ImageSource.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageSource}
  */
 proto.bosdyn.api.ImageSource.deserializeBinary = function(bytes) {
@@ -1386,7 +1380,7 @@ proto.bosdyn.api.ImageSource.deserializeBinaryFromReader = function(msg, reader)
     var field = reader.getFieldNumber();
     switch (field) {
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 4:
@@ -1421,16 +1415,10 @@ proto.bosdyn.api.ImageSource.deserializeBinaryFromReader = function(msg, reader)
       msg.setImageType(value);
       break;
     case 10:
-      var values = /** @type {!Array<!proto.bosdyn.api.Image.PixelFormat>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addPixelFormats(values[i]);
-      }
+      reader.readPackableEnumInto(msg.getPixelFormatsList());
       break;
     case 11:
-      var values = /** @type {!Array<!proto.bosdyn.api.Image.Format>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addImageFormats(values[i]);
-      }
+      reader.readPackableEnumInto(msg.getImageFormatsList());
       break;
     case 12:
       var value = new bosdyn_api_service_customization_pb.DictParam.Spec;
@@ -1591,7 +1579,7 @@ proto.bosdyn.api.ImageSource.PinholeModel.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.ImageSource.PinholeModel.toObject = function(includeInstance, msg) {
   var f, obj = {
-    intrinsics: (f = msg.getIntrinsics()) && proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.toObject(includeInstance, f)
+intrinsics: (f = msg.getIntrinsics()) && proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1604,7 +1592,7 @@ proto.bosdyn.api.ImageSource.PinholeModel.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageSource.PinholeModel}
  */
 proto.bosdyn.api.ImageSource.PinholeModel.deserializeBinary = function(bytes) {
@@ -1705,9 +1693,9 @@ proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.prototype.toObject = 
  */
 proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.toObject = function(includeInstance, msg) {
   var f, obj = {
-    focalLength: (f = msg.getFocalLength()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    principalPoint: (f = msg.getPrincipalPoint()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    skew: (f = msg.getSkew()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f)
+focalLength: (f = msg.getFocalLength()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+principalPoint: (f = msg.getPrincipalPoint()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+skew: (f = msg.getSkew()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1720,7 +1708,7 @@ proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.toObject = function(i
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics}
  */
 proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.deserializeBinary = function(bytes) {
@@ -1995,7 +1983,7 @@ proto.bosdyn.api.ImageSource.PinholeBrownConrady.prototype.toObject = function(o
  */
 proto.bosdyn.api.ImageSource.PinholeBrownConrady.toObject = function(includeInstance, msg) {
   var f, obj = {
-    intrinsics: (f = msg.getIntrinsics()) && proto.bosdyn.api.ImageSource.PinholeBrownConrady.PinholeBrownConradyIntrinsics.toObject(includeInstance, f)
+intrinsics: (f = msg.getIntrinsics()) && proto.bosdyn.api.ImageSource.PinholeBrownConrady.PinholeBrownConradyIntrinsics.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2008,7 +1996,7 @@ proto.bosdyn.api.ImageSource.PinholeBrownConrady.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageSource.PinholeBrownConrady}
  */
 proto.bosdyn.api.ImageSource.PinholeBrownConrady.deserializeBinary = function(bytes) {
@@ -2109,12 +2097,12 @@ proto.bosdyn.api.ImageSource.PinholeBrownConrady.PinholeBrownConradyIntrinsics.p
  */
 proto.bosdyn.api.ImageSource.PinholeBrownConrady.PinholeBrownConradyIntrinsics.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pinholeIntrinsics: (f = msg.getPinholeIntrinsics()) && proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.toObject(includeInstance, f),
-    k1: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    k2: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    p1: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    p2: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    k3: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
+pinholeIntrinsics: (f = msg.getPinholeIntrinsics()) && proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.toObject(includeInstance, f),
+k1: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+k2: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+p1: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+p2: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+k3: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
   };
 
   if (includeInstance) {
@@ -2127,7 +2115,7 @@ proto.bosdyn.api.ImageSource.PinholeBrownConrady.PinholeBrownConradyIntrinsics.t
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageSource.PinholeBrownConrady.PinholeBrownConradyIntrinsics}
  */
 proto.bosdyn.api.ImageSource.PinholeBrownConrady.PinholeBrownConradyIntrinsics.deserializeBinary = function(bytes) {
@@ -2447,7 +2435,7 @@ proto.bosdyn.api.ImageSource.KannalaBrandtModel.prototype.toObject = function(op
  */
 proto.bosdyn.api.ImageSource.KannalaBrandtModel.toObject = function(includeInstance, msg) {
   var f, obj = {
-    intrinsics: (f = msg.getIntrinsics()) && proto.bosdyn.api.ImageSource.KannalaBrandtModel.KannalaBrandtIntrinsics.toObject(includeInstance, f)
+intrinsics: (f = msg.getIntrinsics()) && proto.bosdyn.api.ImageSource.KannalaBrandtModel.KannalaBrandtIntrinsics.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2460,7 +2448,7 @@ proto.bosdyn.api.ImageSource.KannalaBrandtModel.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageSource.KannalaBrandtModel}
  */
 proto.bosdyn.api.ImageSource.KannalaBrandtModel.deserializeBinary = function(bytes) {
@@ -2561,11 +2549,11 @@ proto.bosdyn.api.ImageSource.KannalaBrandtModel.KannalaBrandtIntrinsics.prototyp
  */
 proto.bosdyn.api.ImageSource.KannalaBrandtModel.KannalaBrandtIntrinsics.toObject = function(includeInstance, msg) {
   var f, obj = {
-    pinholeIntrinsics: (f = msg.getPinholeIntrinsics()) && proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.toObject(includeInstance, f),
-    k1: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    k2: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    k3: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    k4: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0)
+pinholeIntrinsics: (f = msg.getPinholeIntrinsics()) && proto.bosdyn.api.ImageSource.PinholeModel.CameraIntrinsics.toObject(includeInstance, f),
+k1: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+k2: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+k3: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+k4: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0)
   };
 
   if (includeInstance) {
@@ -2578,7 +2566,7 @@ proto.bosdyn.api.ImageSource.KannalaBrandtModel.KannalaBrandtIntrinsics.toObject
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageSource.KannalaBrandtModel.KannalaBrandtIntrinsics}
  */
 proto.bosdyn.api.ImageSource.KannalaBrandtModel.KannalaBrandtIntrinsics.deserializeBinary = function(bytes) {
@@ -3181,7 +3169,7 @@ proto.bosdyn.api.ListImageSourcesRequest.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.ListImageSourcesRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3194,7 +3182,7 @@ proto.bosdyn.api.ListImageSourcesRequest.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ListImageSourcesRequest}
  */
 proto.bosdyn.api.ListImageSourcesRequest.deserializeBinary = function(bytes) {
@@ -3339,10 +3327,10 @@ proto.bosdyn.api.ListImageSourcesResponse.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.ListImageSourcesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    imageSourcesList: jspb.Message.toObjectList(msg.getImageSourcesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+imageSourcesList: jspb.Message.toObjectList(msg.getImageSourcesList(),
     proto.bosdyn.api.ImageSource.toObject, includeInstance),
-    transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f)
+transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3355,7 +3343,7 @@ proto.bosdyn.api.ListImageSourcesResponse.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ListImageSourcesResponse}
  */
 proto.bosdyn.api.ListImageSourcesResponse.deserializeBinary = function(bytes) {
@@ -3601,13 +3589,13 @@ proto.bosdyn.api.ImageRequest.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.ImageRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    imageSourceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    qualityPercent: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    imageFormat: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    resizeRatio: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    pixelFormat: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    fallbackFormatsList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
-    customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f)
+imageSourceName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+qualityPercent: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+imageFormat: jspb.Message.getFieldWithDefault(msg, 3, 0),
+resizeRatio: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+pixelFormat: jspb.Message.getFieldWithDefault(msg, 5, 0),
+fallbackFormatsList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
+customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3620,7 +3608,7 @@ proto.bosdyn.api.ImageRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageRequest}
  */
 proto.bosdyn.api.ImageRequest.deserializeBinary = function(bytes) {
@@ -3645,7 +3633,7 @@ proto.bosdyn.api.ImageRequest.deserializeBinaryFromReader = function(msg, reader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setImageSourceName(value);
       break;
     case 2:
@@ -3665,10 +3653,7 @@ proto.bosdyn.api.ImageRequest.deserializeBinaryFromReader = function(msg, reader
       msg.setPixelFormat(value);
       break;
     case 7:
-      var values = /** @type {!Array<!proto.bosdyn.api.Image.PixelFormat>} */ (reader.isDelimited() ? reader.readPackedEnum() : [reader.readEnum()]);
-      for (var i = 0; i < values.length; i++) {
-        msg.addFallbackFormats(values[i]);
-      }
+      reader.readPackableEnumInto(msg.getFallbackFormatsList());
       break;
     case 6:
       var value = new bosdyn_api_service_customization_pb.DictParam;
@@ -3960,8 +3945,8 @@ proto.bosdyn.api.GetImageRequest.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.GetImageRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    imageRequestsList: jspb.Message.toObjectList(msg.getImageRequestsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+imageRequestsList: jspb.Message.toObjectList(msg.getImageRequestsList(),
     proto.bosdyn.api.ImageRequest.toObject, includeInstance)
   };
 
@@ -3975,7 +3960,7 @@ proto.bosdyn.api.GetImageRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetImageRequest}
  */
 proto.bosdyn.api.GetImageRequest.deserializeBinary = function(bytes) {
@@ -4164,10 +4149,10 @@ proto.bosdyn.api.ImageResponse.prototype.toObject = function(opt_includeInstance
  */
 proto.bosdyn.api.ImageResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    shot: (f = msg.getShot()) && proto.bosdyn.api.ImageCapture.toObject(includeInstance, f),
-    source: (f = msg.getSource()) && proto.bosdyn.api.ImageSource.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    customParamError: (f = msg.getCustomParamError()) && bosdyn_api_service_customization_pb.CustomParamError.toObject(includeInstance, f)
+shot: (f = msg.getShot()) && proto.bosdyn.api.ImageCapture.toObject(includeInstance, f),
+source: (f = msg.getSource()) && proto.bosdyn.api.ImageSource.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 4, 0),
+customParamError: (f = msg.getCustomParamError()) && bosdyn_api_service_customization_pb.CustomParamError.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4180,7 +4165,7 @@ proto.bosdyn.api.ImageResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageResponse}
  */
 proto.bosdyn.api.ImageResponse.deserializeBinary = function(bytes) {
@@ -4462,9 +4447,9 @@ proto.bosdyn.api.ImageCaptureAndSource.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.ImageCaptureAndSource.toObject = function(includeInstance, msg) {
   var f, obj = {
-    shot: (f = msg.getShot()) && proto.bosdyn.api.ImageCapture.toObject(includeInstance, f),
-    source: (f = msg.getSource()) && proto.bosdyn.api.ImageSource.toObject(includeInstance, f),
-    imageService: jspb.Message.getFieldWithDefault(msg, 3, "")
+shot: (f = msg.getShot()) && proto.bosdyn.api.ImageCapture.toObject(includeInstance, f),
+source: (f = msg.getSource()) && proto.bosdyn.api.ImageSource.toObject(includeInstance, f),
+imageService: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -4477,7 +4462,7 @@ proto.bosdyn.api.ImageCaptureAndSource.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ImageCaptureAndSource}
  */
 proto.bosdyn.api.ImageCaptureAndSource.deserializeBinary = function(bytes) {
@@ -4512,7 +4497,7 @@ proto.bosdyn.api.ImageCaptureAndSource.deserializeBinaryFromReader = function(ms
       msg.setSource(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setImageService(value);
       break;
     default:
@@ -4701,8 +4686,8 @@ proto.bosdyn.api.GetImageResponse.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.GetImageResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    imageResponsesList: jspb.Message.toObjectList(msg.getImageResponsesList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+imageResponsesList: jspb.Message.toObjectList(msg.getImageResponsesList(),
     proto.bosdyn.api.ImageResponse.toObject, includeInstance)
   };
 
@@ -4716,7 +4701,7 @@ proto.bosdyn.api.GetImageResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetImageResponse}
  */
 proto.bosdyn.api.GetImageResponse.deserializeBinary = function(bytes) {

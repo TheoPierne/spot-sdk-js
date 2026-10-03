@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_basic_command_pb = require('../../../bosdyn/api/basic_command_pb.js');
 goog.object.extend(proto, bosdyn_api_basic_command_pb);
@@ -287,9 +281,9 @@ proto.bosdyn.api.spot.OpenDoorCommandRequest.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.spot.OpenDoorCommandRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    doorCommand: (f = msg.getDoorCommand()) && proto.bosdyn.api.spot.DoorCommand.Request.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+doorCommand: (f = msg.getDoorCommand()) && proto.bosdyn.api.spot.DoorCommand.Request.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -302,7 +296,7 @@ proto.bosdyn.api.spot.OpenDoorCommandRequest.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.OpenDoorCommandRequest}
  */
 proto.bosdyn.api.spot.OpenDoorCommandRequest.deserializeBinary = function(bytes) {
@@ -540,11 +534,11 @@ proto.bosdyn.api.spot.OpenDoorCommandResponse.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot.OpenDoorCommandResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    message: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    doorCommandId: jspb.Message.getFieldWithDefault(msg, 5, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+message: jspb.Message.getFieldWithDefault(msg, 4, ""),
+doorCommandId: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -557,7 +551,7 @@ proto.bosdyn.api.spot.OpenDoorCommandResponse.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.OpenDoorCommandResponse}
  */
 proto.bosdyn.api.spot.OpenDoorCommandResponse.deserializeBinary = function(bytes) {
@@ -596,7 +590,7 @@ proto.bosdyn.api.spot.OpenDoorCommandResponse.deserializeBinaryFromReader = func
       msg.setStatus(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setMessage(value);
       break;
     case 5:
@@ -842,8 +836,8 @@ proto.bosdyn.api.spot.OpenDoorFeedbackRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.spot.OpenDoorFeedbackRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    doorCommandId: jspb.Message.getFieldWithDefault(msg, 2, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+doorCommandId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -856,7 +850,7 @@ proto.bosdyn.api.spot.OpenDoorFeedbackRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.OpenDoorFeedbackRequest}
  */
 proto.bosdyn.api.spot.OpenDoorFeedbackRequest.deserializeBinary = function(bytes) {
@@ -1023,10 +1017,10 @@ proto.bosdyn.api.spot.OpenDoorFeedbackResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.spot.OpenDoorFeedbackResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 100, 0),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    feedback: (f = msg.getFeedback()) && proto.bosdyn.api.spot.DoorCommand.Feedback.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 100, 0),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+feedback: (f = msg.getFeedback()) && proto.bosdyn.api.spot.DoorCommand.Feedback.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1039,7 +1033,7 @@ proto.bosdyn.api.spot.OpenDoorFeedbackResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.OpenDoorFeedbackResponse}
  */
 proto.bosdyn.api.spot.OpenDoorFeedbackResponse.deserializeBinary = function(bytes) {
@@ -1319,7 +1313,7 @@ proto.bosdyn.api.spot.DoorCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DoorCommand}
  */
 proto.bosdyn.api.spot.DoorCommand.deserializeBinary = function(bytes) {
@@ -1437,11 +1431,11 @@ proto.bosdyn.api.spot.DoorCommand.AutoGraspCommand.prototype.toObject = function
  */
 proto.bosdyn.api.spot.DoorCommand.AutoGraspCommand.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    searchRayStartInFrame: (f = msg.getSearchRayStartInFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    searchRayEndInFrame: (f = msg.getSearchRayEndInFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    hingeSide: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    swingDirection: jspb.Message.getFieldWithDefault(msg, 5, 0)
+frameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+searchRayStartInFrame: (f = msg.getSearchRayStartInFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+searchRayEndInFrame: (f = msg.getSearchRayEndInFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+hingeSide: jspb.Message.getFieldWithDefault(msg, 4, 0),
+swingDirection: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -1454,7 +1448,7 @@ proto.bosdyn.api.spot.DoorCommand.AutoGraspCommand.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DoorCommand.AutoGraspCommand}
  */
 proto.bosdyn.api.spot.DoorCommand.AutoGraspCommand.deserializeBinary = function(bytes) {
@@ -1479,7 +1473,7 @@ proto.bosdyn.api.spot.DoorCommand.AutoGraspCommand.deserializeBinaryFromReader =
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 2:
@@ -1729,9 +1723,9 @@ proto.bosdyn.api.spot.DoorCommand.WarmstartCommand.prototype.toObject = function
  */
 proto.bosdyn.api.spot.DoorCommand.WarmstartCommand.toObject = function(includeInstance, msg) {
   var f, obj = {
-    hingeSide: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    swingDirection: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    handleType: jspb.Message.getFieldWithDefault(msg, 3, 0)
+hingeSide: jspb.Message.getFieldWithDefault(msg, 1, 0),
+swingDirection: jspb.Message.getFieldWithDefault(msg, 2, 0),
+handleType: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1744,7 +1738,7 @@ proto.bosdyn.api.spot.DoorCommand.WarmstartCommand.toObject = function(includeIn
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DoorCommand.WarmstartCommand}
  */
 proto.bosdyn.api.spot.DoorCommand.WarmstartCommand.deserializeBinary = function(bytes) {
@@ -1919,9 +1913,9 @@ proto.bosdyn.api.spot.DoorCommand.AutoPushCommand.prototype.toObject = function(
  */
 proto.bosdyn.api.spot.DoorCommand.AutoPushCommand.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    pushPointInFrame: (f = msg.getPushPointInFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    hingeSide: jspb.Message.getFieldWithDefault(msg, 3, 0)
+frameName: jspb.Message.getFieldWithDefault(msg, 1, ""),
+pushPointInFrame: (f = msg.getPushPointInFrame()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+hingeSide: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1934,7 +1928,7 @@ proto.bosdyn.api.spot.DoorCommand.AutoPushCommand.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DoorCommand.AutoPushCommand}
  */
 proto.bosdyn.api.spot.DoorCommand.AutoPushCommand.deserializeBinary = function(bytes) {
@@ -1959,7 +1953,7 @@ proto.bosdyn.api.spot.DoorCommand.AutoPushCommand.deserializeBinaryFromReader = 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     case 2:
@@ -2157,9 +2151,9 @@ proto.bosdyn.api.spot.DoorCommand.Request.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.spot.DoorCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    autoGraspCommand: (f = msg.getAutoGraspCommand()) && proto.bosdyn.api.spot.DoorCommand.AutoGraspCommand.toObject(includeInstance, f),
-    warmstartCommand: (f = msg.getWarmstartCommand()) && proto.bosdyn.api.spot.DoorCommand.WarmstartCommand.toObject(includeInstance, f),
-    autoPushCommand: (f = msg.getAutoPushCommand()) && proto.bosdyn.api.spot.DoorCommand.AutoPushCommand.toObject(includeInstance, f)
+autoGraspCommand: (f = msg.getAutoGraspCommand()) && proto.bosdyn.api.spot.DoorCommand.AutoGraspCommand.toObject(includeInstance, f),
+warmstartCommand: (f = msg.getWarmstartCommand()) && proto.bosdyn.api.spot.DoorCommand.WarmstartCommand.toObject(includeInstance, f),
+autoPushCommand: (f = msg.getAutoPushCommand()) && proto.bosdyn.api.spot.DoorCommand.AutoPushCommand.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2172,7 +2166,7 @@ proto.bosdyn.api.spot.DoorCommand.Request.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DoorCommand.Request}
  */
 proto.bosdyn.api.spot.DoorCommand.Request.deserializeBinary = function(bytes) {
@@ -2410,8 +2404,8 @@ proto.bosdyn.api.spot.DoorCommand.Feedback.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.spot.DoorCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    distancePastThreshold: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+distancePastThreshold: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -2424,7 +2418,7 @@ proto.bosdyn.api.spot.DoorCommand.Feedback.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot.DoorCommand.Feedback}
  */
 proto.bosdyn.api.spot.DoorCommand.Feedback.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -224,10 +218,10 @@ proto.bosdyn.api.gps.GpsState.prototype.toObject = function(opt_includeInstance)
  */
 proto.bosdyn.api.gps.GpsState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    latestData: (f = msg.getLatestData()) && bosdyn_api_gps_gps_pb.GpsDataPoint.toObject(includeInstance, f),
-    gpsDevice: (f = msg.getGpsDevice()) && bosdyn_api_gps_gps_pb.GpsDevice.toObject(includeInstance, f),
-    ecefPBody: (f = msg.getEcefPBody()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    historicalDataList: jspb.Message.toObjectList(msg.getHistoricalDataList(),
+latestData: (f = msg.getLatestData()) && bosdyn_api_gps_gps_pb.GpsDataPoint.toObject(includeInstance, f),
+gpsDevice: (f = msg.getGpsDevice()) && bosdyn_api_gps_gps_pb.GpsDevice.toObject(includeInstance, f),
+ecefPBody: (f = msg.getEcefPBody()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+historicalDataList: jspb.Message.toObjectList(msg.getHistoricalDataList(),
     bosdyn_api_gps_gps_pb.GpsDataPoint.toObject, includeInstance)
   };
 
@@ -241,7 +235,7 @@ proto.bosdyn.api.gps.GpsState.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.GpsState}
  */
 proto.bosdyn.api.gps.GpsState.deserializeBinary = function(bytes) {
@@ -537,13 +531,13 @@ proto.bosdyn.api.gps.Registration.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.gps.Registration.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
-    robotBodyLocation: (f = msg.getRobotBodyLocation()) && bosdyn_api_gps_gps_pb.LLH.toObject(includeInstance, f),
-    gpsStatesList: jspb.Message.toObjectList(msg.getGpsStatesList(),
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+transformsSnapshot: (f = msg.getTransformsSnapshot()) && bosdyn_api_geometry_pb.FrameTreeSnapshot.toObject(includeInstance, f),
+robotBodyLocation: (f = msg.getRobotBodyLocation()) && bosdyn_api_gps_gps_pb.LLH.toObject(includeInstance, f),
+gpsStatesList: jspb.Message.toObjectList(msg.getGpsStatesList(),
     proto.bosdyn.api.gps.GpsState.toObject, includeInstance),
-    quality: (f = msg.getQuality()) && proto.bosdyn.api.gps.Registration.Quality.toObject(includeInstance, f)
+quality: (f = msg.getQuality()) && proto.bosdyn.api.gps.Registration.Quality.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -556,7 +550,7 @@ proto.bosdyn.api.gps.Registration.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.Registration}
  */
 proto.bosdyn.api.gps.Registration.deserializeBinary = function(bytes) {
@@ -732,10 +726,10 @@ proto.bosdyn.api.gps.Registration.Quality.prototype.toObject = function(opt_incl
  */
 proto.bosdyn.api.gps.Registration.Quality.toObject = function(includeInstance, msg) {
   var f, obj = {
-    numPoints: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    covariance: (f = msg.getCovariance()) && bosdyn_api_geometry_pb.Matrix.toObject(includeInstance, f),
-    residuals: (f = msg.getResiduals()) && bosdyn_api_geometry_pb.Matrix.toObject(includeInstance, f),
-    meanResidual: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
+numPoints: jspb.Message.getFieldWithDefault(msg, 1, 0),
+covariance: (f = msg.getCovariance()) && bosdyn_api_geometry_pb.Matrix.toObject(includeInstance, f),
+residuals: (f = msg.getResiduals()) && bosdyn_api_geometry_pb.Matrix.toObject(includeInstance, f),
+meanResidual: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
   };
 
   if (includeInstance) {
@@ -748,7 +742,7 @@ proto.bosdyn.api.gps.Registration.Quality.toObject = function(includeInstance, m
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.Registration.Quality}
  */
 proto.bosdyn.api.gps.Registration.Quality.deserializeBinary = function(bytes) {
@@ -1198,7 +1192,7 @@ proto.bosdyn.api.gps.GetLocationRequest.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.gps.GetLocationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1211,7 +1205,7 @@ proto.bosdyn.api.gps.GetLocationRequest.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.GetLocationRequest}
  */
 proto.bosdyn.api.gps.GetLocationRequest.deserializeBinary = function(bytes) {
@@ -1349,9 +1343,9 @@ proto.bosdyn.api.gps.GetLocationResponse.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.gps.GetLocationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    registration: (f = msg.getRegistration()) && proto.bosdyn.api.gps.Registration.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0),
+registration: (f = msg.getRegistration()) && proto.bosdyn.api.gps.Registration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1364,7 +1358,7 @@ proto.bosdyn.api.gps.GetLocationResponse.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.GetLocationResponse}
  */
 proto.bosdyn.api.gps.GetLocationResponse.deserializeBinary = function(bytes) {
@@ -1590,7 +1584,7 @@ proto.bosdyn.api.gps.ResetRegistrationRequest.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.gps.ResetRegistrationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1603,7 +1597,7 @@ proto.bosdyn.api.gps.ResetRegistrationRequest.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.ResetRegistrationRequest}
  */
 proto.bosdyn.api.gps.ResetRegistrationRequest.deserializeBinary = function(bytes) {
@@ -1741,7 +1735,7 @@ proto.bosdyn.api.gps.ResetRegistrationResponse.prototype.toObject = function(opt
  */
 proto.bosdyn.api.gps.ResetRegistrationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1754,7 +1748,7 @@ proto.bosdyn.api.gps.ResetRegistrationResponse.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.ResetRegistrationResponse}
  */
 proto.bosdyn.api.gps.ResetRegistrationResponse.deserializeBinary = function(bytes) {

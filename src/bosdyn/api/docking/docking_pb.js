@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -307,13 +301,13 @@ proto.bosdyn.api.docking.DockingCommandRequest.prototype.toObject = function(opt
  */
 proto.bosdyn.api.docking.DockingCommandRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
-    dockingStationId: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    clockIdentifier: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    prepPoseBehavior: jspb.Message.getFieldWithDefault(msg, 9, 0),
-    requireFiducial: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+lease: (f = msg.getLease()) && bosdyn_api_lease_pb.Lease.toObject(includeInstance, f),
+dockingStationId: jspb.Message.getFieldWithDefault(msg, 3, 0),
+clockIdentifier: jspb.Message.getFieldWithDefault(msg, 4, ""),
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+prepPoseBehavior: jspb.Message.getFieldWithDefault(msg, 9, 0),
+requireFiducial: jspb.Message.getBooleanFieldWithDefault(msg, 10, false)
   };
 
   if (includeInstance) {
@@ -326,7 +320,7 @@ proto.bosdyn.api.docking.DockingCommandRequest.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.DockingCommandRequest}
  */
 proto.bosdyn.api.docking.DockingCommandRequest.deserializeBinary = function(bytes) {
@@ -365,7 +359,7 @@ proto.bosdyn.api.docking.DockingCommandRequest.deserializeBinaryFromReader = fun
       msg.setDockingStationId(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setClockIdentifier(value);
       break;
     case 5:
@@ -680,10 +674,10 @@ proto.bosdyn.api.docking.DockingCommandResponse.prototype.toObject = function(op
  */
 proto.bosdyn.api.docking.DockingCommandResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    dockingCommandId: jspb.Message.getFieldWithDefault(msg, 5, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0),
+dockingCommandId: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -696,7 +690,7 @@ proto.bosdyn.api.docking.DockingCommandResponse.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.DockingCommandResponse}
  */
 proto.bosdyn.api.docking.DockingCommandResponse.deserializeBinary = function(bytes) {
@@ -956,7 +950,7 @@ proto.bosdyn.api.docking.UpdateDockingParams.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.docking.UpdateDockingParams.toObject = function(includeInstance, msg) {
   var f, obj = {
-    endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+endTime: (f = msg.getEndTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -969,7 +963,7 @@ proto.bosdyn.api.docking.UpdateDockingParams.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.UpdateDockingParams}
  */
 proto.bosdyn.api.docking.UpdateDockingParams.deserializeBinary = function(bytes) {
@@ -1107,9 +1101,9 @@ proto.bosdyn.api.docking.DockingCommandFeedbackRequest.prototype.toObject = func
  */
 proto.bosdyn.api.docking.DockingCommandFeedbackRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    dockingCommandId: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    updateDockingParams: (f = msg.getUpdateDockingParams()) && proto.bosdyn.api.docking.UpdateDockingParams.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+dockingCommandId: jspb.Message.getFieldWithDefault(msg, 2, 0),
+updateDockingParams: (f = msg.getUpdateDockingParams()) && proto.bosdyn.api.docking.UpdateDockingParams.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1122,7 +1116,7 @@ proto.bosdyn.api.docking.DockingCommandFeedbackRequest.toObject = function(inclu
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.DockingCommandFeedbackRequest}
  */
 proto.bosdyn.api.docking.DockingCommandFeedbackRequest.deserializeBinary = function(bytes) {
@@ -1339,9 +1333,9 @@ proto.bosdyn.api.docking.DockingCommandFeedbackResponse.prototype.toObject = fun
  */
 proto.bosdyn.api.docking.DockingCommandFeedbackResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+leaseUseResult: (f = msg.getLeaseUseResult()) && bosdyn_api_lease_pb.LeaseUseResult.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1354,7 +1348,7 @@ proto.bosdyn.api.docking.DockingCommandFeedbackResponse.toObject = function(incl
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.DockingCommandFeedbackResponse}
  */
 proto.bosdyn.api.docking.DockingCommandFeedbackResponse.deserializeBinary = function(bytes) {
@@ -1592,9 +1586,9 @@ proto.bosdyn.api.docking.ConfigRange.prototype.toObject = function(opt_includeIn
  */
 proto.bosdyn.api.docking.ConfigRange.toObject = function(includeInstance, msg) {
   var f, obj = {
-    idStart: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    idEnd: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    type: jspb.Message.getFieldWithDefault(msg, 3, 0)
+idStart: jspb.Message.getFieldWithDefault(msg, 1, 0),
+idEnd: jspb.Message.getFieldWithDefault(msg, 2, 0),
+type: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1607,7 +1601,7 @@ proto.bosdyn.api.docking.ConfigRange.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.ConfigRange}
  */
 proto.bosdyn.api.docking.ConfigRange.deserializeBinary = function(bytes) {
@@ -1782,7 +1776,7 @@ proto.bosdyn.api.docking.GetDockingConfigRequest.prototype.toObject = function(o
  */
 proto.bosdyn.api.docking.GetDockingConfigRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1795,7 +1789,7 @@ proto.bosdyn.api.docking.GetDockingConfigRequest.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.GetDockingConfigRequest}
  */
 proto.bosdyn.api.docking.GetDockingConfigRequest.deserializeBinary = function(bytes) {
@@ -1940,8 +1934,8 @@ proto.bosdyn.api.docking.GetDockingConfigResponse.prototype.toObject = function(
  */
 proto.bosdyn.api.docking.GetDockingConfigResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    dockConfigsList: jspb.Message.toObjectList(msg.getDockConfigsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+dockConfigsList: jspb.Message.toObjectList(msg.getDockConfigsList(),
     proto.bosdyn.api.docking.ConfigRange.toObject, includeInstance)
   };
 
@@ -1955,7 +1949,7 @@ proto.bosdyn.api.docking.GetDockingConfigResponse.toObject = function(includeIns
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.GetDockingConfigResponse}
  */
 proto.bosdyn.api.docking.GetDockingConfigResponse.deserializeBinary = function(bytes) {
@@ -2144,10 +2138,10 @@ proto.bosdyn.api.docking.DockState.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.docking.DockState.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    dockType: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    dockId: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    powerStatus: jspb.Message.getFieldWithDefault(msg, 4, 0)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0),
+dockType: jspb.Message.getFieldWithDefault(msg, 2, 0),
+dockId: jspb.Message.getFieldWithDefault(msg, 3, 0),
+powerStatus: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -2160,7 +2154,7 @@ proto.bosdyn.api.docking.DockState.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.DockState}
  */
 proto.bosdyn.api.docking.DockState.deserializeBinary = function(bytes) {
@@ -2385,7 +2379,7 @@ proto.bosdyn.api.docking.GetDockingStateRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.docking.GetDockingStateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2398,7 +2392,7 @@ proto.bosdyn.api.docking.GetDockingStateRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.GetDockingStateRequest}
  */
 proto.bosdyn.api.docking.GetDockingStateRequest.deserializeBinary = function(bytes) {
@@ -2536,8 +2530,8 @@ proto.bosdyn.api.docking.GetDockingStateResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.docking.GetDockingStateResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    dockState: (f = msg.getDockState()) && proto.bosdyn.api.docking.DockState.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+dockState: (f = msg.getDockState()) && proto.bosdyn.api.docking.DockState.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2550,7 +2544,7 @@ proto.bosdyn.api.docking.GetDockingStateResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.docking.GetDockingStateResponse}
  */
 proto.bosdyn.api.docking.GetDockingStateResponse.deserializeBinary = function(bytes) {

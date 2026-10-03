@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
 goog.object.extend(proto, google_protobuf_wrappers_pb);
@@ -211,10 +205,10 @@ proto.bosdyn.api.spot_cam.PowerStatus.prototype.toObject = function(opt_includeI
  */
 proto.bosdyn.api.spot_cam.PowerStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
-    ptz: (f = msg.getPtz()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    aux1: (f = msg.getAux1()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    aux2: (f = msg.getAux2()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
-    externalMic: (f = msg.getExternalMic()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
+ptz: (f = msg.getPtz()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+aux1: (f = msg.getAux1()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+aux2: (f = msg.getAux2()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+externalMic: (f = msg.getExternalMic()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -227,7 +221,7 @@ proto.bosdyn.api.spot_cam.PowerStatus.toObject = function(includeInstance, msg) 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.PowerStatus}
  */
 proto.bosdyn.api.spot_cam.PowerStatus.deserializeBinary = function(bytes) {
@@ -515,7 +509,7 @@ proto.bosdyn.api.spot_cam.GetPowerStatusRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.GetPowerStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -528,7 +522,7 @@ proto.bosdyn.api.spot_cam.GetPowerStatusRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetPowerStatusRequest}
  */
 proto.bosdyn.api.spot_cam.GetPowerStatusRequest.deserializeBinary = function(bytes) {
@@ -666,8 +660,8 @@ proto.bosdyn.api.spot_cam.GetPowerStatusResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.GetPowerStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -680,7 +674,7 @@ proto.bosdyn.api.spot_cam.GetPowerStatusResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.GetPowerStatusResponse}
  */
 proto.bosdyn.api.spot_cam.GetPowerStatusResponse.deserializeBinary = function(bytes) {
@@ -868,8 +862,8 @@ proto.bosdyn.api.spot_cam.SetPowerStatusRequest.prototype.toObject = function(op
  */
 proto.bosdyn.api.spot_cam.SetPowerStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -882,7 +876,7 @@ proto.bosdyn.api.spot_cam.SetPowerStatusRequest.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetPowerStatusRequest}
  */
 proto.bosdyn.api.spot_cam.SetPowerStatusRequest.deserializeBinary = function(bytes) {
@@ -1070,8 +1064,8 @@ proto.bosdyn.api.spot_cam.SetPowerStatusResponse.prototype.toObject = function(o
  */
 proto.bosdyn.api.spot_cam.SetPowerStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1084,7 +1078,7 @@ proto.bosdyn.api.spot_cam.SetPowerStatusResponse.toObject = function(includeInst
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.SetPowerStatusResponse}
  */
 proto.bosdyn.api.spot_cam.SetPowerStatusResponse.deserializeBinary = function(bytes) {
@@ -1272,8 +1266,8 @@ proto.bosdyn.api.spot_cam.CyclePowerRequest.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.spot_cam.CyclePowerRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1286,7 +1280,7 @@ proto.bosdyn.api.spot_cam.CyclePowerRequest.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.CyclePowerRequest}
  */
 proto.bosdyn.api.spot_cam.CyclePowerRequest.deserializeBinary = function(bytes) {
@@ -1474,8 +1468,8 @@ proto.bosdyn.api.spot_cam.CyclePowerResponse.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.spot_cam.CyclePowerResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+status: (f = msg.getStatus()) && proto.bosdyn.api.spot_cam.PowerStatus.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1488,7 +1482,7 @@ proto.bosdyn.api.spot_cam.CyclePowerResponse.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.spot_cam.CyclePowerResponse}
  */
 proto.bosdyn.api.spot_cam.CyclePowerResponse.deserializeBinary = function(bytes) {

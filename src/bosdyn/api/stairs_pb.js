@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_geometry_pb = require('../../bosdyn/api/geometry_pb.js');
 goog.object.extend(proto, bosdyn_api_geometry_pb);
@@ -256,8 +250,8 @@ proto.bosdyn.api.StairTransform.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.StairTransform.toObject = function(includeInstance, msg) {
   var f, obj = {
-    frameTformStairs: (f = msg.getFrameTformStairs()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    frameName: jspb.Message.getFieldWithDefault(msg, 2, "")
+frameTformStairs: (f = msg.getFrameTformStairs()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+frameName: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -270,7 +264,7 @@ proto.bosdyn.api.StairTransform.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.StairTransform}
  */
 proto.bosdyn.api.StairTransform.deserializeBinary = function(bytes) {
@@ -300,7 +294,7 @@ proto.bosdyn.api.StairTransform.deserializeBinaryFromReader = function(msg, read
       msg.setFrameTformStairs(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setFrameName(value);
       break;
     default:
@@ -444,15 +438,15 @@ proto.bosdyn.api.Staircase.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Staircase.toObject = function(includeInstance, msg) {
   var f, obj = {
-    knowledgeType: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    stairTform: (f = msg.getStairTform()) && proto.bosdyn.api.StairTransform.toObject(includeInstance, f),
-    numberOfSteps: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    averageRise: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    averageRun: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    averageWidth: (f = msg.getAverageWidth()) && proto.bosdyn.api.Staircase.Width.toObject(includeInstance, f),
-    stepsList: jspb.Message.toObjectList(msg.getStepsList(),
+knowledgeType: jspb.Message.getFieldWithDefault(msg, 1, 0),
+stairTform: (f = msg.getStairTform()) && proto.bosdyn.api.StairTransform.toObject(includeInstance, f),
+numberOfSteps: jspb.Message.getFieldWithDefault(msg, 3, 0),
+averageRise: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+averageRun: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+averageWidth: (f = msg.getAverageWidth()) && proto.bosdyn.api.Staircase.Width.toObject(includeInstance, f),
+stepsList: jspb.Message.toObjectList(msg.getStepsList(),
     proto.bosdyn.api.Staircase.Step.toObject, includeInstance),
-    id: jspb.Message.getFieldWithDefault(msg, 8, "")
+id: jspb.Message.getFieldWithDefault(msg, 8, "")
   };
 
   if (includeInstance) {
@@ -465,7 +459,7 @@ proto.bosdyn.api.Staircase.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Staircase}
  */
 proto.bosdyn.api.Staircase.deserializeBinary = function(bytes) {
@@ -521,7 +515,7 @@ proto.bosdyn.api.Staircase.deserializeBinaryFromReader = function(msg, reader) {
       msg.addSteps(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setId(value);
       break;
     default:
@@ -658,8 +652,8 @@ proto.bosdyn.api.Staircase.Width.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.Staircase.Width.toObject = function(includeInstance, msg) {
   var f, obj = {
-    width: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    boundedWidth: jspb.Message.getFieldWithDefault(msg, 2, 0)
+width: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+boundedWidth: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -672,7 +666,7 @@ proto.bosdyn.api.Staircase.Width.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Staircase.Width}
  */
 proto.bosdyn.api.Staircase.Width.deserializeBinary = function(bytes) {
@@ -829,9 +823,9 @@ proto.bosdyn.api.Staircase.Step.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.Staircase.Step.toObject = function(includeInstance, msg) {
   var f, obj = {
-    point: (f = msg.getPoint()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
-    north: (f = msg.getNorth()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
-    width: (f = msg.getWidth()) && proto.bosdyn.api.Staircase.Width.toObject(includeInstance, f)
+point: (f = msg.getPoint()) && bosdyn_api_geometry_pb.Vec3.toObject(includeInstance, f),
+north: (f = msg.getNorth()) && bosdyn_api_geometry_pb.Vec2.toObject(includeInstance, f),
+width: (f = msg.getWidth()) && proto.bosdyn.api.Staircase.Width.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -844,7 +838,7 @@ proto.bosdyn.api.Staircase.Step.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Staircase.Step}
  */
 proto.bosdyn.api.Staircase.Step.deserializeBinary = function(bytes) {
@@ -1317,12 +1311,12 @@ proto.bosdyn.api.StraightStaircase.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.StraightStaircase.toObject = function(includeInstance, msg) {
   var f, obj = {
-    fromKoTformStairs: (f = msg.getFromKoTformStairs()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    tform: (f = msg.getTform()) && proto.bosdyn.api.StairTransform.toObject(includeInstance, f),
-    stairsList: jspb.Message.toObjectList(msg.getStairsList(),
+fromKoTformStairs: (f = msg.getFromKoTformStairs()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+tform: (f = msg.getTform()) && proto.bosdyn.api.StairTransform.toObject(includeInstance, f),
+stairsList: jspb.Message.toObjectList(msg.getStairsList(),
     proto.bosdyn.api.StraightStaircase.Stair.toObject, includeInstance),
-    bottomLanding: (f = msg.getBottomLanding()) && proto.bosdyn.api.StraightStaircase.Landing.toObject(includeInstance, f),
-    topLanding: (f = msg.getTopLanding()) && proto.bosdyn.api.StraightStaircase.Landing.toObject(includeInstance, f)
+bottomLanding: (f = msg.getBottomLanding()) && proto.bosdyn.api.StraightStaircase.Landing.toObject(includeInstance, f),
+topLanding: (f = msg.getTopLanding()) && proto.bosdyn.api.StraightStaircase.Landing.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1335,7 +1329,7 @@ proto.bosdyn.api.StraightStaircase.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.StraightStaircase}
  */
 proto.bosdyn.api.StraightStaircase.deserializeBinary = function(bytes) {
@@ -1488,8 +1482,8 @@ proto.bosdyn.api.StraightStaircase.Stair.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.StraightStaircase.Stair.toObject = function(includeInstance, msg) {
   var f, obj = {
-    rise: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    run: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
+rise: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+run: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0)
   };
 
   if (includeInstance) {
@@ -1502,7 +1496,7 @@ proto.bosdyn.api.StraightStaircase.Stair.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.StraightStaircase.Stair}
  */
 proto.bosdyn.api.StraightStaircase.Stair.deserializeBinary = function(bytes) {
@@ -1648,9 +1642,9 @@ proto.bosdyn.api.StraightStaircase.Landing.prototype.toObject = function(opt_inc
  */
 proto.bosdyn.api.StraightStaircase.Landing.toObject = function(includeInstance, msg) {
   var f, obj = {
-    stairsTformLandingCenter: (f = msg.getStairsTformLandingCenter()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    landingExtentX: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    landingExtentY: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+stairsTformLandingCenter: (f = msg.getStairsTformLandingCenter()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+landingExtentX: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+landingExtentY: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -1663,7 +1657,7 @@ proto.bosdyn.api.StraightStaircase.Landing.toObject = function(includeInstance, 
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.StraightStaircase.Landing}
  */
 proto.bosdyn.api.StraightStaircase.Landing.deserializeBinary = function(bytes) {
@@ -2045,9 +2039,9 @@ proto.bosdyn.api.StaircaseLanding.prototype.toObject = function(opt_includeInsta
  */
 proto.bosdyn.api.StaircaseLanding.toObject = function(includeInstance, msg) {
   var f, obj = {
-    stairsTformLandingCenter: (f = msg.getStairsTformLandingCenter()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    landingExtentX: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    landingExtentY: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+stairsTformLandingCenter: (f = msg.getStairsTformLandingCenter()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+landingExtentX: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+landingExtentY: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -2060,7 +2054,7 @@ proto.bosdyn.api.StaircaseLanding.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.StaircaseLanding}
  */
 proto.bosdyn.api.StaircaseLanding.deserializeBinary = function(bytes) {
@@ -2256,9 +2250,9 @@ proto.bosdyn.api.StaircaseWithLandings.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.StaircaseWithLandings.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bottomLanding: (f = msg.getBottomLanding()) && proto.bosdyn.api.StaircaseLanding.toObject(includeInstance, f),
-    staircase: (f = msg.getStaircase()) && proto.bosdyn.api.Staircase.toObject(includeInstance, f),
-    topLanding: (f = msg.getTopLanding()) && proto.bosdyn.api.StaircaseLanding.toObject(includeInstance, f)
+bottomLanding: (f = msg.getBottomLanding()) && proto.bosdyn.api.StaircaseLanding.toObject(includeInstance, f),
+staircase: (f = msg.getStaircase()) && proto.bosdyn.api.Staircase.toObject(includeInstance, f),
+topLanding: (f = msg.getTopLanding()) && proto.bosdyn.api.StaircaseLanding.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2271,7 +2265,7 @@ proto.bosdyn.api.StaircaseWithLandings.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.StaircaseWithLandings}
  */
 proto.bosdyn.api.StaircaseWithLandings.deserializeBinary = function(bytes) {

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 goog.exportSymbol('proto.bosdyn.api.PressureEnum', null, global);
 goog.exportSymbol('proto.bosdyn.api.TemperatureEnum', null, global);
@@ -105,10 +99,10 @@ proto.bosdyn.api.Units.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Units.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    temp: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    press: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    isRelative: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
+name: (f = jspb.Message.getField(msg, 1)) == null ? undefined : f,
+temp: (f = jspb.Message.getField(msg, 2)) == null ? undefined : f,
+press: (f = jspb.Message.getField(msg, 3)) == null ? undefined : f,
+isRelative: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
   };
 
   if (includeInstance) {
@@ -121,7 +115,7 @@ proto.bosdyn.api.Units.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Units}
  */
 proto.bosdyn.api.Units.deserializeBinary = function(bytes) {
@@ -146,7 +140,7 @@ proto.bosdyn.api.Units.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setName(value);
       break;
     case 2:

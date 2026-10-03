@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.object.extend(proto, google_protobuf_timestamp_pb);
@@ -251,16 +245,16 @@ proto.bosdyn.api.HazardObservation.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.HazardObservation.toObject = function(includeInstance, msg) {
   var f, obj = {
-    acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    pointCloud: (f = msg.getPointCloud()) && bosdyn_api_point_cloud_pb.PointCloud.toObject(includeInstance, f),
-    segmentedDepth: (f = msg.getSegmentedDepth()) && bosdyn_api_image_pb.ImageCaptureAndSource.toObject(includeInstance, f),
-    box: (f = msg.getBox()) && bosdyn_api_geometry_pb.Box2WithFrame.toObject(includeInstance, f),
-    circle: (f = msg.getCircle()) && bosdyn_api_geometry_pb.Circle.toObject(includeInstance, f),
-    circleList: (f = msg.getCircleList()) && proto.bosdyn.api.HazardObservation.CircleList.toObject(includeInstance, f),
-    type: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    likelihood: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    semanticLabel: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    margin: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0)
+acquisitionTime: (f = msg.getAcquisitionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+pointCloud: (f = msg.getPointCloud()) && bosdyn_api_point_cloud_pb.PointCloud.toObject(includeInstance, f),
+segmentedDepth: (f = msg.getSegmentedDepth()) && bosdyn_api_image_pb.ImageCaptureAndSource.toObject(includeInstance, f),
+box: (f = msg.getBox()) && bosdyn_api_geometry_pb.Box2WithFrame.toObject(includeInstance, f),
+circle: (f = msg.getCircle()) && bosdyn_api_geometry_pb.Circle.toObject(includeInstance, f),
+circleList: (f = msg.getCircleList()) && proto.bosdyn.api.HazardObservation.CircleList.toObject(includeInstance, f),
+type: jspb.Message.getFieldWithDefault(msg, 4, 0),
+likelihood: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+semanticLabel: jspb.Message.getFieldWithDefault(msg, 6, ""),
+margin: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0)
   };
 
   if (includeInstance) {
@@ -273,7 +267,7 @@ proto.bosdyn.api.HazardObservation.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.HazardObservation}
  */
 proto.bosdyn.api.HazardObservation.deserializeBinary = function(bytes) {
@@ -336,7 +330,7 @@ proto.bosdyn.api.HazardObservation.deserializeBinaryFromReader = function(msg, r
       msg.setLikelihood(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSemanticLabel(value);
       break;
     case 7:
@@ -504,7 +498,7 @@ proto.bosdyn.api.HazardObservation.CircleList.prototype.toObject = function(opt_
  */
 proto.bosdyn.api.HazardObservation.CircleList.toObject = function(includeInstance, msg) {
   var f, obj = {
-    circlesList: jspb.Message.toObjectList(msg.getCirclesList(),
+circlesList: jspb.Message.toObjectList(msg.getCirclesList(),
     bosdyn_api_geometry_pb.Circle.toObject, includeInstance)
   };
 
@@ -518,7 +512,7 @@ proto.bosdyn.api.HazardObservation.CircleList.toObject = function(includeInstanc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.HazardObservation.CircleList}
  */
 proto.bosdyn.api.HazardObservation.CircleList.deserializeBinary = function(bytes) {
@@ -958,13 +952,13 @@ proto.bosdyn.api.AddHazardsRequest.prototype.toObject = function(opt_includeInst
  */
 proto.bosdyn.api.AddHazardsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    hazardsList: jspb.Message.toObjectList(msg.getHazardsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+hazardsList: jspb.Message.toObjectList(msg.getHazardsList(),
     proto.bosdyn.api.HazardObservation.toObject, includeInstance),
-    visionTformBody: (f = msg.getVisionTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
-    skipAggregation: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    maxUnaggregatedUpdateAge: (f = msg.getMaxUnaggregatedUpdateAge()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    hazardSource: jspb.Message.getFieldWithDefault(msg, 6, "")
+visionTformBody: (f = msg.getVisionTformBody()) && bosdyn_api_geometry_pb.SE3Pose.toObject(includeInstance, f),
+skipAggregation: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
+maxUnaggregatedUpdateAge: (f = msg.getMaxUnaggregatedUpdateAge()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+hazardSource: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -977,7 +971,7 @@ proto.bosdyn.api.AddHazardsRequest.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AddHazardsRequest}
  */
 proto.bosdyn.api.AddHazardsRequest.deserializeBinary = function(bytes) {
@@ -1026,7 +1020,7 @@ proto.bosdyn.api.AddHazardsRequest.deserializeBinaryFromReader = function(msg, r
       msg.setMaxUnaggregatedUpdateAge(value);
       break;
     case 6:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setHazardSource(value);
       break;
     default:
@@ -1324,7 +1318,7 @@ proto.bosdyn.api.AddHazardResult.prototype.toObject = function(opt_includeInstan
  */
 proto.bosdyn.api.AddHazardResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -1337,7 +1331,7 @@ proto.bosdyn.api.AddHazardResult.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AddHazardResult}
  */
 proto.bosdyn.api.AddHazardResult.deserializeBinary = function(bytes) {
@@ -1471,10 +1465,10 @@ proto.bosdyn.api.AddHazardsResponse.prototype.toObject = function(opt_includeIns
  */
 proto.bosdyn.api.AddHazardsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    addHazardResultsList: jspb.Message.toObjectList(msg.getAddHazardResultsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+addHazardResultsList: jspb.Message.toObjectList(msg.getAddHazardResultsList(),
     proto.bosdyn.api.AddHazardResult.toObject, includeInstance),
-    numHazardsUpdated: jspb.Message.getFieldWithDefault(msg, 3, 0)
+numHazardsUpdated: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1487,7 +1481,7 @@ proto.bosdyn.api.AddHazardsResponse.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AddHazardsResponse}
  */
 proto.bosdyn.api.AddHazardsResponse.deserializeBinary = function(bytes) {
@@ -1705,7 +1699,7 @@ proto.bosdyn.api.GetHazardServiceStatusRequest.prototype.toObject = function(opt
  */
 proto.bosdyn.api.GetHazardServiceStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1718,7 +1712,7 @@ proto.bosdyn.api.GetHazardServiceStatusRequest.toObject = function(includeInstan
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetHazardServiceStatusRequest}
  */
 proto.bosdyn.api.GetHazardServiceStatusRequest.deserializeBinary = function(bytes) {
@@ -1856,8 +1850,8 @@ proto.bosdyn.api.GetHazardServiceStatusResponse.prototype.toObject = function(op
  */
 proto.bosdyn.api.GetHazardServiceStatusResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    timeSinceLastObservation: (f = msg.getTimeSinceLastObservation()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
+timeSinceLastObservation: (f = msg.getTimeSinceLastObservation()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1870,7 +1864,7 @@ proto.bosdyn.api.GetHazardServiceStatusResponse.toObject = function(includeInsta
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GetHazardServiceStatusResponse}
  */
 proto.bosdyn.api.GetHazardServiceStatusResponse.deserializeBinary = function(bytes) {

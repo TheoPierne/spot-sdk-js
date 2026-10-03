@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js');
 goog.object.extend(proto, google_protobuf_struct_pb);
@@ -78,10 +72,10 @@ proto.bosdyn.api.AlertData.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.AlertData.toObject = function(includeInstance, msg) {
   var f, obj = {
-    severity: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    title: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    source: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    additionalData: (f = msg.getAdditionalData()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f)
+severity: jspb.Message.getFieldWithDefault(msg, 1, 0),
+title: jspb.Message.getFieldWithDefault(msg, 2, ""),
+source: jspb.Message.getFieldWithDefault(msg, 3, ""),
+additionalData: (f = msg.getAdditionalData()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -94,7 +88,7 @@ proto.bosdyn.api.AlertData.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.AlertData}
  */
 proto.bosdyn.api.AlertData.deserializeBinary = function(bytes) {
@@ -123,11 +117,11 @@ proto.bosdyn.api.AlertData.deserializeBinaryFromReader = function(msg, reader) {
       msg.setSeverity(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setTitle(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setSource(value);
       break;
     case 4:

@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_data_buffer_pb = require('../../../bosdyn/api/data_buffer_pb.js');
 goog.object.extend(proto, bosdyn_api_data_buffer_pb);
@@ -88,14 +82,14 @@ proto.bosdyn.api.metrics_logging.AbsoluteMetricsSnapshot.prototype.toObject = fu
  */
 proto.bosdyn.api.metrics_logging.AbsoluteMetricsSnapshot.toObject = function(includeInstance, msg) {
   var f, obj = {
-    timestampStart: (f = msg.getTimestampStart()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    timestampEnd: (f = msg.getTimestampEnd()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    sequenceNumber: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    robotSerialNumber: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    robotSpecies: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    parametersList: jspb.Message.toObjectList(msg.getParametersList(),
+timestampStart: (f = msg.getTimestampStart()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+timestampEnd: (f = msg.getTimestampEnd()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+sequenceNumber: jspb.Message.getFieldWithDefault(msg, 3, 0),
+robotSerialNumber: jspb.Message.getFieldWithDefault(msg, 4, ""),
+robotSpecies: jspb.Message.getFieldWithDefault(msg, 5, ""),
+parametersList: jspb.Message.toObjectList(msg.getParametersList(),
     bosdyn_api_parameter_pb.Parameter.toObject, includeInstance),
-    eventsList: jspb.Message.toObjectList(msg.getEventsList(),
+eventsList: jspb.Message.toObjectList(msg.getEventsList(),
     bosdyn_api_data_buffer_pb.Event.toObject, includeInstance)
   };
 
@@ -109,7 +103,7 @@ proto.bosdyn.api.metrics_logging.AbsoluteMetricsSnapshot.toObject = function(inc
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.metrics_logging.AbsoluteMetricsSnapshot}
  */
 proto.bosdyn.api.metrics_logging.AbsoluteMetricsSnapshot.deserializeBinary = function(bytes) {
@@ -148,11 +142,11 @@ proto.bosdyn.api.metrics_logging.AbsoluteMetricsSnapshot.deserializeBinaryFromRe
       msg.setSequenceNumber(value);
       break;
     case 4:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRobotSerialNumber(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setRobotSpecies(value);
       break;
     case 6:

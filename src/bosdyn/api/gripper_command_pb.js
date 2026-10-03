@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_basic_command_pb = require('../../bosdyn/api/basic_command_pb.js');
 goog.object.extend(proto, bosdyn_api_basic_command_pb);
@@ -207,7 +201,7 @@ proto.bosdyn.api.GripperCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperCommand}
  */
 proto.bosdyn.api.GripperCommand.deserializeBinary = function(bytes) {
@@ -320,7 +314,7 @@ proto.bosdyn.api.GripperCommand.Request.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.GripperCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    clawGripperCommand: (f = msg.getClawGripperCommand()) && proto.bosdyn.api.ClawGripperCommand.Request.toObject(includeInstance, f)
+clawGripperCommand: (f = msg.getClawGripperCommand()) && proto.bosdyn.api.ClawGripperCommand.Request.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -333,7 +327,7 @@ proto.bosdyn.api.GripperCommand.Request.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperCommand.Request}
  */
 proto.bosdyn.api.GripperCommand.Request.deserializeBinary = function(bytes) {
@@ -496,8 +490,8 @@ proto.bosdyn.api.GripperCommand.Feedback.prototype.toObject = function(opt_inclu
  */
 proto.bosdyn.api.GripperCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    clawGripperFeedback: (f = msg.getClawGripperFeedback()) && proto.bosdyn.api.ClawGripperCommand.Feedback.toObject(includeInstance, f),
-    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
+clawGripperFeedback: (f = msg.getClawGripperFeedback()) && proto.bosdyn.api.ClawGripperCommand.Feedback.toObject(includeInstance, f),
+status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -510,7 +504,7 @@ proto.bosdyn.api.GripperCommand.Feedback.toObject = function(includeInstance, ms
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.GripperCommand.Feedback}
  */
 proto.bosdyn.api.GripperCommand.Feedback.deserializeBinary = function(bytes) {
@@ -690,7 +684,7 @@ proto.bosdyn.api.ClawGripperCommand.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ClawGripperCommand}
  */
 proto.bosdyn.api.ClawGripperCommand.deserializeBinary = function(bytes) {
@@ -778,11 +772,11 @@ proto.bosdyn.api.ClawGripperCommand.Request.prototype.toObject = function(opt_in
  */
 proto.bosdyn.api.ClawGripperCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-    trajectory: (f = msg.getTrajectory()) && bosdyn_api_trajectory_pb.ScalarTrajectory.toObject(includeInstance, f),
-    maximumOpenCloseVelocity: (f = msg.getMaximumOpenCloseVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maximumOpenCloseAcceleration: (f = msg.getMaximumOpenCloseAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    maximumTorque: (f = msg.getMaximumTorque()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
-    disableForceOnContact: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
+trajectory: (f = msg.getTrajectory()) && bosdyn_api_trajectory_pb.ScalarTrajectory.toObject(includeInstance, f),
+maximumOpenCloseVelocity: (f = msg.getMaximumOpenCloseVelocity()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maximumOpenCloseAcceleration: (f = msg.getMaximumOpenCloseAcceleration()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+maximumTorque: (f = msg.getMaximumTorque()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
+disableForceOnContact: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
   };
 
   if (includeInstance) {
@@ -795,7 +789,7 @@ proto.bosdyn.api.ClawGripperCommand.Request.toObject = function(includeInstance,
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ClawGripperCommand.Request}
  */
 proto.bosdyn.api.ClawGripperCommand.Request.deserializeBinary = function(bytes) {
@@ -1112,7 +1106,7 @@ proto.bosdyn.api.ClawGripperCommand.Feedback.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.ClawGripperCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0)
+status: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -1125,7 +1119,7 @@ proto.bosdyn.api.ClawGripperCommand.Feedback.toObject = function(includeInstance
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.ClawGripperCommand.Feedback}
  */
 proto.bosdyn.api.ClawGripperCommand.Feedback.deserializeBinary = function(bytes) {

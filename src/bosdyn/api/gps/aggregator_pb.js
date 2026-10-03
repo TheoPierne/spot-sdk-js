@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
@@ -108,10 +102,10 @@ proto.bosdyn.api.gps.NewGpsDataRequest.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.gps.NewGpsDataRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
-    dataPointsList: jspb.Message.toObjectList(msg.getDataPointsList(),
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
+dataPointsList: jspb.Message.toObjectList(msg.getDataPointsList(),
     bosdyn_api_gps_gps_pb.GpsDataPoint.toObject, includeInstance),
-    gpsDevice: (f = msg.getGpsDevice()) && bosdyn_api_gps_gps_pb.GpsDevice.toObject(includeInstance, f)
+gpsDevice: (f = msg.getGpsDevice()) && bosdyn_api_gps_gps_pb.GpsDevice.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -124,7 +118,7 @@ proto.bosdyn.api.gps.NewGpsDataRequest.toObject = function(includeInstance, msg)
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.NewGpsDataRequest}
  */
 proto.bosdyn.api.gps.NewGpsDataRequest.deserializeBinary = function(bytes) {
@@ -363,7 +357,7 @@ proto.bosdyn.api.gps.NewGpsDataResponse.prototype.toObject = function(opt_includ
  */
 proto.bosdyn.api.gps.NewGpsDataResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
+header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -376,7 +370,7 @@ proto.bosdyn.api.gps.NewGpsDataResponse.toObject = function(includeInstance, msg
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.gps.NewGpsDataResponse}
  */
 proto.bosdyn.api.gps.NewGpsDataResponse.deserializeBinary = function(bytes) {

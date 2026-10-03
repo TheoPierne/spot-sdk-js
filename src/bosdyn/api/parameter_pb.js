@@ -13,13 +13,7 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global = globalThis;
 
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
 goog.object.extend(proto, google_protobuf_duration_pb);
@@ -111,16 +105,16 @@ proto.bosdyn.api.Parameter.prototype.toObject = function(opt_includeInstance) {
  */
 proto.bosdyn.api.Parameter.toObject = function(includeInstance, msg) {
   var f, obj = {
-    label: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    units: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    intValue: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    floatValue: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    stringValue: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    boolValue: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
-    uintValue: jspb.Message.getFieldWithDefault(msg, 10, 0),
-    notes: jspb.Message.getFieldWithDefault(msg, 9, "")
+label: jspb.Message.getFieldWithDefault(msg, 1, ""),
+units: jspb.Message.getFieldWithDefault(msg, 2, ""),
+intValue: (f = jspb.Message.getField(msg, 3)) == null ? undefined : f,
+floatValue: (f = jspb.Message.getOptionalFloatingPointField(msg, 4)) == null ? undefined : f,
+timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+stringValue: (f = jspb.Message.getField(msg, 7)) == null ? undefined : f,
+boolValue: (f = jspb.Message.getBooleanField(msg, 8)) == null ? undefined : f,
+uintValue: (f = jspb.Message.getField(msg, 10)) == null ? undefined : f,
+notes: jspb.Message.getFieldWithDefault(msg, 9, "")
   };
 
   if (includeInstance) {
@@ -133,7 +127,7 @@ proto.bosdyn.api.Parameter.toObject = function(includeInstance, msg) {
 
 /**
  * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @param {jspb.binary.bytesource.ByteSource} bytes The bytes to deserialize.
  * @return {!proto.bosdyn.api.Parameter}
  */
 proto.bosdyn.api.Parameter.deserializeBinary = function(bytes) {
@@ -158,11 +152,11 @@ proto.bosdyn.api.Parameter.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setLabel(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setUnits(value);
       break;
     case 3:
@@ -184,7 +178,7 @@ proto.bosdyn.api.Parameter.deserializeBinaryFromReader = function(msg, reader) {
       msg.setDuration(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setStringValue(value);
       break;
     case 8:
@@ -196,7 +190,7 @@ proto.bosdyn.api.Parameter.deserializeBinaryFromReader = function(msg, reader) {
       msg.setUintValue(value);
       break;
     case 9:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setNotes(value);
       break;
     default:
