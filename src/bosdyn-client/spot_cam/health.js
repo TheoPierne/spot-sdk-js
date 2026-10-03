@@ -1,8 +1,21 @@
+/**
+ * @file For clients to the Spot CAM Health service.
+ */
+
 'use strict';
+
+const { Buffer } = require('node:buffer');
 
 const healthPb = require('../../bosdyn/api/spot_cam/health_pb');
 const { HealthServiceClient } = require('../../bosdyn/api/spot_cam/service_grpc_pb');
 const { BaseClient, handleCommonHeaderErrors } = require('../common');
+const { LoggerUtil } = require('../logger_util');
+
+/**
+ * @typedef {import('../../bosdyn/api/robot_state_pb').SystemFault} SystemFault
+ */
+
+const _LOGGER = LoggerUtil.getLogger('health');
 
 /**
  * A client calling Spot CAM Health service.
@@ -36,11 +49,18 @@ class HealthClient extends BaseClient {
   /**
    * Retrieve (system events, degradations) as an object of two lists.
    * @param {Object} [args] Extra arguments for controlling RPC details
-   * @returns {Promise<{events: robotStatePb.SystemFault[], degradations: healthPb.GetBITStatusResponse.Degradation[]}>}
+   * @returns {Promise<{events: SystemFault[], degradations: healthPb.GetBITStatusResponse.Degradation[]}>}
    */
   getBitStatus(args) {
     const request = new healthPb.GetBITStatusRequest();
-    return this.call(this._stub.getBITStatus, request, this._getBitStatusFromResponse, _healthErrorFromResponse, false, args);
+    return this.call(
+      this._stub.getBITStatus,
+      request,
+      this._getBitStatusFromResponse,
+      _healthErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
@@ -67,7 +87,14 @@ class HealthClient extends BaseClient {
    */
   getSystemLog(args) {
     const request = new healthPb.GetSystemLogRequest();
-    return this.call(this._stub.getSystemLog, request, this._getSystemLogFromResponse, _healthErrorFromResponse, false, args);
+    return this.call(
+      this._stub.getSystemLog,
+      request,
+      this._getSystemLogFromResponse,
+      _healthErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   _clearBitEventsFromResponse() {
@@ -86,13 +113,15 @@ class HealthClient extends BaseClient {
     let total = 0;
 
     const localChunks = [];
-    for (const response in responses) {
+    for (const response of responses) {
       const chunk = response.getData();
-      total += chunk.getData().length;
-      console.debug(`[HEALTH] Retrieved ${chunk.getData().length} bytes (${total}/${chunk.getTotalSize()})`);
+      total += chunk.getData_asU8().length;
+      // At debug level, like Python (console.debug() printed a line for each chunk).
+      _LOGGER.debug(`Retrieved ${chunk.getData_asU8().length} bytes (${total}/${chunk.getTotalSize()})`);
       localChunks.push(chunk);
     }
-    return localChunks.map(e => e.getData()).join('');
+    // The bytes of the chunks joined, like Python (join('') gave the numbers of the bytes, separated by commas).
+    return Buffer.concat(localChunks.map(chunk => chunk.getData_asU8()));
   }
 }
 

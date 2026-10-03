@@ -1,8 +1,16 @@
+/**
+ * @file For clients to the Spot CAM Version service.
+ */
+
 'use strict';
 
 const { VersionServiceClient } = require('../../bosdyn/api/spot_cam/service_grpc_pb');
 const versionPb = require('../../bosdyn/api/spot_cam/version_pb');
 const { BaseClient, handleCommonHeaderErrors } = require('../common');
+
+/**
+ * @typedef {import('../../bosdyn/api/robot_id_pb').SoftwareVersion} SoftwareVersion
+ */
 
 /**
  * A client calling Spot CAM Version service.
@@ -19,7 +27,7 @@ class VersionClient extends BaseClient {
   /**
    * Retrieves the Spot CAM's current software version.
    * @param {Object} [args] Extra arguments for controlling RPC details
-   * @returns {Promise<robotIdPb.SoftwareVersion>}
+   * @returns {Promise<SoftwareVersion>}
    */
   getSoftwareVersion(args) {
     const request = new versionPb.GetSoftwareVersionRequest();

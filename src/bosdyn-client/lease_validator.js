@@ -1,12 +1,20 @@
+/**
+ * @file Lease validator tracks lease usage in intermediate services.
+ */
+
 'use strict';
 
 const assert = require('node:assert/strict');
 
 const { LeaseClient, Lease } = require('./lease');
 const { ResourceHierarchy } = require('./lease_resource_hierarchy');
-const { LoggerUtil } = require('./loggerUtil');
+const { LoggerUtil } = require('./logger_util');
 
 const leasePb = require('../bosdyn/api/lease_pb');
+
+/**
+ * @typedef {import('./robot').Robot} Robot
+ */
 
 const _LOGGER = LoggerUtil.getLogger('LeaseValidator');
 
@@ -17,11 +25,13 @@ const _LOGGER = LoggerUtil.getLogger('LeaseValidator');
  */
 class LeaseValidator {
   /**
+   * Await initialize() before use: it reads the resource hierarchy of the robot (the constructor of Python does it).
    * @param {Robot} robot The robot object for which leases are associated to.
    */
   constructor(robot) {
+    // Without prototype: 'constructor' or 'toString' are not active leases.
     /** @type {Object<string, Lease>} */
-    this.activeLeaseMap = {};
+    this.activeLeaseMap = Object.create(null);
     this.hierarchy = null;
 
     this.robot = robot;
@@ -157,7 +167,7 @@ class LeaseValidator {
     assert.notStrictEqual(
       compareResult,
       Lease.CompareResult.DIFFERENT_RESOURCES,
-      // eslint-disable-next-line max-len
+
       `Mismatched resources (${incomingLease.leaseProto.getResource()} vs ${currentLease.leaseProto.getResource()}) when comparing leases in the LeaseValidator.`,
     );
     if (compareResult === Lease.CompareResult.DIFFERENT_EPOCHS) {
@@ -216,21 +226,23 @@ class LeaseValidator {
       attemptedLease = attemptedLease.leaseProto;
     }
 
+    // Copies, like CopyFrom in Python: the result shared the protos of the validator.
     mutableLeaseUseResults.setAttemptedLease(attemptedLease.clone());
 
     if (previousLease && previousLease.leaseProto) {
-      mutableLeaseUseResults.setPreviousLease(previousLease.leaseProto);
+      mutableLeaseUseResults.setPreviousLease(previousLease.leaseProto.clone());
     }
 
     const latestKnownLease = this._getActiveLease(attemptedLease.getResource());
     if (latestKnownLease && latestKnownLease.leaseProto) {
-      mutableLeaseUseResults.setLatestKnownLease(latestKnownLease.leaseProto);
+      mutableLeaseUseResults.setLatestKnownLease(latestKnownLease.leaseProto.clone());
     }
 
     if (this.hierarchy) {
       for (const leaf of this.hierarchy.leafResources()) {
         if (leaf in this.activeLeaseMap) {
-          mutableLeaseUseResults.setLatestResourcesList([this.activeLeaseMap[leaf].leaseProto]);
+          // All the leaves, like extend() in Python (each one replaced the previous ones).
+          mutableLeaseUseResults.addLatestResources(this.activeLeaseMap[leaf].leaseProto.clone());
         }
       }
     }
@@ -259,8 +271,9 @@ class LeaseValidator {
         const result = new Lease(leaseProto, true).compare(leafLease, true);
 
         if ([Lease.CompareResult.OLDER, Lease.CompareResult.SUPER_LEASE].includes(result)) {
-          leaseProto.setClientNamesList(leafLease.leaseProto.getClientNamesList());
-          leaseProto.setSequenceList(leafLease.leaseProto.getSequenceList());
+          // Copies of the lists, like [:] = in Python (jspb returns its internal arrays).
+          leaseProto.setClientNamesList([...leafLease.leaseProto.getClientNamesList()]);
+          leaseProto.setSequenceList([...leafLease.leaseProto.getSequenceList()]);
         }
       }
     }
@@ -288,22 +301,22 @@ class LeaseValidatorResponseProcessor {
    */
   mutate(response) {
     let leaseUseResults;
-    try {
+    if (typeof response?.getLeaseUseResult === 'function') {
       leaseUseResults = [response.getLeaseUseResult()];
-    } catch (_) {
-      try {
-        leaseUseResults = response.getLeaseUseResultsList();
-      } catch (e) {
-        return;
-      }
+    } else if (typeof response?.getLeaseUseResultsList === 'function') {
+      leaseUseResults = response.getLeaseUseResultsList();
+    } else {
+      return;
     }
 
     for (const result of leaseUseResults) {
-      if (result.getStatus() === leasePb.LeaseUseResult.Status.STATUS_UNKNOWN) {
+      // Unset messages read as the defaults, like Python: a response without lease use result (TypeError), and a
+      // result without latest known lease (an empty lease, which is invalid).
+      if ((result?.getStatus() ?? 0) === leasePb.LeaseUseResult.Status.STATUS_UNKNOWN) {
         continue;
       }
 
-      this.leaseValidator.testAndSetActiveLease(result.getLatestKnownLease(), false);
+      this.leaseValidator.testAndSetActiveLease(result.getLatestKnownLease() ?? new leasePb.Lease(), false);
     }
   }
 }

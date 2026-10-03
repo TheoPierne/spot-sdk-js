@@ -1,15 +1,14 @@
+/**
+ * @file Sdk is a repository for settings typically common to a single developer and/or robot fleet.
+ */
+
 'use strict';
 
+const { Buffer } = require('node:buffer');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const process = require('node:process');
-
-require('dotenv').config({ path: path.resolve(`${__dirname}/../../.env`), quiet: true });
-
-process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-
-const expandenv = require('expandenv');
 
 const { ArmSurfaceContactClient } = require('./arm_surface_contact');
 const { AudioVisualClient } = require('./audio_visual');
@@ -26,6 +25,7 @@ const { DirectoryRegistrationClient } = require('./directory_registration');
 const { DockingClient } = require('./docking');
 const { DoorClient } = require('./door');
 const { EstopClient } = require('./estop');
+const { BosdynError } = require('./exceptions');
 const { FaultClient } = require('./fault');
 const { AggregatorClient } = require('./gps/aggregator_client');
 const { RegistrationClient } = require('./gps/registration_client');
@@ -34,10 +34,12 @@ const { GripperCameraParamClient } = require('./gripper_camera_param');
 const { ImageClient } = require('./image');
 const { InverseKinematicsClient } = require('./inverse_kinematics');
 const { IREnableDisableServiceClient } = require('./ir_enable_disable');
+const { KeepaliveClient } = require('./keepalive');
 const { LeaseClient } = require('./lease');
 const { LicenseClient } = require('./license');
 const { LocalGridClient } = require('./local_grid');
-const { LoggerUtil } = require('./loggerUtil');
+const { LogStatusClient } = require('./log_status');
+const { LoggerUtil } = require('./logger_util');
 const { ManipulationApiClient } = require('./manipulation_api_client');
 const { MapProcessingServiceClient } = require('./map_processing');
 const { NetworkComputeBridgeClient } = require('./network_compute_bridge_client');
@@ -56,22 +58,32 @@ const { SpotCheckClient } = require('./spot_check');
 const { TimeSyncClient } = require('./time_sync');
 const { WorldObjectClient } = require('./world_object');
 
-class SdkError extends Error {
-  constructor(msg) {
-    super(msg);
-    this.name = this.constructor.name;
-  }
-}
+/** General class of errors to handle non-response non-rpc errors. */
+class SdkError extends BosdynError {}
 
+/** Path to app token not set. */
 class UnsetAppTokenError extends SdkError {}
+/** Cannot load the provided app token path. */
 class UnableToLoadAppTokenError extends SdkError {}
 
-const BOSDYN_RESOURCE_ROOT = process.env.BOSDYN_RESOURCE_ROOT || path.resolve(expandenv('$USERPROFILE'), '.bosdyn');
+// os.homedir() works on every OS, unlike $USERPROFILE which only exists on Windows.
+const BOSDYN_RESOURCE_ROOT = process.env.BOSDYN_RESOURCE_ROOT || path.join(os.homedir(), '.bosdyn');
+
+/**
+ * Environment variable with the path (or glob) of the certificates to trust instead of the Boston Dynamics robot
+ * certificate, e.g. the CA of a mock robot. Used by loadRobotCert() when it gets no path.
+ * @type {string}
+ */
+const BOSDYN_CA_CERT_ENV = 'BOSDYN_CA_CERT';
 
 const _LOGGER = LoggerUtil.getLogger('SDK');
 
+/**
+ * Returns a descriptive client name for API clients with an optional prefix.
+ */
 function generateClientName(prefix = '') {
-  const processInfo = `${path.basename(require.main.filename)}-${process.pid}`;
+  const entrypoint = require.main?.filename || process.argv[1] || 'node';
+  const processInfo = `${path.basename(entrypoint)}-${process.pid}`;
   const machineName = os.hostname();
   let userName;
 
@@ -111,8 +123,10 @@ const _DEFAULT_SERVICE_CLIENTS = [
   ImageClient,
   IREnableDisableServiceClient,
   InverseKinematicsClient,
+  KeepaliveClient,
   LeaseClient,
   LicenseClient,
+  LogStatusClient,
   LocalGridClient,
   ManipulationApiClient,
   MapProcessingServiceClient,
@@ -148,7 +162,7 @@ function createStandardSdk(clientNamePrefix, serviceClients = null, certResource
   sdk.loadRobotCert(certResourceGlob);
   sdk.requestProcessors.push(new AddRequestHeader(() => clientName));
 
-  let allServiceClients = _DEFAULT_SERVICE_CLIENTS;
+  let allServiceClients = [..._DEFAULT_SERVICE_CLIENTS];
   if (serviceClients !== null) {
     if (Array.isArray(serviceClients)) {
       allServiceClients = allServiceClients.concat(serviceClients);
@@ -237,7 +251,8 @@ class Sdk {
 
   /**
    * Tell the Sdk how to create a specific type of service client.
-   * @param {BaseClient} creationFunc Callable that returns a client. Typically just the class.
+   * @param {typeof import('./common').BaseClient} creationFunc Callable that returns a client. Typically just the
+   * class.
    * @param {string} [serviceType=null] Type of the service. If null (default), will try to get
    * the name from creation_func.
    * @param {string} [serviceName=null] Name of the service. If null (default), will try to get
@@ -255,35 +270,63 @@ class Sdk {
   }
 
   /**
-    * Load the SSL certificate for the robot.
-    * @param {string} [resourcePathGlob = null] Optional path to certificate resource(s).
-    If null, will load the certificate in the 'resources' package.
-    Otherwise, should be a glob expression to match certificates.
-    Defaults to null.
-    * @returns {void}
-    * @throws {RangeError}
-    */
+   * Load the SSL certificate for the robot.
+   * @param {?string} [resourcePathGlob=null] Optional path to certificate resource(s): a file, a directory or a glob
+   * expression to match certificates. If null, the path in the BOSDYN_CA_CERT environment variable, if set (e.g. the
+   * CA of a mock robot), else the robot certificate of the 'resources' package (Boston Dynamics Root CA), like Python.
+   * @returns {void}
+   * @throws {RangeError} No certificate matches the path.
+   */
   loadRobotCert(resourcePathGlob = null) {
     this.cert = null;
+
+    // An explicit choice: NODE_ENV=development replaced the robot certificate with a test CA for any application.
+    if (resourcePathGlob === null && process.env[BOSDYN_CA_CERT_ENV]) {
+      resourcePathGlob = process.env[BOSDYN_CA_CERT_ENV];
+      this.logger.info(`[SDK] Trusting the certificates of ${BOSDYN_CA_CERT_ENV}: "${resourcePathGlob}"`);
+    }
+
     if (resourcePathGlob === null) {
-      const cert = process.env.NODE_ENV !== 'production' ? 'ca.crt' : 'robot.pem';
-      const pathToResource = path.join(__dirname, 'resources', cert);
-      this.cert = fs.readFileSync(pathToResource);
-    } else {
-      const certPaths = [];
-      fs.readdirSync(resourcePathGlob).forEach(file => {
-        const link = `${resourcePathGlob}${resourcePathGlob.endsWith('/') ? '' : '/'}${file}`;
-        file = fs.statSync(link);
-        if (file.isFile()) {
-          certPaths.push(link);
-        }
-      });
-      if (certPaths.length === 0) throw RangeError(`No files matched ${resourcePathGlob}`);
-      this.cert = '';
-      for (const certPath of certPaths) {
-        this.cert += fs.readFileSync(certPaths[certPath]);
+      this.cert = fs.readFileSync(path.join(__dirname, 'resources', 'robot.pem'));
+      return;
+    }
+
+    const wildcardToRegExp = pattern =>
+      new RegExp(
+        `^${pattern
+          .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+          .replace(/\*/g, '.*')
+          .replace(/\?/g, '.')}$`,
+      );
+
+    let certPaths = [];
+    if (fs.existsSync(resourcePathGlob)) {
+      const stat = fs.statSync(resourcePathGlob);
+      if (stat.isFile()) {
+        certPaths = [resourcePathGlob];
+      } else if (stat.isDirectory()) {
+        certPaths = fs
+          .readdirSync(resourcePathGlob)
+          .map(file => path.join(resourcePathGlob, file))
+          .filter(filePath => fs.statSync(filePath).isFile());
+      }
+    } else if (/[*?]/.test(resourcePathGlob)) {
+      const directory = path.dirname(resourcePathGlob);
+      const pattern = wildcardToRegExp(path.basename(resourcePathGlob));
+      if (fs.existsSync(directory)) {
+        certPaths = fs
+          .readdirSync(directory)
+          .filter(file => pattern.test(file))
+          .map(file => path.join(directory, file))
+          .filter(filePath => fs.statSync(filePath).isFile());
       }
     }
+
+    if (certPaths.length === 0) {
+      throw new RangeError(`[SDK] No robot certificate found for "${resourcePathGlob}"`);
+    }
+
+    this.cert = Buffer.concat(certPaths.map(certPath => fs.readFileSync(certPath)));
   }
 
   /**
@@ -304,6 +347,7 @@ module.exports = {
   generateClientName,
   createStandardSdk,
   BOSDYN_RESOURCE_ROOT,
+  BOSDYN_CA_CERT_ENV,
   Sdk,
   SdkError,
   UnsetAppTokenError,

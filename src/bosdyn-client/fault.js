@@ -1,3 +1,7 @@
+/**
+ * @file For clients to use the fault service.
+ */
+
 'use strict';
 
 const { BaseClient, errorFactory, handleCommonHeaderErrors, handleUnsetStatusError } = require('./common');
@@ -7,8 +11,15 @@ const { DefaultDict } = require('./util');
 const { FaultServiceClient } = require('../bosdyn/api/fault_service_grpc_pb');
 const serviceFaultPb = require('../bosdyn/api/service_fault_pb');
 
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ */
+
+/** General class of errors for the Fault service. */
 class FaultResponseError extends ResponseError {}
+/** The specified service fault id already exists as an active fault on the robot. */
 class ServiceFaultAlreadyExistsError extends FaultResponseError {}
+/** The specified service fault id does not match any active service faults on the robot. */
 class ServiceFaultDoesNotExistError extends FaultResponseError {}
 
 /**
@@ -26,7 +37,7 @@ class FaultClient extends BaseClient {
   /**
    * Broadcast a new service fault through the robot.
    * @param {serviceFaultPb.ServiceFault} serviceFault Populated fault message to broadcast.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<serviceFaultPb.TriggerServiceFaultResponse>} An instance of
    * bosdyn.api.TriggerServiceFaultResponse
    * @throws {RpcError} Problem communicating with the robot.
@@ -43,7 +54,7 @@ class FaultClient extends BaseClient {
    * @param {serviceFaultPb.ServiceFaultId} serviceFaultId ServiceFault to clear.
    * @param {boolean} [clearAllServiceFaults=false] Clear all faults associated with the service name.
    * @param {boolean} [clearAllPayloadFaults=false] Clear all faults associated with the payload guid.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<serviceFaultPb.ClearServiceFaultResponse>} An instance of bosdyn.api.ClearServiceFaultResponse
    * @throws {RpcError} Problem communicating with the robot.
    * @throws {ServiceFaultDoesNotExistError} The service fault does not exist in active service faults.
@@ -58,14 +69,15 @@ class FaultClient extends BaseClient {
   }
 }
 
-const _TRIGGER_STATUS_TO_ERROR = DefaultDict(() => [ResponseError, null]);
+// FaultResponseError for the unknown statuses, like Python.
+const _TRIGGER_STATUS_TO_ERROR = DefaultDict(() => [FaultResponseError, null]);
 _TRIGGER_STATUS_TO_ERROR.set(serviceFaultPb.TriggerServiceFaultResponse.Status.STATUS_OK, [null, null]);
 _TRIGGER_STATUS_TO_ERROR.set(serviceFaultPb.TriggerServiceFaultResponse.Status.STATUS_FAULT_ALREADY_ACTIVE, [
   ServiceFaultAlreadyExistsError,
   'The specified service fault id already exists as an active fault on the robot.',
 ]);
 
-const _CLEAR_STATUS_TO_ERROR = DefaultDict(() => [ResponseError, null]);
+const _CLEAR_STATUS_TO_ERROR = DefaultDict(() => [FaultResponseError, null]);
 _CLEAR_STATUS_TO_ERROR.set(serviceFaultPb.ClearServiceFaultResponse.Status.STATUS_OK, [null, null]);
 _CLEAR_STATUS_TO_ERROR.set(serviceFaultPb.ClearServiceFaultResponse.Status.STATUS_FAULT_NOT_ACTIVE, [
   ServiceFaultDoesNotExistError,
@@ -77,7 +89,7 @@ const _triggerServiceFaultError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(serviceFaultPb.TriggerServiceFaultResponse.Status),
+      serviceFaultPb.TriggerServiceFaultResponse.Status,
       _TRIGGER_STATUS_TO_ERROR,
     ),
   ),
@@ -88,7 +100,7 @@ const _clearServiceFaultError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(serviceFaultPb.ClearServiceFaultResponse.Status),
+      serviceFaultPb.ClearServiceFaultResponse.Status,
       _CLEAR_STATUS_TO_ERROR,
     ),
   ),

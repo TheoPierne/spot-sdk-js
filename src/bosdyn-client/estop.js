@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the emergency stop (estop) service.
+ */
+
 'use strict';
 
 const { pid } = require('node:process');
@@ -12,24 +16,32 @@ const {
   handleUnsetStatusError,
   errorFactory,
 } = require('./common');
-const { ResponseError, RpcError, TimedOutError } = require('./exceptions');
-const { LoggerUtil } = require('./loggerUtil');
+const { ResponseError, RpcError, TimedOutError, ValueError } = require('./exceptions');
+const { LoggerUtil } = require('./logger_util');
 const { DefaultDict } = require('./util');
 
 const estopPb = require('../bosdyn/api/estop_pb');
 const { EstopServiceClient } = require('../bosdyn/api/estop_service_grpc_pb');
 const { Queue } = require('../bosdyn-core/queue');
+const { nowMsec, toUint64String } = require('../bosdyn-core/util');
 
 const StopLevel = estopPb.EstopStopLevel;
 
-class ValueError extends Error {}
+/** General class of errors for Estop service. */
 class EstopResponseError extends ResponseError {}
+/** The endpoint specified in the request is not registered. */
 class EndpointUnknownError extends EstopResponseError {}
+/** The challenge and/or response was incorrect. */
 class IncorrectChallengeResponseError extends EstopResponseError {}
+/** Target endpoint did not match. */
 class EndpointMismatchError extends EstopResponseError {}
+/** Registered to the wrong configuration. */
 class ConfigMismatchError extends EstopResponseError {}
+/** New endpoint was invalid. */
 class InvalidEndpointError extends EstopResponseError {}
+/** Tried to replace a EstopConfig, but provided bad ID. */
 class InvalidIdError extends EstopResponseError {}
+/** The operation is not allowed while motors are on. */
 class MotorsOnError extends EstopResponseError {}
 
 /**
@@ -48,7 +60,7 @@ class EstopClient extends BaseClient {
    * Register the endpoint in the target configuration.
    * @param {string} targetConfigId The identification of the current configuration on the robot.
    * @param {EstopEndpoint} endpoint Estop endpoint.
-   * @param {Object} args Passed to underlying RPC. Example: { timeout: 5000 } to cancel the RPC after 5 seconds.
+   * @param {Object} [args] Passed to underlying RPC. Example: { timeout: 5000 } to cancel the RPC after 5 seconds.
    * @returns {Promise<estopPb.EstopEndpoint>}
    */
   register(targetConfigId, endpoint, args) {
@@ -67,7 +79,7 @@ class EstopClient extends BaseClient {
    * Deregister the endpoint in the target configuration.
    * @param {string} targetConfigId The identification of the current configuration on the robot.
    * @param {EstopEndpoint} endpoint Estop endpoint.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<estopPb.DeregisterEstopEndpointResponse>}
    */
   deregister(targetConfigId, endpoint, args) {
@@ -77,7 +89,7 @@ class EstopClient extends BaseClient {
 
   /**
    * Return the estop configuration of the robot.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<estopPb.EstopConfig>}
    */
   getConfig(args) {
@@ -95,7 +107,7 @@ class EstopClient extends BaseClient {
    * Change the estop configuration of the robot.
    * @param {estopPb.EstopConfig} config New configuration to set.
    * @param {string} targetConfigId The identification of the current configuration on the robot.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<estopPb.EstopConfig>}
    */
   setConfig(config, targetConfigId, args) {
@@ -112,7 +124,7 @@ class EstopClient extends BaseClient {
 
   /**
    * Return the estop status of the robot.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<estopPb.EstopSystemStatus>}
    */
   getStatus(args) {
@@ -130,13 +142,14 @@ class EstopClient extends BaseClient {
    * Check in with the estop system.
    * @param {estopPb.EstopStopLevel} stopLevel Number representing desired stop level. See StopLevel enum.
    * @param {EstopEndpoint} endpoint The endpoint asserting the stop level.
-   * @param {number} challenge A previously received challenge from the server.
-   * @param {number} response A response to the 'challenge' argument.
+   * @param {?(string|bigint|number)} challenge A previously received challenge from the server (an uint64: the
+   * challenges are strings, exact beyond 2^53).
+   * @param {?(string|bigint|number)} response A response to the 'challenge' argument.
    * @param {boolean} suppressIncorrect Set True to prevent an IncorrectChallengeResponseError from being
    * raised when STATUS_INVALID is returned. Useful for the first check-in, before a
    * challenge has been sent by the server.
-   * @param {Object} args Passed to underlying RPC.
-   * @returns {Promise<number>}
+   * @param {Object} [args] Passed to underlying RPC.
+   * @returns {Promise<string>} The new challenge.
    */
   checkIn(stopLevel, endpoint, challenge, response, suppressIncorrect = false, args) {
     const req = EstopClient._buildCheckInRequest(stopLevel, endpoint, challenge, response);
@@ -148,19 +161,18 @@ class EstopClient extends BaseClient {
    * Check in request generator
    * @param {estopPb.EstopStopLevel} stopLevel Number representing desired stop level. See StopLevel enum.
    * @param {EstopEndpoint} endpoint The endpoint asserting the stop level.
-   * @param {number} challenge A previously received challenge from the server.
-   * @param {number} response A response to the 'challenge' argument.
+   * @param {?(string|bigint|number)} challenge A previously received challenge from the server.
+   * @param {?(string|bigint|number)} response A response to the 'challenge' argument.
    * @returns {estopPb.EstopCheckInRequest}
    * @private
    * @static
    */
   static _buildCheckInRequest(stopLevel, endpoint, challenge, response) {
     if (endpoint instanceof EstopEndpoint) endpoint = endpoint.toProto();
-    const req = new estopPb.EstopCheckInRequest()
-      .setEndpoint(endpoint)
-      .setChallenge(challenge)
-      .setResponse(response)
-      .setStopLevel(stopLevel);
+    const req = new estopPb.EstopCheckInRequest().setEndpoint(endpoint).setStopLevel(stopLevel);
+    // uint64 strings ([jstype = JS_STRING]): jspb writes 0 for a number, and a number is rounded beyond 2^53.
+    if (challenge !== null && challenge !== undefined) req.setChallenge(toUint64String(challenge));
+    if (response !== null && response !== undefined) req.setResponse(toUint64String(response));
     return req;
   }
 
@@ -177,7 +189,7 @@ class EstopClient extends BaseClient {
     const req = new estopPb.RegisterEstopEndpointRequest()
       .setTargetConfigId(targetConfigId)
       .setNewEndpoint(endpoint)
-      .setTargetEndpoint(new estopPb.EstopEndpoint().setRole(endpoint.role));
+      .setTargetEndpoint(new estopPb.EstopEndpoint().setRole(endpoint.getRole()));
     return req;
   }
 
@@ -223,6 +235,16 @@ class EstopEndpoint {
    */
   static REQUIRED_ROLE = 'PDB_rooted';
 
+  /**
+   * @param {EstopClient} client The client of the estop service.
+   * @param {string} name Name of the endpoint.
+   * @param {number} estopTimeout Timeout of the endpoint, in seconds like Python (not in milliseconds like the
+   * timeouts of the RPCs): the robot is stopped when it gets no valid check-in during this time.
+   * @param {string} [role=EstopEndpoint.REQUIRED_ROLE] Role of the endpoint.
+   * @param {boolean} [firstCheckin=true] Whether the first check-in does not have a challenge to answer yet.
+   * @param {?number} [estopCutPowerTimeout=null] Timeout of the cut power of the endpoint, in seconds.
+   * @throws {ValueError} The timeout is not a positive number.
+   */
   constructor(
     client,
     name,
@@ -231,6 +253,9 @@ class EstopEndpoint {
     firstCheckin = true,
     estopCutPowerTimeout = null,
   ) {
+    if (!(Number.isFinite(estopTimeout) && estopTimeout > 0)) {
+      throw new ValueError(`[ESTOP] Invalid estopTimeout "${estopTimeout}" (a number of seconds > 0)`);
+    }
     /** @type {EstopClient} */
     this.client = client;
     this.role = role;
@@ -248,10 +273,9 @@ class EstopEndpoint {
 
   toString() {
     return this.estopCutPowerTimeout === null
-      ? `${this._name} (timeout ${Math.floor(this.estopTimeout / 1000).toFixed(3)}s)`
-      : `${this._name} (timeout ${Math.floor(this.estopTimeout / 1000).toFixed(3)}s, cut_power_timeout ${(
-          this.estopCutPowerTimeout / 1000
-        ).toFixed(3)}s)`;
+      ? `${this._name} (timeout ${this.estopTimeout.toFixed(3)}s)`
+      : `${this._name} (timeout ${this.estopTimeout.toFixed(3)}s,
+      cut_power_timeout ${this.estopCutPowerTimeout.toFixed(3)}s)`;
   }
 
   firstCheckin() {
@@ -262,10 +286,16 @@ class EstopEndpoint {
     this._firstCheckin = val;
   }
 
+  /**
+   * Sets the challenge of the endpoint.
+   */
   setChallenge(challenge) {
     this._challenge = challenge;
   }
 
+  /**
+   * The challenge of the endpoint.
+   */
   getChallenge() {
     return this._challenge;
   }
@@ -285,7 +315,7 @@ class EstopEndpoint {
 
   /**
    * Issue a CUT stop level command to the robot, cutting motor power immediately.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    */
   async stop(args) {
     this.logger.debug('[ESTOP] Stopping');
@@ -294,7 +324,7 @@ class EstopEndpoint {
 
   /**
    * Issue a SETTLE_THEN_CUT stop level. The robot will attempt to sit before cutting motor power.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    */
   async settleThenCut(args) {
     this.logger.debug('[ESTOP] Stopping with SETTLE_THEN_CUT');
@@ -303,7 +333,7 @@ class EstopEndpoint {
 
   /**
    * Issue a NONE stop level command to the robot, allowing motor power.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    */
   async allow(args) {
     this.logger.debug('[ESTOP] Releasing');
@@ -314,7 +344,7 @@ class EstopEndpoint {
    * Check in at a specified level.
    * Meant for internal use, but may be helpful for higher-level wrappers.
    * @param {number} level Number representing desired stop level. See StopLevel enum.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    */
   async checkInAtLevel(level, args) {
     try {
@@ -331,26 +361,27 @@ class EstopEndpoint {
     } catch (e) {
       if (e instanceof EstopResponseError) {
         this._challenge = _challengeFromCheckInResponse(e.response);
-        throw e;
       }
-    } finally {
-      this._firstCheckin = false;
+      throw e;
     }
+    // Like Python, only a successful check-in ends the first check-in: after a failure (e.g. network),
+    // an incorrect challenge is still tolerated on the next one.
+    this._firstCheckin = false;
   }
 
   /**
    * Deregister this endpoint from the configuration.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    */
   async deregister(args) {
     this.logger.debug('[ESTOP] Deregistering');
-    await this.client.deRegister(this._configId, this, args);
+    await this.client.deregister(this._configId, this, args);
   }
 
   /**
    * Register this endpoint to the given configuration.
    * @param {string} targetConfigId The identification of the current configuration on the robot.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    */
   async register(targetConfigId, args) {
     this.logger.debug(`[ESTOP] Registering to ${targetConfigId}`);
@@ -372,7 +403,8 @@ class EstopEndpoint {
       this.logger = LoggerUtil.getLogger(this._name);
     }
     this.role = proto.getRole();
-    this.estopTimeout = proto.getTimeout().getSeconds() + proto.getTimeout().getNanos() * 1e-9;
+    // Unset durations read as 0, like Python.
+    this.estopTimeout = (proto.getTimeout()?.getSeconds() ?? 0) + (proto.getTimeout()?.getNanos() ?? 0) * 1e-9;
     this._uniqueId = proto.getUniqueId();
     if (!proto.getCutPowerTimeout()) {
       this.estopCutPowerTimeout = null;
@@ -387,8 +419,8 @@ class EstopEndpoint {
    * @returns {estopPb.EstopEndpoint}
    */
   toProto() {
-    const tSeconds = Math.floor(this.estopTimeout / 1000);
-    const tNanos = Math.floor((this.estopTimeout / 1000 - tSeconds) * 1e6);
+    const tSeconds = Math.trunc(this.estopTimeout);
+    const tNanos = Math.floor((this.estopTimeout - tSeconds) * 1e9);
     const req = new estopPb.EstopEndpoint()
       .setRole(this.role)
       .setName(this._name)
@@ -396,8 +428,8 @@ class EstopEndpoint {
       .setTimeout(new Duration().setSeconds(tSeconds).setNanos(tNanos));
 
     if (this.estopCutPowerTimeout !== null) {
-      const cptSeconds = Math.floor(this.estopCutPowerTimeout / 1000);
-      const cptNanos = Math.floor((this.estopCutPowerTimeout / 1000 - cptSeconds) * 1e6);
+      const cptSeconds = Math.trunc(this.estopCutPowerTimeout);
+      const cptNanos = Math.floor((this.estopCutPowerTimeout - cptSeconds) * 1e9);
 
       req.setCutPowerTimeout(new Duration().setSeconds(cptSeconds).setNanos(cptNanos));
     }
@@ -411,15 +443,31 @@ class EstopEndpoint {
    */
   _response() {
     const challenge = this.getChallenge();
-    return challenge === null ? null : responseFromChallenge(challenge).toString(10);
+    return challenge === null ? null : responseFromChallenge(challenge);
   }
 
+  /**
+   * The unique id of the endpoint. Should be used as read-only.
+   */
   get uniqueId() {
     return this._uniqueId;
   }
 
   get lastSetLevel() {
     return this._lastSetLevel;
+  }
+}
+
+/**
+ * Description of an error for the logs, which never throws (unlike a toString() may).
+ * @param {*} e The error.
+ * @returns {string}
+ */
+function _errorMessage(e) {
+  try {
+    return e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+  } catch (err) {
+    return 'unknown error';
   }
 }
 
@@ -436,6 +484,16 @@ class EstopKeepAlive {
     DISABLED: 2,
   };
 
+  /**
+   * @param {EstopEndpoint} endpoint The endpoint to check in with.
+   * @param {?number} [rpcTimeoutSeconds=null] Timeout of the check-in RPCs, in seconds (the estop timeout of the
+   * endpoint if null).
+   * @param {?number} [rpcIntervalSeconds=null] Interval between the check-ins, in seconds (a third of the estop
+   * timeout of the endpoint if null).
+   * @param {?function(): boolean} [keepRunningCb=null] Called before each check-in: the check-ins stop when it returns
+   * false.
+   * @param {number} [maxStatusQueueSize=20] The maximum number of statuses kept in statusQueue.
+   */
   constructor(
     endpoint,
     rpcTimeoutSeconds = null,
@@ -464,22 +522,57 @@ class EstopKeepAlive {
     this.statusQueue = new Queue({ maxSize: maxStatusQueueSize });
     this._updateStatus(EstopKeepAlive.KeepAliveStatus.OK);
 
-    try {
-      this._checkIn();
-    } catch (e) {
-      this.logger.warn(`[ESTOP] Estop initial check-in exception:\n${e}\n`);
-    }
+    /**
+     * Tail of the queue of check-ins: like Python's lock, check-ins run one at a time so that each
+     * one sends the challenge returned by the previous one. Two concurrent check-ins would send the
+     * same challenge, and the robot would reject the second one (e.g. a stop()).
+     * @type {Promise<void>}
+     * @private
+     */
+    this._lock = Promise.resolve();
 
-    this._periodicCheckIn();
+    /**
+     * Aborted to stop the check-in loop, including the wait between two check-ins.
+     * @type {AbortController}
+     * @private
+     */
+    this._stopController = new AbortController();
+
+    // The initial check-in gets a challenge from the estop system. allow(), stop()... queue behind it.
+    this._initialCheckIn = this._checkIn().catch(e => {
+      this.logger.warn(`[ESTOP] Estop initial check-in exception: ${_errorMessage(e)}`);
+    });
+    this._task = this._initialCheckIn
+      .then(() => this._periodicCheckIn())
+      .catch(e => this._error(`[ESTOP] Check-in loop failed: ${_errorMessage(e)}`, true));
   }
 
   [Symbol.dispose]() {
     this.shutdown();
   }
 
+  async [Symbol.asyncDispose]() {
+    await this.shutdown();
+  }
+
+  /**
+   * Resolves once the initial check-in is done (successful or not). Python's constructor blocks on it:
+   * await this before powering on the motors.
+   * @returns {Promise<void>}
+   */
+  waitForInitialCheckIn() {
+    return this._initialCheckIn;
+  }
+
+  /**
+   * Stop the periodic check-ins. The returned promise resolves once the check-in loop has exited,
+   * like Python's shutdown() which joins the thread.
+   * @returns {Promise<void>}
+   */
   shutdown() {
     this.logger.debug('[ESTOP] Shutting down');
     this._endPeriodicCheckIn();
+    return this._task;
   }
 
   get logger() {
@@ -507,6 +600,7 @@ class EstopKeepAlive {
   _endPeriodicCheckIn() {
     this.logger.debug('[ESTOP] Stopping check-in');
     this._endCheckInSignal = true;
+    this._stopController.abort();
   }
 
   /**
@@ -551,12 +645,16 @@ class EstopKeepAlive {
 
   /**
    * Check in, optionally specifying a non-standard RPC timeout.
-   * @param {number} rpcTimeout A timeout in millisecond
+   * @param {number} rpcTimeoutSec A timeout in seconds.
    */
-  async _checkIn(rpcTimeout = null) {
-    // Assuming that _rpcTimeout is in second so converted in millisecond
-    rpcTimeout = rpcTimeout || this._rpcTimeout * 1000;
-    await this._endpoint.checkInAtLevel(this._desiredStopLevel, { timeout: rpcTimeout });
+  _checkIn(rpcTimeoutSec = null) {
+    const timeoutMs = (rpcTimeoutSec ?? this._rpcTimeout) * 1000;
+    // The desired level is read when the check-in starts, inside the critical section: a stop() queued
+    // behind a periodic check-in is sent as CUT, with a fresh challenge.
+    const run = () => this._endpoint.checkInAtLevel(this._desiredStopLevel, { timeout: timeoutMs });
+    const checkIn = this._lock.then(run, run);
+    this._lock = checkIn.catch(() => {});
+    return checkIn;
   }
 
   /**
@@ -564,9 +662,10 @@ class EstopKeepAlive {
    */
   async _periodicCheckIn() {
     this.logger.info('[ESTOP] Starting estop check-in');
-    /* eslint-disable no-await-in-loop */
+    const { signal } = this._stopController;
+
     while (!this._endCheckInSignal && this._keepRunning()) {
-      const execStart = Date.now();
+      const execStartMs = nowMsec();
 
       let isError = false;
 
@@ -577,21 +676,23 @@ class EstopKeepAlive {
         if (e instanceof TimedOutError) {
           this._error(`[ESTOP] RPC took longer than ${this._rpcTimeout} seconds`);
         } else if (e instanceof RpcError) {
-          this._error(`[ESTOP] Transport exception during check-in: \n${e}\n (resuming check-in)`);
+          this._error(`[ESTOP] Transport exception during check-in: ${_errorMessage(e)} (resuming check-in)`);
         } else if (e instanceof EndpointUnknownError) {
-          this._error(e.toString(), true);
+          // Disable ourself to show we cannot estop any longer.
+          this._error(_errorMessage(e), true);
         } else {
-          this.logger.warn(`[ESTOP] Generic exception during check-in: \n${e}\n (resuming check-in)`);
+          this.logger.warn(`[ESTOP] Generic exception during check-in: ${_errorMessage(e)} (resuming check-in)`);
         }
       }
 
       if (!isError) this._ok();
 
-      const execSec = Date.now() - execStart;
-      const waitTime = Math.max(this._checkInPeriod - execSec, 0);
-      if (waitTime > 0) {
-        await sleep(waitTime);
-      } else {
+      const execMs = nowMsec() - execStartMs;
+      const waitTimeMs = Math.max(this._checkInPeriod * 1_000 - execMs, 0);
+      try {
+        // Interrupted by shutdown(): the loop ends promptly and does not keep the process alive.
+        await sleep(waitTimeMs, undefined, { signal });
+      } catch (e) {
         break;
       }
     }
@@ -599,6 +700,15 @@ class EstopKeepAlive {
   }
 
   /**
+   * The last stop level set by a check-in of the endpoint (null before the first one), like Python.
+   * @type {?number}
+   */
+  get lastSetLevel() {
+    return this._endpoint.lastSetLevel;
+  }
+
+  /**
+   * The endpoint of the keep-alive. Should be used as read-only.
    * @type {EstopEndpoint}
    */
   get endpoint() {
@@ -606,6 +716,7 @@ class EstopKeepAlive {
   }
 
   /**
+   * The client of the endpoint. Should be used as read-only.
    * @type {EstopClient}
    */
   get client() {
@@ -616,7 +727,7 @@ class EstopKeepAlive {
 /**
  * Returns true if robot is estopped, false otherwise.
  * @param {EstopClient} estopClient The EstopClient
- * @param {Object} args Passed to underlying RPC.
+ * @param {Object} [args] Passed to underlying RPC.
  * @returns {Promise<boolean>}
  */
 async function isEstopped(estopClient, args) {
@@ -625,7 +736,7 @@ async function isEstopped(estopClient, args) {
 }
 
 function responseFromChallenge(challenge) {
-  return BigInt.asUintN(64, BigInt(~challenge));
+  return BigInt.asUintN(64, ~BigInt(challenge)).toString(10);
 }
 
 const _CHECK_IN_STATUS_TO_ERROR = DefaultDict(() => [ResponseError, null]);
@@ -682,12 +793,7 @@ _REGISTER_ENDPOINT_STATUS_TO_ERROR.set(estopPb.RegisterEstopEndpointResponse.Sta
 
 const _checkInErrorFromResponse = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(
-      response,
-      response.getStatus(),
-      Object.keys(estopPb.EstopCheckInResponse.Status),
-      _CHECK_IN_STATUS_TO_ERROR,
-    ),
+    errorFactory(response, response.getStatus(), estopPb.EstopCheckInResponse.Status, _CHECK_IN_STATUS_TO_ERROR),
   ),
 );
 
@@ -698,12 +804,7 @@ function _checkInErrorFromResponseNoIncorrect(resp) {
 
 const _setConfigErrorFromResponse = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(
-      response,
-      response.getStatus(),
-      Object.keys(estopPb.SetEstopConfigResponse.Status),
-      _SET_CONFIG_STATUS_TO_ERROR,
-    ),
+    errorFactory(response, response.getStatus(), estopPb.SetEstopConfigResponse.Status, _SET_CONFIG_STATUS_TO_ERROR),
   ),
 );
 
@@ -712,7 +813,7 @@ const _deregisterEndpointErrorFromResponse = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(estopPb.DeregisterEstopEndpointResponse.Status),
+      estopPb.DeregisterEstopEndpointResponse.Status,
       _DEREGISTER_ENDPOINT_STATUS_TO_ERROR,
     ),
   ),
@@ -723,7 +824,7 @@ const _registerEndpointErrorFromResponse = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(estopPb.RegisterEstopEndpointResponse.Status),
+      estopPb.RegisterEstopEndpointResponse.Status,
       _REGISTER_ENDPOINT_STATUS_TO_ERROR,
     ),
   ),
@@ -746,6 +847,7 @@ function _estopSysStatusFromResponse(response) {
 }
 
 module.exports = {
+  StopLevel,
   EstopResponseError,
   EndpointUnknownError,
   IncorrectChallengeResponseError,
@@ -753,6 +855,7 @@ module.exports = {
   ConfigMismatchError,
   InvalidEndpointError,
   InvalidIdError,
+  MotorsOnError,
   EstopClient,
   EstopEndpoint,
   EstopKeepAlive,

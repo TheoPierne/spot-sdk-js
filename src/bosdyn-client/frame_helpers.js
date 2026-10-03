@@ -1,3 +1,8 @@
+/**
+ * @file Helpers for the frame trees of the robot state and of the images: the names of the frames, the transforms
+ * between two frames, and the validation of a FrameTreeSnapshot.
+ */
+
 'use strict';
 
 const mathHelpers = require('./math_helpers');
@@ -66,7 +71,7 @@ function validateFrameTreeSnapshot(frameTreeSnapshot) {
     let curFrameName = frameName;
     const visitedFrames = new Set();
     visitedFrames.add(curFrameName);
-    /* eslint-disable no-constant-condition */
+
     while (true) {
       const edge = frameTreeSnapshot.getChildToParentEdgeMapMap().get(curFrameName);
       if (!edge) throw new ValidateFrameTreeUnknownFrameError();
@@ -80,7 +85,8 @@ function validateFrameTreeSnapshot(frameTreeSnapshot) {
 
   let root = null;
 
-  if (!frameTreeSnapshot.getChildToParentEdgeMapMap().toArray().length) {
+  // getLength(): toArray() copied every entry to test the emptiness.
+  if (frameTreeSnapshot.getChildToParentEdgeMapMap().getLength() === 0) {
     throw new ValidateFrameTreeError('Empty edges in FrameTreeSnapshot');
   }
 
@@ -115,9 +121,9 @@ function getATformB(frameTreeSnapshot, frameA, frameB, validate = true) {
   if (!frameTreeSnapshot.getChildToParentEdgeMapMap().has(frameB)) return null;
 
   function _listParentEdges(leafFrame) {
-    let parentEdges = [];
+    const parentEdges = [];
     let curFrame = leafFrame;
-    /* eslint-disable no-constant-condition */
+
     while (true) {
       const parentEdge = frameTreeSnapshot.getChildToParentEdgeMapMap().get(curFrame);
       if (!parentEdge.getParentFrameName()) break;
@@ -132,8 +138,14 @@ function getATformB(frameTreeSnapshot, frameA, frameB, validate = true) {
 
   function _accumulateTransforms(parentEdges) {
     let ret = mathHelpers.SE3Pose.fromIdentity();
+    // The edges go from the leaf up to the root: prepend each parent_tform_child to get
+    // root_tform_leaf, like Python (`from_proto(edge) * ret`).
     for (const parentEdge of parentEdges) {
-      ret = ret.mult(mathHelpers.SE3Pose.fromProto(parentEdge.getParentTformChild()));
+      // An unset transform is the identity, like the default proto in Python.
+      const parentTformChild = parentEdge.hasParentTformChild()
+        ? mathHelpers.SE3Pose.fromProto(parentEdge.getParentTformChild())
+        : mathHelpers.SE3Pose.fromIdentity();
+      ret = parentTformChild.mult(ret);
     }
     return ret;
   }
@@ -200,7 +212,7 @@ function expressSe3VelocityInNewFrame(frameTreeSnapshot, frameB, frameC, velOfAI
 /**
  * Get the transformation between "odom" frame and "body" frame from the FrameTreeSnapshot.
  * @param {geometryPb.FrameTreeSnapshot} frameTreeSnapshot object representing the child_to_parent_edge_map
- * @returns {number}
+ * @returns {?mathHelpers.SE3Pose}
  */
 function getOdomTformBody(frameTreeSnapshot) {
   return getATformB(frameTreeSnapshot, ODOM_FRAME_NAME, BODY_FRAME_NAME);
@@ -209,7 +221,7 @@ function getOdomTformBody(frameTreeSnapshot) {
 /**
  * Get the transformation between "vision" frame and "body" frame from the FrameTreeSnapshot.
  * @param {geometryPb.FrameTreeSnapshot} frameTreeSnapshot object representing the child_to_parent_edge_map
- * @returns {mathHelpers.SE3Pose}
+ * @returns {?mathHelpers.SE3Pose}
  */
 function getVisionTformBody(frameTreeSnapshot) {
   return getATformB(frameTreeSnapshot, VISION_FRAME_NAME, BODY_FRAME_NAME);
@@ -227,13 +239,16 @@ class ChildFrameInTree extends GenerateTreeError {}
 /**
  * Appends a child/parent and the transform to the FrameTreeSnapshot.
  * @param {geometryPb.FrameTreeSnapshot} frameTreeSnapshot Object representing the child_to_parent_edge_map
- * @param {mathHelpers.SE3Pose} parentTformChild The SE3Pose to add to the frameTreeSnapshot
+ * @param {geometryPb.SE3Pose|mathHelpers.SE3Pose} parentTformChild The SE3Pose to add to the frameTreeSnapshot: a
+ * proto like Python, or a math_helpers SE3Pose (it was set as the proto, which could not be serialized).
  * @param {string} parentFrameName The parent name.
  * @param {string} childFrameName The child name.
  * @returns {geometryPb.FrameTreeSnapshot}
+ * @throws {ChildFrameInTree} The child frame is already in the tree.
  */
 function addEdgeToTree(frameTreeSnapshot, parentTformChild, parentFrameName, childFrameName) {
   if (frameTreeSnapshot.getChildToParentEdgeMapMap().has(childFrameName)) throw new ChildFrameInTree();
+  if (typeof parentTformChild?.toProto === 'function') parentTformChild = parentTformChild.toProto();
   frameTreeSnapshot
     .getChildToParentEdgeMapMap()
     .set(

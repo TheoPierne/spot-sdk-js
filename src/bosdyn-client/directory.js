@@ -1,3 +1,9 @@
+/**
+ * @file Client for the directory service.
+ *
+ * A DirectoryClient allows a client to look-up information about other API services available on a robot.
+ */
+
 'use strict';
 
 const {
@@ -13,7 +19,13 @@ const { DefaultDict } = require('./util');
 const directoryPb = require('../bosdyn/api/directory_pb');
 const { DirectoryServiceClient } = require('../bosdyn/api/directory_service_grpc_pb');
 
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ */
+
+/** General class of errors for Directory service. */
 class DirectoryResponseError extends ResponseError {}
+/** The requested service name does not exist. */
 class NonexistentServiceError extends DirectoryResponseError {}
 
 const _STATUS_TO_ERROR = DefaultDict(() => [ResponseError, null]);
@@ -25,12 +37,7 @@ _STATUS_TO_ERROR.set(directoryPb.GetServiceEntryResponse.Status.STATUS_NONEXISTE
 
 const _errorFromResponse = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(
-      response,
-      response.getStatus(),
-      Object.keys(directoryPb.GetServiceEntryResponse.Status),
-      _STATUS_TO_ERROR,
-    ),
+    errorFactory(response, response.getStatus(), directoryPb.GetServiceEntryResponse.Status, _STATUS_TO_ERROR),
   ),
 );
 
@@ -56,7 +63,7 @@ class DirectoryClient extends BaseClient {
 
   /**
    * List all services present on the robot.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<directoryPb.ServiceEntry[]>} A list of the proto message definitions of all registered services
    * @throws {RpcError} Problem communicating with the robot.
    */
@@ -68,7 +75,7 @@ class DirectoryClient extends BaseClient {
   /**
    * Get the service entry for one particular service specified by name.
    * @param {string} serviceName The name of the service to retrieve.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<directoryPb.ServiceEntry>} The proto message definition of the service entry
    * @throws {RpcError} Problem communicating with the robot.
    * @throws {NonexistentServiceError} The service was not found.

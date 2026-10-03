@@ -1,21 +1,28 @@
+/**
+ * @file Displays and saves images with the image viewers of the system.
+ */
+
 'use strict';
 
-const { execSync } = require('node:child_process');
+const { spawn } = require('node:child_process');
+const fs = require('node:fs');
+const path = require('node:path');
 const process = require('node:process');
 
-const sharp = require('sharp');
-const tmp = require('tmp');
-const which = require('which');
+// sharp and tmp are loaded when they are used (sharp takes 0.1 s to load, and the package root loads every module),
+// and the viewers of the system are registered at the first use of the module.
 
 const _viewers = [];
+let _defaultViewersRegistered = false;
 
 /**
  * Register an image viewer. If order < 0 the viewer is used in first place.
- * @param {class|Function} viewer Image class's viewer.
+ * @param {typeof Viewer|Viewer} viewer A viewer, or its class.
  * @param {number} [order=1] The order to put the viewer.
  * @returns {void}
  */
 function register(viewer, order = 1) {
+  _registerDefaultViewers();
   try {
     if (viewer.prototype instanceof Viewer) {
       viewer = new viewer();
@@ -38,7 +45,8 @@ function register(viewer, order = 1) {
  * @param {string} options.title The title of the image.
  * @returns {Promise<boolean>}
  */
-async function show(image, options) {
+async function show(image, options = {}) {
+  _registerDefaultViewers();
   for (const viewer of _viewers) {
     // eslint-disable-next-line
     const show = await viewer.show(image, options);
@@ -51,10 +59,10 @@ async function show(image, options) {
  * Save image to path. (Convert any type of image into .png | .jpg | ...)
  * @param {Buffer|Array|string} image The data of the image.
  * @param {string} name The name of the image.
- * @returns {Promise<sharp>}
+ * @returns {Promise<import('sharp').OutputInfo>}
  */
 function save(image, name) {
-  return sharp(image).toFile(name);
+  return require('sharp')(image).toFile(name);
 }
 
 class Viewer {
@@ -80,15 +88,25 @@ class Viewer {
 
   async save_image(image) {
     const postfix = this.format ? `.${this.format.toLowerCase()}` : '.png';
-    const file = tmp.fileSync({ mode: 0o644, prefix: 'bosdyn', postfix, discardDescriptor: true });
-    await sharp(image).toFile(file.name);
+    const file = require('tmp').fileSync({ mode: 0o644, prefix: 'bosdyn', postfix, discardDescriptor: true });
+    await require('sharp')(image).toFile(file.name);
     return file;
   }
 
-  show_file(file, options) {
-    const CWD = process.cwd();
-    const cmd = this.get_command(file.name, options);
-    execSync(cmd, { cwd: CWD, shell: true });
+  show_file(file, options = {}) {
+    // Like PIL's Popen: start the viewer without waiting for it. A synchronous exec would block the event
+    // loop (and with it the lease, estop and time sync keep-alives) until the viewer is closed.
+    const child = spawn(this.get_command(file.name, options), {
+      cwd: process.cwd(),
+      shell: true,
+      detached: true,
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+    child.on('error', () => {
+      // Nothing to do: no viewer, no image.
+    });
+    child.unref();
     return true;
   }
 }
@@ -102,10 +120,6 @@ class WindowsViewer extends Viewer {
   }
 }
 
-if (process.platform === 'win32') {
-  register(WindowsViewer);
-}
-
 class MacViewer extends Viewer {
   format = 'PNG';
   options = { compress_level: 1 };
@@ -113,41 +127,32 @@ class MacViewer extends Viewer {
   get_command(file) {
     return `(open -a Preview.app "${file}"; sleep 20; rm -f "${file}")&`;
   }
-
-  show_file(file) {
-    const CWD = process.cwd();
-    const cmd = this.get_command(file.name);
-    execSync(cmd, { cwd: CWD, shell: true });
-    return true;
-  }
-}
-
-if (process.platform === 'darwin') {
-  register(MacViewer);
 }
 
 class UnixViewer extends Viewer {
   format = 'PNG';
   options = { compress_level: 1 };
 
-  get_command(file, options) {
+  get_command(file, options = {}) {
     const command = this.get_command_ex(file, options)[0];
     return `(${command} "${file}"; rm -f "${file}")&`;
   }
+}
 
-  show_file(file, options) {
-    const CWD = process.cwd();
-    const cmd = this.get_command(file.name, options);
-    execSync(cmd, { cwd: CWD, shell: true });
-    return true;
-  }
+/**
+ * A title that cannot break out of its shell quotes.
+ * @param {string} title The title of the image.
+ * @returns {string}
+ */
+function _shellSafeTitle(title) {
+  return String(title).replace(/["`$\\]/g, '');
 }
 
 class DisplayViewer extends UnixViewer {
-  get_command_ex(file, options) {
+  get_command_ex(file, options = {}) {
     const executable = 'display';
     let command = 'display';
-    if (options.title) command += ` -name "${options.title}"`;
+    if (options.title) command += ` -name "${_shellSafeTitle(options.title)}"`;
     return [command, executable];
   }
 }
@@ -169,19 +174,48 @@ class EogViewer extends UnixViewer {
 }
 
 class XVViewer extends UnixViewer {
-  get_command_ex(file, options) {
+  get_command_ex(file, options = {}) {
     const executable = 'xv';
     let command = 'xv';
-    if (options.title) command += ` -name "${options.title}"`;
+    if (options.title) command += ` -name "${_shellSafeTitle(options.title)}"`;
     return [command, executable];
   }
 }
 
-if (!['win32', 'darwin'].includes(process.platform)) {
-  if (which.sync('display', { nothrow: true })) register(DisplayViewer);
-  if (which.sync('gm', { nothrow: true })) register(GmDisplayViewer);
-  if (which.sync('eog', { nothrow: true })) register(EogViewer);
-  if (which.sync('xv', { nothrow: true })) register(XVViewer);
+/**
+ * Whether an executable is in a directory of the PATH, like shutil.which() in Python (used on Linux only).
+ * @param {string} name The name of the executable.
+ * @returns {boolean}
+ */
+function _inPath(name) {
+  return (process.env.PATH ?? '').split(path.delimiter).some(dir => {
+    if (!dir) return false;
+    try {
+      const file = path.join(dir, name);
+      fs.accessSync(file, fs.constants.X_OK);
+      return fs.statSync(file).isFile();
+    } catch {
+      return false;
+    }
+  });
+}
+
+/**
+ * Registers the viewers of the system, like PIL when it is imported, once.
+ */
+function _registerDefaultViewers() {
+  if (_defaultViewersRegistered) return;
+  _defaultViewersRegistered = true;
+  if (process.platform === 'win32') {
+    register(WindowsViewer);
+  } else if (process.platform === 'darwin') {
+    register(MacViewer);
+  } else {
+    if (_inPath('display')) register(DisplayViewer);
+    if (_inPath('gm')) register(GmDisplayViewer);
+    if (_inPath('eog')) register(EogViewer);
+    if (_inPath('xv')) register(XVViewer);
+  }
 }
 
 module.exports = {

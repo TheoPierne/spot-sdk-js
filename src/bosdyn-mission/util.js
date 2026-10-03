@@ -1,17 +1,30 @@
+/**
+ * @file Helpers for missions: conversions between protobuf values and JavaScript values, the Result constants, and
+ * string representations of the nodes.
+ */
+
 'use strict';
 
 const process = require('node:process');
 const jspb = require('google-protobuf');
 const { Any } = require('google-protobuf/google/protobuf/any_pb');
+const { Timestamp } = require('google-protobuf/google/protobuf/timestamp_pb');
 const { Result } = require('./constants');
+const alertsPb = require('../bosdyn/api/alerts_pb');
+const geometryPb = require('../bosdyn/api/geometry_pb');
 const graphNavPb = require('../bosdyn/api/graph_nav/graph_nav_pb');
 const mapPb = require('../bosdyn/api/graph_nav/map_pb');
 const nodesPb = require('../bosdyn/api/mission/nodes_pb');
 const utilPb = require('../bosdyn/api/mission/util_pb');
 const { ValueError } = require('../bosdyn-client/exceptions');
+const { protoTypeName } = require('../bosdyn-client/util');
+const textFormat = require('../bosdyn-core/text_format');
 
 const DUMMY_MESSAGE = new nodesPb.Node().setName('dummy-message-for-parameterization');
 
+/**
+ * Could not convert the provided value to the destination type.
+ */
 class InvalidConversion extends Error {
   constructor(originalValue, destinationTypename) {
     super();
@@ -25,23 +38,64 @@ class InvalidConversion extends Error {
   }
 }
 
-const _js_identifier_regex = /[A-Za-z_]\w*$/;
+// Like Python's str.isidentifier(): a letter or an underscore, then letters, digits or underscores.
+const _js_identifier_regex = /^[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}]*$/u;
+
+/**
+ * Name of a value of a proto enum, or undefined.
+ * @param {Object<string, number>} enumObject
+ * @param {number} value
+ * @returns {string|undefined}
+ */
+function _enumName(enumObject, value) {
+  return Object.keys(enumObject).find(key => enumObject[key] === value);
+}
+
+/**
+ * An Any message packing the message (Any.pack() returns nothing: pack into a new Any).
+ * @param {jspb.Message} message
+ * @returns {Any}
+ */
+function _packAny(message) {
+  const any = new Any();
+  any.pack(message.serializeBinary(), protoTypeName(message));
+  return any;
+}
+
+/**
+ * Use type name to reconstruct field name of bosdyn.api.mission.Node.type.
+ * Example: SimpleParallel becomes simple_parallel.
+ * @param {string} typeName Name of the type, e.g. 'bosdyn.api.mission.SimpleParallel' or 'SimpleParallel'.
+ * @returns {string}
+ * @throws {ValueError} The field is not in the type oneof of Node.
+ */
+function typeToFieldName(typeName) {
+  const nodeType = String(typeName).split('.').pop();
+  const fieldName = nodeType[0].toLowerCase() + nodeType.slice(1).replace(/[A-Z]/g, char => `_${char.toLowerCase()}`);
+  if (!(fieldName.toUpperCase() in nodesPb.Node.TypeCase)) {
+    throw new ValueError(`${fieldName} is not a field name in bosdyn.api.mission.Node.type`);
+  }
+  return fieldName;
+}
 
 /**
  * Get a string representation of a Node, interpreted as a tree.
- * @param {nodesPb.Node} root 
- * @param {number} startLevel 
- * @param {boolean} includeStatus 
+ * @param {nodesPb.Node} root
+ * @param {number} startLevel
+ * @param {boolean} includeStatus
  * @returns {string}
  */
 function treeToString(root, startLevel = 0, includeStatus = false) {
+  // The text of Python: no space after the prefix, one before the class if the node has a text (there were
+  // spaces everywhere, and a space was added for any node).
   let string = '';
   if (startLevel === 0) string += '\n';
   const prefix = `|${'-'.repeat(startLevel)}`;
-  string += `${prefix} ${root.toString()} ${root ? ' ' : ''} (${root.constructor.name})`;
-  if (includeStatus) string += `\n ${prefix} Status code: [${root.last_result}]`;
+  const text = String(root);
+  string += `${prefix}${text}${text ? ' ' : ''}(${root.constructor.name})`;
+  if (includeStatus) string += `\n${prefix}Status code: [${root.last_result ?? root.lastResult ?? 'None'}]`;
   for (const child of root.children) {
-    string += `\n ${treeToString(child, startLevel + 1, includeStatus)}`;
+    string += `\n${treeToString(child, startLevel + 1, includeStatus)}`;
   }
   return string;
 }
@@ -116,9 +170,11 @@ function protoFromObject(options, packNodes = true) {
   }
 
   const numChildren = children.length;
-  const innerType = innerProto.constructor.name;
+  // The name of the message type (the jspb classes are anonymous functions: constructor.name is '').
+  const innerType = protoTypeName(innerProto).split('.').pop();
 
-  if (innerProto.getChildrenList().length) {
+  // Do some sanity checking on the children (getChildrenList() only exists for the nodes with children).
+  if (typeof innerProto.getChildrenList === 'function') {
     if (numChildren === 0) throw new Error(`Proto "${node.getName()}" of type "${innerType}" has no children!`);
 
     for (const childObj of children) {
@@ -134,6 +190,14 @@ function protoFromObject(options, packNodes = true) {
     } else {
       throw new Error(`Proto "${node.getName()}" of type "${innerType}" has ${numChildren} children!`);
     }
+  } else if (innerProto instanceof nodesPb.SimpleParallel) {
+    if (numChildren !== 2) {
+      throw new Error(
+        `Proto "${node.getName()}" of type "${innerType}" was given ${numChildren} children but should have 2!`,
+      );
+    }
+    innerProto.setPrimary(protoFromObject(children[0]));
+    innerProto.setSecondary(protoFromObject(children[1]));
   } else if (numChildren !== 0) {
     throw new Error(
       `Proto "${node.getName()}" of type "${innerType}" was given ${numChildren} children,
@@ -142,9 +206,11 @@ function protoFromObject(options, packNodes = true) {
   }
 
   if (packNodes) {
-    node.setImpl(new Any().pack(innerProto.serializeBinary(), 'bosdyn.api.mission.Sequence'));
+    // With the type of the node: it was always a Sequence, and Any.pack() returns nothing.
+    node.setImpl(_packAny(innerProto));
   } else {
-    node[`set${innerType}`]?.(innerProto);
+    typeToFieldName(innerType);
+    node[`set${innerType}`](innerProto);
   }
 
   return node;
@@ -158,19 +224,31 @@ function protoFromObject(options, packNodes = true) {
 function jsVarToValue(val) {
   const value = new utilPb.ConstantValue();
 
+  // A number is an int_value when it is an integer: 2.0 is 2 in JavaScript.
   if (typeof val === 'boolean') {
     value.setBoolValue(val);
   } else if (Number.isInteger(val)) {
     value.setIntValue(val);
-  } else if (!Number.isInteger(val) && !Number.isNaN(val)) {
+  } else if (typeof val === 'number') {
     value.setFloatValue(val);
   } else if (typeof val === 'string') {
     value.setStringValue(val);
+  } else if (val instanceof Timestamp) {
+    // Like Python 5.2.0 (a message packed in an Any before).
+    value.setTimestampValue(val.clone());
+  } else if (val instanceof utilPb.ConstantValue) {
+    return val.clone();
   } else if (val instanceof jspb.Message) {
-    const any = new Any().pack(val.serializeBinary(), '');
-    value.setMsgValue(any);
+    value.setMsgValue(_packAny(val));
+  } else if (val instanceof Map || (val !== null && typeof val === 'object' && !(Symbol.iterator in val))) {
+    const dictValue = new utilPb.ConstantValue.DictValue();
+    const entries = val instanceof Map ? val.entries() : Object.entries(val);
+    for (const [key, item] of entries) dictValue.getValuesMap().set(key, jsVarToValue(item));
+    value.setDictValue(dictValue);
+  } else if (val !== null && typeof val === 'object') {
+    value.setListValue(new utilPb.ConstantValue.ListValue().setValuesList(Array.from(val, jsVarToValue)));
   } else {
-    throw new Error(`Invalid type "${typeof val}"`);
+    throw new Error(`Invalid type "${val === null ? 'null' : typeof val}"`);
   }
 
   return value;
@@ -182,26 +260,76 @@ function jsVarToValue(val) {
  * @returns {utilPb.VariableDeclaration.Type}
  */
 function jsTypeToPbType(val) {
+  const { Type } = utilPb.VariableDeclaration;
   if (typeof val === 'boolean') {
-    return utilPb.VariableDeclaration.Type.TYPE_BOOL;
+    return Type.TYPE_BOOL;
   } else if (Number.isInteger(val)) {
-    return utilPb.VariableDeclaration.Type.TYPE_INT;
-  } else if (!Number.isInteger(val) && !Number.isNaN(val)) {
-    return utilPb.VariableDeclaration.Type.TYPE_FLOAT;
+    return Type.TYPE_INT;
+  } else if (typeof val === 'number') {
+    return Type.TYPE_FLOAT;
   } else if (typeof val === 'string') {
-    return utilPb.VariableDeclaration.Type.TYPE_STRING;
+    return Type.TYPE_STRING;
+  } else if (val instanceof Timestamp) {
+    // Like Python 5.2.0 (TYPE_MESSAGE before).
+    return Type.TYPE_TIMESTAMP;
+  } else if (val instanceof utilPb.ConstantValue.ListValue) {
+    // Special case for List and Dict value to allow using this function with the value of a ConstantValue.
+    return Type.TYPE_LIST;
+  } else if (val instanceof utilPb.ConstantValue.DictValue) {
+    return Type.TYPE_DICT;
   } else if (val instanceof jspb.Message) {
-    return utilPb.VariableDeclaration.Type.TYPE_MESSAGE;
+    return Type.TYPE_MESSAGE;
+  } else if (val instanceof Map || (val !== null && typeof val === 'object' && !(Symbol.iterator in val))) {
+    return Type.TYPE_DICT;
+  } else if (val !== null && typeof val === 'object') {
+    return Type.TYPE_LIST;
   }
 
   throw new InvalidConversion(val, 'bosdyn.api.mission.VariableDeclaration.Type');
 }
 
+/**
+ * The type of a variable, and the sub type of its items for a list or a dict.
+ * @param {any} val A value.
+ * @returns {[number, ?utilPb.VariableDeclaration.SubType]}
+ */
+function jsTypeToVariableDeclInfo(val) {
+  const varType = jsTypeToPbType(val);
+  let subType = null;
+  let first;
+  if (varType === utilPb.VariableDeclaration.Type.TYPE_LIST) {
+    first = Array.from(val).slice(0, 1);
+  } else if (varType === utilPb.VariableDeclaration.Type.TYPE_DICT) {
+    first = (val instanceof Map ? Array.from(val.values()) : Object.values(val)).slice(0, 1);
+  }
+  if (first?.length) {
+    const [subVarType, subRecurse] = jsTypeToVariableDeclInfo(first[0]);
+    subType = new utilPb.VariableDeclaration.SubType().setType(subVarType).setSubType(subRecurse ?? undefined);
+  }
+  return [varType, subType];
+}
+
+/**
+ * A VariableDeclaration of the type of the variable.
+ * @param {any} val A value.
+ * @param {?string} [name=null] Name of the variable.
+ * @returns {utilPb.VariableDeclaration}
+ */
+function jsVarToVariableDecl(val, name = null) {
+  const [varType, subType] = jsTypeToVariableDeclInfo(val);
+  const declaration = new utilPb.VariableDeclaration().setType(varType);
+  if (subType) declaration.setSubType(subType);
+  if (name !== null) declaration.setName(name);
+  return declaration;
+}
+
 function isStringIdentifier(string) {
-  if (Object.hasOwn(string, 'isidentifier')) return string.isidentifier();
   return _js_identifier_regex.test(string);
 }
 
+/**
+ * Returns the protobuf-schema variable type that corresponds to the given descriptor.
+ */
 function fieldDescToPbType(field_desc) {
   process.emitWarning('Function under development', {
     code: 'NOT_WORKING_CORRECTLY',
@@ -209,7 +337,6 @@ function fieldDescToPbType(field_desc) {
   });
 
   if (
-    field_desc.type in
     [
       field_desc.TYPE_UINT32,
       field_desc.TYPE_UINT64,
@@ -221,10 +348,10 @@ function fieldDescToPbType(field_desc) {
       field_desc.TYPE_SINT32,
       field_desc.TYPE_SINT64,
       field_desc.TYPE_SFIXED32,
-    ]
+    ].includes(field_desc.type)
   ) {
     return utilPb.VariableDeclaration.Type.TYPE_INT;
-  } else if (field_desc.type in [field_desc.TYPE_DOUBLE, field_desc.TYPE_FLOAT]) {
+  } else if ([field_desc.TYPE_DOUBLE, field_desc.TYPE_FLOAT].includes(field_desc.type)) {
     return utilPb.VariableDeclaration.Type.TYPE_FLOAT;
   } else if (field_desc.type === field_desc.TYPE_BOOL) {
     return utilPb.VariableDeclaration.Type.TYPE_BOOL;
@@ -237,20 +364,19 @@ function fieldDescToPbType(field_desc) {
   throw new InvalidConversion(field_desc.type, 'bosdyn.api.mission.VariableDeclaration.Type');
 }
 
+/**
+ * Return the stringified VariableDeclaration.Type, or "<unknown>" if the type is invalid.
+ */
 function safePbTypeToString(pbType) {
-  try {
-    return Object.keys(utilPb.VariableDeclaration.Type)[pbType];
-  } catch (e) {
-    return '<unknown>';
-  }
+  return _enumName(utilPb.VariableDeclaration.Type, pbType) ?? '<unknown>';
 }
 
 function oneLineStr(msg) {
-  return JSON.stringify(msg.toObject());
+  return textFormat.messageToString(msg, { asOneLine: true });
 }
 
 function nodeSpecToShortString(node_spec, maxlen = 15) {
-  let string = node_spec.getName() ? node_spec.getName() : oneLineStr(node_spec);
+  const string = node_spec.getName() ? node_spec.getName() : oneLineStr(node_spec);
 
   if (string.length > maxlen) return `${string.substring(0, maxlen - 3)}...`;
   return string;
@@ -264,27 +390,31 @@ class ResultFromProto {
     [utilPb.Result.RESULT_ERROR]: Result.ERROR,
   };
 
+  // The keys of an object are strings: the proto values are numbers again.
   static protoFromResults = Object.fromEntries(
-    Object.entries(ResultFromProto.resultsFromProto).map(([k, v]) => [v, k]),
+    Object.entries(ResultFromProto.resultsFromProto).map(([k, v]) => [v, Number(k)]),
   );
 }
 
+/**
+ * Returns a Result enum from a utilPb.Result, or throws InvalidConversion error.
+ */
 function protoEnumToResultConstant(proto_msg) {
-  try {
-    return ResultFromProto.resultsFromProto[proto_msg];
-  } catch (e) {
+  if (!Object.hasOwn(ResultFromProto.resultsFromProto, proto_msg)) {
     throw new InvalidConversion(proto_msg, 'constants.Result');
   }
+  return ResultFromProto.resultsFromProto[proto_msg];
 }
 
+/**
+ * Returns a protobuf version of the Result enum, RESULT_UNKNOWN on error.
+ */
 function resultConstantToProtoEnum(result) {
-  if (!(result instanceof Result)) throw new InvalidConversion(result, 'bosdyn.api.mission.Result');
-
-  try {
-    return ResultFromProto.protoFromResults[result];
-  } catch (e) {
+  // Result is an object: instanceof threw a TypeError.
+  if (!Object.values(Result).includes(result) || !Object.hasOwn(ResultFromProto.protoFromResults, result)) {
     throw new InvalidConversion(result, 'bosdyn.api.mission.Result');
   }
+  return ResultFromProto.protoFromResults[result];
 }
 
 function mostRestrictiveTravelParams(
@@ -315,21 +445,30 @@ function mostRestrictiveTravelParams(
   }
 
   function take_velocity_limit(returned, other) {
+    // Look at max_vel using >=, then min_vel using <=.
     for (const [min_max, comp] of [
-      ['getMaxVel', ge],
-      ['getMinVel', le],
+      ['MaxVel', ge],
+      ['MinVel', le],
     ]) {
-      if (!Object.hasOwn(other, min_max)) continue;
+      // If the other doesn't even have this field, skip to the next one (Object.hasOwn() was always false).
+      if (!other[`has${min_max}`]()) continue;
 
-      const lim_returned = returned[min_max]();
-      const lim_other = other[min_max]();
-      lim_returned.getLinear().setX(take_limiting(lim_returned.getLinear().getX(), lim_other.getLinear().getX(), comp));
-      lim_returned.getLinear().setY(take_limiting(lim_returned.getLinear().getY(), lim_other.getLinear().getY(), comp));
-      lim_returned.setAngular(take_limiting(lim_returned.angular, lim_other.angular, comp));
+      // Like the fields of Python, the unset messages are created.
+      if (!returned[`has${min_max}`]()) returned[`set${min_max}`](new geometryPb.SE2Velocity());
+      const lim_returned = returned[`get${min_max}`]();
+      const lim_other = other[`get${min_max}`]();
+      if (!lim_returned.hasLinear()) lim_returned.setLinear(new geometryPb.Vec2());
+      const linear_other = lim_other.getLinear() ?? new geometryPb.Vec2();
+      lim_returned.getLinear().setX(take_limiting(lim_returned.getLinear().getX(), linear_other.getX(), comp));
+      lim_returned.getLinear().setY(take_limiting(lim_returned.getLinear().getY(), linear_other.getY(), comp));
+      lim_returned.setAngular(take_limiting(lim_returned.getAngular(), lim_other.getAngular(), comp));
     }
   }
 
-  if (vel_limit !== null) take_velocity_limit(travel_params.getVelocityLimit(), vel_limit);
+  if (vel_limit !== null) {
+    if (!travel_params.hasVelocityLimit()) travel_params.setVelocityLimit(new geometryPb.SE2VelocityLimit());
+    take_velocity_limit(travel_params.getVelocityLimit(), vel_limit);
+  }
 
   travel_params.setDisableDirectedExploration(
     travel_params.getDisableDirectedExploration() || disable_directed_exploration,
@@ -350,27 +489,11 @@ function mostRestrictiveTravelParams(
 }
 
 function getValueFromConstantValueMessage(const_proto) {
-  const field = const_proto.getValueCase();
-  if (field === 0) throw new ValueError('Did not have a value set!');
-  let ret;
-  switch (field) {
-    case 1:
-      ret = const_proto.getFloatValue();
-      break;
-    case 2:
-      ret = const_proto.getStringValue();
-      break;
-    case 3:
-      ret = const_proto.getIntValue();
-      break;
-    case 4:
-      ret = const_proto.getBoolValue();
-      break;
-    case 5:
-      ret = const_proto.getMsgValue();
-      break;
-  }
-  return ret;
+  const field = _enumName(utilPb.ConstantValue.ValueCase, const_proto.getValueCase());
+  if (field === undefined || field === 'VALUE_NOT_SET') throw new ValueError('Did not have a value set!');
+  // e.g. FLOAT_VALUE: getFloatValue() (the list and dict values were missing).
+  const getter = `get${field.toLowerCase().replace(/(^|_)([a-z])/g, (match, sep, char) => char.toUpperCase())}`;
+  return const_proto[getter]();
 }
 
 function getValueFromValueMessage(node, blackboard, value_msg) {
@@ -384,13 +507,12 @@ function getValueFromValueMessage(node, blackboard, value_msg) {
   }
 }
 
+/**
+ * Safe wrapper to convert a protobuf enum object to its string representation. Avoids throwing an error if the status
+ * is unknown by the enum object.
+ */
 function safePbEnumToString(value, pbEnumObj) {
-  try {
-    return Object.keys(pbEnumObj)[value];
-  } catch (e) {
-    // Pass
-  }
-  return `<unknown> (value: ${value})`;
+  return _enumName(pbEnumObj, value) ?? `<unknown> (value: ${value})`;
 }
 
 /**
@@ -428,13 +550,36 @@ function setBlackboard(values) {
   return nodeToReturn;
 }
 
+const _SEVERITY_TO_LOG_LEVEL = {
+  [alertsPb.AlertData.SeverityLevel.SEVERITY_LEVEL_INFO]: 'info',
+  [alertsPb.AlertData.SeverityLevel.SEVERITY_LEVEL_WARN]: 'warn',
+  [alertsPb.AlertData.SeverityLevel.SEVERITY_LEVEL_ERROR]: 'error',
+  // A critical mission prompt or text message does not indicate a critical robot failure,
+  // and is usually expected depending on how a mission plays out. For this reason, we
+  // reduce the severity from CRITICAL to ERROR for logs.
+  [alertsPb.AlertData.SeverityLevel.SEVERITY_LEVEL_CRITICAL]: 'error',
+};
+
+/**
+ * Converts alert data severity enum to a logger level for printing purposes.
+ * @param {number} textLevel An AlertData.SeverityLevel.
+ * @returns {string} The level of a winston logger: 'info', 'warn' or 'error'.
+ */
+function severityToLogLevel(textLevel) {
+  return _SEVERITY_TO_LOG_LEVEL[textLevel] ?? 'info';
+}
+
 module.exports = {
   DUMMY_MESSAGE,
   InvalidConversion,
   treeToString,
+  typeToFieldName,
   protoFromObject,
   jsVarToValue,
   jsTypeToPbType,
+  jsTypeToVariableDeclInfo,
+  jsVarToVariableDecl,
+  severityToLogLevel,
   isStringIdentifier,
   fieldDescToPbType,
   safePbTypeToString,

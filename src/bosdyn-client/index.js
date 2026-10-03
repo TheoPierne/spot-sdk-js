@@ -1,98 +1,105 @@
+/**
+ * @file Some commonly used classes and functions of the client library, exported together.
+ */
+
 'use strict';
 
-/* eslint-disable */
-['log', 'warn', 'error', 'debug'].forEach(method => {
-  let old = console[method];
-  console[method] = function () {
-    let stack = new Error().stack.split(/\n/);
-    // Chrome includes a single "Error" line, FF doesn't.
-    if (stack[0].indexOf('Error') === 0) {
-      stack = stack.slice(1);
-    }
-    let args = [].slice.apply(arguments).concat([stack[1].trim()]);
-    return old.apply(console, args);
-  };
-});
-/* eslint-enable */
+/**
+ * The client library package, like bosdyn.client of Python: the convenience imports of the commonly used classes.
+ * Run as a program, it is the command line (`python -m bosdyn.client` in Python).
+ *
+ * Requiring it no longer changes console.log(), console.warn(), console.error() and console.debug() of the process
+ * (they appended the location of the call to every message, the output of the command line too).
+ */
 
 const process = require('node:process');
+
+const { AuthClient, InvalidLoginError, InvalidTokenError } = require('./auth');
 const { main } = require('./command_line');
+const { BaseClient } = require('./common');
+const {
+  BosdynError,
+  ClientCancelledOperationError,
+  CustomParamError,
+  InternalServerError,
+  InvalidClientCertificateError,
+  InvalidRequestError,
+  LeaseUseError,
+  LicenseError,
+  NonexistentAuthorityError,
+  NotFoundError,
+  PersistentRpcError,
+  ProxyConnectionError,
+  ResponseError,
+  RetryableRpcError,
+  RetryableUnavailableError,
+  RpcError,
+  ServerError,
+  ServiceFailedDuringExecutionError,
+  ServiceUnavailableError,
+  TimedOutError,
+  TooManyRequestsError,
+  UnableToConnectToRobotError,
+  UnauthenticatedError,
+  UnimplementedError,
+  UnknownDnsNameError,
+  UnsetStatusError,
+} = require('./exceptions');
+const { Robot } = require('./robot');
+const { BOSDYN_RESOURCE_ROOT, Sdk, createStandardSdk } = require('./sdk');
+
+module.exports = {
+  // Auth.js
+  AuthClient,
+  InvalidLoginError,
+  InvalidTokenError,
+
+  // Common.js
+  BaseClient,
+
+  // Exceptions.js (BosdynError is Error in Python)
+  BosdynError,
+  ClientCancelledOperationError,
+  CustomParamError,
+  InternalServerError,
+  InvalidClientCertificateError,
+  InvalidRequestError,
+  LeaseUseError,
+  LicenseError,
+  NonexistentAuthorityError,
+  NotFoundError,
+  PersistentRpcError,
+  ProxyConnectionError,
+  ResponseError,
+  RetryableRpcError,
+  RetryableUnavailableError,
+  RpcError,
+  ServerError,
+  ServiceFailedDuringExecutionError,
+  ServiceUnavailableError,
+  TimedOutError,
+  TooManyRequestsError,
+  UnableToConnectToRobotError,
+  UnauthenticatedError,
+  UnimplementedError,
+  UnknownDnsNameError,
+  UnsetStatusError,
+
+  // Robot.js
+  Robot,
+
+  // Sdk.js (create_standard_sdk was exported, undefined: sdk.js has createStandardSdk)
+  BOSDYN_RESOURCE_ROOT,
+  Sdk,
+  createStandardSdk,
+
+  // Command_line.js
+  CommandHandler: main,
+};
 
 if (require.main === module) {
-  if (!main()) {
-    process.exit(1);
-  }
-} else {
-  const { BaseClient } = require('./common');
-  const {
-    ResponseError,
-    InvalidRequestError,
-    LeaseUseError,
-    LicenseError,
-    ServerError,
-    InternalServerError,
-    UnsetStatusError,
-    RpcError,
-    ClientCancelledOperationError,
-    InvalidClientCertificateError,
-    NonexistentAuthorityError,
-    NotFoundError,
-    ProxyConnectionError,
-    ServiceUnavailableError,
-    ServiceFailedDuringExecutionError,
-    TimedOutError,
-    UnableToConnectToRobotError,
-    UnauthenticatedError,
-    UnknownDnsNameError,
-    UnimplementedError,
-  } = require('./exceptions');
-
-  const { AuthClient, InvalidLoginError, InvalidTokenError } = require('./auth');
-
-  const { Robot } = require('./robot');
-
-  const { Sdk, create_standard_sdk, BOSDYN_RESOURCE_ROOT } = require('./sdk');
-
-  module.exports = {
-    // Common.js
-    BaseClient,
-
-    // Exceptions.js
-    ResponseError,
-    InvalidRequestError,
-    LeaseUseError,
-    LicenseError,
-    ServerError,
-    InternalServerError,
-    UnsetStatusError,
-    RpcError,
-    ClientCancelledOperationError,
-    InvalidClientCertificateError,
-    NonexistentAuthorityError,
-    NotFoundError,
-    ProxyConnectionError,
-    ServiceUnavailableError,
-    ServiceFailedDuringExecutionError,
-    TimedOutError,
-    UnableToConnectToRobotError,
-    UnauthenticatedError,
-    UnknownDnsNameError,
-    UnimplementedError,
-
-    // Auth.js
-    AuthClient,
-    InvalidLoginError,
-    InvalidTokenError,
-
-    // Robot.js
-    Robot,
-
-    // Sdk.js
-    Sdk,
-    create_standard_sdk,
-    BOSDYN_RESOURCE_ROOT,
-
-    // Command_line.js
-    CommandHandler: main,
-  };
+  // Like `if not main(): sys.exit(1)` in the __main__ of Python (main() returns a promise: it never exited with 1).
+  main().then(ok => {
+    if (!ok) process.exitCode = 1;
+  });
 }

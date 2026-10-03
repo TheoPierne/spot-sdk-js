@@ -1,6 +1,13 @@
+/**
+ * @file Splits serialized messages into DataChunk messages for the streaming RPCs, and assembles them back.
+ */
+
 'use strict';
 
 const { Buffer } = require('node:buffer');
+
+const jspb = require('google-protobuf');
+
 const dataChunkPb = require('../bosdyn/api/data_chunk_pb');
 
 /**
@@ -26,6 +33,8 @@ function* splitSerialized(serialized, dataChunkByteSize) {
  * @yields {dataChunkPb.DataChunk}
  */
 function* chunkSerialized(serialized, dataChunkByteSize) {
+  // jspb reads a string given to a bytes field as base64: chunk the bytes instead.
+  if (typeof serialized === 'string') serialized = Buffer.from(serialized);
   const totalBytesSize = serialized.length;
   for (const data of splitSerialized(serialized, dataChunkByteSize)) {
     yield new dataChunkPb.DataChunk().setTotalSize(totalBytesSize).setData(data);
@@ -45,12 +54,25 @@ function chunkMessage(message, dataChunkByteSize) {
 /**
  * Parse out a message from chunks.
  * @template M
- * @param {Iterable} iterableChunks A GRPC message
- * @param {M} outMsg A GRPC message
+ * @param {Iterable} iterableChunks DataChunks, or messages with a DataChunk `chunk` field.
+ * @param {M} outMsg The message class to create, or a message instance to fill
+ * (like Python's parse_from_chunks).
  * @returns {M}
  */
 function parseFromChunks(iterableChunks, outMsg) {
-  return outMsg.deserializeBinary(serializedFromChunks(iterableChunks));
+  const serialized = serializedFromChunks(iterableChunks);
+  if (typeof outMsg === 'function') return outMsg.deserializeBinary(serialized);
+  return outMsg.constructor.deserializeBinaryFromReader(outMsg, new jspb.BinaryReader(serialized));
+}
+
+/**
+ * Bytes of a DataChunk, or of the `chunk` field of a wrapper message.
+ * @param {*} message A DataChunk or a message defining a DataChunk chunk field.
+ * @returns {Uint8Array}
+ */
+function _chunkBytes(message) {
+  const chunk = typeof message.getChunk === 'function' ? message.getChunk() : message;
+  return chunk?.getData_asU8() ?? new Uint8Array(0);
 }
 
 /**
@@ -59,7 +81,7 @@ function parseFromChunks(iterableChunks, outMsg) {
  * @returns {Buffer}
  */
 function serializedFromMessages(iterableMessages) {
-  return serializedFromStrings(iterableMessages.map(e => e.getChunk().getData()));
+  return Buffer.concat(Array.from(iterableMessages, _chunkBytes));
 }
 
 /**
@@ -68,16 +90,19 @@ function serializedFromMessages(iterableMessages) {
  * @returns {Buffer}
  */
 function serializedFromChunks(iterableChunks) {
-  return serializedFromStrings(iterableChunks.map(e => e.getData()));
+  return Buffer.concat(Array.from(iterableChunks, _chunkBytes));
 }
 
 /**
- * Concatenate bytes together.
- * @param {Iterable} iterableStrings A GRPC message
+ * Concatenate bytes together, like serialized_from_strings() in Python.
+ * @param {Iterable<Uint8Array|string>} iterableStrings The bytes, e.g. the data of DataChunks: any iterable, like
+ * Python (it had to be an array). A string is the base64 of bytes, like the bytes fields of jspb (it was read as
+ * UTF-8).
  * @returns {Buffer}
  */
 function serializedFromStrings(iterableStrings) {
-  return Buffer.concat(iterableStrings.map(str => Buffer.from(str)));
+  const toBytes = data => (typeof data === 'string' ? Buffer.from(data, 'base64') : data);
+  return Buffer.concat(Array.from(iterableStrings, toBytes));
 }
 
 module.exports = {

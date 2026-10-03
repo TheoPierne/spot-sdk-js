@@ -1,26 +1,84 @@
+/**
+ * @file Reads a particular series of GRPC request or response messages from a bddf file.
+ */
+
 'use strict';
 
+/**
+ * @typedef {import('google-protobuf').Message} Message
+ */
+
+/**
+ * @typedef {import('./grpc_service_reader').GrpcServiceReader} GrpcServiceReader
+ */
+
+/**
+ * @typedef {import('../../bosdyn/api/bddf_pb').SeriesDescriptor} SeriesDescriptor
+ */
+
+/**
+ * Reads a particular series of GRPC request or response messages from a bddf file.
+ */
 class GrpcProtoReader {
-  constructor(service_reader, series_index, series_type, proto_type, series_descriptor) {
-    this._service_reader = service_reader;
-    this._series_index = series_index;
-    this._series_type = series_type;
-    this._proto_type = proto_type;
-    this._series_descriptor = series_descriptor;
-    this._num_messages = null;
+  /**
+   * @param {GrpcServiceReader} serviceReader
+   * @param {number} seriesIndex
+   * @param {string} seriesType
+   * @param {Message} protoType
+   * @param {SeriesDescriptor} seriesDescriptor
+   */
+  constructor(serviceReader, seriesIndex, seriesType, protoType, seriesDescriptor) {
+    /**
+     * @type {GrpcServiceReader}
+     */
+    this._serviceReader = serviceReader;
+
+    /**
+     * @type {number}
+     */
+    this._seriesIndex = seriesIndex;
+
+    /**
+     * @type {string}
+     */
+    this._seriesType = seriesType;
+
+    /**
+     * @type {Message}
+     */
+    this._protoType = protoType;
+
+    /**
+     * @type {SeriesDescriptor}
+     */
+    this._seriesDescriptor = seriesDescriptor;
+
+    /**
+     * @type {Promise<number>}
+     */
+    this._numMessages = null;
   }
 
-  get num_messages() {
-    if (this._num_messages === null) {
-      this._num_messages = this._service_reader.data_reader.num_data_blocks(this._series_index);
+  /**
+   * Number of messages in of the given type.
+   * @type {Promise<number>}
+   */
+  get numMessages() {
+    if (this._numMessages === null) {
+      this._numMessages = this._serviceReader.dataReader.numDataBlocks(this._seriesIndex);
     }
-    return this._num_messages;
+    return this._numMessages;
   }
 
-  get_message(index_in_series) {
-    const [, timestamp_nsec, data] = this._service_reader.data_reader.read(this._series_index, index_in_series);
-    const protobuf = new this._proto_type(data);
-    return [timestamp_nsec, protobuf];
+  /**
+   * Get a message from the series by its index number in the series.
+   * @param {number} indexInSeries
+   * @returns {Promise<[number, Message]>}
+   */
+  async getMessage(indexInSeries) {
+    const [, timestampNsec, data] = await this._serviceReader.dataReader.read(this._seriesIndex, indexInSeries);
+    const protobuf = this._protoType.deserializeBinary(data);
+    return [timestampNsec, protobuf];
   }
 }
 

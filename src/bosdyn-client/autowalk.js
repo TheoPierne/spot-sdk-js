@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the Autowalk service.
+ */
+
 'use strict';
 
 const { BaseClient, errorFactory } = require('./common');
@@ -9,8 +13,17 @@ const { DefaultDict } = require('./util');
 const autowalkPb = require('../bosdyn/api/autowalk/autowalk_pb');
 const { AutowalkServiceClient } = require('../bosdyn/api/autowalk/autowalk_service_grpc_pb');
 
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ * @typedef {import('./lease').Lease} Lease
+ * @typedef {import('../bosdyn/api/autowalk/walks_pb').Walk} Walk
+ */
+
+/** General class of errors for autowalk service. */
 class AutowalkResponseError extends ResponseError {}
+/** Provided Walk could not be compiled because the Walk was malformed. */
 class CompilationError extends AutowalkResponseError {}
+/** Provided Walk could not be validated because some part of the Walk was unable to initialize. */
 class ValidationError extends AutowalkResponseError {}
 
 /**
@@ -38,9 +51,9 @@ class AutowalkClient extends BaseClient {
 
   /**
    * Send the input walk file to the autowalk service for compilation.
-   * @param {walksPb.Walk} walk A walks_pb.Walk input to be compiled by the autowalk service
+   * @param {Walk} walk A walks_pb.Walk input to be compiled by the autowalk service
    * @param {number} dataChunkTypeByte max size of each streamed message
-   * @param {Object} args The arguments that can be send with the RPC request
+   * @param {Object} [args] The arguments that can be send with the RPC request
    * @returns {Promise<autowalkPb.CompileAutowalkResponse>}
    * @throws {RpcError} Problem communicating with the robot.
    * @throws {CompilationError} The walk failed to compile because it was malformed.
@@ -49,24 +62,25 @@ class AutowalkClient extends BaseClient {
   compileAutowalk(walk, dataChunkTypeByte = 1000 * 1000, args) {
     const req = AutowalkClient._compileAutowalkRequest(walk);
     this._applyRequestProcessors(req, false);
+    // The response is streamed in DataChunks, like assemble_type in Python (response.getStatus was not a function).
     return this.call(
       this._stub.compileAutowalk,
       [...chunkMessage(req, dataChunkTypeByte)],
       null,
       _compileAutowalkErrorFromResponse,
       false,
-      args,
+      { ...args, assembleType: autowalkPb.CompileAutowalkResponse },
     );
   }
 
   /**
    * Send the input walk file to the autowalk service for compilation and
    * load resulting mission to the Mission Service on the robot.
-   * @param {walksPb.Walk} walk A walks_pb.Walk input to be loaded onto the robot by the autowalk service
+   * @param {Walk} walk A walks_pb.Walk input to be loaded onto the robot by the autowalk service
    * @param {Lease[]} leases Leases the autowalk service will need to use. Unlike other clients, these MUST
    * be specified.
    * @param {number} dataChunkByteSize max size of each streamed message
-   * @param {Object} args The arguments that can be send with the RPC request
+   * @param {Object} [args] The arguments that can be send with the RPC request
    * @returns {Promise<autowalkPb.LoadAutowalkResponse>}
    * @throws {RpcError} Problem communicating with the robot.
    * @throws {CompilationError} The walk failed to compile because it was malformed.
@@ -81,13 +95,13 @@ class AutowalkClient extends BaseClient {
       null,
       _loadAutowalkErrorFromResponse,
       false,
-      args,
+      { ...args, assembleType: autowalkPb.LoadAutowalkResponse },
     );
   }
 
   /**
    * Compile autowalk request generator
-   * @param {autowalkPb.Walk} walk A walks_pb.Walk input to be loaded onto the robot by the autowalk service
+   * @param {Walk} walk A walks_pb.Walk input to be loaded onto the robot by the autowalk service
    * @private
    * @returns {autowalkPb.CompileAutowalkRequest}
    */
@@ -97,7 +111,7 @@ class AutowalkClient extends BaseClient {
 
   /**
    * Load autowalk request generator
-   * @param {autowalkPb.Walk} walk A walks_pb.Walk input to be loaded onto the robot by the autowalk service
+   * @param {Walk} walk A walks_pb.Walk input to be loaded onto the robot by the autowalk service
    * @param {Lease[]} leases Leases the autowalk service will need to use. Unlike other clients, these MUST
    * be specified.
    * @returns {autowalkPb.LoadAutowalkRequest}
@@ -133,17 +147,12 @@ const _compileAutowalkErrorFromResponse = response =>
   errorFactory(
     response,
     response.getStatus(),
-    Object.keys(autowalkPb.CompileAutowalkResponse.Status),
+    autowalkPb.CompileAutowalkResponse.Status,
     _COMPILE_AUTOWALK_STATUS_TO_ERROR,
   );
 
 const _loadAutowalkErrorFromResponse = response =>
-  errorFactory(
-    response,
-    response.getStatus(),
-    Object.keys(autowalkPb.LoadAutowalkResponse.Status),
-    _LOAD_AUTOWALK_STATUS_TO_ERROR,
-  );
+  errorFactory(response, response.getStatus(), autowalkPb.LoadAutowalkResponse.Status, _LOAD_AUTOWALK_STATUS_TO_ERROR);
 
 module.exports = {
   AutowalkClient,

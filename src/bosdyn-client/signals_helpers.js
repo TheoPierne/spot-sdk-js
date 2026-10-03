@@ -1,3 +1,7 @@
+/**
+ * @file Helpers for working with DAQ plugins and signals.proto.
+ */
+
 'use strict';
 
 const { camelCase } = require('lodash');
@@ -68,7 +72,8 @@ function buildCapabilityLiveData(signals, capabilityName) {
   capabilityLiveData.setName(capabilityName);
   capabilityLiveData.setStatus(LiveDataResponse.CapabilityLiveData.Status.STATUS_OK);
   for (const [signalId, signal] of Object.entries(signals)) {
-    capabilityLiveData.getSignalsMap().set(signalId, signal);
+    // Copies, like CopyFrom() in Python (the live data shared the signals passed).
+    capabilityLiveData.getSignalsMap().set(signalId, signal.clone());
   }
   return capabilityLiveData;
 }
@@ -80,18 +85,20 @@ function buildCapabilityLiveData(signals, capabilityName) {
  */
 function buildLiveDataResponse(liveDataCapabilities) {
   const response = new LiveDataResponse();
-  response.setLiveDataList(liveDataCapabilities);
+  // Copies, like extend() in Python (the response shared the array and the messages passed).
+  response.setLiveDataList(liveDataCapabilities.map(capability => capability.clone()));
   return response;
 }
 
 /**
  * Checks type of SignalData and returns the value.
  * @param {SignalData} signalData Signal data.
- * @returns {any}
+ * @returns {any} The value, or null without data or value (a TypeError: getValueNotSet() does not exist).
  */
 function getData(signalData) {
   const data = signalData.getData();
-  const valueType = data.getValueCase();
+  const valueType = data?.getValueCase() ?? 0;
+  if (valueType === 0) return null;
   const keyWhichOneOf = Object.keys(data.constructor.ValueCase).find(
     keyOf => data.constructor.ValueCase[keyOf] === valueType,
   );

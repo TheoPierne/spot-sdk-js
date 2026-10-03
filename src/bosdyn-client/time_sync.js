@@ -1,16 +1,28 @@
+/**
+ * @file A client for the time-sync service.
+ *
+ * The time-sync service helps track the difference between the robot's system clock and the system clock of clients,
+ * and sends an estimate of this difference to the client. The client uses this information when it needs to send a
+ * timestamp to the robot in a request proto. Timestamps in request protos generally need to be specified relative to
+ * the robot's system clock.
+ */
+
 'use strict';
 
 const { setTimeout: sleep } = require('node:timers/promises');
 
+const { Duration } = require('google-protobuf/google/protobuf/duration_pb');
 const time = require('google-protobuf/google/protobuf/timestamp_pb');
-const Event = require('node-threading-event');
 
 const { BaseClient, commonHeaderErrors } = require('./common');
+const { BosdynError } = require('./exceptions');
+const { LoggerUtil } = require('./logger_util');
 const { _TimeConverter, NoTimeSyncError } = require('./robot_command');
 
 const timeRangePb = require('../bosdyn/api/time_range_pb');
 const timeSyncPb = require('../bosdyn/api/time_sync_pb');
 const { TimeSyncServiceClient } = require('../bosdyn/api/time_sync_service_grpc_pb');
+const { Event } = require('../bosdyn-core/event');
 const {
   RobotTimeConverter,
   nowNsec,
@@ -20,20 +32,19 @@ const {
   timestampToNsec,
 } = require('../bosdyn-core/util');
 
-class TimeSyncError extends Error {
-  constructor(msg) {
-    super(msg);
-    this.name = this.constructor.name;
-  }
-}
-
-class NotEstablishedError extends TimeSyncError {}
-class TimedOutError extends TimeSyncError {}
-class InactiveThreadError extends TimeSyncError {}
-
 /**
- * @typedef {import('google-protobuf/google/protobuf/duration_pb').Duration} Duration
+ * @typedef {import('./robot_command').RobotCommandClient} RobotCommandClient
  */
+
+/** General class of errors for TimeSync non-response / non-grpc errors. */
+class TimeSyncError extends BosdynError {}
+
+/** Client has not established time-sync with the robot. */
+class NotEstablishedError extends TimeSyncError {}
+/** Exceeded deadline to achieve time-sync. */
+class TimedOutError extends TimeSyncError {}
+/** Time-sync thread is no longer running. */
+class InactiveThreadError extends TimeSyncError {}
 
 /**
  * A client for establishing time-sync with a server/robot.
@@ -52,7 +63,7 @@ class TimeSyncClient extends BaseClient {
    * @param {timeSyncPb.TimeSyncRoundTrip} previousRoundTrip Null on first rpc call, then
    * fill out with previous response from server.
    * @param {string} clockIdentifier Empty on first call, assigned by server in first response.
-   * @param {Object} args The GRPC options to send over the GRPC request
+   * @param {Object} [args] The GRPC options to send over the GRPC request
    * @returns {Promise<timeSyncPb.TimeSyncUpdateResponse>}
    */
   getTimeSyncUpdate(previousRoundTrip, clockIdentifier, args) {
@@ -91,7 +102,7 @@ function robotTimeRangeFromNanoseconds(startNsec, endNsec, timeSyncEndpoint = nu
   const converter = timeSyncEndpoint ? timeSyncEndpoint.getRobotTimeConverter() : null;
 
   function _convertNsec(nsec) {
-    let timestampProto = nsecToTimestamp(parseInt(nsec));
+    const timestampProto = nsecToTimestamp(nsec);
     if (!timeSyncEndpoint) return timestampProto;
     return converter.robotTimestampFromLocal(timestampProto);
   }
@@ -108,8 +119,8 @@ function robotTimeRangeFromNanoseconds(startNsec, endNsec, timeSyncEndpoint = nu
  * be converted to robot_time.
  * If the input times are already in the robot clock, do not specify timeSyncEndpoint and
  * the times will not be converted.
- * @param {number|null} startDatetime Date.now() or null
- * @param {number|null} endDatetime Date.now() or null
+ * @param {Date|number|null} startDatetime A Date, milliseconds since the Unix epoch (e.g. Date.now()), or null
+ * @param {Date|number|null} endDatetime A Date, milliseconds since the Unix epoch (e.g. Date.now()), or null
  * @param {TimeSyncEndpoint|null} timeSyncEndpoint Either TimeSyncEndpoint or null.
  * @returns {timeRangePb.TimeRange}
  */
@@ -133,8 +144,11 @@ function robotTimeRangeFromDatetimes(startDatetime, endDatetime, timeSyncEndpoin
  * @returns {timeRangePb.TimeRange}
  */
 function timespecToRobotTimespan(timespanSpec, timeSyncEndpoint = null) {
-  let [startDatetime, endDatetime] = parseTimespan(timespanSpec);
-  return robotTimeRangeFromDatetimes(startDatetime, endDatetime, timeSyncEndpoint);
+  // parseTimespan gives seconds since the epoch (Python gives datetimes): read as milliseconds by
+  // robotTimeRangeFromDatetimes, '2d' ended up in January 1970.
+  const [startSec, endSec] = parseTimespan(timespanSpec);
+  const secToNsec = sec => (sec === null || sec === undefined ? null : sec * 1e9);
+  return robotTimeRangeFromNanoseconds(secToNsec(startSec), secToNsec(endSec), timeSyncEndpoint);
 }
 
 /** @typedef {import('google-protobuf/google/protobuf/timestamp_pb').Timestamp} Timestamp */
@@ -142,7 +156,7 @@ function timespecToRobotTimespan(timespanSpec, timeSyncEndpoint = null) {
 /**
  * Set or convert fields of the proto that need timestamps in the robot's clock.
  * @param {RobotCommandClient} client Robot command client instance.
- * @param {number} timestamp Client time, such as from Date.now().
+ * @param {number} timestamp Client time in seconds since the Unix epoch, e.g. nowSec() (not Date.now()).
  * @param {TimeSyncEndpoint} timesyncEndpoint A timesync endpoint associated with the robot object.
  * @returns {Timestamp}
  */
@@ -191,7 +205,6 @@ class TimeSyncEndpoint {
   /**
    * The last response message from the time-sync service.
    * @returns {?timeSyncPb.TimeSyncUpdateResponse}
-   * @readonly
    */
   get response() {
     return this._previousResponse;
@@ -200,27 +213,26 @@ class TimeSyncEndpoint {
   /**
    * Checks if the client has successfully established time-sync with the robot.
    * @returns {boolean}
-   * @readonly
    */
   get hasEstablishedTimeSync() {
-    const response = this.response;
-    return response && response.getState().getStatus() === timeSyncPb.TimeSyncState.Status.STATUS_OK;
+    return this.response?.getState()?.getStatus() === timeSyncPb.TimeSyncState.Status.STATUS_OK;
   }
 
   /**
    * The previous round trip time.
    * @returns {Duration|null}
-   * @readonly
    */
   get roundTripTime() {
     const response = this.response;
-    return response ? response.getState().getBestEstimate().getRoundTripTime() : null;
+    if (!response) return null;
+    // Before time sync is established (more samples needed), there is no estimate yet: like the default
+    // proto in Python, a zero duration.
+    return response.getState()?.getBestEstimate()?.getRoundTripTime() ?? new Duration();
   }
 
   /**
    * The clock identifier for the instance of the time-sync client.
    * @returns {string}
-   * @readonly
    */
   get clockIdentifier() {
     return this._clockIdentifier;
@@ -230,14 +242,12 @@ class TimeSyncEndpoint {
    * The best current estimate of clock skew from the time-sync service.
    * @returns {Duration}
    * @throws {NotEstablishedError} Time sync has not yet been established.
-   * @readonly
    */
   get clockSkew() {
-    const response = this.response;
-    if (!response || response.getState().getStatus() !== timeSyncPb.TimeSyncState.Status.STATUS_OK) {
+    if (!this.hasEstablishedTimeSync) {
       throw new NotEstablishedError();
     }
-    return response.getState().getBestEstimate().getClockSkew();
+    return this.response.getState().getBestEstimate()?.getClockSkew() ?? new Duration();
   }
 
   /**
@@ -251,7 +261,7 @@ class TimeSyncEndpoint {
   async establishTimesync(maxSamples = 25, breakOnSuccess = false) {
     for (let counter = 0; counter < maxSamples; counter++) {
       if (breakOnSuccess && this.hasEstablishedTimeSync) return true;
-      // eslint-disable-next-line no-await-in-loop
+
       await this.getNewEstimate();
     }
     return this.hasEstablishedTimeSync;
@@ -283,7 +293,7 @@ class TimeSyncEndpoint {
 
     const roundTrip = new timeSyncPb.TimeSyncRoundTrip()
       .setClientRx(new time.Timestamp())
-      .setClientTx(header.getRequestHeader().getRequestTimestamp())
+      .setClientTx(header.getRequestHeader()?.getRequestTimestamp())
       .setServerRx(header.getRequestReceivedTimestamp())
       .setServerTx(header.getResponseTimestamp());
     setTimestampFromNsec(roundTrip.getClientRx(), rxTime);
@@ -306,7 +316,7 @@ class TimeSyncEndpoint {
 
   /**
    * Convert a local time in seconds to a timestamp proto in robot time.
-   * @param {number} localTimeSecs Timestamp in seconds since the unix epoch (e.g., from Date.now()).
+   * @param {number} localTimeSecs Timestamp in seconds since the unix epoch (e.g. nowSec(), not Date.now()).
    * @returns {Timestamp}
    * @throws {NotEstablishedError} Time sync has not yet been established.
    */
@@ -317,6 +327,9 @@ class TimeSyncEndpoint {
   }
 }
 
+// Like Python's daemon thread, the waits of the time sync do not keep the process alive.
+const _DAEMON = { ref: false };
+
 /**
  * Background for achieving and maintaining time-sync to the robot.
  */
@@ -325,13 +338,13 @@ class TimeSyncThread {
    * After achieving time sync, update estimate every minute.
    * @type {number}
    */
-  DEFAULT_TIME_SYNC_INTERVAL_SEC = 60_000;
+  DEFAULT_TIME_SYNC_INTERVAL_MS = 60_000;
 
   /**
    * When time-sync service is not yet ready, poll it at this interval
    * @type {number}
    */
-  TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC = 5_000;
+  TIME_SYNC_SERVICE_NOT_READY_INTERVAL_MS = 5_000;
 
   /**
    * @param {TimeSyncClient} timeSyncClient An instance of TimeSyncClient
@@ -350,7 +363,10 @@ class TimeSyncThread {
      * @type {number}
      * @private
      */
-    this._timeSyncIntervalSec = this.DEFAULT_TIME_SYNC_INTERVAL_SEC;
+    this._timeSyncIntervalMs = this.DEFAULT_TIME_SYNC_INTERVAL_MS;
+
+    this._task = null;
+    this._running = false;
 
     /**
      * Boolean that control the loop
@@ -367,10 +383,13 @@ class TimeSyncThread {
     this._exception = null;
 
     /**
+     * Wait for the next time-sync update, interrupted when the thread should exit or the interval changes.
      * @type {Event}
      * @private
      */
     this._event = new Event();
+
+    this.logger = LoggerUtil.getLogger('bosdyn.TimeSyncThread');
   }
 
   /**
@@ -378,29 +397,41 @@ class TimeSyncThread {
    * @returns {void}
    */
   start() {
+    if (this._running) {
+      // stop() was called but the loop has not ended yet (an update is in progress): keep it running,
+      // otherwise a stop() followed by a start() would end with no time sync at all.
+      this._shouldExit = false;
+      return;
+    }
     this._shouldExit = false;
     this._exception = null;
     this._event.clear();
-    this._timesyncThread();
+    this._running = true;
+    this._task = this._timesyncThread().finally(() => {
+      this._running = false;
+      this._task = null;
+      // start() was called while the loop was ending: run it again.
+      if (!this._shouldExit && this._exception === null) this.start();
+    });
   }
 
   /**
-   * Stop time sync with robot
-   * @returns {void}
+   * Stop time sync with robot. Like Python's join, the returned promise resolves once the update in
+   * progress (if any) is done.
+   * @returns {Promise<void>}
    */
   stop() {
-    if (this._shouldExit) return;
     this._shouldExit = true;
     this._event.set();
+    return this._task ?? Promise.resolve();
   }
 
   /**
    * Get the time sync interval in seconds
    * @type {number}
-   * @readonly
    */
   get timeSyncIntervalSec() {
-    return this._timeSyncIntervalSec;
+    return this._timeSyncIntervalMs / 1_000;
   }
 
   /**
@@ -408,14 +439,14 @@ class TimeSyncThread {
    * @param {number} val The interval in seconds
    */
   set timeSyncIntervalSec(val) {
-    this._timeSyncIntervalSec = val;
+    if (!Number.isFinite(val) || val <= 0) throw new RangeError('timeSyncIntervalSec must be > 0');
+    this._timeSyncIntervalMs = val * 1_000;
     this._event.set();
   }
 
   /**
    * Return true if all sync operations should stop
    * @type {boolean}
-   * @readonly
    */
   get shouldExit() {
     return this._shouldExit;
@@ -426,21 +457,23 @@ class TimeSyncThread {
    * @param {number} timeoutSec Maximum time (seconds) to wait for time-sync to be achieved.
    * @returns {Promise<void>}
    */
-  async waitForSync(timeoutSec = 3_000) {
+  async waitForSync(timeoutSec = 3) {
     if (this.hasEstablishedTimeSync) return;
 
-    const endTimeSec = Date.now() + timeoutSec;
+    const endTimeMs = Date.now() + timeoutSec * 1_000;
 
-    while (!this.shouldExit) {
+    // Like Python, wait while the thread runs: if it dies (e.g. on an RPC error), report its error at
+    // once instead of waiting until the timeout.
+    while (!this.stopped) {
       if (this.endpoint.hasEstablishedTimeSync) return;
-      if (Date.now() > endTimeSec) throw new TimedOutError();
-      // eslint-disable-next-line no-await-in-loop
+      if (Date.now() > endTimeMs) throw new TimedOutError();
+
       await sleep(100);
     }
 
-    const threadExc = this.threadException;
+    const threadExc = this.exception;
     if (threadExc) {
-      throw threadExc();
+      throw threadExc;
     }
     throw new InactiveThreadError();
   }
@@ -453,14 +486,20 @@ class TimeSyncThread {
     return this.endpoint.hasEstablishedTimeSync;
   }
 
+  /**
+   * Returns true if thread is no longer running.
+   */
   get stopped() {
-    return !this._event.isSet();
+    return !this._running;
   }
 
   get exception() {
     return this._exception;
   }
 
+  /**
+   * Return the TimeSyncEndpoint used by this thread.
+   */
   get endpoint() {
     return this._timeSyncEndpoint;
   }
@@ -487,7 +526,7 @@ class TimeSyncThread {
 
   /**
    * Convert a local time in seconds to a timestamp proto in robot time.
-   * @param {number} localTimeSecs Timestamp in seconds since the unix epoch (e.g., from Date.now()).
+   * @param {number} localTimeSecs Timestamp in seconds since the unix epoch (e.g. nowSec(), not Date.now()).
    * @param {number} timesyncTimeoutSec Time to wait for timesync before doing conversion.
    * @returns {Promise<time.Timestamp|null>}
    */
@@ -505,19 +544,15 @@ class TimeSyncThread {
    */
   async _timesyncThread() {
     try {
-      /* eslint-disable no-await-in-loop */
       while (!this.shouldExit) {
-        const response = this._timeSyncEndpoint.response;
+        const status = this._timeSyncEndpoint.response?.getState()?.getStatus();
 
-        if (
-          !response ||
-          response.getState().getStatus() === timeSyncPb.TimeSyncState.Status.STATUS_MORE_SAMPLES_NEEDED
-        ) {
+        if (status === undefined || status === timeSyncPb.TimeSyncState.Status.STATUS_MORE_SAMPLES_NEEDED) {
           // Pass
-        } else if (response.getState().getStatus() === timeSyncPb.TimeSyncState.Status.STATUS_SERVICE_NOT_READY) {
-          await this._event.wait(this.TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC);
+        } else if (status === timeSyncPb.TimeSyncState.Status.STATUS_SERVICE_NOT_READY) {
+          await this._event.wait(this.TIME_SYNC_SERVICE_NOT_READY_INTERVAL_MS, _DAEMON);
         } else {
-          await this._event.wait(this._timeSyncIntervalSec);
+          await this._event.wait(this._timeSyncIntervalMs, _DAEMON);
         }
         this._event.clear();
 
@@ -525,9 +560,10 @@ class TimeSyncThread {
           await this._timeSyncEndpoint.getNewEstimate();
         }
       }
-      /* eslint-enable no-await-in-loop */
     } catch (e) {
-      console.log(e);
+      // Like Python, the error ends the thread and is raised by waitForSync(). Also log it: the time sync
+      // would otherwise stop silently (robot.timeSync restarts a stopped thread).
+      this.logger.error(`Time sync stopped by an error: ${e?.message ?? e}`);
       this._exception = e;
     }
   }

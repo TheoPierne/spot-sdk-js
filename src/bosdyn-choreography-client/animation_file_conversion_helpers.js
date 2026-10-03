@@ -8,7 +8,100 @@
 
 'use strict';
 
+const { BoolValue, DoubleValue } = require('google-protobuf/google/protobuf/wrappers_pb');
+
+const geometryPb = require('../bosdyn/api/geometry_pb');
+const choreographyParamsPb = require('../bosdyn/api/spot/choreography_params_pb');
 const choreographySequencePb = require('../bosdyn/api/spot/choreography_sequence_pb');
+
+/**
+ * The sub-message of a message, created if it is not set: like the fields of the Python messages, on which the
+ * handlers set values directly (getLegs() & co. returned undefined on a new keyframe: TypeError).
+ * @param {import('google-protobuf').Message} message
+ * @param {string} field Name of the field in the accessors, e.g. 'Legs' for getLegs() and setLegs().
+ * @param {Function} MessageClass Class of the sub-message.
+ * @returns {import('google-protobuf').Message}
+ */
+function _sub(message, field, MessageClass) {
+  let sub = message[`get${field}`]();
+  if (!sub) {
+    sub = new MessageClass();
+    message[`set${field}`](sub);
+  }
+  return sub;
+}
+
+/** The value of a DoubleValue field is set. */
+function _setDouble(message, field, value) {
+  _sub(message, field, DoubleValue).setValue(value);
+}
+
+function _leg(frame, leg) {
+  return _sub(_sub(frame, 'Legs', choreographySequencePb.AnimateLegs), leg, choreographySequencePb.AnimateSingleLeg);
+}
+
+function _legJointAngles(frame, leg) {
+  return _sub(_leg(frame, leg), 'JointAngles', choreographySequencePb.LegJointAngles);
+}
+
+function _footPos(frame, leg) {
+  return _sub(_leg(frame, leg), 'FootPos', geometryPb.Vec3Value);
+}
+
+function _setVec3(vec3, x, y, z) {
+  _setDouble(vec3, 'X', x);
+  _setDouble(vec3, 'Y', y);
+  _setDouble(vec3, 'Z', z);
+}
+
+function _setStance(frame, leg, val) {
+  // Like int(val) in Python: a 0 of the file is read as 1e-6, which is false (it set true).
+  _sub(_leg(frame, leg), 'Stance', BoolValue).setValue(Math.trunc(val) !== 0);
+}
+
+function _body(frame) {
+  return _sub(frame, 'Body', choreographySequencePb.AnimateBody);
+}
+
+function _bodyPos(frame) {
+  return _sub(_body(frame), 'BodyPos', geometryPb.Vec3Value);
+}
+
+function _comPos(frame) {
+  return _sub(_body(frame), 'ComPos', geometryPb.Vec3Value);
+}
+
+function _bodyEuler(frame) {
+  return _sub(_body(frame), 'EulerAngles', choreographyParamsPb.EulerZYXValue);
+}
+
+function _bodyQuaternion(frame) {
+  return _sub(_body(frame), 'Quaternion', geometryPb.Quaternion);
+}
+
+function _arm(frame) {
+  return _sub(frame, 'Arm', choreographySequencePb.AnimateArm);
+}
+
+function _armJointAngles(frame) {
+  return _sub(_arm(frame), 'JointAngles', choreographySequencePb.ArmJointAngles);
+}
+
+function _handPose(frame) {
+  return _sub(_arm(frame), 'HandPose', choreographySequencePb.AnimateArm.HandPose);
+}
+
+function _handPosition(frame) {
+  return _sub(_handPose(frame), 'Position', geometryPb.Vec3Value);
+}
+
+function _handEuler(frame) {
+  return _sub(_handPose(frame), 'EulerAngles', choreographyParamsPb.EulerZYXValue);
+}
+
+function _handQuaternion(frame) {
+  return _sub(_handPose(frame), 'Quaternion', geometryPb.Quaternion);
+}
 
 exports.startTimeHandler = (val, animationFrame) => {
   animationFrame.setTime(val);
@@ -16,459 +109,453 @@ exports.startTimeHandler = (val, animationFrame) => {
 };
 
 exports.flAnglesHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getFl().getJointAngles().setHipX(vals[0]).setHipY(vals[1]).setKnee(vals[2]);
+  _legJointAngles(animationFrame, 'Fl').setHipX(vals[0]).setHipY(vals[1]).setKnee(vals[2]);
   return animationFrame;
 };
 
 exports.frAnglesHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getFr().getJointAngles().setHipX(vals[0]).setHipY(vals[1]).setKnee(vals[2]);
+  _legJointAngles(animationFrame, 'Fr').setHipX(vals[0]).setHipY(vals[1]).setKnee(vals[2]);
   return animationFrame;
 };
 
 exports.hlAnglesHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getHl().getJointAngles().setHipX(vals[0]).setHipY(vals[1]).setKnee(vals[2]);
+  _legJointAngles(animationFrame, 'Hl').setHipX(vals[0]).setHipY(vals[1]).setKnee(vals[2]);
   return animationFrame;
 };
 
 exports.hrAnglesHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getHr().getJointAngles().setHipX(vals[0]).setHipY(vals[1]).setKnee(vals[2]);
+  _legJointAngles(animationFrame, 'Hr').setHipX(vals[0]).setHipY(vals[1]).setKnee(vals[2]);
   return animationFrame;
 };
 
 exports.flPosHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getFl().getFootPos().getX().setValue(vals[0]);
-  animationFrame.getLegs().getFl().getFootPos().getY().setValue(vals[1]);
-  animationFrame.getLegs().getFl().getFootPos().getZ().setValue(vals[2]);
+  _setVec3(_footPos(animationFrame, 'Fl'), vals[0], vals[1], vals[2]);
   return animationFrame;
 };
 
 exports.frPosHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getFr().getFootPos().getX().setValue(vals[0]);
-  animationFrame.getLegs().getFr().getFootPos().getY().setValue(vals[1]);
-  animationFrame.getLegs().getFr().getFootPos().getZ().setValue(vals[2]);
+  _setVec3(_footPos(animationFrame, 'Fr'), vals[0], vals[1], vals[2]);
   return animationFrame;
 };
 
 exports.hlPosHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getHl().getFootPos().getX().setValue(vals[0]);
-  animationFrame.getLegs().getHl().getFootPos().getY().setValue(vals[1]);
-  animationFrame.getLegs().getHl().getFootPos().getZ().setValue(vals[2]);
+  _setVec3(_footPos(animationFrame, 'Hl'), vals[0], vals[1], vals[2]);
   return animationFrame;
 };
 
 exports.hrPosHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getHr().getFootPos().getX().setValue(vals[0]);
-  animationFrame.getLegs().getHr().getFootPos().getY().setValue(vals[1]);
-  animationFrame.getLegs().getHr().getFootPos().getZ().setValue(vals[2]);
+  _setVec3(_footPos(animationFrame, 'Hr'), vals[0], vals[1], vals[2]);
   return animationFrame;
 };
 
 exports.gripperHandler = (val, animationFrame) => {
-  animationFrame.getGripper().getGripperAngle().setValue(val);
+  _setDouble(_sub(animationFrame, 'Gripper', choreographySequencePb.AnimateGripper), 'GripperAngle', val);
   return animationFrame;
 };
 
 exports.flContactHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFl().getStance().setValue(val);
+  _setStance(animationFrame, 'Fl', val);
   return animationFrame;
 };
 
 exports.frContactHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFr().getStance().setValue(val);
+  _setStance(animationFrame, 'Fr', val);
   return animationFrame;
 };
 
 exports.hlContactHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHl().getStance().setValue(val);
+  _setStance(animationFrame, 'Hl', val);
   return animationFrame;
 };
 
 exports.hrContactHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getStance().setValue(val);
+  _setStance(animationFrame, 'Hr', val);
   return animationFrame;
 };
 
 exports.sh0Handler = (val, animationFrame) => {
-  animationFrame.getArm().getJointAngles().getShoulder0().setValue(val);
+  _setDouble(_armJointAngles(animationFrame), 'Shoulder0', val);
   return animationFrame;
 };
 
 exports.sh1Handler = (val, animationFrame) => {
-  animationFrame.getArm().getJointAngles().getShoulder1().setValue(val);
+  _setDouble(_armJointAngles(animationFrame), 'Shoulder1', val);
   return animationFrame;
 };
 
 exports.el0Handler = (val, animationFrame) => {
-  animationFrame.getArm().getJointAngles().getElbow0().setValue(val);
+  _setDouble(_armJointAngles(animationFrame), 'Elbow0', val);
   return animationFrame;
 };
 
 exports.el1Handler = (val, animationFrame) => {
-  animationFrame.getArm().getJointAngles().getElbow1().setValue(val);
+  _setDouble(_armJointAngles(animationFrame), 'Elbow1', val);
   return animationFrame;
 };
 
 exports.wr0Handler = (val, animationFrame) => {
-  animationFrame.getArm().getJointAngles().getWrist0().setValue(val);
+  _setDouble(_armJointAngles(animationFrame), 'Wrist0', val);
   return animationFrame;
 };
 
 exports.wr1Handler = (val, animationFrame) => {
-  animationFrame.getArm().getJointAngles().getWrist1().setValue(val);
+  _setDouble(_armJointAngles(animationFrame), 'Wrist1', val);
   return animationFrame;
 };
 
 exports.flHxHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFl().getJointAngles().setHipX(val);
+  _legJointAngles(animationFrame, 'Fl').setHipX(val);
   return animationFrame;
 };
 
 exports.flHyHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFl().getJointAngles().setHipY(val);
+  _legJointAngles(animationFrame, 'Fl').setHipY(val);
   return animationFrame;
 };
 
 exports.flKnHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFl().getJointAngles().setKnee(val);
+  _legJointAngles(animationFrame, 'Fl').setKnee(val);
   return animationFrame;
 };
 
 exports.frHxHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFr().getJointAngles().setHipX(val);
+  _legJointAngles(animationFrame, 'Fr').setHipX(val);
   return animationFrame;
 };
 
 exports.frHyHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFr().getJointAngles().setHipY(val);
+  _legJointAngles(animationFrame, 'Fr').setHipY(val);
   return animationFrame;
 };
 
 exports.frKnHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFr().getJointAngles().setKnee(val);
+  _legJointAngles(animationFrame, 'Fr').setKnee(val);
   return animationFrame;
 };
 
 exports.hlHxHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHl().getJointAngles().setHipX(val);
+  _legJointAngles(animationFrame, 'Hl').setHipX(val);
   return animationFrame;
 };
 
 exports.hlHyHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHl().getJointAngles().setHipY(val);
+  _legJointAngles(animationFrame, 'Hl').setHipY(val);
   return animationFrame;
 };
 
 exports.hlKnHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHl().getJointAngles().setKnee(val);
+  _legJointAngles(animationFrame, 'Hl').setKnee(val);
   return animationFrame;
 };
 
 exports.hrHxHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getJointAngles().setHipX(val);
+  _legJointAngles(animationFrame, 'Hr').setHipX(val);
   return animationFrame;
 };
 
 exports.hrHyHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getJointAngles().setHipY(val);
+  _legJointAngles(animationFrame, 'Hr').setHipY(val);
   return animationFrame;
 };
 
 exports.hrKnHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getJointAngles().setKnee(val);
+  _legJointAngles(animationFrame, 'Hr').setKnee(val);
   return animationFrame;
 };
 
 exports.flXHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFl().getFootPos().getX().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Fl'), 'X', val);
   return animationFrame;
 };
 
 exports.flYHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFl().getFootPos().getY().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Fl'), 'Y', val);
   return animationFrame;
 };
 
 exports.flZHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFl().getFootPos().getZ().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Fl'), 'Z', val);
   return animationFrame;
 };
 
 exports.frXHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFr().getFootPos().getX().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Fr'), 'X', val);
   return animationFrame;
 };
 
 exports.frYHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFr().getFootPos().getY().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Fr'), 'Y', val);
   return animationFrame;
 };
 
 exports.frZHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getFr().getFootPos().getZ().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Fr'), 'Z', val);
   return animationFrame;
 };
 
 exports.hlXHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHl().getFootPos().getX().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Hl'), 'X', val);
   return animationFrame;
 };
 
 exports.hlYHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHl().getFootPos().getY().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Hl'), 'Y', val);
   return animationFrame;
 };
 
 exports.hlZHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHl().getFootPos().getZ().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Hl'), 'Z', val);
   return animationFrame;
 };
 
 exports.hrXHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getFootPos().getX().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Hr'), 'X', val);
   return animationFrame;
 };
 
 exports.hrYHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getFootPos().getY().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Hr'), 'Y', val);
   return animationFrame;
 };
 
 exports.hrZHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getFootPos().getZ().setValue(val);
+  _setDouble(_footPos(animationFrame, 'Hr'), 'Z', val);
   return animationFrame;
 };
 
 exports.bodyXHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getBodyPos().getX().setValue(val);
+  _setDouble(_bodyPos(animationFrame), 'X', val);
   return animationFrame;
 };
 
 exports.bodyYHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getBodyPos().getY().setValue(val);
+  _setDouble(_bodyPos(animationFrame), 'Y', val);
   return animationFrame;
 };
 
 exports.bodyZHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getBodyPos().getZ().setValue(val);
+  _setDouble(_bodyPos(animationFrame), 'Z', val);
   return animationFrame;
 };
 
 exports.comXHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getComPos().getX().setValue(val);
+  _setDouble(_comPos(animationFrame), 'X', val);
   return animationFrame;
 };
 
 exports.comYHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getComPos().getY().setValue(val);
+  _setDouble(_comPos(animationFrame), 'Y', val);
   return animationFrame;
 };
 
 exports.comZHandler = (val, animationFrame) => {
-  animationFrame.getLegs().getHr().getComPos().getZ().setValue(val);
+  _setDouble(_comPos(animationFrame), 'Z', val);
   return animationFrame;
 };
 
 exports.bodyQuatXHandler = (val, animationFrame) => {
-  animationFrame.getBody().getQuaternion().setX(val);
+  _bodyQuaternion(animationFrame).setX(val);
   return animationFrame;
 };
 
 exports.bodyQuatYHandler = (val, animationFrame) => {
-  animationFrame.getBody().getQuaternion().setY(val);
+  _bodyQuaternion(animationFrame).setY(val);
   return animationFrame;
 };
 
 exports.bodyQuatZHandler = (val, animationFrame) => {
-  animationFrame.getBody().getQuaternion().setZ(val);
+  _bodyQuaternion(animationFrame).setZ(val);
   return animationFrame;
 };
 
 exports.bodyQuatWHandler = (val, animationFrame) => {
-  animationFrame.getBody().getQuaternion().setW(val);
+  _bodyQuaternion(animationFrame).setW(val);
   return animationFrame;
 };
 
 exports.bodyRollHandler = (val, animationFrame) => {
-  animationFrame.getBody().getEulerAngles().getRoll().setValue(val);
+  _setDouble(_bodyEuler(animationFrame), 'Roll', val);
   return animationFrame;
 };
 
 exports.bodyPitchHandler = (val, animationFrame) => {
-  animationFrame.getBody().getEulerAngles().getPitch().setValue(val);
+  _setDouble(_bodyEuler(animationFrame), 'Pitch', val);
   return animationFrame;
 };
 
 exports.bodyYawHandler = (val, animationFrame) => {
-  animationFrame.getBody().getEulerAngles().getYaw().setValue(val);
+  _setDouble(_bodyEuler(animationFrame), 'Yaw', val);
   return animationFrame;
 };
 
 exports.bodyPosHandler = (vals, animationFrame) => {
-  animationFrame.getBody().getBodyPos().getX().setValue(vals[0]);
-  animationFrame.getBody().getBodyPos().getY().setValue(vals[1]);
-  animationFrame.getBody().getBodyPos().getZ().setValue(vals[2]);
+  _setVec3(_bodyPos(animationFrame), vals[0], vals[1], vals[2]);
   return animationFrame;
 };
 
 exports.comPosHandler = (vals, animationFrame) => {
-  animationFrame.getBody().getComPos().getX().setValue(vals[0]);
-  animationFrame.getBody().getComPos().getY().setValue(vals[1]);
-  animationFrame.getBody().getComPos().getZ().setValue(vals[2]);
+  _setVec3(_comPos(animationFrame), vals[0], vals[1], vals[2]);
   return animationFrame;
 };
 
 exports.bodyEulerRpyAnglesHandler = (vals, animationFrame) => {
-  animationFrame.getBody().getEulerAngles().getRoll().setValue(vals[0]);
-  animationFrame.getBody().getEulerAngles().getPitch().setValue(vals[1]);
-  animationFrame.getBody().getEulerAngles().getYaw().setValue(vals[2]);
+  const euler = _bodyEuler(animationFrame);
+  _setDouble(euler, 'Roll', vals[0]);
+  _setDouble(euler, 'Pitch', vals[1]);
+  _setDouble(euler, 'Yaw', vals[2]);
   return animationFrame;
 };
 
 exports.bodyQuaternionXyzwHandler = (vals, animationFrame) => {
-  animationFrame.getBody().getQuaternion().setX(vals[0]);
-  animationFrame.getBody().getQuaternion().setY(vals[1]);
-  animationFrame.getBody().getQuaternion().setZ(vals[2]);
-  animationFrame.getBody().getQuaternion().setW(vals[3]);
+  _bodyQuaternion(animationFrame).setX(vals[0]).setY(vals[1]).setZ(vals[2]).setW(vals[3]);
   return animationFrame;
 };
 
-exports.bodyQuaternionWxyzwHandler = (vals, animationFrame) => {
-  animationFrame.getBody().getQuaternion().setX(vals[1]);
-  animationFrame.getBody().getQuaternion().setY(vals[2]);
-  animationFrame.getBody().getQuaternion().setZ(vals[3]);
-  animationFrame.getBody().getQuaternion().setW(vals[0]);
+exports.bodyQuaternionWxyzHandler = (vals, animationFrame) => {
+  _bodyQuaternion(animationFrame).setX(vals[1]).setY(vals[2]).setZ(vals[3]).setW(vals[0]);
   return animationFrame;
 };
+
+/**
+ * @deprecated Misspelled: use bodyQuaternionWxyzHandler (the body_quat_wxyz column was not recognized).
+ */
+exports.bodyQuaternionWxyzwHandler = exports.bodyQuaternionWxyzHandler;
 
 exports.legAnglesHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getFl().getJointAngles().setHipX(vals[0]);
-  animationFrame.getLegs().getFl().getJointAngles().setHipY(vals[1]);
-  animationFrame.getLegs().getFl().getJointAngles().setKnee(vals[2]);
-  animationFrame.getLegs().getFr().getJointAngles().setHipX(vals[3]);
-  animationFrame.getLegs().getFr().getJointAngles().setHipY(vals[4]);
-  animationFrame.getLegs().getFr().getJointAngles().setKnee(vals[5]);
-  animationFrame.getLegs().getHl().getJointAngles().setHipX(vals[6]);
-  animationFrame.getLegs().getHl().getJointAngles().setHipY(vals[7]);
-  animationFrame.getLegs().getHl().getJointAngles().setKnee(vals[8]);
-  animationFrame.getLegs().getHr().getJointAngles().setHipX(vals[9]);
-  animationFrame.getLegs().getHr().getJointAngles().setHipY(vals[10]);
-  animationFrame.getLegs().getHr().getJointAngles().setKnee(vals[11]);
+  ['Fl', 'Fr', 'Hl', 'Hr'].forEach((leg, i) => {
+    _legJointAngles(animationFrame, leg)
+      .setHipX(vals[3 * i])
+      .setHipY(vals[3 * i + 1])
+      .setKnee(vals[3 * i + 2]);
+  });
   return animationFrame;
 };
 
 exports.footPosHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getFl().getFootPos().getX().setValue(vals[0]);
-  animationFrame.getLegs().getFl().getFootPos().getY().setValue(vals[1]);
-  animationFrame.getLegs().getFl().getFootPos().getZ().setValue(vals[2]);
-  animationFrame.getLegs().getFr().getFootPos().getX().setValue(vals[3]);
-  animationFrame.getLegs().getFr().getFootPos().getY().setValue(vals[4]);
-  animationFrame.getLegs().getFr().getFootPos().getZ().setValue(vals[5]);
-  animationFrame.getLegs().getHl().getFootPos().getX().setValue(vals[6]);
-  animationFrame.getLegs().getHl().getFootPos().getY().setValue(vals[7]);
-  animationFrame.getLegs().getHl().getFootPos().getZ().setValue(vals[8]);
-  animationFrame.getLegs().getHr().getFootPos().getX().setValue(vals[9]);
-  animationFrame.getLegs().getHr().getFootPos().getY().setValue(vals[10]);
-  animationFrame.getLegs().getHr().getFootPos().getZ().setValue(vals[11]);
+  ['Fl', 'Fr', 'Hl', 'Hr'].forEach((leg, i) => {
+    _setVec3(_footPos(animationFrame, leg), vals[3 * i], vals[3 * i + 1], vals[3 * i + 2]);
+  });
   return animationFrame;
 };
 
 exports.contactHandler = (vals, animationFrame) => {
-  animationFrame.getLegs().getFl().getStance().setValue(vals[0]);
-  animationFrame.getLegs().getFr().getStance().setValue(vals[0]);
-  animationFrame.getLegs().getHl().getStance().setValue(vals[0]);
-  animationFrame.getLegs().getHr().getStance().setValue(vals[0]);
+  // One value for each leg (vals[0] was set on the 4 legs).
+  ['Fl', 'Fr', 'Hl', 'Hr'].forEach((leg, i) => _setStance(animationFrame, leg, vals[i]));
   return animationFrame;
 };
 
 exports.armJointsHandler = (vals, animationFrame) => {
-  animationFrame.getArm().getJointAngles().getShoulder0().setValue(vals[0]);
-  animationFrame.getArm().getJointAngles().getShoulder1().setValue(vals[1]);
-  animationFrame.getArm().getJointAngles().getElbow0().setValue(vals[2]);
-  animationFrame.getArm().getJointAngles().getElbow1().setValue(vals[3]);
-  animationFrame.getArm().getJointAngles().getWrist0().setValue(vals[4]);
-  animationFrame.getArm().getJointAngles().getWrist1().setValue(vals[5]);
+  const jointAngles = _armJointAngles(animationFrame);
+  ['Shoulder0', 'Shoulder1', 'Elbow0', 'Elbow1', 'Wrist0', 'Wrist1'].forEach((joint, i) =>
+    _setDouble(jointAngles, joint, vals[i]),
+  );
   return animationFrame;
 };
 
+// The single hand_x/y/z columns get a single value (Python reads vals[0] of it, and sets a Vec3Value field to it).
 exports.handXHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getPosition().setX(val);
+  _setDouble(_handPosition(animationFrame), 'X', val);
   return animationFrame;
 };
 
 exports.handYHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getPosition().setY(val);
+  _setDouble(_handPosition(animationFrame), 'Y', val);
   return animationFrame;
 };
 
 exports.handZHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getPosition().setZ(val);
+  _setDouble(_handPosition(animationFrame), 'Z', val);
   return animationFrame;
 };
 
 exports.handQuatXHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getQuaternion().setX(val);
+  _handQuaternion(animationFrame).setX(val);
   return animationFrame;
 };
 
 exports.handQuatYHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getQuaternion().setY(val);
+  _handQuaternion(animationFrame).setY(val);
   return animationFrame;
 };
 
 exports.handQuatZHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getQuaternion().setZ(val);
+  _handQuaternion(animationFrame).setZ(val);
   return animationFrame;
 };
 
 exports.handQuatWHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getQuaternion().setW(val);
+  _handQuaternion(animationFrame).setW(val);
   return animationFrame;
 };
 
 exports.handRollHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getEulerAngles().getRoll().setValue(val);
+  _setDouble(_handEuler(animationFrame), 'Roll', val);
   return animationFrame;
 };
 
 exports.handPitchHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getEulerAngles().getPitch().setValue(val);
+  _setDouble(_handEuler(animationFrame), 'Pitch', val);
   return animationFrame;
 };
 
 exports.handYawHandler = (val, animationFrame) => {
-  animationFrame.getArm().getHandPose().getEulerAngles().getYaw().setValue(val);
+  _setDouble(_handEuler(animationFrame), 'Yaw', val);
   return animationFrame;
 };
 
 exports.handPosHandler = (vals, animationFrame) => {
-  animationFrame.getArm().getHandPose().getPosition().getX().setValue(vals[0]);
-  animationFrame.getArm().getHandPose().getPosition().getY().setValue(vals[1]);
-  animationFrame.getArm().getHandPose().getPosition().getZ().setValue(vals[2]);
+  _setVec3(_handPosition(animationFrame), vals[0], vals[1], vals[2]);
   return animationFrame;
 };
 
 exports.handEulerRpyAnglesHandler = (vals, animationFrame) => {
-  animationFrame.getArm().getHandPose().getEulerAngles().getRoll().setValue(vals[0]);
-  animationFrame.getArm().getHandPose().getEulerAngles().getPitch().setValue(vals[1]);
-  animationFrame.getArm().getHandPose().getEulerAngles().getYaw().setValue(vals[2]);
+  const euler = _handEuler(animationFrame);
+  _setDouble(euler, 'Roll', vals[0]);
+  _setDouble(euler, 'Pitch', vals[1]);
+  _setDouble(euler, 'Yaw', vals[2]);
   return animationFrame;
 };
 
 exports.handQuaternionXyzwHandler = (vals, animationFrame) => {
-  animationFrame.getArm().getHandPose().getQuaternion().setX(vals[0]);
-  animationFrame.getArm().getHandPose().getQuaternion().setY(vals[1]);
-  animationFrame.getArm().getHandPose().getQuaternion().setZ(vals[2]);
-  animationFrame.getArm().getHandPose().getQuaternion().setW(vals[3]);
+  _handQuaternion(animationFrame).setX(vals[0]).setY(vals[1]).setZ(vals[2]).setW(vals[3]);
   return animationFrame;
 };
 
 exports.handQuaternionWxyzHandler = (vals, animationFrame) => {
-  animationFrame.getArm().getHandPose().getQuaternion().setX(vals[1]);
-  animationFrame.getArm().getHandPose().getQuaternion().setY(vals[2]);
-  animationFrame.getArm().getHandPose().getQuaternion().setZ(vals[3]);
-  animationFrame.getArm().getHandPose().getQuaternion().setW(vals[0]);
+  _handQuaternion(animationFrame).setX(vals[1]).setY(vals[2]).setZ(vals[3]).setW(vals[0]);
   return animationFrame;
 };
+
+/**
+ * A number of the file, read like Python's float(): the whole text must be a number (parseFloat('1.5abc') is 1.5).
+ * @param {string} text
+ * @returns {number}
+ * @throws {Error} The text is not a number.
+ */
+function parseFloatStrict(text) {
+  const value = Number(text);
+  if (typeof text !== 'string' || text.trim() === '' || Number.isNaN(value)) {
+    throw new Error(`could not convert string to float: '${text}'`);
+  }
+  return value;
+}
+
+/**
+ * An integer of the file, read like Python's int().
+ * @param {string} text
+ * @returns {number}
+ * @throws {Error} The text is not an integer.
+ */
+function parseIntStrict(text) {
+  const value = Number(text);
+  if (typeof text !== 'string' || !/^\s*[+-]?\d+\s*$/.test(text)) {
+    throw new Error(`invalid literal for int() with base 10: '${text}'`);
+  }
+  return value;
+}
+
+exports.parseFloatStrict = parseFloatStrict;
+exports.parseIntStrict = parseIntStrict;
 
 exports.controlsOption = (fileLineSplit, animation) => {
   for (const track of fileLineSplit) {
@@ -480,17 +567,16 @@ exports.controlsOption = (fileLineSplit, animation) => {
       animation.proto.setControlsBody(true);
     } else if (track === 'gripper') {
       animation.proto.setControlsGripper(true);
-    } else if (track === 'controls') {
-      continue;
-    } else {
-      console.error(`Unknown track name: ${track}`);
+    } else if (track !== 'controls') {
+      console.log(`Unknown track name ${track}`);
     }
   }
   return animation;
 };
 
 exports.bpmOption = (fileLineSplit, animation) => {
-  animation.setBpm(fileLineSplit[1]);
+  // The bpm of the Animation class (not of its proto: setBpm() is not a method of the class).
+  animation.bpm = parseIntStrict(fileLineSplit[1]);
   return animation;
 };
 
@@ -511,30 +597,37 @@ exports.neutralStartOption = (fileLineSplit, animation) => {
 
 exports.preciseStepsOption = (fileLineSplit, animation) => {
   animation.proto.setPreciseSteps(true);
+  return animation;
 };
 
 exports.preciseTimingOption = (fileLineSplit, animation) => {
   animation.proto.setTimingAdjustability(-1);
+  return animation;
 };
 
 exports.timingAdjustabilityOption = (fileLineSplit, animation) => {
-  animation.proto.setTimingAdjustability(fileLineSplit[1]);
+  animation.proto.setTimingAdjustability(parseFloatStrict(fileLineSplit[1]));
+  return animation;
 };
 
 exports.noLoopingOption = (fileLineSplit, animation) => {
   animation.proto.setNoLooping(true);
+  return animation;
 };
 
 exports.armRequiredOption = (fileLineSplit, animation) => {
   animation.proto.setArmRequired(true);
+  return animation;
 };
 
 exports.armProhibitedOption = (fileLineSplit, animation) => {
   animation.proto.setArmProhibited(true);
+  return animation;
 };
 
 exports.startsSittingOption = (fileLineSplit, animation) => {
   animation.proto.setStartsSitting(true);
+  return animation;
 };
 
 exports.trackSwingTrajectoriesOption = (fileLineSplit, animation) => {
@@ -549,28 +642,36 @@ exports.assumeZeroRollAndPitchOption = (fileLineSplit, animation) => {
 
 exports.armPlaybackOption = (fileLineSplit, animation) => {
   const playback = fileLineSplit[1];
+  const { ArmPlayback } = choreographySequencePb.Animation;
   if (playback === 'jointspace') {
-    animation.proto.setArmPlayback(choreographySequencePb.Animation.ArmPlayback.ARM_PLAYBACK_JOINTSPACE);
+    animation.proto.setArmPlayback(ArmPlayback.ARM_PLAYBACK_JOINTSPACE);
   } else if (playback === 'workspace') {
-    animation.proto.setArmPlayback(choreographySequencePb.Animation.ArmPlayback.ARM_PLAYBACK_WORKSPACE);
+    animation.proto.setArmPlayback(ArmPlayback.ARM_PLAYBACK_WORKSPACE);
   } else if (playback === 'workspace_dance_frame') {
-    animation.proto.setArmPlayback(choreographySequencePb.Animation.ArmPlayback.ARM_PLAYBACK_WORKSPACE_DANCE_FRAME);
+    animation.proto.setArmPlayback(ArmPlayback.ARM_PLAYBACK_WORKSPACE_DANCE_FRAME);
   } else {
-    animation.proto.setArmPlayback(choreographySequencePb.Animation.ArmPlayback.ARM_PLAYBACK_DEFAULT);
-    console.error(`Unknown arm playback option ${playback}`);
+    animation.proto.setArmPlayback(ArmPlayback.ARM_PLAYBACK_DEFAULT);
+    console.log(`Unknown arm playback option ${playback}`);
   }
   return animation;
 };
 
 exports.displayRgbOption = (fileLineSplit, animation) => {
-  for (let i = 1; i < 3; i++) {
-    animation.rgb[i - 1] = fileLineSplit[i];
+  if (fileLineSplit.length === 4) {
+    const rgbOptionValues = fileLineSplit.slice(1, 4);
+    // R, G and B (the loop started at 1: R was never read).
+    for (let i = 0; i < 3; i++) {
+      animation.rgb[i] = parseIntStrict(rgbOptionValues[i]);
+    }
+  } else {
+    console.error(`Misformed display_rgb option: Format must follow 'display_rgb [R] [G] [B]'`);
   }
   return animation;
 };
 
 exports.frequencyOption = (fileLineSplit, animation) => {
-  animation.frequency = fileLineSplit[1];
+  // A number: the string was kept, and added to the keyframe times.
+  animation.frequency = parseFloatStrict(fileLineSplit[1]);
   return animation;
 };
 
@@ -580,9 +681,8 @@ exports.retimeToIntegerSlicesOption = (fileLineSplit, animation) => {
 };
 
 exports.descriptionOption = (fileLineSplit, animation) => {
-  let description = fileLineSplit.slice(1).join(' ');
-  description = description.replaceAll('"', '');
-  animation.description = description;
+  // Remove any quotation marks.
+  animation.description = fileLineSplit.slice(1).join(' ').replaceAll('"', '');
   return animation;
 };
 

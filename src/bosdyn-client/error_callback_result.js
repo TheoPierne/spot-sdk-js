@@ -1,3 +1,7 @@
+/**
+ * @file The results of the error callbacks of the keep-alive helpers: what to do after an error.
+ */
+
 'use strict';
 
 const ErrorCallbackResult = Object.freeze({

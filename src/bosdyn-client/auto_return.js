@@ -1,3 +1,7 @@
+/**
+ * @file Client implementation of the AutoReturn service.
+ */
+
 'use strict';
 
 const { BaseClient, errorFactory, handleCommonHeaderErrors, handleUnsetStatusError } = require('./common');
@@ -7,7 +11,14 @@ const { DefaultDict } = require('./util');
 const autoReturnPb = require('../bosdyn/api/auto_return/auto_return_pb');
 const { AutoReturnServiceClient } = require('../bosdyn/api/auto_return/auto_return_service_grpc_pb');
 
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ * @typedef {import('./lease').Lease} Lease
+ */
+
+/** Error in Auto Return RPC */
 class AutoReturnResponseError extends ResponseError {}
+/** One or more parameters were invalid. */
 class InvalidParameterError extends AutoReturnResponseError {}
 
 /**
@@ -28,7 +39,7 @@ class AutoReturnClient extends BaseClient {
    * @param {autoReturnPb.Params} params Parameters to use.
    * @param {Lease[]} leases An array of leases.
    * @param {boolean} clearBuffer Set True to forget any currently buffered locations.
-   * @param {Object} args Arguments that can be passed to the RPC request.
+   * @param {Object} [args] Arguments that can be passed to the RPC request.
    * @returns {Promise<autoReturnPb.ConfigureResponse>}
    * @throws {InvalidParameterError} An invalid request was received by the service.
    * @throws {RpcError} Problem communicating with the service.
@@ -40,7 +51,7 @@ class AutoReturnClient extends BaseClient {
 
   /**
    * Get the configuration of the AutoReturn system.
-   * @param {Object} args Arguments that can be passed to the RPC request.
+   * @param {Object} [args] Arguments that can be passed to the RPC request.
    * @returns {Promise<autoReturnPb.GetConfigurationResponse>}
    * @throws {RpcError} Problem communicating with the service.
    */
@@ -53,7 +64,7 @@ class AutoReturnClient extends BaseClient {
    * Start AutoReturn now.
    * @param {autoReturnPb.Params} [params=null] Parameters to use.
    * @param {Lease[]} [leases=[]] Leases to be included in the request.
-   * @param {Object} args Arguments that can be passed to the RPC request.
+   * @param {Object} [args] Arguments that can be passed to the RPC request.
    * @returns {Promise<autoReturnPb.StartResponse>}
    * @throws {InvalidParameterError} An invalid request was received by the service.
    * @throws {RpcError} Problem communicating with the service.
@@ -103,12 +114,7 @@ _CONFIGURE_STATUS_TO_ERROR.set(autoReturnPb.ConfigureResponse.Status.STATUS_INVA
 
 const configureError = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(
-      response,
-      response.getStatus(),
-      Object.keys(autoReturnPb.ConfigureResponse.Status),
-      _CONFIGURE_STATUS_TO_ERROR,
-    ),
+    errorFactory(response, response.getStatus(), autoReturnPb.ConfigureResponse.Status, _CONFIGURE_STATUS_TO_ERROR),
   ),
 );
 
@@ -119,7 +125,7 @@ _START_STATUS_TO_ERROR.set(autoReturnPb.StartResponse.Status.STATUS_INVALID_PARA
 ]);
 
 const startError = handleCommonHeaderErrors(response =>
-  errorFactory(response, response.getStatus(), Object.keys(autoReturnPb.StartResponse.Status), _START_STATUS_TO_ERROR),
+  errorFactory(response, response.getStatus(), autoReturnPb.StartResponse.Status, _START_STATUS_TO_ERROR),
 );
 
 module.exports = {

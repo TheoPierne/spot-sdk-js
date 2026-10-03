@@ -1,14 +1,25 @@
+/**
+ * @file For clients to automate token refresh.
+ */
+
 'use strict';
 
 const { setTimeout, clearTimeout } = require('node:timers');
-const { Duration, DateTime } = require('luxon');
 
 const { InvalidTokenError } = require('./auth');
-const { ResponseError, RpcError } = require('./exceptions');
-const { LoggerUtil } = require('./loggerUtil');
+const { ErrorCallbackResult } = require('./error_callback_result');
+const { ResponseError, RpcError, TimedOutError } = require('./exceptions');
+const { LoggerUtil } = require('./logger_util');
 const { WriteFailedError } = require('./token_cache');
 
+/**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
 const LOGGER = LoggerUtil.getLogger('TokenManager');
+
+const USER_TOKEN_REFRESH_TIME_DELTA = 60 * 60 * 1000;
+const USER_TOKEN_RETRY_INTERVAL_START = 1000;
 
 /**
  * Refreshes the user token in the robot object.
@@ -18,21 +29,34 @@ class TokenManager {
   /**
    * Create an instance of TokenManager's class.
    * @param {Robot} robot Robot object.
-   * @param {number} [timestamp=null] The date in timestamp to use.
+   * @param {Date|number|null} [timestamp=null] Initial token timestamp.
+   * @param {number} [refreshInterval]
+   * @param {number} [initialRetryInterval]
    */
-  constructor(robot, timestamp = null) {
+  constructor(
+    robot,
+    timestamp = null,
+    refreshInterval = USER_TOKEN_REFRESH_TIME_DELTA,
+    initialRetryInterval = USER_TOKEN_RETRY_INTERVAL_START,
+  ) {
+    /**
+     * @type {import('./robot').Robot}
+     */
     this.robot = robot;
-    this._lastTimestamp = timestamp || DateTime.now();
+    this._lastTimestamp =
+      timestamp instanceof Date ? timestamp.getTime() : timestamp === null ? Date.now() : Number(timestamp);
 
-    this._exitTimer = null;
+    this._refreshInterval = refreshInterval;
+    this._initialRetryInterval = initialRetryInterval;
+    this._retryInterval = initialRetryInterval;
+
+    /** @type {NodeJS.Timeout|null} */
+    this._timer = null;
+
     this._isAlive = true;
+    this._isUpdating = false;
 
     this.update();
-  }
-
-  _exitCallback() {
-    clearTimeout(this._exitTimer);
-    this._exitTimer = null;
   }
 
   isAlive() {
@@ -40,56 +64,137 @@ class TokenManager {
   }
 
   stop() {
-    this._exitCallback();
     this._isAlive = false;
+
+    if (this._timer !== null) {
+      clearTimeout(this._timer);
+      this._timer = null;
+    }
   }
 
   /**
    * Refresh the user token as needed.
    */
   update() {
-    const USER_TOKEN_REFRESH_TIME_DELTA = Duration.fromObject({ hours: 1 });
-    const USER_TOKEN_RETRY_INTERVAL_START = Duration.fromObject({ seconds: 1 });
+    if (!this._isAlive || this._isUpdating || this._timer !== null) {
+      return;
+    }
 
-    let retryInterval = USER_TOKEN_RETRY_INTERVAL_START;
+    const elapsed = Date.now() - this._lastTimestamp;
 
-    const updateToken = async () => {
-      const elapsedTime = DateTime.now().diff(this._lastTimestamp);
+    this._schedule(Math.min(this._refreshInterval - elapsed, this._refreshInterval));
+  }
 
-      if (elapsedTime >= USER_TOKEN_REFRESH_TIME_DELTA) {
-        try {
-          await this.robot.authenticateWithToken(this.robot.userToken);
-        } catch (err) {
-          if (err instanceof WriteFailedError) {
-            LOGGER.error('Failed to save the token to the cache. Continuing without caching.');
-          } else if (err instanceof InvalidTokenError || err instanceof ResponseError || err instanceof RpcError) {
-            LOGGER.error(`Error refreshing the token. Retry in ${retryInterval.as('seconds')} seconds`);
-            this._exitTimer = setTimeout(updateToken, retryInterval.as('milliseconds'));
-            retryInterval = Duration.fromMillis(
-              Math.min(2 * retryInterval.as('milliseconds'), USER_TOKEN_REFRESH_TIME_DELTA.as('milliseconds')),
-            );
-            return;
-          } else {
-            LOGGER.error(err);
-            return;
+  /**
+   * @param {number} waitTimeMs
+   * @private
+   */
+  _schedule(waitTimeMs) {
+    if (!this._isAlive) {
+      return;
+    }
+
+    this._timer = setTimeout(
+      () => {
+        this._timer = null;
+        // A rejection here would be unhandled and would kill the process, keepalives included.
+        this._refresh().catch(err => {
+          LOGGER.error('Unexpected error in token refresh loop.', err);
+          this._isAlive = false;
+          this._isUpdating = false;
+        });
+      },
+      Math.max(0, waitTimeMs),
+    );
+
+    // Le timer ne doit pas maintenir seul le processus Node.js actif.
+    this._timer.unref?.();
+  }
+
+  /**
+   * @private
+   */
+  async _refresh() {
+    if (!this._isAlive || this._isUpdating) {
+      return;
+    }
+
+    this._isUpdating = true;
+
+    const startTime = Date.now();
+    let action = ErrorCallbackResult.RESUME_NORMAL_OPERATION;
+
+    try {
+      await this.robot.authenticateWithToken(this.robot.userToken);
+      this._lastTimestamp = Date.now();
+    } catch (err) {
+      if (err instanceof WriteFailedError) {
+        LOGGER.error('Failed to save the token to the cache. Continuing without caching.', err);
+      } else if (err instanceof InvalidTokenError || err instanceof ResponseError || err instanceof RpcError) {
+        LOGGER.error('Error refreshing the token.', err);
+
+        action = ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF;
+
+        if (this.robot.tokenRefreshErrorCallback && !(err instanceof TimedOutError)) {
+          try {
+            action = await this.robot.tokenRefreshErrorCallback(err);
+          } catch (callbackError) {
+            LOGGER.error('Exception thrown in the provided token refresh error callback.', callbackError);
           }
         }
 
-        retryInterval = USER_TOKEN_RETRY_INTERVAL_START;
-
-        this._lastTimestamp = DateTime.now();
-        const remainingTime = USER_TOKEN_REFRESH_TIME_DELTA.minus(elapsedTime);
-        this._exitTimer = setTimeout(updateToken, remainingTime.as('milliseconds'));
+        if (action === ErrorCallbackResult.RESUME_NORMAL_OPERATION) {
+          LOGGER.warn(`Refreshing token in ${this._refreshInterval / 1000} seconds.`);
+        }
       } else {
-        const remainingTime = USER_TOKEN_REFRESH_TIME_DELTA.minus(elapsedTime);
-        this._exitTimer = setTimeout(updateToken, remainingTime.as('milliseconds'));
-      }
-    };
+        LOGGER.error('Unexpected error in token refresh loop.', err);
 
-    updateToken();
+        this._isAlive = false;
+        this._isUpdating = false;
+        return;
+      }
+    }
+
+    const elapsed = Date.now() - startTime;
+
+    this._isUpdating = false;
+
+    if (!this._isAlive) {
+      return;
+    }
+
+    if (action === ErrorCallbackResult.ABORT) {
+      LOGGER.warn('Application-supplied callback directed the token refresh loop to exit.');
+
+      this._isAlive = false;
+      return;
+    }
+
+    if (action === ErrorCallbackResult.RETRY_IMMEDIATELY) {
+      LOGGER.warn('Retrying to refresh token immediately.');
+
+      this._schedule(0);
+      return;
+    }
+
+    if (action === ErrorCallbackResult.RESUME_NORMAL_OPERATION) {
+      this._retryInterval = this._initialRetryInterval;
+      this._schedule(this._refreshInterval - elapsed);
+      return;
+    }
+
+    LOGGER.warn(`Retrying token refresh in ${this._retryInterval / 1000} seconds.`);
+
+    const currentRetryInterval = this._retryInterval;
+
+    this._retryInterval = Math.min(currentRetryInterval * 2, this._refreshInterval);
+
+    this._schedule(currentRetryInterval - elapsed);
   }
 }
 
 module.exports = {
   TokenManager,
+  USER_TOKEN_REFRESH_TIME_DELTA,
+  USER_TOKEN_RETRY_INTERVAL_START,
 };

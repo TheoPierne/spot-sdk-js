@@ -1,3 +1,7 @@
+/**
+ * @file Settings common to a user's access to one robot.
+ */
+
 'use strict';
 
 const { setTimeout: sleep } = require('node:timers/promises');
@@ -9,19 +13,38 @@ const { DataBufferClient, logEvent } = require('./data_buffer');
 const { DirectoryClient } = require('./directory');
 const { DirectoryRegistrationClient } = require('./directory_registration');
 const { EstopClient, isEstopped } = require('./estop');
+const { BosdynError } = require('./exceptions');
 const { LeaseWallet } = require('./lease');
-const { LoggerUtil } = require('./loggerUtil');
-const { PayloadRegistrationClient, PayloadNotAuthorizedError } = require('./payload_registration');
+const { LoggerUtil } = require('./logger_util');
+const {
+  PayloadRegistrationClient,
+  PayloadNotAuthorizedError,
+  PayloadAlreadyExistsError,
+} = require('./payload_registration');
 const { PowerClient, powerOn, powerOff, safePowerOffMotors, isPoweredOn } = require('./power');
 const { RobotCommandClient } = require('./robot_command');
 const { RobotIdClient } = require('./robot_id');
 const { RobotStateClient, hasArm } = require('./robot_state');
-const { TimeSyncThread, TimeSyncClient } = require('./time_sync');
+const { TimeSyncThread, TimeSyncClient, TimeSyncError } = require('./time_sync');
 const { TokenCache } = require('./token_cache');
 const { TokenManager } = require('./token_manager');
 
 const dataBufferProtos = require('../bosdyn/api/data_buffer_pb');
 const { timestampToSec, nowSec } = require('../bosdyn-core/util');
+
+/**
+ * A client of a service, with the type of its gRPC stub (any by default).
+ * @template {import('@grpc/grpc-js').Client} [Stub=any]
+ * @typedef {import('./common').BaseClient<Stub>} BaseClient
+ */
+
+/**
+ * @typedef {import('../bosdyn/api/geometry_pb').FrameTreeSnapshot} FrameTreeSnapshot
+ * @typedef {import('../bosdyn/api/parameter_pb').Parameter} Parameter
+ * @typedef {import('../bosdyn/api/payload_pb').Payload} Payload
+ * @typedef {import('../bosdyn/api/robot_id_pb').RobotId} RobotId
+ * @typedef {import('../bosdyn/api/robot_state_pb').RobotHardwareConfigurationResponse} RobotHardwareConfigurationResponse
+ */
 
 const _DEFAULT_SECURE_CHANNEL_PORT = 443;
 
@@ -33,14 +56,15 @@ const _DEFAULT_SECURE_CHANNEL_PORT = 443;
  * @typedef {import('../bosdyn/api/directory_pb').ServiceEntry} ServiceEntry
  */
 
-class RobotError extends Error {
-  constructor(msg) {
-    super(msg);
-    this.name = this.constructor.name;
-  }
-}
+// An error of the SDK, like Python (Error of bosdyn.client.exceptions).
+/** General class of errors to handle non-response non-grpc errors. */
+class RobotError extends BosdynError {}
+/** Full service definition has not been registered in the robot instance. */
 class UnregisteredServiceError extends RobotError {}
 
+/**
+ * Service name has not been registered in the robot instance.
+ */
 class UnregisteredServiceNameError extends UnregisteredServiceError {
   constructor(serviceName) {
     super(`Service name "${serviceName}" has not been registered`);
@@ -53,6 +77,9 @@ class UnregisteredServiceNameError extends UnregisteredServiceError {
   }
 }
 
+/**
+ * Service type has not been registered in the robot instance.
+ */
 class UnregisteredServiceTypeError extends UnregisteredServiceError {
   constructor(serviceType) {
     super(`Service name "${serviceType}" has not been registered`);
@@ -131,6 +158,13 @@ class Robot {
     this._tokenManager = null;
 
     /**
+     * Optional callback invoked when an error occurs in the token refresh loop, like Python's
+     * token_refresh_error_callback: (error) => ErrorCallbackResult (or a promise of it).
+     * @type {?Function}
+     */
+    this.tokenRefreshErrorCallback = null;
+
+    /**
      * The current username of the operator using the robot.
      * @type {?string}
      */
@@ -141,6 +175,13 @@ class Robot {
      * @type {Object<string, BaseClient>}
      */
     this.serviceClientsByName = {};
+
+    /**
+     * Clients being created, by service name.
+     * @type {Map<string, Promise<BaseClient>>}
+     * @private
+     */
+    this._pendingClients = new Map();
 
     /**
      * An object of gRPC channels by authority (host).
@@ -156,14 +197,14 @@ class Robot {
 
     /**
      * The robot's ID information.
-     * @type {?robotIdPb.RobotId}
+     * @type {?RobotId}
      * @private
      */
     this._robotId = null;
 
     /**
      * The hardware configuration of the robot.
-     * @type {?robotStatePb.RobotHardwareConfigurationResponse}
+     * @type {?RobotHardwareConfigurationResponse}
      * @private
      */
     this._hardwareConfig = null;
@@ -283,7 +324,6 @@ class Robot {
   /**
    * Get the robot name
    * @type {?string}
-   * @readonly
    */
   get host() {
     return this._name;
@@ -327,11 +367,12 @@ class Robot {
 
   /**
    * Adds to this object's processors, etc. based on other
-   * @param {Sdk} other The other `Robot` instance from which to copy properties.
+   * @param {import('./sdk').Sdk} other The other `Robot` instance from which to copy properties.
    */
   updateFrom(other) {
-    this.requestProcessors = [...this.requestProcessors, ...other.requestProcessors];
-    this.responseProcessors = [...this.responseProcessors, ...other.responseProcessors];
+    // Same order as Python: the processors of other run first.
+    this.requestProcessors = [...other.requestProcessors, ...this.requestProcessors];
+    this.responseProcessors = [...other.responseProcessors, ...this.responseProcessors];
     this.serviceClientFactoriesByType = { ...this.serviceClientFactoriesByType, ...other.serviceClientFactoriesByType };
     this.serviceTypeByName = { ...this.serviceTypeByName, ...other.serviceTypeByName };
 
@@ -350,33 +391,58 @@ class Robot {
    * Note: If a new service has been registered with the directory service, this may raise
    * UnregisteredServiceNameError when trying to connect to it until sync_with_directory() is
    * called.
+   * @template {BaseClient} [T=any] The class of the client, e.g. `ensureClient<RobotStateClient>(...)` in TypeScript
+   * (any by default).
    * @param {string} serviceName The name of the service.
    * @param {?GrpcChannel} channelToEnsure gRPC channel object to use. Default None, in
    * which case the Sdk data is used to generate a channel. The channel will become associated with
    * the client.
    * @param {any[]} options Any options to pass to the gRPC Channel creation
    * @param {?string} serviceEndpoint Endpoint of the service.
-   * @returns {Promise<any>}
+   * @returns {Promise<T>}
    */
   async ensureClient(serviceName, channelToEnsure = null, options = [], serviceEndpoint = null) {
     if (this.serviceClientsByName[serviceName]) return this.serviceClientsByName[serviceName];
 
-    let serviceType;
-
-    if (this.serviceTypeByName[serviceName]) {
-      serviceType = this.serviceTypeByName[serviceName];
-    } else {
-      throw new UnregisteredServiceNameError(serviceName);
+    // Concurrent calls for the same service share one creation instead of creating two clients.
+    let pending = this._pendingClients.get(serviceName);
+    if (!pending) {
+      // Checked before sharing the creation: an unregistered service is never cached.
+      const creationFunction = this._clientCreationFunction(serviceName);
+      pending = this._createClient(serviceName, creationFunction, channelToEnsure, options, serviceEndpoint).finally(
+        () => this._pendingClients.delete(serviceName),
+      );
+      this._pendingClients.set(serviceName, pending);
     }
+    return pending;
+  }
 
-    let creationFunction;
+  /**
+   * The function creating the client of a service.
+   * @param {string} serviceName The name of the service.
+   * @returns {new () => BaseClient} The class of the client.
+   * @throws {UnregisteredServiceNameError|UnregisteredServiceTypeError}
+   * @private
+   */
+  _clientCreationFunction(serviceName) {
+    const serviceType = this.serviceTypeByName[serviceName];
+    if (!serviceType) throw new UnregisteredServiceNameError(serviceName);
 
-    if (this.serviceClientFactoriesByType[serviceType]) {
-      creationFunction = this.serviceClientFactoriesByType[serviceType];
-    } else {
-      throw new UnregisteredServiceTypeError(serviceType);
-    }
+    const creationFunction = this.serviceClientFactoriesByType[serviceType];
+    if (!creationFunction) throw new UnregisteredServiceTypeError(serviceType);
 
+    return creationFunction;
+  }
+
+  /**
+   * Create the client of a service, see ensureClient.
+   * @returns {BaseClient}
+   * @private
+   */
+  async _createClient(serviceName, creationFunction, channelToEnsure, options, serviceEndpoint) {
+    /**
+     * @type {BaseClient}
+     */
     const client = new creationFunction();
     this.logger.debug(`[ROBOT] Created client for ${serviceName}`);
 
@@ -385,12 +451,47 @@ class Robot {
     }
 
     client.channel = channelToEnsure;
+    client._channelResetFn = this._makeChannelResetFn(serviceName);
     // eslint-disable-next-line
     isAsyncFunction(client.updateFrom) ? await client.updateFrom(this) : client.updateFrom(this);
     this.serviceClientsByName[serviceName] = client;
     return client;
   }
 
+  /**
+   * Forgets the channel and the client of a service, like _reset_channel() in Python 5.2.0: the next ones are new.
+   * The channel is not closed (other clients may use it).
+   * @param {string} serviceName The name of the service.
+   * @private
+   */
+  _resetChannel(serviceName) {
+    const authority = this.authoritiesByName[serviceName];
+    if (authority && authority in this.channelsByAuthority) {
+      delete this.channelsByAuthority[authority];
+      this.logger.info(`Evicted secure channel for service ${serviceName} (authority=${authority})`);
+    }
+    delete this.serviceClientsByName[serviceName];
+  }
+
+  /**
+   * The function giving a client a new channel after an InternalDeserializationError, like
+   * _make_channel_reset_fn() in Python 5.2.0.
+   * @param {string} serviceName The name of the service.
+   * @returns {function(): Promise<GrpcChannel>}
+   * @private
+   */
+  _makeChannelResetFn(serviceName) {
+    return () => {
+      this._resetChannel(serviceName);
+      return this.ensureChannel(serviceName);
+    };
+  }
+
+  /**
+   * Closes the gRPC channels of the robot, like shutdown() in Python. The background tasks of the time sync and of
+   * the token refresh are stopped when the robot is disposed (`using robot = sdk.createRobot(...)`), or by
+   * stopTimeSync() for the time sync.
+   */
   shutdown() {
     for (const channelFromAuth of Object.values(this.channelsByAuthority)) {
       channelFromAuth.close();
@@ -400,7 +501,7 @@ class Robot {
   /**
    * Return the RobotId proto for this robot, querying it from the robot if not yet cached.
    * @param {?number} [timeout=null] The timeout for this request.
-   * @returns {Promise<robotIdPb.RobotId>}
+   * @returns {Promise<import('../bosdyn/api/robot_id_pb').RobotId>}
    */
   async getCachedRobotId(timeout = null) {
     if (this._robotId === null) {
@@ -414,7 +515,7 @@ class Robot {
   /**
    * Return the HardwareConfiguration proto for this robot, querying it from the robot if not yet cached.
    * @param {?number} [timeout=null] The timeout for this request.
-   * @returns {Promise<robotStatePb.RobotHardwareConfigurationResponse>}
+   * @returns {Promise<import('../bosdyn/api/robot_state_pb').HardwareConfiguration>}
    */
   async getCachedHardwareHardwareConfiguration(timeout = null) {
     if (!this._hardwareConfig) {
@@ -435,17 +536,6 @@ class Robot {
    */
   // eslint-disable-next-line no-unused-vars
   async ensureChannel(serviceName, secure = true, options = [], serviceEndpoint = null) {
-    const option = options.length ? options.map(x => x[0]) : null;
-
-    if (option !== null) {
-      if (!('grpc.max_receive_message_length' in option[0])) {
-        options.push({ 'grpc.max_receive_message_length': this.maxReceiveMessageLength });
-      }
-      if (!('grpc.max_send_message_length' in option[0])) {
-        options.push({ 'grpc.max_send_message_length': this.maxSendMessageLength });
-      }
-    }
-
     let authority = this._bootstrapServiceAuthorities[serviceName];
 
     if (!authority) {
@@ -462,7 +552,29 @@ class Robot {
   }
 
   /**
-   * Get the channel to access the given authority, creating it if it doesn't exist."
+   * Channel options with the max message lengths of this robot added when they are not given,
+   * like Python's ensure_secure_channel. Without them, grpc-js refuses responses larger than 4 MB.
+   * @param {Object|Array} options An object, or Python-like [[name, value], ...] pairs.
+   * @returns {Object}
+   * @private
+   */
+  _channelOptions(options) {
+    const channelOptions = {};
+    if (Array.isArray(options)) {
+      for (const option of options) {
+        if (Array.isArray(option)) channelOptions[option[0]] = option[1];
+        else Object.assign(channelOptions, option);
+      }
+    } else {
+      Object.assign(channelOptions, options);
+    }
+    channelOptions['grpc.max_receive_message_length'] ??= this.maxReceiveMessageLength;
+    channelOptions['grpc.max_send_message_length'] ??= this.maxSendMessageLength;
+    return channelOptions;
+  }
+
+  /**
+   * Get the channel to access the given authority, creating it if it doesn't exist.
    * @param {string} authority The authority to access
    * @param {Object} options Options of the channel
    * @returns {GrpcChannel}
@@ -471,7 +583,13 @@ class Robot {
     if (authority in this.channelsByAuthority) return this.channelsByAuthority[authority];
 
     const creds = channel.createSecureChannelCreds(this.cert, () => this.userToken);
-    const channelData = channel.createSecureChannel(this.address, this._secureChannelPort, creds, authority, options);
+    const channelData = channel.createSecureChannel(
+      this.address,
+      this._secureChannelPort,
+      creds,
+      authority,
+      this._channelOptions(options),
+    );
     this.logger.debug(
       `[ROBOT] Created channel to ${this.address} at port ${this._secureChannelPort} with authority ${authority}`,
     );
@@ -479,11 +597,21 @@ class Robot {
     return channelData;
   }
 
+  /**
+   * Get the channel to access the given authority, creating it if it doesn't exist.
+   * @param {string} authority The authority to access
+   * @param {*} options
+   * @returns {GrpcChannel}
+   */
   ensureInsecureChannel(authority, options = []) {
     if (authority in this.channelsByAuthority) return this.channelsByAuthority[authority];
-    const channelData = channel.createInsecureChannel(this.address, this._secureChannelPort, authority, options);
+    const channelData = channel.createInsecureChannel(
+      this.address,
+      this._secureChannelPort,
+      authority,
+      this._channelOptions(options),
+    );
     this.logger.warn(
-      // eslint-disable-next-line max-len
       `[ROBOT] Created insecure channel to ${this.address} at port ${this._secureChannelPort} with authority ${authority}`,
     );
     this.channelsByAuthority[authority] = channelData;
@@ -495,6 +623,7 @@ class Robot {
    * @param {string} username Username on the robot.
    * @param {string} password Password for the username on the robot.
    * @param {?number} timeout An optional timeout value for the operation.
+   * @returns {Promise<void>}
    */
   async authenticate(username, password, timeout = null) {
     const defaultServiceName = AuthClient.defaultServiceName;
@@ -509,10 +638,11 @@ class Robot {
    * Authenticate to this Robot with the token at the given service.
    * @param {string} token Token used to authenticate
    * @param {?number} timeout An optional timeout value for the operation.
+   * @returns {Promise<void>}
    */
   async authenticateWithToken(token, timeout = null) {
     /** @type {AuthClient} */
-    const authClient = await this.ensureClient(AuthClient.defaultservicename);
+    const authClient = await this.ensureClient(AuthClient.defaultServiceName);
     const usertoken = await authClient.authWithToken(token, { timeout });
     this.updateUserToken(usertoken);
   }
@@ -521,6 +651,7 @@ class Robot {
    * Authenticate to this Robot with a cached token at the given service.
    * @param {string} username Username used to authenticate from cache
    * @param {?number} timeout An optional timeout value for the operation.
+   * @returns {Promise<void>}
    */
   async authenticateFromCache(username, timeout = null) {
     const token = this.tokenCache.read(this._getTokenId(username));
@@ -536,12 +667,18 @@ class Robot {
    * This call is used to authenticate to a robot using payload credentials. If a payload is
    * not yet authorized, it will block until the payload is authorized by an operator in the
    * robot web page.
-   * @param {*} guid The GUID of the registered payload requesting the token.
+   * @param {string} guid The GUID of the registered payload requesting the token.
    * @param {string} secret The secret of the registered payload requesting the token.
    * @param {?PayloadRegistrationClient} payloadRegistrationClient Instance of PayloadRegistrationClient
    * @param {?number} timeout An optional timeout value for the operation.
    */
-  async authenticateFromPayloadCredentials(guid, secret, payloadRegistrationClient = null, timeout = null, retryInterval = 1000) {
+  async authenticateFromPayloadCredentials(
+    guid,
+    secret,
+    payloadRegistrationClient = null,
+    timeout = null,
+    retryInterval = 1000,
+  ) {
     let printedWarning = false;
 
     if (payloadRegistrationClient === null) {
@@ -549,7 +686,7 @@ class Robot {
     }
 
     let userToken = null;
-    /* eslint-disable no-await-in-loop */
+
     while (userToken === null) {
       try {
         userToken = await payloadRegistrationClient.getPayloadAuthToken(guid, secret, { timeout });
@@ -558,13 +695,15 @@ class Robot {
           if (!printedWarning) {
             printedWarning = true;
             // eslint-disable-next-line
-            console.log('[ROBOT] Payload is not authorized. Authentication will block until an operator authorizes the payload in the Admin Console.');
+            this.logger.warn('[ROBOT] Payload is not authorized. Authentication will block until an operator authorizes the payload in the Admin Console.');
           }
+        } else {
+          throw e;
         }
       }
       await sleep(retryInterval);
     }
-    /* eslint-enable no-await-in-loop */
+
     this.updateUserToken(userToken);
   }
 
@@ -586,8 +725,9 @@ class Robot {
     const matches = this.tokenCache.match(this.serialNumber);
     const usernames = [];
     for (const match of matches) {
-      const username = match.split('.');
-      usernames.push(username);
+      // After '<serial>.', like Python (whose split fails for a username with dots: it was truncated here).
+      const username = match.startsWith(`${this.serialNumber}.`) ? match.slice(this.serialNumber.length + 1) : '';
+      if (username) usernames.push(username);
     }
     return usernames.sort();
   }
@@ -595,7 +735,7 @@ class Robot {
   /**
    * Get all the information that identifies the robot.
    * @param {string} idServiceName The id service name
-   * @returns {Promise<robotIdPb.RobotId>}
+   * @returns {Promise<RobotId>}
    */
   async getId(idServiceName = RobotIdClient.defaultServiceName) {
     /** @type {RobotIdClient} */
@@ -638,7 +778,7 @@ class Robot {
   /**
    * Register a payload with the robot and request a userToken.
    * This method will block until the payload is authorized by an operator in the robot webpage.
-   * @param {payloadPb.Payload} payload The payload object to be registered with the robot.
+   * @param {Payload} payload The payload object to be registered with the robot.
    * @param {string} secret The secret key associated with the payload, used for authentication.
    * @param {?number} timeout An optional timeout value for the operation.
    */
@@ -648,9 +788,16 @@ class Robot {
     try {
       await payloadRegistrationClient.registerPayload(payload, secret, { timeout });
     } catch (e) {
-      // Pass
+      // Like Python, only an already registered payload is fine.
+      if (!(e instanceof PayloadAlreadyExistsError)) throw e;
     }
-    await this.authenticateFromPayloadCredentials(payload.getGuid(), secret, payloadRegistrationClient, timeout, authRetryInterval);
+    await this.authenticateFromPayloadCredentials(
+      payload.getGuid(),
+      secret,
+      payloadRegistrationClient,
+      timeout,
+      authRetryInterval,
+    );
   }
 
   /**
@@ -668,13 +815,12 @@ class Robot {
    * Stop the time sync thread if needed.
    */
   stopTimeSync() {
-    if (!this._timeSyncThread.stopped) this._timeSyncThread.stop();
+    if (this._timeSyncThread && !this._timeSyncThread.stopped) this._timeSyncThread.stop();
   }
 
   /**
    * Accessor for the time-sync thread. Creates and starts thread if not already started.
    * @type {Promise<?TimeSyncThread>}
-   * @readonly
    */
   get timeSync() {
     return this.startTimeSync().then(() => this._timeSyncThread);
@@ -706,8 +852,10 @@ class Robot {
     let robotTimestamp = null;
     if (timestampSecs === null) {
       try {
-        robotTimestamp = await (await this.timeSync).robotTimestampFromLocalSecs(Date.now());
+        robotTimestamp = await (await this.timeSync).robotTimestampFromLocalSecs(nowSec());
       } catch (e) {
+        // Like Python, only a missing time sync is fine: the robot then timestamps the comment itself.
+        if (!(e instanceof TimeSyncError)) throw e;
         robotTimestamp = null;
       }
     } else {
@@ -724,9 +872,9 @@ class Robot {
    * @param {number} startTimestampSecs Start of the event, in local time.
    * @param {?number} endTimestampSecs End of the event. startTimestampSecs is used if null.
    * @param {?string} idStr Unique id for event. A uuid is generated if null.
-   * @param {Parameter} parameters Parameters to attach to the event.
+   * @param {?Parameter[]} parameters Parameters to attach to the event.
    * @param {dataBufferProtos.Event.LogPreserveHint} logPreserveHint A value from the enum
-   * @returns {Promise<void>}
+   * @returns {Promise<dataBufferProtos.RecordEventsResponse>}
    */
   logEvent(
     eventType,
@@ -808,7 +956,7 @@ class Robot {
   /**
    * Get the current frame tree snapshot from the robot state client.
    * @param {?number} timeout An optional timeout value for the operation.
-   * @returns {Promise<geometryPb.FrameTreeSnapshot>}
+   * @returns {Promise<FrameTreeSnapshot>}
    */
   async getFrameTreeSnapshot(timeout = null) {
     /** @type {RobotStateClient} */

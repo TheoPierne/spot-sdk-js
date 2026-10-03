@@ -1,8 +1,21 @@
+/**
+ * @file For clients to the Manipulation API service.
+ */
+
 'use strict';
 
 const { BaseClient, handleCommonHeaderErrors, handleLeaseUseResultErrors } = require('./common');
 const { addLeaseWalletProcessors } = require('./lease');
 const { ManipulationApiServiceClient } = require('../bosdyn/api/manipulation_api_service_grpc_pb');
+
+/**
+ * @typedef {import('../bosdyn/api/manipulation_api_pb').ManipulationApiRequest} ManipulationApiRequest
+ * @typedef {import('../bosdyn/api/manipulation_api_pb').ManipulationApiResponse} ManipulationApiResponse
+ * @typedef {import('../bosdyn/api/manipulation_api_pb').ManipulationApiFeedbackRequest} ManipulationApiFeedbackRequest
+ * @typedef {import('../bosdyn/api/manipulation_api_pb').ManipulationApiFeedbackResponse} ManipulationApiFeedbackResponse
+ * @typedef {import('../bosdyn/api/manipulation_api_pb').ApiGraspOverrideRequest} ApiGraspOverrideRequest
+ * @typedef {import('../bosdyn/api/manipulation_api_pb').ApiGraspOverrideResponse} ApiGraspOverrideResponse
+ */
 
 /**
  * @typedef {import('./robot').Robot} Robot
@@ -32,10 +45,10 @@ class ManipulationApiClient extends BaseClient {
 
   /**
    * Issue a manipulation api command to the robot.
-   * @param {manipulationApiPb.ManipulationApiRequest} manipulationApiRequest The command request
+   * @param {ManipulationApiRequest} manipulationApiRequest The command request
    * for a manipulation task.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<manipulationApiPb.ManipulationApiResponse>} The full ManipulationApiResponse message,
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<ManipulationApiResponse>} The full ManipulationApiResponse message,
    * which includes a command id for feedback.
    */
   manipulationApiCommand(manipulationApiRequest, args) {
@@ -51,10 +64,10 @@ class ManipulationApiClient extends BaseClient {
 
   /**
    * Issue a manipulation api feedback request to the robot.
-   * @param {manipulationApiPb.ManipulationApiFeedbackRequest} manipulationApiFeedbackRequest The request for
+   * @param {ManipulationApiFeedbackRequest} manipulationApiFeedbackRequest The request for
    * feedback for a specific manipulation command.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<manipulationApiPb.ManipulationApiFeedbackResponse>} The full ManipulationApiFeedbackResponse
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<ManipulationApiFeedbackResponse>} The full ManipulationApiFeedbackResponse
    * message.
    */
   manipulationApiFeedbackCommand(manipulationApiFeedbackRequest, args) {
@@ -70,10 +83,10 @@ class ManipulationApiClient extends BaseClient {
 
   /**
    * Issue a grasp override command to the robot.
-   * @param {manipulationApiPb.ApiGraspOverrideRequest} graspOverrideRequest he command request
+   * @param {ApiGraspOverrideRequest} graspOverrideRequest he command request
    * for a grasp override.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<manipulationApiPb.ApiGraspOverrideResponse>}
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<ApiGraspOverrideResponse>}
    */
   graspOverrideCommand(graspOverrideRequest, args) {
     return this.call(

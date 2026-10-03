@@ -1,3 +1,9 @@
+/**
+ * @file Client for the point cloud service.
+ *
+ * This allows client code to read from a point cloud service.
+ */
+
 'use strict';
 
 const { BaseClient, errorFactory, commonHeaderErrors, handleCommonHeaderErrors } = require('./common');
@@ -7,10 +13,19 @@ const { DefaultDict } = require('./util');
 const pointCloudProtos = require('../bosdyn/api/point_cloud_pb');
 const { PointCloudServiceClient } = require('../bosdyn/api/point_cloud_service_grpc_pb');
 
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ */
+
+/** General class of errors for PointCloud service. */
 class PointCloudResponseError extends ResponseError {}
+/** System cannot find the requested point cloud source name. */
 class UnknownPointCloudSourceError extends PointCloudResponseError {}
+/** System cannot generate the PointCloudSource at this time. */
 class SourceDataError extends PointCloudResponseError {}
+/** System cannot generate point cloud data at this time. */
 class PointCloudDataError extends PointCloudResponseError {}
+/** System cannot generate point cloud with the request cloud_type. */
 class PointCloudTypeError extends PointCloudResponseError {}
 
 const _STATUS_TO_ERROR = DefaultDict(() => [PointCloudResponseError, null]);
@@ -37,11 +52,11 @@ _STATUS_TO_ERROR.set(pointCloudProtos.PointCloudResponse.Status.STATUS_UNSUPPORT
 ]);
 
 const _errorFromResponse = handleCommonHeaderErrors(response => {
-  for (const pointCloudResponse of response.getPointCloudResponses()) {
+  for (const pointCloudResponse of response.getPointCloudResponsesList()) {
     const result = errorFactory(
       response,
       pointCloudResponse.getStatus(),
-      Object.keys(pointCloudProtos.PointCloudResponse.Status),
+      pointCloudProtos.PointCloudResponse.Status,
       _STATUS_TO_ERROR,
     );
     if (result !== null) return result;
@@ -70,17 +85,25 @@ class PointCloudClient extends BaseClient {
    */
   listPointCloudSources(args) {
     const req = PointCloudClient._getListPointCloudSourceRequest();
-    return this.call(this._stub.listPointCloudSources, req, _listPointCloudSourcesValue, commonHeaderErrors, false, args);
+    return this.call(
+      this._stub.listPointCloudSources,
+      req,
+      _listPointCloudSourcesValue,
+      commonHeaderErrors,
+      false,
+      args,
+    );
   }
 
   /**
    * Obtain point clouds from sources using default parameters.
    * @param {string[]} pointCloudSources The source names to request point clouds from.
    * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Array} A list of point cloud responses for each of the requested sources.
+   * @returns {Promise<pointCloudProtos.PointCloudResponse[]>} A list of point cloud responses for each of the
+   * requested sources.
    * @throws {RpcError} Problem communicating with the robot.
    * @throws {UnknownPointCloudSourceError} Provided point cloud source was invalid or not found.
-   * @throws {point_cloud.SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
+   * @throws {SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
    * @throws {UnsetStatusError} An internal PointCloudService issue has happened.
    * @throws {PointCloudDataError} Problem with the point cloud data. Only PointCloudSource is filled.
    */
@@ -100,7 +123,7 @@ class PointCloudClient extends BaseClient {
    * for each of the requested sources.
    * @throws {RpcError} Problem communicating with the robot.
    * @throws {UnknownPointCloudSourceError} Provided point cloud source was invalid or not found.
-   * @throws {point_cloud.SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
+   * @throws {SourceDataError} Failed to fill out PointCloudSource. All other fields are not filled.
    * @throws {UnsetStatusError} An internal PointCloudService issue has happened.
    * @throws {PointCloudDataError} Problem with the point cloud data. Only PointCloudSource is filled.
    */
@@ -142,4 +165,5 @@ module.exports = {
   UnknownPointCloudSourceError,
   SourceDataError,
   PointCloudDataError,
+  PointCloudTypeError,
 };

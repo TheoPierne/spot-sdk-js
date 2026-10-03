@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the Spot CAM Lighting service.
+ */
+
 'use strict';
 
 const LED_pb = require('../../bosdyn/api/spot_cam/LED_pb');
@@ -25,7 +29,7 @@ class LightingClient extends BaseClient {
 
   /**
    * Retrieve the brightness value [0, 1] of each LED at indices [0, max).
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<number[]>}
    */
   getLedBrightness(args) {
@@ -43,7 +47,7 @@ class LightingClient extends BaseClient {
   /**
    * Set the brightness value [0, 1] of each LED at indices [0, max).
    * @param {number[]} brightnesses An array of number representing brightnesses
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<void>}
    */
   setLedBrightness(brightnesses, args) {

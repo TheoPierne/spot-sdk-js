@@ -1,3 +1,7 @@
+/**
+ * @file Constants relevant to the missions service.
+ */
+
 'use strict';
 
 /**

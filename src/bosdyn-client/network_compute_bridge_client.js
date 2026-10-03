@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the network compute bridge service.
+ */
+
 'use strict';
 
 const { BaseClient, handleCommonHeaderErrors, handleCustomParamsErrors } = require('./common');
@@ -7,9 +11,17 @@ const { DefaultDict } = require('./util');
 const networkComputeBridgePb = require('../bosdyn/api/network_compute_bridge_pb');
 const networkComputeBridgeServiceGrpcPb = require('../bosdyn/api/network_compute_bridge_service_grpc_pb');
 
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ */
+
+/** The requested service for external computation was not found in the directory. */
 class ExternalServiceNotFoundError extends ResponseError {}
+/** The call to the external server did not complete successfully. */
 class ExternalServerError extends ResponseError {}
+/** The robot failed to rotate the image as requested. */
 class NetworkComputeRotationError extends ResponseError {}
+/** The model failed to analyze the set of input images, but a retry might work. */
 class NetworkComputeAnalysisFailedError extends ResponseError {}
 
 /**
@@ -27,7 +39,7 @@ class NetworkComputeBridgeClient extends BaseClient {
   /**
    * List all available models that the service knows.
    * @param {string} serviceName The service to query for models.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<networkComputeBridgePb.ListAvailableModelsResponse>} The full ListAvailableModelsResponse,
    * which contains any models the service or worker service advertise.
    * @throws {RpcError} Problem communicating with the robot.
@@ -46,7 +58,7 @@ class NetworkComputeBridgeClient extends BaseClient {
   /**
    * List all available models that the service knows.
    * @param {networkComputeBridgePb.ListAvailableModelsRequest} listRequest The request to list all models.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {networkComputeBridgePb.ListAvailableModelsResponse} The full ListAvailableModelsResponse,
    * which contains any models the service or worker service advertise.
    * @throws {RpcError} Problem communicating with the robot.
@@ -63,7 +75,7 @@ class NetworkComputeBridgeClient extends BaseClient {
    * Issue the main network compute bridge request to run a model on specific, requested data.
    * @param {networkComputeBridgePb.NetworkComputeRequest} networkComputeRequest The request which contains what
    * type of data should be processed, and which model the server should run.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<networkComputeBridgePb.NetworkComputeResponse>} The full NetworkComputeResponse,
    * which contains the processed data.
    * @throws {RpcError} Problem communicating with the robot.
@@ -124,11 +136,15 @@ _LIST_AVAILABLE_MODELS_STATUS_TO_ERROR.set(
 );
 
 const _networkComputeError = handleCommonHeaderErrors(
-  handleCustomParamsErrors(response => {
-    const [errorType, message] = _NETWORK_COMPUTE_STATUS_TO_ERROR.get(response.getStatus());
-    if (errorType === null) return null;
-    return new errorType(response, message);
-  }),
+  handleCustomParamsErrors(
+    response => {
+      const [errorType, message] = _NETWORK_COMPUTE_STATUS_TO_ERROR.get(response.getStatus());
+      if (errorType === null) return null;
+      return new errorType(response, message);
+    },
+    // NetworkComputeResponse has no Status enum of its own to find the value in.
+    { statusValue: networkComputeBridgePb.NetworkComputeStatus.NETWORK_COMPUTE_STATUS_CUSTOM_PARAMS_ERROR },
+  ),
 );
 
 const _listAvailableModelsError = handleCommonHeaderErrors(response => {
@@ -138,5 +154,9 @@ const _listAvailableModelsError = handleCommonHeaderErrors(response => {
 });
 
 module.exports = {
+  ExternalServiceNotFoundError,
+  ExternalServerError,
+  NetworkComputeRotationError,
+  NetworkComputeAnalysisFailedError,
   NetworkComputeBridgeClient,
 };

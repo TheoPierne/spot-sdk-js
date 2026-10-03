@@ -1,77 +1,122 @@
+/**
+ * @file A class for reading a series of POD data from a DataFile.
+ */
+
 'use strict';
 
-const struct = require('python-struct');
-
-const { ParseError, POD_TYPE_TO_NUM_BYTES, POD_TYPE_TO_STRUCT } = require('./common');
+const { ParseError, POD_TYPE_TO_NUM_BYTES, unpackPodValues } = require('./common');
 
 const bddf_pb = require('../../bosdyn/api/bddf_pb');
 
-function range(start, end, step = 1) {
-  return Array.from({ length: Math.ceil((end - start) / step) }, (_, i) => start + i * step);
+/**
+ * The values of the samples split by the dimensions, like _split() in Python: a sample of dimension [2, 3] is
+ * [[a, b, c], [d, e, f]].
+ * @param {Array<number|bigint>} vals
+ * @param {number[]} dims
+ * @returns {Array}
+ */
+function _split(vals, dims) {
+  if (!dims.length) return vals;
+  // The product of the dimensions (Python calls itertools.product(): a TypeError for every dimension).
+  const elsPerSample = dims.reduce((product, dim) => product * dim, 1);
+  if (!elsPerSample) throw new ParseError(`Invalid dimensions ${dims}`);
+  const nextDims = dims.slice(1);
+  const samples = [];
+  for (let i = 0; i < vals.length; i += elsPerSample) {
+    samples.push(_split(vals.slice(i, i + elsPerSample), nextDims));
+  }
+  return samples;
 }
 
+/**
+ * A class for reading a series of POD data from a DataFile.
+ *
+ * Methods throw ParseError if there is a problem with the format of the file.
+ */
 class PodSeriesReader {
-  constructor(data_reader, series_spec) {
-    this._data_reader = data_reader;
-    this._series_index = this._data_reader.series_spec_to_index(series_spec);
-    this._series_descriptor = this._data_reader.series_descriptor(this._series_index);
-    if (!this._series_descriptor.hasPodType()) {
-      const dataType = bddf_pb.SeriesDescriptor.DatatypeCase[this._series_descriptor.getDatatypeCase()];
+  /**
+   * @param {import('./data_reader').DataReader} dataReader
+   */
+  constructor(dataReader) {
+    /** @type {import('./data_reader').DataReader} */
+    this._dataReader = dataReader;
+    this._numDataBlocks = null;
+  }
+
+  /**
+   * @template {new (...args: any[]) => any} T
+   * @this {T}
+   * @param {import('./data_reader').DataReader} dataReader
+   * @param {Object<string, string>} seriesSpec
+   * @returns {Promise<InstanceType<T>>}
+   */
+  static async create(dataReader, seriesSpec) {
+    /** @type {InstanceType<T>} */
+    const podSeriesReader = new this(dataReader);
+
+    podSeriesReader._seriesIndex = podSeriesReader._dataReader.seriesSpecToIndex(seriesSpec);
+    podSeriesReader._seriesDescriptor = await podSeriesReader._dataReader.seriesDescriptor(
+      podSeriesReader._seriesIndex,
+    );
+    if (!podSeriesReader._seriesDescriptor.hasPodType()) {
+      const dataType = Object.keys(bddf_pb.SeriesDescriptor.DatatypeCase).find(
+        name => bddf_pb.SeriesDescriptor.DatatypeCase[name] === podSeriesReader._seriesDescriptor.getDatatypeCase(),
+      );
       throw new ParseError(`Expected DataType 'pod_type' but got ${dataType}.`);
     }
 
-    this._pod_type = this._series_descriptor.getPodType();
-    this._num_values_per_sample = 1;
-    for (const dim of this._pod_type.getDimensionList()) {
-      this._num_values_per_sample *= dim;
+    podSeriesReader._podType = podSeriesReader._seriesDescriptor.getPodType();
+    podSeriesReader._numValuesPerSample = 1;
+    for (const dim of podSeriesReader._podType.getDimensionList()) {
+      podSeriesReader._numValuesPerSample *= dim;
     }
-    const pod_type = this._pod_type.getPodType();
-    this._bytes_per_sample = POD_TYPE_TO_NUM_BYTES[pod_type] * this._num_values_per_sample;
-    this._num_data_blocks = null;
+    const podType = podSeriesReader._podType.getPodType();
+    podSeriesReader._bytesPerSample = POD_TYPE_TO_NUM_BYTES[podType] * podSeriesReader._numValuesPerSample;
+
+    return podSeriesReader;
   }
 
-  get pod_type() {
-    return this._pod_type;
+  /**
+   * Return the PodTypeDescriptor for the series.
+   */
+  get podType() {
+    return this._podType;
   }
 
-  get series_descriptor() {
-    return this._series_descriptor;
+  /**
+   * Return the SeriesDescriptor for the series.
+   */
+  get seriesDescriptor() {
+    return this._seriesDescriptor;
   }
 
-  get num_data_blocks() {
-    if (this._num_data_blocks === null) {
-      this._num_data_blocks = this._data_reader.num_data_blocks(this._series_index);
+  /**
+   * Number of data blocks in this series.
+   */
+  get numDataBlocks() {
+    if (this._numDataBlocks === null) {
+      this._numDataBlocks = this._dataReader.numDataBlocks(this._seriesIndex);
     }
-    return this._num_data_blocks;
+    return this._numDataBlocks;
   }
 
-  read_samples(index_in_series) {
-    const [, timestamp_nsec, data] = this._data_reader.read(this._series_index, index_in_series);
-    const num_samples = Math.floor(data.length / this._bytes_per_sample);
-    const expected_size = num_samples * this._bytes_per_sample;
-    if (data.length !== expected_size) {
-      const id = this._series_descriptor.getSeriesIdentifier();
-      throw new ParseError(`${id} idx=${index_in_series} expect ${expected_size} elements but got ${data.length}`);
+  /**
+   * Return the POD data values from the data block of the given index.
+   * @param {number} indexInSeries
+   * @returns {Promise<[bigint, Array]>} The nanoseconds since the epoch, and the values of the samples (BigInt for the
+   * 64 bits integers).
+   */
+  async readSamples(indexInSeries) {
+    const [, timestampNsec, data] = await this._dataReader.read(this._seriesIndex, indexInSeries);
+    const numSamples = Math.floor(data.length / this._bytesPerSample);
+    const expectedSize = numSamples * this._bytesPerSample;
+    if (data.length !== expectedSize) {
+      const id = JSON.stringify(this._seriesDescriptor.getSeriesIdentifier().toObject());
+      throw new ParseError(`${id} idx=${indexInSeries} expect ${expectedSize} elements but got ${data.length}`);
     }
 
-    const num_values = num_samples * this._num_values_per_sample;
-    const format_str = `<${num_values}${POD_TYPE_TO_STRUCT[this._pod_type.getPodType()]}`;
-    const pod_data = struct.unpack(format_str, data);
-
-    function _split(vals, dims) {
-      if (!dims.length) return vals;
-      const els_per_sample = dims.map(x => [x]);
-      console.assert(els_per_sample);
-      const next_dims = dims.slice(1);
-      // Return [_split(vals[i:i + els_per_sample], next_dims) for i in range(0, len(vals), els_per_sample)];
-      return range(0, vals.length, els_per_sample.length).map(x =>
-        _split(vals.slice(x, x + els_per_sample.length), next_dims),
-      );
-    }
-
-    const split_data = _split(pod_data, this._pod_type.getDimensionList());
-
-    return [timestamp_nsec, split_data];
+    const podData = unpackPodValues(this._podType.getPodType(), data);
+    return [timestampNsec, _split(podData, this._podType.getDimensionList())];
   }
 }
 

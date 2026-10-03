@@ -1,3 +1,7 @@
+/**
+ * @file For clients to use the robot state service.
+ */
+
 'use strict';
 
 const { BaseClient, commonHeaderErrors } = require('./common.js');
@@ -6,6 +10,10 @@ const {
   RobotStateServiceClient,
   RobotStateStreamingServiceClient,
 } = require('../bosdyn/api/robot_state_service_grpc_pb');
+
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ */
 
 /**
  * Client for the RobotState service.
@@ -21,7 +29,7 @@ class RobotStateClient extends BaseClient {
 
   /**
    * Obtain current state of the robot.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<robotStatePb.RobotState>} The current robot state.
    * @throws {RpcError} Problem communicating with the robot.
    */
@@ -32,7 +40,7 @@ class RobotStateClient extends BaseClient {
 
   /**
    * Obtain robot metrics, such as distance traveled or time powered on.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<robotStatePb.RobotMetrics>} All of the current robot metrics.
    * @throws {RpcError} Problem communicating with the robot.
    */
@@ -43,7 +51,7 @@ class RobotStateClient extends BaseClient {
 
   /**
    * Obtain current hardware configuration of robot.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<robotStatePb.HardwareConfiguration>} The hardware configuration,
    * which includes the link names.
    * @throws {RpcError} Problem communicating with the robot.
@@ -63,7 +71,7 @@ class RobotStateClient extends BaseClient {
   /**
    * Obtain link model OBJ for a specific link.
    * @param {string} linkName Name of the link to get the model.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<robotStatePb.Skeleton.Link.ObjModel>} The bosdyn.api.Skeleton.Link.ObjModel for
    * the specified link.
    * @throws {RpcError} Problem communicating with the robot.
@@ -81,7 +89,8 @@ class RobotStateClient extends BaseClient {
    */
   async getHardwareConfigWithLinkInfo() {
     const hardwareConfiguration = await this.getRobotHardwareConfiguration();
-    const links = hardwareConfiguration.getSkeleton().getLinksList();
+    // An unset skeleton has no link, like Python (TypeError).
+    const links = hardwareConfiguration.getSkeleton()?.getLinksList() ?? [];
 
     await Promise.all(
       links.map(async link => {
@@ -110,6 +119,9 @@ class RobotStateClient extends BaseClient {
 }
 
 /**
+ * Client for the RobotState service.
+ *
+ * This client is in BETA and may undergo changes in future releases.
  * @extends {BaseClient<RobotStateStreamingServiceClient>}
  */
 class RobotStateStreamingClient extends BaseClient {
@@ -139,11 +151,11 @@ const _getRobotHardwareConfigurationValue = response => response.getHardwareConf
 const _getRobotLinkModelValue = response => response.getLinkModel();
 
 /**
- * Convenience function which first requests a robots hardware configuration followed by
- * requests to get link models for all robot links.
+ * Check if the robot has an arm attached.
  * @param {RobotStateClient} stateClient RobotStateClient to query for robot state.
- * @param {?number} timeout Timeout for the command in milliseconds.
+ * @param {?number} [timeout=null] Timeout of the RPC in milliseconds (no deadline if null, like None in Python).
  * @returns {Promise<boolean>} Returns true if robot has an arm, false otherwise.
+ * @throws {RpcError} A problem occurred trying to communicate with the robot.
  */
 async function hasArm(stateClient, timeout = null) {
   const state = await stateClient.getRobotState({ timeout });

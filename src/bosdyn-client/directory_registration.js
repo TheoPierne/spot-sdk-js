@@ -1,17 +1,32 @@
+/**
+ * @file Client for the directory registration service.
+ *
+ * A DirectoryRegistrationClient allows a client to modify information about other API services available on a robot.
+ */
+
 'use strict';
 
 const { BaseClient, errorFactory, handleCommonHeaderErrors, handleUnsetStatusError } = require('./common');
-const { ResponseError, TimedOutError, RetryableUnavailableError } = require('./exceptions');
 const { ErrorCallbackResult } = require('./error_callback_result');
-const { LoggerUtil } = require('./loggerUtil');
+const { ResponseError, RetryableUnavailableError, RpcError, TimedOutError } = require('./exceptions');
+const { LoggerUtil } = require('./logger_util');
 const { DefaultDict } = require('./util');
 
 const directoryPb = require('../bosdyn/api/directory_pb');
 const directoryRegistrationPb = require('../bosdyn/api/directory_registration_pb');
 const { DirectoryRegistrationServiceClient } = require('../bosdyn/api/directory_registration_service_grpc_pb');
+const { Event } = require('../bosdyn-core/event');
+const { nowSec } = require('../bosdyn-core/util');
 
+/**
+ * @typedef {import('./logger_util').Logger} Logger
+ */
+
+/** General class of errors for directory registration responses. */
 class DirectoryRegistrationResponseError extends ResponseError {}
+/** The service already exists on the robot. */
 class ServiceAlreadyExistsError extends DirectoryRegistrationResponseError {}
+/** The specified service does not exist on the robot. */
 class ServiceDoesNotExistError extends DirectoryRegistrationResponseError {}
 
 /**
@@ -40,7 +55,7 @@ class DirectoryRegistrationClient extends BaseClient {
    * @param {number} port The port number the service can be accessed through on the host system.
    * @param {boolean} userTokenRequired If a user token should be verified to access the service.
    * @param {number} livenessTimeoutSecs Number of seconds without directory heartbeat before timeout fault.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<directoryRegistrationPb.RegisterServiceResponse>}
    */
   register(name, serviceType, authority, hostIp, port, userTokenRequired = true, livenessTimeoutSecs = 0, args) {
@@ -74,7 +89,7 @@ class DirectoryRegistrationClient extends BaseClient {
    * @param {number} port The port number the service can be accessed through on the host system.
    * @param {boolean} userTokenRequired If a user token should be verified to access the service.
    * @param {number} livenessTimeoutSecs Number of seconds without directory heartbeat before timeout fault.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<directoryRegistrationPb.UpdateServiceResponse>}
    */
   update(name, serviceType, authority, hostIp, port, userTokenRequired = true, livenessTimeoutSecs = 0, args) {
@@ -95,7 +110,7 @@ class DirectoryRegistrationClient extends BaseClient {
   /**
    * Remove a service routing with the robot.
    * @param {string} name The name of the service to be removed.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<directoryRegistrationPb.UnregisterServiceResponse>}
    */
   unregister(name, args) {
@@ -130,7 +145,7 @@ const _directoryRegisterError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(directoryRegistrationPb.RegisterServiceResponse.Status),
+      directoryRegistrationPb.RegisterServiceResponse.Status,
       _REGISTER_STATUS_TO_ERROR,
     ),
   ),
@@ -141,7 +156,7 @@ const _directoryUpdateError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(directoryRegistrationPb.UpdateServiceResponse.Status),
+      directoryRegistrationPb.UpdateServiceResponse.Status,
       _UPDATE_STATUS_TO_ERROR,
     ),
   ),
@@ -152,7 +167,7 @@ const _directoryUnregisterError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(directoryRegistrationPb.UnregisterServiceResponse.Status),
+      directoryRegistrationPb.UnregisterServiceResponse.Status,
       _UNREGISTER_STATUS_TO_ERROR,
     ),
   ),
@@ -190,7 +205,7 @@ async function resetServiceRegistration(
   try {
     await directoryRegistrationClient.unregister(name);
   } catch (e) {
-    // Pass
+    if (!(e instanceof ServiceDoesNotExistError)) throw e;
   }
 
   await directoryRegistrationClient.register(
@@ -203,6 +218,9 @@ async function resetServiceRegistration(
     livenessTimeoutSecs,
   );
 }
+
+// Like the Python daemon thread, the waits of the loop do not keep the process alive.
+const _DAEMON = { ref: false };
 
 /**
  * Helper class to keep a directory entry updated.
@@ -219,17 +237,19 @@ async function resetServiceRegistration(
  */
 class DirectoryRegistrationKeepAlive {
   /**
-   * Creates an instance of DirectoryRegistrationKeepAlive to maintain a service registration.
-   * @param {DirectoryRegistrationClient} dirRegClient - Client for the directory registration service.
+   * @param {DirectoryRegistrationClient} dirRegClient Client to the directory registration service.
    * @param {Object} [options] Optional configuration options.
-   * @param {Console} [options.logger=console] Logger object for logging messages. Defaults to `console`.
-   * @param {number|null} [options.rpcTimeoutSeconds=null] Timeout in seconds for RPC requests. `null` means no timeout.
-   * @param {number} [options.rpcIntervalSeconds=30] Interval in seconds for periodic service registrations.
-   * @param {number} [options.initialRetrySeconds=1] Initial number of seconds to wait before retrying a failed registration request. Defaults to 1 second.
+   * @param {?Logger} [options.logger=null] Object to log with. Defaults to null, in which case one with the
+   * class name is acquired.
+   * @param {?number} [options.rpcTimeoutSeconds=null] Number of seconds to wait for a dirRegClient RPC. Defaults
+   * to null, for the default RPC timeout.
+   * @param {number} [options.rpcIntervalSeconds=30] Interval in seconds at which to request service registrations.
+   * @param {number} [options.initialRetrySeconds=1] Initial number of seconds to wait before retrying a failed
+   * registration request.
    */
   constructor(
     dirRegClient,
-    { logger = null, rpcTimeoutSeconds = null, rpcIntervalSeconds = 30, initialRetrySeconds = 1 } = {}
+    { logger = null, rpcTimeoutSeconds = null, rpcIntervalSeconds = 30, initialRetrySeconds = 1 } = {},
   ) {
     /** @type {string|null} */
     this.authority = null;
@@ -248,26 +268,40 @@ class DirectoryRegistrationKeepAlive {
      * @type {DirectoryRegistrationClient}
      */
     this.dirRegClient = dirRegClient;
+
+    /**
+     * Optional callback called when an RPC error occurs in the re-registration loop. It returns an
+     * ErrorCallbackResult, or a promise of one, telling the loop what to do.
+     * @type {?function(Error): (number|Promise<number>)}
+     */
     this.reregistrationErrorCallback = null;
 
+    this._endReregisterSignal = new Event();
     this._rpcTimeout = rpcTimeoutSeconds;
     this._reregisterPeriod = rpcIntervalSeconds;
     this._initialRetrySeconds = initialRetrySeconds;
 
-    this._running = false;
-    this._loopPromise = null;
-    this._abortController = null;
+    this._started = false;
+    /**
+     * The re-registration loop, while it runs.
+     * @type {?Promise<void>}
+     * @private
+     */
+    this._task = null;
   }
 
   async [Symbol.asyncDispose]() {
-    this.shutdown();
+    await this.shutdown();
     try {
       await this.unregister();
-    } catch (_) { /* ignore */ }
+    } catch (_) {
+      /* ignore */
+    }
   }
 
   /**
-   * Register (optionally reset) the service, then start the periodic loop.
+   * Register, optionally update, and then kick off the re-registration loop.
+   * Can not be restarted with this method after a shutdown.
    *
    * @param {string} directoryName Unique name in the directory.
    * @param {string} serviceType Service type.
@@ -279,7 +313,7 @@ class DirectoryRegistrationKeepAlive {
    * @param {boolean} [resetService=true] Fully reset the registration before starting the loop.
    * @returns {Promise<this>}
    * @throws {Error} If already started.
-   * @throws {Error} RpcError if communication with the robot fails.
+   * @throws {RpcError} Problem communicating with the robot.
    */
   async start(
     directoryName,
@@ -291,28 +325,19 @@ class DirectoryRegistrationKeepAlive {
     userTokenRequired = true,
     resetService = true,
   ) {
-    if (this._running) {
-      throw new Error('DirectoryRegistrationKeepAlive already started.');
+    if (this._started) {
+      throw new Error('DirectoryRegistrationKeepAlive can only be started once.');
     }
+    this._started = true;
 
     if (livenessTimeoutSecs === null) {
       livenessTimeoutSecs = this._reregisterPeriod * 2.5;
     }
 
-    if (resetService) {
-      await resetServiceRegistration(
-        this.dirRegClient,
-        directoryName,
-        serviceType,
-        authority,
-        host,
-        port,
-        userTokenRequired,
-        livenessTimeoutSecs,
-      );
-    } else {
-      try {
-        await this.dirRegClient.register(
+    try {
+      if (resetService) {
+        await resetServiceRegistration(
+          this.dirRegClient,
           directoryName,
           serviceType,
           authority,
@@ -321,8 +346,19 @@ class DirectoryRegistrationKeepAlive {
           userTokenRequired,
           livenessTimeoutSecs,
         );
-      } catch (e) {
-        if (e instanceof ServiceAlreadyExistsError) {
+      } else {
+        try {
+          await this.dirRegClient.register(
+            directoryName,
+            serviceType,
+            authority,
+            host,
+            port,
+            userTokenRequired,
+            livenessTimeoutSecs,
+          );
+        } catch (e) {
+          if (!(e instanceof ServiceAlreadyExistsError)) throw e;
           await this.dirRegClient.update(
             directoryName,
             serviceType,
@@ -332,10 +368,12 @@ class DirectoryRegistrationKeepAlive {
             userTokenRequired,
             livenessTimeoutSecs,
           );
-        } else {
-          throw e;
         }
       }
+    } catch (e) {
+      // Like Python, the loop was not started: start() can be called again.
+      this._started = false;
+      throw e;
     }
 
     this.logger.info(`${directoryName} service registered/updated.`);
@@ -348,75 +386,99 @@ class DirectoryRegistrationKeepAlive {
     this.livenessTimeoutSecs = livenessTimeoutSecs;
     this.userTokenRequired = userTokenRequired;
 
-    this._running = true;
-    this._abortController = new AbortController();
-    this._loopPromise = this._periodicReregisterLoop(this._abortController.signal).catch(err => {
-      if (this._running) this.logger.error(`Reregistration loop crashed: ${err}`);
-      this._running = false;
-    });
+    this._task = this._periodicReregister()
+      .catch(err => this.logger.error(`Reregistration loop crashed: ${err?.stack ?? err}`))
+      .finally(() => {
+        this._task = null;
+      });
+    return this;
   }
 
   /**
-   * Whether the periodic loop is still running.
+   * Are we still periodically re-registering?
    * @returns {boolean}
    */
   isAlive() {
-    return this._running;
+    return this._task !== null;
   }
 
   /**
    * Stop the re-registration loop (idempotent).
    * Does NOT automatically call `unregister()`—use it separately if needed.
-   * @returns {void}
+   * @returns {Promise<void>} Resolves once the loop has ended, like Python's join().
    */
   shutdown() {
-    if (!this._running) return;
-    this.logger.info(`Shutting down ${this.directoryName} keep alive`);
-    this._running = false;
-    if (this._abortController) this._abortController.abort();
+    if (this._task) this.logger.info(`Shutting down ${this.directoryName} keep alive`);
+    this._endReregisterSignal.set();
+    return this._task ?? Promise.resolve();
   }
 
   /**
-   * Unregister the service from the directory. First awaits the loop to finish cleanly.
-   * @returns {Promise<void>}
+   * Unregister the service from the directory. First stops the loop, which would register it again.
+   * @returns {Promise<directoryRegistrationPb.UnregisterServiceResponse>}
+   * @throws {RpcError} Problem communicating with the robot.
+   * @throws {ServiceDoesNotExistError} The service does not exist.
    */
   async unregister() {
     this.logger.info(`Unregistering ${this.directoryName} from directory`);
-
-    const p = this._loopPromise;
-    this.shutdown();
-
-    if (p) {
-      try {
-        await p;
-      } catch (_) { /* ignore */ }
-    }
-
-    await this.dirRegClient.unregister(this.directoryName, { timeout: this._rpcTimeout });
+    await this.shutdown();
+    return this.dirRegClient.unregister(this.directoryName, this._rpcArgs());
   }
 
   /**
-   * Main re-registration loop: handles immediate retry, exponential backoff, and normal cadence.
+   * Options of the RPCs: rpcTimeoutSeconds is in seconds like in Python, but call() takes milliseconds.
    * @private
-   * @param {AbortSignal} abortSignal Cancellation signal to stop the loop.
+   * @returns {{timeout: ?number}}
+   */
+  _rpcArgs() {
+    return { timeout: this._rpcTimeout === null ? null : this._rpcTimeout * 1000 };
+  }
+
+  /**
+   * Logs an error of a re-registration.
+   * @param {Error} err The error.
+   * @returns {Promise<ErrorCallbackResult>} What to do next: the result of reregistrationErrorCallback for an RpcError,
+   * else resume the normal operation.
+   * @private
+   */
+  async _handleReregistrationError(err) {
+    // Ignore already registered errors, and transient availability errors.
+    if (err instanceof ServiceAlreadyExistsError || err instanceof RetryableUnavailableError) {
+      return ErrorCallbackResult.RESUME_NORMAL_OPERATION;
+    }
+    if (err instanceof TimedOutError) {
+      this.logger.warn(`Timed out, timeout set to "${this._rpcTimeout}"`);
+    } else if (err instanceof RpcError) {
+      this.logger.error(`Reregistration failed with RpcError: ${err?.stack || err}`);
+      if (this.reregistrationErrorCallback) {
+        try {
+          return await this.reregistrationErrorCallback(err);
+        } catch (cbErr) {
+          this.logger.error(`Exception in error callback: ${cbErr?.stack || cbErr}`);
+        }
+      }
+    } else {
+      // Log all other exceptions, but continue looping in hopes that it resolves itself.
+      this.logger.error(`Caught general exception: ${err?.stack || err}`);
+    }
+    return ErrorCallbackResult.RESUME_NORMAL_OPERATION;
+  }
+
+  /**
+   * Main re-registration loop: handles an accidental removal of the service from the directory, with
+   * immediate retry, exponential backoff, and normal cadence.
+   * @private
    * @returns {Promise<void>}
    */
-  async _periodicReregisterLoop(abortSignal) {
+  async _periodicReregister() {
     let retryInterval = this._initialRetrySeconds;
-    let waitTime = this._reregisterInterval;
+    // start() just registered the service: wait before the first re-registration.
+    let waitTime = this._reregisterPeriod;
 
     this.logger.info(`Starting directory registration loop for ${this.directoryName}`);
 
-    while (!abortSignal.aborted) {
-      if (waitTime > 0) {
-        try {
-          await this._sleep(waitTime * 1000, abortSignal);
-        } catch (_) {
-          break;
-        }
-      }
-
-      const execStart = Date.now();
+    while (!(await this._endReregisterSignal.wait(waitTime * 1000, _DAEMON))) {
+      const execStart = nowSec();
       let action = ErrorCallbackResult.RESUME_NORMAL_OPERATION;
 
       try {
@@ -428,60 +490,26 @@ class DirectoryRegistrationKeepAlive {
           this.port,
           this.userTokenRequired,
           this.livenessTimeoutSecs,
-          { timeout: this._rpcTimeout }
+          this._rpcArgs(),
         );
       } catch (err) {
-        if (err instanceof ServiceAlreadyExistsError) {
-          // Ignore already registered errors.
-        } else if (err instanceof RetryableUnavailableError) {
-          // Ignore transient availability errors.
-        } else if (err instanceof TimedOutError) {
-          this.logger.warn(`Timed out, timeout set to "${this._rpcTimeout}"`);
-        } else {
-          this.logger.error(`Reregistration failed: ${err?.stack || err}`);
-          if (this.reregistrationErrorCallback) {
-            try {
-              action = await this.reregistrationErrorCallback(err);
-            } catch (cbErr) {
-              this.logger.error(`Exception in error callback: ${cbErr?.stack || cbErr}`);
-            }
-          }
-        }
+        action = await this._handleReregistrationError(err);
       }
-      
-      const elapsed = (Date.now() - execStart) / 1000;
-      
+
+      const elapsed = nowSec() - execStart;
+
       if (action === ErrorCallbackResult.RETRY_IMMEDIATELY) {
         waitTime = 0;
       } else if (action === ErrorCallbackResult.ABORT) {
         break;
       } else if (action === ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF) {
-        waitTime = Math.max(0, retryInterval - elapsed);
+        waitTime = retryInterval - elapsed;
         retryInterval = Math.min(2 * retryInterval, this._reregisterPeriod);
       } else {
         retryInterval = this._initialRetrySeconds;
-        waitTime = Math.max(0, this._reregisterPeriod - elapsed);
+        waitTime = this._reregisterPeriod - elapsed;
       }
     }
-  }
-  
-  /**
-   * Abortable sleep.
-   * @private
-   * @param {number} ms Duration to wait in milliseconds.
-   * @param {AbortSignal} signal Cancellation signal.
-   * @returns {Promise<void>}
-   */
-  _sleep(ms, signal) {
-    return new Promise((resolve, reject) => {
-      if (signal.aborted) return reject(new Error('aboterd'));
-      const t = setTimeout(resolve, ms);
-      const onAbort = () => {
-        clearTimeout(t);
-        reject(new Error('aborted'));
-      };
-      signal.addEventListener('abort', onAbort, { once: true });
-    });
   }
 }
 
@@ -491,4 +519,5 @@ module.exports = {
   ServiceDoesNotExistError,
   DirectoryRegistrationClient,
   DirectoryRegistrationKeepAlive,
+  resetServiceRegistration,
 };

@@ -1,7 +1,12 @@
+/**
+ * @file For clients to the Spot CAM Audio service.
+ */
+
 'use strict';
 
+const { Buffer } = require('node:buffer');
+
 const wrappersPb = require('google-protobuf/google/protobuf/wrappers_pb');
-const _ = require('underscore');
 
 const dataChunkPb = require('../../bosdyn/api/data_chunk_pb');
 const audioPb = require('../../bosdyn/api/spot_cam/audio_pb');
@@ -22,18 +27,25 @@ class AudioClient extends BaseClient {
 
   /**
    * Retrieve the list of available sounds
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<audioPb.Sound[]>}
    */
   listSounds(args) {
     const request = new audioPb.ListSoundsRequest();
-    return this.call(this._stub.listSounds, request, this._listSoundsFromResponse, _audioErrorFromResponse, false, args);
+    return this.call(
+      this._stub.listSounds,
+      request,
+      this._listSoundsFromResponse,
+      _audioErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
    * Set the current volume as a percentage
    * @param {number} percentage The new volume as a percentage [0 - 100]
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<void>}
    */
   setVolume(percentage, args) {
@@ -43,7 +55,7 @@ class AudioClient extends BaseClient {
 
   /**
    * Retrieve the current volume as a percentage
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<number>}
    */
   getVolume(args) {
@@ -55,11 +67,11 @@ class AudioClient extends BaseClient {
    * Play already uploaded sound with optional volume gain multiplier
    * @param {audioPb.Sound} sound The sound identifier to play
    * @param {number} gain The gain to apply to the volume
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<void>}
    */
   playSound(sound, gain = null, args) {
-    let request = new audioPb.PlaySoundRequest().setSound(sound);
+    const request = new audioPb.PlaySoundRequest().setSound(sound);
     if (gain) {
       const fv = new wrappersPb.FloatValue().setValue(gain);
       request.setGain(fv);
@@ -70,12 +82,19 @@ class AudioClient extends BaseClient {
   /**
    * Delete sound found in listSounds()
    * @param {audioPb.Sound} sound The sound to delete
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<void>}
    */
   deleteSound(sound, args) {
     const request = new audioPb.DeleteSoundRequest().setSound(sound);
-    return this.call(this._stub.deleteSound, request, this._deleteSoundFromResponse, _audioErrorFromResponse, false, args);
+    return this.call(
+      this._stub.deleteSound,
+      request,
+      this._deleteSoundFromResponse,
+      _audioErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
@@ -83,30 +102,37 @@ class AudioClient extends BaseClient {
    * @param {audioPb.Sound} sound The sound to load
    * @param {string|Buffer} data The sound data to load
    * @param {number} maxChunkSize The maximum size of the chunk that can be send
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<void>}
    */
   loadSound(sound, data, maxChunkSize = 1024 * 1024, args) {
-    function* yieldRequests(dataToYield) {
-      const chunk = new dataChunkPb.DataChunk().setTotalSize(dataToYield.length);
-      const request = new audioPb.LoadSoundRequest().setSound(sound).setData(chunk);
+    // The bytes of a binary string (jspb reads a string as base64).
+    const bytes = typeof data === 'string' ? Buffer.from(data, 'latin1') : data;
+    const totalSize = bytes.length;
+    // A new request for each chunk: grpc-js serializes the written requests later, so one request changed for each
+    // chunk sent the last chunk every time.
+    const chunkRequest = (start, end) =>
+      new audioPb.LoadSoundRequest()
+        .setSound(sound)
+        .setData(new dataChunkPb.DataChunk().setTotalSize(totalSize).setData(bytes.subarray(start, end)));
 
+    function* yieldRequests() {
+      // Break file into chunks if it's too large (for...in on a range gave its indices: chunks of 1 byte).
       let last = 0;
-      for (const i in _.range(maxChunkSize, request.getData().getTotalSize(), maxChunkSize)) {
-        request.getData().setData(dataToYield.slice(last, i));
-        yield request;
+      for (let i = maxChunkSize; i < totalSize; i += maxChunkSize) {
+        yield chunkRequest(last, i);
         last = i;
       }
 
-      if (last < request.getData().getTotalSize()) {
-        request.getData().setData(dataToYield.slice(last));
-        yield request;
+      // Small (leftover) chunks gets sent here
+      if (last < totalSize) {
+        yield chunkRequest(last, totalSize);
       }
     }
 
     return this.call(
       this._stub.loadSound,
-      yieldRequests(data),
+      yieldRequests(),
       this._loadSoundFromResponse,
       _audioErrorFromResponse,
       false,
@@ -117,7 +143,7 @@ class AudioClient extends BaseClient {
   /**
    * Set the audio capture channel
    * @param {audioPb.AudioCaptureChannel} channel Microphone to use
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<audioPb.SetAudioCaptureChannelResponse>}
    */
   setAudioCaptureChannel(channel, args) {
@@ -127,7 +153,7 @@ class AudioClient extends BaseClient {
 
   /**
    * Retrieve the audio capture channel (microphone)
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<audioPb.AudioCaptureChannel>}
    */
   getAudioCaptureChannel(args) {
@@ -146,7 +172,7 @@ class AudioClient extends BaseClient {
    * Set the audio capture gain
    * @param {audioPb.AudioCaptureChannel} channel Microphone to set gain for
    * @param {number} gain Microphone gain, 0.0 to 1.0
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<audioPb.SetAudioCaptureGainResponse>}
    */
   setAudioCaptureGain(channel, gain, args) {
@@ -157,7 +183,7 @@ class AudioClient extends BaseClient {
   /**
    * Retrieve the audio capture gain (microphone volume)
    * @param {audioPb.AudioCaptureChannel} channel Microphone to get gain for
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<number>}
    */
   getAudioCaptureGain(channel, args) {

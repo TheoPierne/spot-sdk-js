@@ -1,89 +1,104 @@
-'use strict';
+/**
+ * @file A class for reading GRPC data from a DataFile.
+ */
 
-const loader = require('@grpc/proto-loader');
+'use strict';
 
 const { GrpcRequests, GrpcResponses } = require('./bosdyn');
 const { LOGGER } = require('./common');
 const { GrpcServiceReader } = require('./grpc_service_reader');
 
-function getFunctionName(glob, func) {
-  return Object.entries(Object.getOwnPropertyDescriptors(glob))
-    .filter(([, { value }]) => value === func)
-    .map(([key]) => key)[0];
-}
+const { protoTypeName } = require('../../bosdyn-client/util');
 
-const PROTO = 'C:\\Users\\theop\\Desktop\\spot-sdk\\spot-sdk-py\\spot-sdk-3.1.2\\protos\\';
-
-let c = loader.loadSync(`${PROTO}auth.proto`, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-  includeDirs: [PROTO],
-});
-
+/**
+ * A class for reading GRPC data from a DataFile.
+ *
+ * Methods throw ParseError if there is a problem with the format of the file.
+ */
 class GrpcReader {
-  constructor(data_reader, protobuf_classes, base) {
-    this._data_reader = data_reader;
-    this._service_name_to_reader = {};
-    this._series_index_to_reader = {};
-    const proto_name_to_class = Object.fromEntries(
-      protobuf_classes.map(proto_class => [getFunctionName(base, proto_class), proto_class]),
+  constructor(dataReader) {
+    this._dataReader = dataReader;
+    this._serviceNameToReader = {};
+    this._seriesIndexToReader = {};
+    this._protoNameToReader = {};
+  }
+
+  /**
+   * @template {new (...args: any[]) => any} T
+   * @this {T}
+   * @param {import('./data_reader').DataReader} dataReader
+   * @param {any[]} protobufClasses
+   * @returns {Promise<InstanceType<T>>}
+   */
+  static async create(dataReader, protobufClasses) {
+    /** @type {InstanceType<T>} */
+    const grpcReader = new this(dataReader);
+
+    const protoNameToClass = Object.fromEntries(
+      protobufClasses.map(protoClass => [protoTypeName(protoClass), protoClass]),
     );
-    this._proto_name_to_reader = {};
-    for (const [series_index, series_identifier] of data_reader.file_index.getSeriesIdentifiersList()) {
-      console.log(series_index);
-      if (![GrpcRequests.SERIES_TYPE, GrpcResponses.SERIES_TYPE].include(series_identifier.getSeriesType())) {
-        console.log(series_identifier.getSeriesType(), GrpcRequests.SERIES_TYPE, GrpcResponses.SERIES_TYPE);
+
+    for (const [seriesIndex, seriesIdentifier] of dataReader.fileIndex.getSeriesIdentifiersList().entries()) {
+      if (![GrpcRequests.SERIES_TYPE, GrpcResponses.SERIES_TYPE].includes(seriesIdentifier.getSeriesType())) {
         continue;
       }
 
-      const service_name = series_identifier.getSpecMap().get(GrpcRequests.SERVICE_NAME);
-      const message_type = series_identifier.getSpecMap().get(GrpcRequests.MESSAGE_TYPE);
-      let proto_class, service_reader;
+      const serviceName = seriesIdentifier.getSpecMap().get(GrpcRequests.SERVICE_NAME);
+      const messageType = seriesIdentifier.getSpecMap().get(GrpcRequests.MESSAGE_TYPE);
+      let serviceReader;
 
-      try {
-        proto_class = proto_name_to_class[message_type];
-      } catch (e) {
-        LOGGER.exception(`Don't have a protobuf class for ${message_type}`);
+      // A missing class is skipped, like Python (a lookup does not throw: its reader failed later).
+      const protoClass = protoNameToClass[messageType];
+      if (protoClass === undefined) {
+        LOGGER.error(`Don't have a protobuf class for ${messageType}`);
         continue;
       }
 
-      try {
-        service_reader = this._service_name_to_reader[service_name];
-      } catch (e) {
-        service_reader = new GrpcServiceReader(this, service_name);
-        this._service_name_to_reader[service_name] = service_reader;
+      if (serviceName in grpcReader._serviceNameToReader) {
+        serviceReader = grpcReader._serviceNameToReader[serviceName];
+      } else {
+        serviceReader = new GrpcServiceReader(grpcReader, serviceName);
+        grpcReader._serviceNameToReader[serviceName] = serviceReader;
       }
-      console.log('D');
-      const series_descriptor = this._data_reader.series_descriptor(series_index);
-      const reader = service_reader.add_proto_reader(
-        series_index,
-        proto_class,
-        series_identifier.getSeriesType(),
-        series_descriptor,
-        base,
+
+      const seriesDescriptor = await grpcReader._dataReader.seriesDescriptor(seriesIndex);
+      const reader = serviceReader.addProtoReader(
+        seriesIndex,
+        protoClass,
+        seriesIdentifier.getSeriesType(),
+        seriesDescriptor,
       );
-      if (!(message_type in this._proto_name_to_reader)) {
-        this._proto_name_to_reader[message_type] = reader;
+      if (!(messageType in grpcReader._protoNameToReader)) {
+        grpcReader._protoNameToReader[messageType] = reader;
       }
-      this._series_index_to_reader[series_index] = reader;
+      grpcReader._seriesIndexToReader[seriesIndex] = reader;
     }
-    console.log(Object.keys(this._proto_name_to_reader));
+
+    return grpcReader;
   }
 
-  get data_reader() {
-    return this._data_reader;
+  /**
+   * Return underlying DataReader this object is using.
+   */
+  get dataReader() {
+    return this._dataReader;
   }
 
-  get_proto_reader(proto_name) {
-    return this._proto_name_to_reader[proto_name];
+  /**
+   * Return the GrpcProtoReader for protobuf messages with the specified type name.
+   * @param {string} protoName
+   * @returns {import('./grpc_proto_reader').GrpcProtoReader}
+   */
+  getProtoReader(protoName) {
+    return this._protoNameToReader[protoName];
   }
 
-  get_message(series_index, index_in_series) {
-    const reader = this._series_index_to_reader[series_index];
-    return reader.get_message(index_in_series);
+  /**
+   * Return a deserialized protobuf from bytes stored in the file.
+   */
+  getMessage(seriesIndex, indexInSeries) {
+    const reader = this._seriesIndexToReader[seriesIndex];
+    return reader.getMessage(indexInSeries);
   }
 }
 

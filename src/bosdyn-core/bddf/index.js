@@ -1,3 +1,7 @@
+/**
+ * @file Code for reading and writing 'bddf' data files.
+ */
+
 'use strict';
 
 const {
@@ -5,6 +9,7 @@ const {
   ChecksumError,
   DataError,
   DataFormatError,
+  EOFError,
   LOGGER,
   PROTOBUF_CONTENT_TYPE,
   ParseError,
@@ -49,6 +54,7 @@ module.exports = {
   ChecksumError,
   DataError,
   DataFormatError,
+  EOFError,
   LOGGER,
   PROTOBUF_CONTENT_TYPE,
   ParseError,

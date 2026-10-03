@@ -1,13 +1,25 @@
+/**
+ * @file Client for the data-service.
+ */
+
 'use strict';
 
 const { BaseClient, commonHeaderErrors } = require('./common');
+const { BosdynError } = require('./exceptions');
 const dataIndexProtos = require('../bosdyn/api/data_index_pb');
 const { DataServiceClient: DataServiceClientStub } = require('../bosdyn/api/data_service_grpc_pb');
 
-class InvalidArgument extends Error {}
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ */
+
+// An error of the SDK, like Python (Error of bosdyn.client.exceptions).
+/** A given argument could not be used. */
+class InvalidArgument extends BosdynError {}
 
 /**
  * @typedef {import('./robot').Robot} Robot
+ * @typedef {import('../bosdyn/api/time_range_pb').TimeRange} TimeRange
  */
 
 /**
@@ -52,7 +64,7 @@ class DataServiceClient extends BaseClient {
 
   /**
    * Internal get_data_index RPC stub call.
-   * @param {dataIndexProtos.TimeRange} timeRange The time range to send.
+   * @param {TimeRange} timeRange The time range to send.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataIndexProtos.GetDataPagesResponse>}
    * @throws {RpcError} Problem communicating with the robot.
@@ -63,7 +75,7 @@ class DataServiceClient extends BaseClient {
   }
 
   /**
-   * @param {?dataIndexProtos.TimeRange} timeRange The time range to send.
+   * @param {?TimeRange} timeRange The time range to send.
    * @param {!Array<string>} pageIds List of page's ids.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataIndexProtos.DeleteDataPagesResponse>}

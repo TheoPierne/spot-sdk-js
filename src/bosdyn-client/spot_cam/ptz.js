@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the Spot CAM Ptz service.
+ */
+
 'use strict';
 
 const { FloatValue, Int32Value } = require('google-protobuf/google/protobuf/wrappers_pb');
@@ -6,7 +10,8 @@ const ptzPb = require('../../bosdyn/api/spot_cam/ptz_pb');
 const { PtzServiceClient } = require('../../bosdyn/api/spot_cam/service_grpc_pb');
 
 const { BaseClient, commonHeaderErrors } = require('../common');
-const { recenterAngle } = require('../math_helpers');
+const { ValueError } = require('../exceptions');
+const { recenterValueMod } = require('../math_helpers');
 
 /**
  * A client calling Spot CAM Ptz service.
@@ -38,7 +43,14 @@ class PtzClient extends BaseClient {
    */
   getPtzPosition(ptzDesc, args) {
     const request = new ptzPb.GetPtzPositionRequest().setPtz(ptzDesc);
-    return this.call(this._stub.getPtzPosition, request, this._getPtzPositionFromResponse, commonHeaderErrors, false, args);
+    return this.call(
+      this._stub.getPtzPosition,
+      request,
+      this._getPtzPositionFromResponse,
+      commonHeaderErrors,
+      false,
+      args,
+    );
   }
 
   /**
@@ -49,7 +61,14 @@ class PtzClient extends BaseClient {
    */
   getPtzVelocity(ptzDesc, args) {
     const request = new ptzPb.GetPtzVelocityRequest().setPtz(ptzDesc);
-    return this.call(this._stub.getPtzVelocity, request, this._getPtzVelocityFromResponse, commonHeaderErrors, false, args);
+    return this.call(
+      this._stub.getPtzVelocity,
+      request,
+      this._getPtzVelocityFromResponse,
+      commonHeaderErrors,
+      false,
+      args,
+    );
   }
 
   /**
@@ -68,7 +87,14 @@ class PtzClient extends BaseClient {
       .setTilt(new FloatValue().setValue(tilt))
       .setZoom(new FloatValue().setValue(zoom));
     const request = new ptzPb.SetPtzPositionRequest().setPosition(ptzPosition);
-    return this.call(this._stub.setPtzPosition, request, this._setPtzPositionFromResponse, commonHeaderErrors, false, args);
+    return this.call(
+      this._stub.setPtzPosition,
+      request,
+      this._setPtzPositionFromResponse,
+      commonHeaderErrors,
+      false,
+      args,
+    );
   }
 
   /**
@@ -87,7 +113,14 @@ class PtzClient extends BaseClient {
       .setTilt(new FloatValue().setValue(tilt))
       .setZoom(new FloatValue().setValue(zoom));
     const request = new ptzPb.SetPtzVelocityRequest().setVelocity(ptzVelocity);
-    return this.call(this._stub.setPtzVelocity, request, this._setPtzVelocityFromResponse, commonHeaderErrors, false, args);
+    return this.call(
+      this._stub.setPtzVelocity,
+      request,
+      this._setPtzVelocityFromResponse,
+      commonHeaderErrors,
+      false,
+      args,
+    );
   }
 
   /**
@@ -97,13 +130,20 @@ class PtzClient extends BaseClient {
    */
   initializeLens(args) {
     const request = new ptzPb.InitializeLensRequest();
-    return this.call(this._stub.initializeLens, request, this._initializeLensFromResponse, commonHeaderErrors, false, args);
+    return this.call(
+      this._stub.initializeLens,
+      request,
+      this._initializeLensFromResponse,
+      commonHeaderErrors,
+      false,
+      args,
+    );
   }
 
   /**
    * Retrieve focus of the mechanical ptz
    * @param {Object} [args] Extra arguments for controlling RPC details
-   * @returns {Promise<PtzFocusState>}
+   * @returns {Promise<ptzPb.PtzFocusState>}
    */
   getPtzFocusState(args) {
     const request = new ptzPb.GetPtzFocusStateRequest();
@@ -119,29 +159,21 @@ class PtzClient extends BaseClient {
 
   /**
    * Set focus of the mechanical ptz
-   * @param {PtzFocusMode} focusMode Enum indicating whether to autofocus or manually focus
+   * @param {ptzPb.PtzFocusState.PtzFocusMode} focusMode Enum indicating whether to autofocus or manually focus
    * @param {number} distance Approximate distance to focus on, most accurate between 1.2m and 20m,
    * only settable in PTZ_FOCUS_MANUAL mode
    * @param {number} focusPosition Precise lens position for the camera for repeatable operations,
    * overrides distance if specified, only settable in PTZ_FOCUS_MANUAL mode
    * @param {Object} [args] Extra arguments for controlling RPC details
-   * @returns {Promise<SetPtzFocusStateResponse>}
+   * @returns {Promise<ptzPb.SetPtzFocusStateResponse>}
    */
   setPtzFocusState(focusMode, distance = null, focusPosition = null, args) {
-    let focusPositionVal, approxDistance;
-    if (focusPosition !== null) {
-      focusPositionVal = new Int32Value().setValue(focusPosition);
-      approxDistance = null;
-    } else if (distance !== null) {
-      approxDistance = new FloatValue().setValue(distance);
-      focusPositionVal = null;
-    } else {
-      throw new Error('One of distance or focusPosition must be specified.');
+    let ptzFocusState;
+    try {
+      ptzFocusState = createFocusState(focusMode, distance, focusPosition);
+    } catch (err) {
+      return Promise.reject(err);
     }
-    const ptzFocusState = new ptzPb.PtzFocusState()
-      .setMode(focusMode)
-      .setApproxDistance(approxDistance)
-      .setFocusPosition(focusPositionVal);
     const request = new ptzPb.SetPtzFocusStateRequest().setFocusState(ptzFocusState);
     return this.call(
       this._stub.setPtzFocusState,
@@ -192,10 +224,40 @@ class PtzClient extends BaseClient {
  * @returns {number}
  */
 function shiftPanAngle(pan) {
-  return recenterAngle(pan, 0, 360);
+  // A modulo like Python (the loops of recenterAngle never ended for Infinity).
+  return recenterValueMod(pan, 180, 360);
+}
+
+/**
+ * Generate a focus state proto.
+ * @param {ptzPb.PtzFocusState.PtzFocusMode} focusMode Enum indicating whether to autofocus or manually focus.
+ * @param {?number} [distance=null] Approximate distance to focus on, only used in PTZ_FOCUS_MANUAL mode.
+ * @param {?number} [focusPosition=null] Precise lens position for the camera, overrides distance if specified, only
+ * used in PTZ_FOCUS_MANUAL mode.
+ * @returns {ptzPb.PtzFocusState}
+ * @throws {ValueError} In PTZ_FOCUS_MANUAL mode, neither distance nor focusPosition is given.
+ */
+function createFocusState(focusMode, distance = null, focusPosition = null) {
+  let approxDistance = null;
+  let focusPositionVal = null;
+  // Only the manual mode needs a distance or a position (PTZ_FOCUS_AUTO threw: autofocus could not be set back).
+  if (focusMode === ptzPb.PtzFocusState.PtzFocusMode.PTZ_FOCUS_MANUAL) {
+    if (focusPosition !== null && focusPosition !== undefined) {
+      focusPositionVal = new Int32Value().setValue(focusPosition);
+    } else if (distance !== null && distance !== undefined) {
+      approxDistance = new FloatValue().setValue(distance);
+    } else {
+      throw new ValueError('One of distance or focusPosition must be specified.');
+    }
+  }
+  return new ptzPb.PtzFocusState()
+    .setMode(focusMode)
+    .setApproxDistance(approxDistance)
+    .setFocusPosition(focusPositionVal);
 }
 
 module.exports = {
   PtzClient,
+  createFocusState,
   shiftPanAngle,
 };

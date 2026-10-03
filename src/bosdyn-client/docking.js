@@ -1,3 +1,7 @@
+/**
+ * @file A client for the docking service.
+ */
+
 'use strict';
 
 const { setTimeout: sleep } = require('node:timers/promises');
@@ -6,6 +10,7 @@ const {
   BaseClient,
   errorFactory,
   commonHeaderErrors,
+  commonLeaseErrors,
   handleCommonHeaderErrors,
   handleLeaseUseResultErrors,
   handleUnsetStatusError,
@@ -19,6 +24,10 @@ const { DefaultDict } = require('./util');
 const dockingPb = require('../bosdyn/api/docking/docking_pb');
 const { DockingServiceClient } = require('../bosdyn/api/docking/docking_service_grpc_pb');
 const { nowSec, secondsToTimestamp } = require('../bosdyn-core/util');
+
+/**
+ * @typedef {import('./lease').Lease} Lease
+ */
 
 /**
  * @typedef {import('./robot').Robot} Robot
@@ -44,7 +53,7 @@ class DockingClient extends BaseClient {
   }
 
   /**
-   * @param {Robot} other 
+   * @param {Robot} other
    */
   updateFrom(other) {
     super.updateFrom(other);
@@ -181,7 +190,8 @@ class DockingClient extends BaseClient {
   }
 
   _dockingStateFromResponse(response) {
-    return response.getDockState();
+    // The default DockState of Python when unset (it was undefined).
+    return response.getDockState() ?? new dockingPb.DockState();
   }
 }
 
@@ -194,7 +204,7 @@ const _dockingCommandErrorFromResponse = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(dockingPb.DockingCommandResponse.Status),
+        dockingPb.DockingCommandResponse.Status,
         _DOCKING_COMMAND_STATUS_TO_ERROR,
       ),
     ),
@@ -220,14 +230,14 @@ async function blockingDockRobot(robot, dockId, numRetries = 4, timeoutMsec = 30
   let attemptNumber = 0;
   let dockingSuccess = false;
 
-  /* eslint-disable no-await-in-loop */
   while (attemptNumber < numRetries && !dockingSuccess) {
     attemptNumber += 1;
 
     const converter = await (await robot.timeSync).getRobotTimeConverter();
+    // Robot times are in seconds: the timeout (ms) must be converted, and the client side buffer is 10 s.
     const startTime = converter.robotSecondsFromLocalSeconds(nowSec());
-    const cmdEndTime = startTime + timeoutMsec;
-    const cmdTimeout = cmdEndTime + 10_000;
+    const cmdEndTime = startTime + timeoutMsec / 1000;
+    const cmdTimeout = cmdEndTime + 10;
 
     const prepPose =
       attemptNumber % 2
@@ -237,19 +247,15 @@ async function blockingDockRobot(robot, dockId, numRetries = 4, timeoutMsec = 30
     const timeSync = await robot.timeSync;
     const endTime = secondsToTimestamp(cmdEndTime);
 
-    const cmdId = await dockingClient.dockingCommand(
-      dockId,
-      timeSync.endpoint.clockIdentifier,
-      endTime,
-      prepPose,
-    );
+    const cmdId = await dockingClient.dockingCommand(dockId, timeSync.endpoint.clockIdentifier, endTime, prepPose);
 
     const statusDocking = dockingPb.DockingCommandFeedbackResponse.Status;
 
     while (converter.robotSecondsFromLocalSeconds(nowSec()) < cmdTimeout) {
       const feedback = await dockingClient.dockingCommandFeedbackFull(cmdId);
 
-      const err = commonHeaderErrors(feedback);
+      // Like Python, a lost lease must stop the docking with a LeaseUseError.
+      const err = commonHeaderErrors(feedback) ?? commonLeaseErrors(feedback);
       if (err) throw err;
 
       const status = feedback.getStatus();
@@ -270,10 +276,11 @@ async function blockingDockRobot(robot, dockId, numRetries = 4, timeoutMsec = 30
 
   if (dockingSuccess) return attemptNumber - 1;
 
+  // Try and return to the prep pose if we failed to dock.
   try {
     await blockingGoToPrepPose(robot, dockId);
   } catch (e) {
-    // Pass
+    if (!(e instanceof CommandFailedError)) throw e;
   }
 
   throw new CommandFailedError('Docking Failed, too many attempts');
@@ -291,9 +298,10 @@ async function blockingGoToPrepPose(robot, dockId, timeout = 20_000) {
   const dockingClient = await robot.ensureClient(DockingClient.defaultServiceName);
 
   const converter = await (await robot.timeSync).getRobotTimeConverter();
+  // Robot times are in seconds: the timeout (ms) must be converted, and the client side buffer is 10 s.
   const startTime = converter.robotSecondsFromLocalSeconds(nowSec());
-  const cmdEndTime = startTime + timeout;
-  const cmdTimeout = cmdEndTime + 10_000;
+  const cmdEndTime = startTime + timeout / 1000;
+  const cmdTimeout = cmdEndTime + 10;
 
   const timeSync = await robot.timeSync;
   const endTime = secondsToTimestamp(cmdEndTime);
@@ -305,11 +313,11 @@ async function blockingGoToPrepPose(robot, dockId, timeout = 20_000) {
     dockingPb.PrepPoseBehavior.PREP_POSE_ONLY_POSE,
   );
 
-  /* eslint-disable no-await-in-loop */
   while (converter.robotSecondsFromLocalSeconds(nowSec()) < cmdTimeout) {
     const feedback = await dockingClient.dockingCommandFeedbackFull(cmdId);
 
-    const err = commonHeaderErrors(feedback);
+    // Like Python, a lost lease must stop the command with a LeaseUseError.
+    const err = commonHeaderErrors(feedback) ?? commonLeaseErrors(feedback);
     if (err) throw err;
 
     const status = feedback.getStatus();
@@ -338,9 +346,10 @@ async function blockingUndock(robot, timeout = 20_000) {
   const dockingClient = await robot.ensureClient(DockingClient.defaultServiceName);
 
   const converter = await (await robot.timeSync).getRobotTimeConverter();
+  // Robot times are in seconds: the timeout (ms) must be converted, and the client side buffer is 10 s.
   const startTime = converter.robotSecondsFromLocalSeconds(nowSec());
-  const cmdEndTime = startTime + timeout;
-  const cmdTimeout = cmdEndTime + 10_000;
+  const cmdEndTime = startTime + timeout / 1000;
+  const cmdTimeout = cmdEndTime + 10;
 
   const timeSync = await robot.timeSync;
   const endTime = secondsToTimestamp(cmdEndTime);
@@ -352,11 +361,11 @@ async function blockingUndock(robot, timeout = 20_000) {
     dockingPb.PrepPoseBehavior.PREP_POSE_UNDOCK,
   );
 
-  /* eslint-disable no-await-in-loop */
   while (converter.robotSecondsFromLocalSeconds(nowSec()) < cmdTimeout) {
     const feedback = await dockingClient.dockingCommandFeedbackFull(cmdId);
 
-    const err = commonHeaderErrors(feedback);
+    // Like Python, a lost lease must stop the command with a LeaseUseError.
+    const err = commonHeaderErrors(feedback) ?? commonLeaseErrors(feedback);
     if (err) throw err;
 
     const status = feedback.getStatus();

@@ -1,9 +1,23 @@
+/**
+ * @file Payload software update initiation gRPC client.
+ *
+ * This client uses an insecure channel for signaling to a payload that it should send its version information or
+ * initiate a software update.
+ */
+
 'use strict';
 
-const { BaseClient } = require("./common");
+const { BaseClient } = require('./common');
 
-const { PayloadSoftwareUpdateInitiationServiceClient } = require('../bosdyn/api/payload_software_update_initiation_service_grpc_pb');
-const { TriggerSendPayloadSoftwareInfoResponse, TriggerSendPayloadSoftwareInfoRequest, TriggerInitiateUpdateResponse, TriggerInitiateUpdateRequest } = require("../bosdyn/api/payload_software_update_initiation_pb");
+const {
+  TriggerSendPayloadSoftwareInfoResponse,
+  TriggerSendPayloadSoftwareInfoRequest,
+  TriggerInitiateUpdateResponse,
+  TriggerInitiateUpdateRequest,
+} = require('../bosdyn/api/payload_software_update_initiation_pb');
+const {
+  PayloadSoftwareUpdateInitiationServiceClient,
+} = require('../bosdyn/api/payload_software_update_initiation_service_grpc_pb');
 
 /**
  * Payload software update initiation gRPC client.
@@ -38,9 +52,10 @@ class PayloadSoftwareUpdateInitiation extends BaseClient {
     const req = new TriggerInitiateUpdateRequest();
     return this.call(this._stub.triggerInitiateUpdate, req, null, null, false, args);
   }
-
 }
 
 module.exports = {
   PayloadSoftwareUpdateInitiation,
+  // Name of the Python client.
+  PayloadSoftwareUpdateInitiationClient: PayloadSoftwareUpdateInitiation,
 };

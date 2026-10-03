@@ -1,3 +1,7 @@
+/**
+ * @file The errors of the compilation and of the validation of missions.
+ */
+
 'use strict';
 
 const { safePbTypeToString } = require('./util');

@@ -1,3 +1,7 @@
+/**
+ * @file Boston Dynamics conventions for bddf files
+ */
+
 'use strict';
 
 const { SeriesIdentifier } = require('./common');

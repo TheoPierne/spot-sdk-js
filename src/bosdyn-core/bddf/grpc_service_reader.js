@@ -1,31 +1,44 @@
+/**
+ * @file A container for the GrpcProtoReaders associated with a given service in a bddf file.
+ */
+
 'use strict';
 
 const { GrpcProtoReader } = require('./grpc_proto_reader');
 
-function getFunctionName(glob, func) {
-  return Object.entries(Object.getOwnPropertyDescriptors(glob))
-    .filter(([, { value }]) => value === func)
-    .map(([key]) => key)[0];
-}
+const { protoTypeName } = require('../../bosdyn-client/util');
 
+/**
+ * A container for the GrpcProtoReaders associated with a given service in a bddf file.
+ */
 class GrpcServiceReader {
-  constructor(grpc_reader, service_name) {
-    this._grpc_reader = grpc_reader;
-    this._service_name = service_name;
-    this._type_name_to_reader = {};
+  constructor(grpcReader, serviceName) {
+    this._grpcReader = grpcReader;
+    this._serviceName = serviceName;
+    this._typeNameToReader = {};
   }
 
-  get data_reader() {
-    return this._grpc_reader.data_reader;
+  /**
+   * Accessor for the DataReader used by this object.
+   */
+  get dataReader() {
+    return this._grpcReader.dataReader;
   }
 
-  get_proto_reader(type_name) {
-    return this._type_name_to_reader[type_name];
+  /**
+   * Returns a GrpcProtoReader for messages with the specified protobuf type name.
+   */
+  getProtoReader(typeName) {
+    return this._typeNameToReader[typeName];
   }
 
-  add_proto_reader(series_index, proto_type, series_type, series_descriptor, proto_base) {
-    const reader = new GrpcProtoReader(this, series_index, series_type, proto_type, series_descriptor);
-    this._type_name_to_reader[getFunctionName(proto_base, proto_type)] = reader;
+  /**
+   * Create and return a GrpcProtoReader for the given series in the bddf file.
+   */
+  addProtoReader(seriesIndex, protoType, seriesType, seriesDescriptor) {
+    const reader = new GrpcProtoReader(this, seriesIndex, seriesType, protoType, seriesDescriptor);
+    // The name of the class (getProtoTypeName() takes a message: all the readers were under 'null').
+    this._typeNameToReader[protoTypeName(protoType)] = reader;
     return reader;
   }
 }

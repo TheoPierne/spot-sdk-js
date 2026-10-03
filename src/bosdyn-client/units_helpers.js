@@ -1,6 +1,14 @@
+/**
+ * @file Helpers for working with units.proto.
+ */
+
 'use strict';
 
 const { TemperatureEnum, PressureEnum } = require('../bosdyn/api/units_pb');
+
+/**
+ * @typedef {import('../bosdyn/api/units_pb').Units} Units
+ */
 
 const TEMPERATURES_NAMES = {
   [TemperatureEnum.TEMPERATURE_KELVIN]: 'K',
@@ -16,7 +24,7 @@ const PRESSURE_NAMES = {
 
 /**
  * Gets the units in string form to use for display. Ex: TEMPERATURE_KELVIN = "K"
- * @param {unitsPb.Units} units Populate units message.
+ * @param {Units} units Populate units message.
  * @returns {string}
  */
 function unitsToString(units) {

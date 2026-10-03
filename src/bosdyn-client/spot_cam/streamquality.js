@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the Spot CAM StreamQuality service.
+ */
+
 'use strict';
 
 const wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb');
@@ -9,7 +13,7 @@ const { BaseClient, handleCommonHeaderErrors } = require('../common');
 
 /**
  * A client calling Spot CAM StreamQuality service.
- * @extends {BaseClient<StreamQualityClient>}
+ * @extends {BaseClient<StreamQualityServiceClient>}
  */
 class StreamQualityClient extends BaseClient {
   static defaultServiceName = 'spot-cam-stream-quality';
@@ -117,16 +121,15 @@ class StreamQualityClient extends BaseClient {
     if (refreshInterval) streamParams.setRefreshinterval(new wrappers_pb.Int64Value().setValue(refreshInterval));
     if (idrInterval) streamParams.setIdrinterval(new wrappers_pb.Int64Value().setValue(idrInterval));
     if (awbMode) streamParams.setAwb(new streamqualityPb.StreamParams.AwbMode().setAwb(awbMode));
+    // The given messages, like Python (they were put in a field of a new message: brightness_target, exposure).
     if (autoExposure) {
-      streamParams.setAutoExposure(new streamqualityPb.StreamParams.AutoExposure());
+      streamParams.setAutoExposure(autoExposure);
     }
     if (syncAutoExposure) {
-      streamParams.setSyncExposure(
-        new streamqualityPb.StreamParams.SyncAutoExposure().setBrightnessTarget(syncAutoExposure),
-      );
+      streamParams.setSyncExposure(syncAutoExposure);
     }
     if (manualExposure) {
-      streamParams.setManualExposure(new streamqualityPb.StreamParams.ManualExposure().setExposure(manualExposure));
+      streamParams.setManualExposure(manualExposure);
     }
 
     const request = new streamqualityPb.SetStreamParamsRequest().setParams(streamParams);

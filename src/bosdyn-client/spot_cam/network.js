@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the Spot CAM Network service.
+ */
+
 'use strict';
 
 const networkPb = require('../../bosdyn/api/spot_cam/network_pb');

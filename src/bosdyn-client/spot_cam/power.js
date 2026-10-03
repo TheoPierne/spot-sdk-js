@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the Spot CAM Power service.
+ */
+
 'use strict';
 
 const { BoolValue } = require('google-protobuf/google/protobuf/wrappers_pb');
@@ -72,27 +76,22 @@ class PowerClient extends BaseClient {
    */
   cyclePower(ptz = null, aux1 = null, aux2 = null, externalMic = null, args) {
     const request = this._buildCyclePowerRequest(ptz, aux1, aux2, externalMic);
-    return this.call(this._stub.cyclePower, request, this._cyclePowerFromResponse, _powerErrorFromResponse, false, args);
+    return this.call(
+      this._stub.cyclePower,
+      request,
+      this._cyclePowerFromResponse,
+      _powerErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   _buildSetPowerStatusRequest(ptz, aux1, aux2, externalMic) {
-    return new powerPb.SetPowerStatusRequest().setStatus(
-      new powerPb.PowerStatus()
-        .setPtz(new BoolValue().setValue(ptz))
-        .setAux1(new BoolValue().setValue(aux1))
-        .setAux2(new BoolValue().setValue(aux2))
-        .setExternalMic(new BoolValue().setValue(externalMic)),
-    );
+    return new powerPb.SetPowerStatusRequest().setStatus(_powerStatus(ptz, aux1, aux2, externalMic));
   }
 
   _buildCyclePowerRequest(ptz, aux1, aux2, externalMic) {
-    return new powerPb.CyclePowerRequest().setStatus(
-      new powerPb.PowerStatus()
-        .setPtz(new BoolValue().setValue(ptz))
-        .setAux1(new BoolValue().setValue(aux1))
-        .setAux2(new BoolValue().setValue(aux2))
-        .setExternalMic(new BoolValue().setValue(externalMic)),
-    );
+    return new powerPb.CyclePowerRequest().setStatus(_powerStatus(ptz, aux1, aux2, externalMic));
   }
 
   _getPowerStatusFromResponse(response) {
@@ -106,6 +105,24 @@ class PowerClient extends BaseClient {
   _cyclePowerFromResponse(response) {
     return response.getStatus();
   }
+}
+
+/**
+ * The power status to request: a null device is left as it is, false turns a device off. Python only sets the
+ * devices set to true (`if ptz:`), so it can not turn one off.
+ * @param {?boolean} ptz
+ * @param {?boolean} aux1
+ * @param {?boolean} aux2
+ * @param {?boolean} externalMic
+ * @returns {powerPb.PowerStatus}
+ */
+function _powerStatus(ptz, aux1, aux2, externalMic) {
+  const status = new powerPb.PowerStatus();
+  if (ptz !== null && ptz !== undefined) status.setPtz(new BoolValue().setValue(ptz));
+  if (aux1 !== null && aux1 !== undefined) status.setAux1(new BoolValue().setValue(aux1));
+  if (aux2 !== null && aux2 !== undefined) status.setAux2(new BoolValue().setValue(aux2));
+  if (externalMic !== null && externalMic !== undefined) status.setExternalMic(new BoolValue().setValue(externalMic));
+  return status;
 }
 
 const _powerErrorFromResponse = handleCommonHeaderErrors(() => null);

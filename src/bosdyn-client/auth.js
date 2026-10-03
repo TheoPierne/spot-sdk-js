@@ -1,3 +1,7 @@
+/**
+ * @file For clients to acquire a user token from the authentication service.
+ */
+
 'use strict';
 
 const { BaseClient, errorFactory, handleCommonHeaderErrors, handleUnsetStatusError } = require('./common');
@@ -6,9 +10,13 @@ const { DefaultDict } = require('./util');
 const { GetAuthTokenRequest, GetAuthTokenResponse } = require('../bosdyn/api/auth_pb');
 const { AuthServiceClient } = require('../bosdyn/api/auth_service_grpc_pb');
 
+/** General class of errors for AuthResponseError service. */
 class AuthResponseError extends ResponseError {}
+/** Provided username/password is invalid. */
 class InvalidLoginError extends AuthResponseError {}
+/** Provided user token is invalid or cannot be re-minted. */
 class InvalidTokenError extends AuthResponseError {}
+/** User is temporarily locked out of authentication. */
 class TemporarilyLockedOutError extends AuthResponseError {}
 
 const _STATUS_TO_ERROR = DefaultDict(() => [ResponseError, null]);
@@ -28,18 +36,34 @@ _STATUS_TO_ERROR.set(GetAuthTokenResponse.Status.STATUS_TEMPORARILY_LOCKED_OUT, 
 
 const _errorFromResponse = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(response, response.getStatus(), Object.keys(GetAuthTokenResponse.Status), _STATUS_TO_ERROR),
+    errorFactory(response, response.getStatus(), GetAuthTokenResponse.Status, _STATUS_TO_ERROR),
   ),
 );
 
+/**
+ * @param {GetAuthTokenResponse} response
+ * @returns {string}
+ * @private
+ */
 function _tokenFromResponse(response) {
   return response.getToken();
 }
 
+/**
+ * @param {string} username
+ * @param {string} password
+ * @returns {GetAuthTokenRequest}
+ * @private
+ */
 function _buildAuthRequest(username, password) {
   return new GetAuthTokenRequest().setUsername(username).setPassword(password);
 }
 
+/**
+ * @param {string} token
+ * @returns {GetAuthTokenRequest}
+ * @private
+ */
 function _buildAuthTokenRequest(token) {
   return new GetAuthTokenRequest().setToken(token);
 }

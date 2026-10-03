@@ -1,9 +1,14 @@
+/**
+ * @file Code for downloading robot data in bddf format.
+ */
+
 'use strict';
 
-const { writeFileSync } = require('node:fs');
+const { createWriteStream } = require('node:fs');
+const path = require('node:path');
 const process = require('node:process');
-
-const timeRangePb = require('../bosdyn/api/time_range_pb');
+const { Transform } = require('node:stream');
+const { pipeline } = require('node:stream/promises');
 
 const {
   TimeSyncEndpoint,
@@ -12,10 +17,19 @@ const {
   robotTimeRangeFromNanoseconds,
   timespecToRobotTimespan,
 } = require('./time_sync');
+const { httpsGetUnverified } = require('./util');
 
+const timeRangePb = require('../bosdyn/api/time_range_pb');
 const { TIME_FORMAT_DESC } = require('../bosdyn-core/util');
 
-// Const REQUEST_CHUNK_SIZE = 10 * 1024 ** 2;
+/**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+// This value is not guaranteed.
+const REQUEST_CHUNK_SIZE = 10 * 1024 ** 2;
+// Seconds.
+const REQUEST_TIMEOUT = 20;
 const DEFAULT_OUTPUT = './download.bddf';
 
 function _printHelpTimespan() {
@@ -30,27 +44,21 @@ function _printHelpTimespan() {
     `);
 }
 
-function _bddfUrl(hostname, data = null) {
-  let str = '';
-  if (data) {
-    for (const [key, value] of Object.entries(data)) {
-      str += `${key}=${value}`;
-    }
-  }
-  return `https://${hostname}/v1/data-buffer/bddf/${str === '' ? '' : `?${str}`}`;
+function _bddfUrl(hostname) {
+  return `https://${hostname}/v1/data-buffer/bddf/`;
 }
 
 function _httpHeaders(robot) {
-  return { Authorization: `Bearer ${robot.user_token}` };
+  return { Authorization: `Bearer ${robot.userToken}` };
 }
 
 /**
- * 
- * @param {timeRangePb.TimeRange} timeRange 
+ *
+ * @param {timeRangePb.TimeRange} timeRange
  * @returns {{from_sec: string, to_sec: string}}
  */
 function _requestTimespanFromTimeRange(timeRange) {
-  let ret = {};
+  const ret = {};
   if (timeRange.hasStart()) ret.from_sec = `${timeRange.getStart().getSeconds()}`;
   if (timeRange.hasEnd()) ret.to_sec = `${timeRange.getEnd().getSeconds()}`;
   return ret;
@@ -64,6 +72,40 @@ function _requestTimespanFromNanoseconds(startNsec, endNsec, timeSyncEndpoint) {
   return _requestTimespanFromTimeRange(robotTimeRangeFromNanoseconds(startNsec, endNsec, timeSyncEndpoint));
 }
 
+/**
+ * A stream that prints a dot for each chunk of the download, like the Python download.
+ * @returns {Transform}
+ */
+function _progress() {
+  let received = 0;
+  return new Transform({
+    transform(chunk, encoding, callback) {
+      const before = Math.ceil(received / REQUEST_CHUNK_SIZE);
+      received += chunk.length;
+      process.stdout.write('.'.repeat(Math.ceil(received / REQUEST_CHUNK_SIZE) - before));
+      callback(null, chunk);
+    },
+  });
+}
+
+/**
+ * Download data from robot in bddf format. Like Python, the certificate of the robot is not checked.
+ * @param {Robot} robot API robot object, authenticated.
+ * @param {string} hostname Hostname/ip-address of robot.
+ * @param {?number} [startNsec=null] Start time of log.
+ * @param {?number} [endNsec=null] End time of log.
+ * @param {?string} [timespanSpec=null] If startNsec and endNsec are null, string representing the timespan to
+ * download.
+ * @param {?string} [outputFilename=null] Name of the file to write, by default the name given by the robot.
+ * @param {boolean} [robotTime=false] If true, timespan is in robot clock, if false, in host clock.
+ * @param {?string} [channel=null] If set, limit data to download to a specific channel.
+ * @param {?string} [messageType=null] If set, limit data by specified message-type.
+ * @param {?string} [grpcService=null] If set, limit GRPC log data by name of service.
+ * @param {boolean} [showProgress=false] Print a dot for each chunk of the download.
+ * @returns {Promise<?string>} Output filename, or null on error.
+ * @throws {NotEstablishedError} Time sync with the robot could not be established.
+ * @throws {Error} The robot answered with an HTTP error (e.g. 401 for a bad token), or the download failed.
+ */
 async function downloadData(
   robot,
   hostname,
@@ -75,66 +117,77 @@ async function downloadData(
   channel = null,
   messageType = null,
   grpcService = null,
+  showProgress = false,
 ) {
-  let timeSyncEndpoint;
+  let timeSyncEndpoint = null;
   if (!robotTime) {
-    let timeSyncClient = await robot.ensureClient(TimeSyncClient.defaultServiceName);
+    // Establish time sync with robot to obtain skew.
+    const timeSyncClient = await robot.ensureClient(TimeSyncClient.defaultServiceName);
     timeSyncEndpoint = new TimeSyncEndpoint(timeSyncClient);
     if (!(await timeSyncEndpoint.establishTimesync())) throw new NotEstablishedError('time sync not established');
   }
 
+  // Get the parameters for limiting the timespan of the response.
   const getParams =
     startNsec || endNsec
       ? _requestTimespanFromNanoseconds(startNsec, endNsec, timeSyncEndpoint)
       : _requestTimespanFromSpec(timespanSpec, timeSyncEndpoint);
 
+  // Optional parameters for limiting the messages
   if (channel) getParams.channel = channel;
   if (messageType) getParams.type = messageType;
   if (grpcService) getParams.grpc_service = grpcService;
 
-  const url = _bddfUrl(hostname, getParams);
-
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: _httpHeaders(robot),
-  });
-  
-  if (!res.ok) {
-    console.error(`${url} response: ${res.status}`);
+  // Request the data.
+  const url = `${_bddfUrl(hostname)}?${new URLSearchParams(getParams)}`;
+  const resp = await httpsGetUnverified(url, _httpHeaders(robot), REQUEST_TIMEOUT * 1000);
+  if (resp.statusCode >= 400) {
+    // urlopen() raises an HTTPError in Python.
+    resp.resume();
+    throw new Error(`HTTP Error ${resp.statusCode}: ${resp.statusMessage} (${url})`);
+  }
+  if (resp.statusCode !== 200) {
+    resp.resume();
+    console.error(`${url} ${JSON.stringify(getParams)} response: ${resp.statusCode}`);
     return null;
   }
-  
-  const buf = await res.arrayBuffer();
 
-  const outfile = outputFilename ? outputFilename : _outputFilename(res);
-  
-  writeFileSync(outfile, buf);
-  
+  const outfile = outputFilename ? outputFilename : _outputFilename(resp);
+  // The data is written while it is received (it was kept in memory).
+  await pipeline(resp, ...(showProgress ? [_progress()] : []), createWriteStream(outfile));
+  if (showProgress) console.log();
+
   return outfile;
 }
 
 /**
- * @param {Response} response 
- * @returns 
+ * Get output filename either from http response, or default value.
+ * @param {import('node:http').IncomingMessage} response
+ * @returns {string}
  */
 function _outputFilename(response) {
-  let content = response.headers.get('Content-Disposition');
-  if (content.length < 2) {
+  const content = response.headers['content-disposition'];
+  if (!content || content.length < 2) {
     console.debug('Content-Disposition not set correctly.');
     return DEFAULT_OUTPUT;
   }
-  let match = content.search('filename="?([^"]+)');
-  if (match === -1) return DEFAULT_OUTPUT;
-  return content[match];
+  const match = /filename="?([^"]+)/.exec(content);
+  if (!match) return DEFAULT_OUTPUT;
+  // Only a file name: the file is written in the current directory.
+  return path.basename(match[1]);
 }
 
-function main() {
+/**
+ * Command-line interface.
+ * @returns {Promise<number>} The exit code.
+ */
+async function main() {
   const argparse = require('argparse');
-  const { createStandardSdk } = require('./sdk');
   const { InvalidLoginError } = require('./auth');
-  const { addCommonArguments } = require('./util');
+  const { createStandardSdk } = require('./sdk');
+  const { addCommonArguments, authenticate, setupLogging } = require('./util');
 
-  let parser = new argparse.ArgumentParser();
+  const parser = new argparse.ArgumentParser();
   parser.add_argument('-T', '--timespan', { default: '5m', help: 'Time span (default last 5 minutes)' });
   parser.add_argument('--help-timespan', { action: 'store_true', help: 'Print time span formatting options' });
   parser.add_argument('-c', '--channel', { help: 'Specify channel for data (default=all)' });
@@ -145,50 +198,67 @@ function main() {
 
   addCommonArguments(parser);
 
-  let options = parser.parse_args();
+  const options = parser.parse_args();
+  setupLogging(options.verbose);
 
   if (options.help_timespan) {
     _printHelpTimespan();
-    return false;
+    return 0;
   }
 
-  let sdk = createStandardSdk('bddf');
-  let robot = sdk.create_robot(options.hostname);
+  // Create a robot object.
+  const sdk = createStandardSdk('bddf');
+  const robot = sdk.createRobot(options.hostname);
 
+  // Use the robot object to authenticate to the robot. A JWT Token is required to download log data.
   try {
-    robot.authenticate(options.username, options.password);
+    if (options.username || options.password) {
+      await robot.authenticate(options.username, options.password);
+    } else {
+      await authenticate(robot);
+    }
   } catch (e) {
     if (e instanceof InvalidLoginError) {
       console.error(`Cannot authenticate to robot to obtain token: ${e}`);
-      return true;
+      return 1;
     }
-    console.error(e);
+    throw e;
   }
 
-  const outputFilename = downloadData(
+  const outputFilename = await downloadData(
     robot,
     options.hostname,
+    null,
+    null,
     options.timespan,
-    undefined,
-    undefined,
-    undefined,
+    options.output,
     options.robot_time,
     options.channel,
     options.type,
     options.service,
+    true,
   );
 
-  if (!outputFilename) return true;
+  if (!outputFilename) return 1;
 
   console.info(`Wrote '${outputFilename}'.`);
-  return false;
+  return 0;
 }
 
+module.exports = {
+  DEFAULT_OUTPUT,
+  downloadData,
+  main,
+};
+
 if (require.main === module) {
-  main();
-  process.exit(0);
-} else {
-  module.exports = {
-    main,
-  };
+  main().then(
+    code => {
+      process.exitCode = code;
+    },
+    error => {
+      console.error(error);
+      process.exitCode = 1;
+    },
+  );
 }

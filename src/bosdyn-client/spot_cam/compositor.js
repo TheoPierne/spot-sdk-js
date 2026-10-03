@@ -1,4 +1,10 @@
+/**
+ * @file For clients to the Spot CAM Compositor service.
+ */
+
 'use strict';
+
+const { BoolValue } = require('google-protobuf/google/protobuf/wrappers_pb');
 
 const compositorPb = require('../../bosdyn/api/spot_cam/compositor_pb');
 const { CompositorServiceClient } = require('../../bosdyn/api/spot_cam/service_grpc_pb');
@@ -19,7 +25,7 @@ class CompositorClient extends BaseClient {
   /**
    * Change the current view that is being streamed over the network
    * @param {string} name The screen name
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<string>}
    */
   setScreen(name, args) {
@@ -29,7 +35,7 @@ class CompositorClient extends BaseClient {
 
   /**
    * Get the currently selected screen
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<string>}
    */
   getScreen(args) {
@@ -39,17 +45,24 @@ class CompositorClient extends BaseClient {
 
   /**
    * List available screens
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<compositorPb.ScreenDescription[]>}
    */
   listScreens(args) {
     const request = new compositorPb.ListScreensRequest();
-    return this.call(this._stub.listScreens, request, this._screensFromResponse, _compositorErrorFromResponse, false, args);
+    return this.call(
+      this._stub.listScreens,
+      request,
+      this._screensFromResponse,
+      _compositorErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
    * List cameras on Spot CAM
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<compositorPb.GetVisibleCamerasResponse.Stream[]>}
    */
   getVisibleCameras(args) {
@@ -71,24 +84,50 @@ class CompositorClient extends BaseClient {
    * @param {number} maxTemp maximum temperature on the temperature scale
    * @param {boolean} autoScale Auto-scale the color map. This is the most human-understandable
    * option. minTemp and maxTemp are ignored if this is set to true
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<compositorPb.SetIrColormapResponse>}
    */
-  setIrColorMap(colormap, minTemp, maxTemp, autoScale, args) {
+  setIrColormap(colormap, minTemp, maxTemp, autoScale, args) {
     const scale = new compositorPb.IrColorMap.ScalingPair().setMin(minTemp).setMax(maxTemp);
-    const irColormap = new compositorPb.IrColorMap().setColormap(colormap).setScale(scale).setAutoScale(autoScale);
+    // auto_scale is a BoolValue: a boolean threw (true), or failed to serialize (false).
+    const irColormap = new compositorPb.IrColorMap()
+      .setColormap(colormap)
+      .setScale(scale)
+      .setAutoScale(new BoolValue().setValue(autoScale));
     const request = new compositorPb.SetIrColormapRequest().setMap(irColormap);
-    return this.call(this._stub.setIrColormap, request, this._returnResponse, _compositorErrorFromResponse, false, args);
+    return this.call(
+      this._stub.setIrColormap,
+      request,
+      this._returnResponse,
+      _compositorErrorFromResponse,
+      false,
+      args,
+    );
+  }
+
+  /**
+   * Set IR colormap to use on Spot CAM
+   * @deprecated Use setIrColormap() (like getIrColormap() and Python's set_ir_colormap()).
+   */
+  setIrColorMap(colormap, minTemp, maxTemp, autoScale, args) {
+    return this.setIrColormap(colormap, minTemp, maxTemp, autoScale, args);
   }
 
   /**
    * Get currently selected IR colormap on Spot CAM
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<compositorPb.IrColorMap>}
    */
   getIrColormap(args) {
     const request = new compositorPb.GetIrColormapRequest();
-    return this.call(this._stub.getIrColormap, request, this._colormapFromResponse, _compositorErrorFromResponse, false, args);
+    return this.call(
+      this._stub.getIrColormap,
+      request,
+      this._colormapFromResponse,
+      _compositorErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
@@ -96,8 +135,8 @@ class CompositorClient extends BaseClient {
    * @param {number} x horizontal coordinate of reticle
    * @param {number} y vertical coordinate of reticle
    * @param {boolean} enable Enable the reticle on the display
-   * @param {TempUnit} unit Temperature unit to display
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {compositorPb.IrMeterOverlay.TempUnit} unit Temperature unit to display
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<compositorPb.SetIrMeterOverlayResponse>}
    */
   setIrMeterOverlay(x, y, enable, unit, args) {
@@ -105,38 +144,61 @@ class CompositorClient extends BaseClient {
     const overlay = new compositorPb.IrMeterOverlay()
       .setEnable(enable)
       .setCoords(coords)
-      .setMeter([coords])
+      // Setting both coords and meter fields for backwards compatibility (setMeter() did not exist).
+      .setMeterList([coords])
       .setUnit(unit);
     const request = new compositorPb.SetIrMeterOverlayRequest().setOverlay(overlay);
-    return this.call(this._stub.SetIrMeterOverlay, request, this._returnResponse, _compositorErrorFromResponse, false, args);
+    return this.call(
+      this._stub.setIrMeterOverlay,
+      request,
+      this._returnResponse,
+      _compositorErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
    * Set multiple IR reticle positions to use on Spot CAM IR
-   * @param {number[]} coords List of [x, y] reticle coordinates in range [0,1]
+   * @param {Array<[number, number]>} coords List of [x, y] reticle coordinates in range [0,1]
    * e.g. [[0.1, 0.2], [0.2, 0.4], [0.7, 0.7]]
    * @param {boolean} enable Enable the reticles on the display
-   * @param {TempUnit} unit Temperature unit to display
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {compositorPb.IrMeterOverlay.TempUnit} unit Temperature unit to display
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<compositorPb.SetIrMeterOverlayResponse>}
    */
   setMultiIrMeterOverlay(coords, enable, unit, args) {
-    const coords_proto = coords.map(coord =>
-      new compositorPb.IrMeterOverlay.NormalizedCoordinates().setX(coord.x).setY(coord.y),
+    // [x, y] pairs, as documented (coord.x was undefined).
+    const coords_proto = coords.map(([x, y]) =>
+      new compositorPb.IrMeterOverlay.NormalizedCoordinates().setX(x).setY(y),
     );
-    const overlay = new compositorPb.IrMeterOverlay().setEnable(enable).setMeter(coords_proto).setUnit(unit);
+    const overlay = new compositorPb.IrMeterOverlay().setEnable(enable).setMeterList(coords_proto).setUnit(unit);
     const request = new compositorPb.SetIrMeterOverlayRequest().setOverlay(overlay);
-    return this.call(this._stub.SetIrMeterOverlay, request, this._returnResponse, _compositorErrorFromResponse, false, args);
+    return this.call(
+      this._stub.setIrMeterOverlay,
+      request,
+      this._returnResponse,
+      _compositorErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
    * Get current IR reticle positions
-   * @param {Object} args Extra arguments for controlling RPC details
+   * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<compositorPb.GetIrMeterOverlayResponse>}
    */
   getIrMeterOverlay(args) {
     const request = new compositorPb.GetIrMeterOverlayRequest();
-    return this.call(this._stub.GetIrMeterOverlay, request, this._returnResponse, _compositorErrorFromResponse, false, args);
+    return this.call(
+      this._stub.getIrMeterOverlay,
+      request,
+      this._returnResponse,
+      _compositorErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   _returnResponse(response) {

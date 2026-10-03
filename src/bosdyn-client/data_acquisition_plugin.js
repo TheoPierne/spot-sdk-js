@@ -1,9 +1,21 @@
+/**
+ * @file General client implementation for all data-acquisition plugin services.
+ */
+
 'use strict';
 
 const { BaseClient } = require('./common');
-const { _getLiveDataError, acquireDataError, metadataToProto } = require('./data_acquisition');
+const { DataAcquisitionClient, _getLiveDataError, acquireDataError, metadataToProto } = require('./data_acquisition');
 const dataAcquisitionPb = require('../bosdyn/api/data_acquisition_pb');
 const { DataAcquisitionPluginServiceClient } = require('../bosdyn/api/data_acquisition_plugin_service_grpc_pb');
+
+/**
+ * @typedef {import('./robot').Robot} Robot
+ */
+
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ */
 
 /**
  * A client for triggering data acquisition plugin and logging. This client is not intended for
@@ -22,7 +34,7 @@ class DataAcquisitionPluginClient extends BaseClient {
 
   /**
    * Update instance from another object.
-   * @param {BaseClient} other The object where to copy from.
+   * @param {Robot} other The object where to copy from.
    * @returns {void}
    */
   updateFrom(other) {
@@ -40,7 +52,7 @@ class DataAcquisitionPluginClient extends BaseClient {
    * @param {?dataAcquisitionPb.Metadata} [metadata] The JSON structured metadata to be associated with
    * the data returned by the DataAcquisitionService when logged in the data acquisition
    * store service.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataAcquisitionPb.AcquirePluginDataResponse>} If the RPC is successful, then it will return the
    * acquire data response which can be used to check the status of the acquisition and get feedback.
    * @throws {RpcError} Problem communicating with the robot.
@@ -63,6 +75,12 @@ class DataAcquisitionPluginClient extends BaseClient {
   getLiveData(request) {
     return this.call(this._stub.getLiveData, request, null, _getLiveDataError);
   }
+}
+
+// The getStatus, getServiceInfo and cancelAcquisition methods are the ones of DataAcquisitionClient, like Python (they
+// were missing: the plugin service has these RPCs too).
+for (const name of ['getStatus', 'getServiceInfo', 'cancelAcquisition']) {
+  DataAcquisitionPluginClient.prototype[name] = DataAcquisitionClient.prototype[name];
 }
 
 module.exports = {

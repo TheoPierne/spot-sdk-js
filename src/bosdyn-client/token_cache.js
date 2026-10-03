@@ -1,3 +1,7 @@
+/**
+ * @file For clients to delegate saving of tokens: token storage separate from token management.
+ */
+
 'use strict';
 
 const {
@@ -11,19 +15,21 @@ const {
   copyFileSync,
 } = require('node:fs');
 const { homedir, constants } = require('node:os');
-const { join, dirname } = require('node:path');
+const { basename, dirname, extname, join } = require('node:path');
 const process = require('node:process');
 
 const tmp = require('tmp');
 
-class TokenCacheError extends Error {
-  constructor(msg) {
-    super(msg);
-    this.name = this.constructor.name;
-  }
-}
+const { BosdynError } = require('./exceptions');
+
+/** General class of errors to handle non-response non-grpc errors. */
+// An error of the SDK, like Python (Error of bosdyn.client.exceptions).
+class TokenCacheError extends BosdynError {}
+/** Failed to delete the token from storage. */
 class ClearFailedError extends TokenCacheError {}
+/** Failed to read the token from cache. */
 class NotInCacheError extends TokenCacheError {}
+/** Failed to write the token to storage. */
 class WriteFailedError extends TokenCacheError {}
 
 function atomicFileWrite(data, filename, permissions = 0o600) {
@@ -78,6 +84,9 @@ class TokenCache {
     // Pass
   }
 
+  /**
+   * Returns a set of valid keys that contains the name.
+   */
   match(name) {
     return [];
   }
@@ -89,10 +98,12 @@ class TokenCache {
  */
 class TokenCacheFilesystem {
   /**
-   * @param {string} [cacheDirectory] The cache's path.
+   * @param {string} [cacheDirectory='~/.bosdyn/user_tokens'] The cache's path. A leading ~ is the home directory, like
+   * os.path.expanduser() in Python (it was a directory named ~; the ~user form is not supported).
    */
-  constructor(cacheDirectory = `${homedir()}/.bosdyn/user_tokens`) {
-    this.directory = join(cacheDirectory);
+  constructor(cacheDirectory = '~/.bosdyn/user_tokens') {
+    const expanded = /^~(?=$|[\\/])/.test(cacheDirectory) ? homedir() + cacheDirectory.slice(1) : cacheDirectory;
+    this.directory = join(expanded);
   }
 
   /**
@@ -140,6 +151,7 @@ class TokenCacheFilesystem {
   }
 
   /**
+   * Returns a set of valid keys that contains the name.
    * @param {string} name The file's name to match.
    * @returns {Array<string>|Array}
    */
@@ -168,7 +180,9 @@ class TokenCacheFilesystem {
    * @private
    */
   _filenameToName(filename) {
-    return join(filename).split('.')[0];
+    // Without the extension only, like os.path.splitext() in Python: '<serial>.<username>.jwt' was cut at the first
+    // dot (the serial number).
+    return basename(filename, extname(filename));
   }
 }
 

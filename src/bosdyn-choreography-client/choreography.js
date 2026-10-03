@@ -1,7 +1,12 @@
+/**
+ * @file For clients to use the choreography service
+ */
+
 'use strict';
 
 const { createHash } = require('node:crypto');
-const { createWriteStream, existsSync, readFileSync, mkdirSync, writeFileSync } = require('node:fs');
+const { existsSync, readFileSync, mkdirSync, writeFileSync } = require('node:fs');
+const { writeFile } = require('node:fs/promises');
 const { join } = require('node:path');
 
 const { StringValue } = require('google-protobuf/google/protobuf/wrappers_pb');
@@ -16,11 +21,18 @@ const {
   handleUnsetStatusError,
   errorFactory,
 } = require('../bosdyn-client/common');
+const { serializedFromMessages } = require('../bosdyn-client/data_chunk');
 const { ResponseError } = require('../bosdyn-client/exceptions');
 const { addLeaseWalletProcessors } = require('../bosdyn-client/lease');
 const { NoTimeSyncError, _TimeConverter } = require('../bosdyn-client/robot_command');
 const { DefaultDict } = require('../bosdyn-client/util');
-const { secondsToDuration } = require('../bosdyn-core/util');
+const textFormat = require('../bosdyn-core/text_format');
+const { secondsToDuration, toUint64String } = require('../bosdyn-core/util');
+
+/**
+ * @typedef {import('google-protobuf/google/protobuf/timestamp_pb').Timestamp} Timestamp
+ * @typedef {import('../bosdyn/api/lease_pb').Lease} LeaseProto
+ */
 
 /**
  * @typedef {import('../bosdyn-client/robot').Robot} Robot
@@ -58,7 +70,7 @@ class ChoreographyClient extends BaseClient {
   }
 
   /**
-   * @param {Robot} other 
+   * @param {Robot} other
    */
   async updateFrom(other) {
     super.updateFrom(other);
@@ -77,7 +89,6 @@ class ChoreographyClient extends BaseClient {
    * Timesync endpoint for the robot
    * @type {TimeSyncEndpoint}
    * @throws {NoTimeSyncError}
-   * @readonly
    */
   get timesyncEndpoint() {
     if (!this._timesyncEndpoint) {
@@ -117,11 +128,19 @@ class ChoreographyClient extends BaseClient {
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<choreographySequencePb.UploadChoreographyResponse>}
    */
-  uploadChoregraphy(choreographySeq, nonStrictParsing, args) {
+  uploadChoreography(choreographySeq, nonStrictParsing = true, args) {
     const request = new choreographySequencePb.UploadChoreographyRequest()
       .setChoreographySequence(choreographySeq)
-      .setNonStringParsing(nonStrictParsing);
+      // setNonStringParsing() did not exist: no sequence could be uploaded.
+      .setNonStrictParsing(nonStrictParsing);
     return this.call(this._stub.uploadChoreography, request, null, commonHeaderErrors, false, args);
+  }
+
+  /**
+   * @deprecated Misspelled: use uploadChoreography().
+   */
+  uploadChoregraphy(choreographySeq, nonStrictParsing = true, args) {
+    return this.uploadChoreography(choreographySeq, nonStrictParsing, args);
   }
 
   /**
@@ -162,11 +181,11 @@ class ChoreographyClient extends BaseClient {
    * @param {string} fpath Location where the new `cha` file will be saved.
    * @param {boolean} hasArm True if the robot has an arm, false if the robot doesn't have an arm.
    * When False arm motion won't be added to the `cha` file.
-   * @param {string[]} args String(s), array of strings, or a mix of string(s) and list(s) that are the options to be
-   * included in the `cha` file. (ex. 'truncatable')
-   * @returns {Promise<string>}
+   * @param {...(string|string[])} args String(s), array of strings, or a mix of string(s) and list(s) that are the
+   * options to be included in the `cha` file. (ex. 'truncatable')
+   * @returns {Promise<string>} The filename of the new animation `cha` file, once it is written.
    */
-  async choreographyLogToAnimationFile(name, fpath, hasArm, args) {
+  async choreographyLogToAnimationFile(name, fpath, hasArm, ...args) {
     /**
      * Takes a list of options or a variable number of string arguments, or a mix of the two and returns a single list
      * containing all of the options to be included
@@ -202,7 +221,9 @@ class ChoreographyClient extends BaseClient {
 
       return alist
         .map(item => {
-          let str = String(item);
+          // Like the format of Python, which writes the booleans (the contacts) as 1 and 0: true and false could not
+          // be read back.
+          let str = typeof item === 'boolean' ? String(Number(item)) : String(item);
           if (str.length < width) {
             const padding = ' '.repeat(width - str.length);
             if (align === '>') {
@@ -234,7 +255,7 @@ class ChoreographyClient extends BaseClient {
     const { choreographyLog } = await this.downloadRobotStateLog(logType);
 
     // create the header for the *.cha file
-    const jointTypeList = ['leg_joints', 'body_pos', 'body_quat_zyzw', 'time', 'contact'];
+    const jointTypeList = ['leg_joints', 'body_pos', 'body_quat_xyzw', 'time', 'contact'];
     let controlsHeader = 'controls legs body';
     const description = 'Animation created from log recording.';
 
@@ -246,7 +267,8 @@ class ChoreographyClient extends BaseClient {
 
     // format the complete header with all the options to be included in the *.cha file
     const jointSpacer = '{:<60}';
-    let header = `${controlsHeader}\ndescription:${description}\n`;
+    // The description keyword ("description:" was not read back).
+    let header = `${controlsHeader}\ndescription ${description}\n`;
 
     for (const option of optionList(args)) {
       header += `${option}\n`;
@@ -259,51 +281,35 @@ class ChoreographyClient extends BaseClient {
     const filePath = join(fpath, `${name}${ext}`);
     let initialTime = -1;
 
-    const stream = createWriteStream(filePath, { flags: 'w' });
-    stream.write(`${header}\n`);
+    // No empty line after the header: it made a fourth section, and the file could not be read back.
+    const lines = [header];
 
     const keyframeList = choreographyLog.getKeyFramesList();
 
     for (const k of keyframeList) {
       const listValues = [];
 
-      // leg_joints values:
-      // front right leg joint values
-      listValues.push(k.getJointAngles().getFr().getHipX());
-      listValues.push(k.getJointAngles().getFr().getHipY());
-      listValues.push(k.getJointAngles().getFr().getKnee());
-
-      // front left leg joint values
-      listValues.push(k.getJointAngles().getFl().getHipX());
-      listValues.push(k.getJointAngles().getFl().getHipY());
-      listValues.push(k.getJointAngles().getFl().getKnee());
-
-      // hind right leg joint values
-      listValues.push(k.getJointAngles().getHr().getHipX());
-      listValues.push(k.getJointAngles().getHr().getHipY());
-      listValues.push(k.getJointAngles().getHr().getKnee());
-
-      // hind left leg joint values
-      listValues.push(k.getJointAngles().getHl().getHipX());
-      listValues.push(k.getJointAngles().getHl().getHipY());
-      listValues.push(k.getJointAngles().getHl().getKnee());
+      // leg_joints values, in the order of the column: fl, fr, hl, hr (Python writes fr, fl, hr, hl, which swaps
+      // the left and right legs when the animation is played).
+      const jointAngles = k.getJointAngles();
+      for (const leg of ['Fl', 'Fr', 'Hl', 'Hr']) {
+        const legAngles = jointAngles?.[`get${leg}`]();
+        listValues.push(legAngles?.getHipX() ?? 0, legAngles?.getHipY() ?? 0, legAngles?.getKnee() ?? 0);
+      }
 
       // body_pos values:
       // position of the body in the animation frame
-      listValues.push(k.getAnimationTformBody().getPosition().getX());
-      listValues.push(k.getAnimationTformBody().getPosition().getY());
-      listValues.push(k.getAnimationTformBody().getPosition().getZ());
+      const position = k.getAnimationTformBody()?.getPosition();
+      listValues.push(position?.getX() ?? 0, position?.getY() ?? 0, position?.getZ() ?? 0);
 
       // body_quat_xyzw values:
       // rotation of the body in the animation frame
-      listValues.push(k.getAnimationTformBody().getRotation().getX());
-      listValues.push(k.getAnimationTformBody().getRotation().getY());
-      listValues.push(k.getAnimationTformBody().getRotation().getZ());
-      listValues.push(k.getAnimationTformBody().getRotation().getW());
+      const rotation = k.getAnimationTformBody()?.getRotation();
+      listValues.push(rotation?.getX() ?? 0, rotation?.getY() ?? 0, rotation?.getZ() ?? 0, rotation?.getW() ?? 0);
 
       // time value:
       // time, in seconds, when the keyframe position occurs relative to the start of the recording
-      let time = timestampToSeconds(k.getTimestamp());
+      let time = k.getTimestamp() ? timestampToSeconds(k.getTimestamp()) : 0;
 
       // if the initial time is negative it's the first timestamp recorded, set that as the initial time
       if (initialTime < 0) {
@@ -314,33 +320,32 @@ class ChoreographyClient extends BaseClient {
       time -= initialTime;
       listValues.push(time);
 
-      // contact values:
+      // contact values, fl, fr, hl, hr like the column:
       // contact state of each foot; 0 for airborne, 1 for contact with the floor.
-      listValues.push(k.getFootContactState().getFrContact());
-      listValues.push(k.getFootContactState().getFlContact());
-      listValues.push(k.getFootContactState().getHrContact());
-      listValues.push(k.getFootContactState().getHlContact());
+      const contacts = k.getFootContactState();
+      for (const leg of ['Fl', 'Fr', 'Hl', 'Hr']) {
+        listValues.push(contacts?.[`get${leg}Contact`]() ?? false);
+      }
 
       if (hasArm) {
         // if the robot has an arm, record the joint values of the arm and gripper
 
         // arm_joints values:
-        listValues.push(k.getJointAngles().getArm().getShoulder0().getValue());
-        listValues.push(k.getJointAngles().getArm().getShoulder1().getValue());
-        listValues.push(k.getJointAngles().getArm().getElbow0().getValue());
-        listValues.push(k.getJointAngles().getArm().getElbow1().getValue());
-        listValues.push(k.getJointAngles().getArm().getWrist0().getValue());
-        listValues.push(k.getJointAngles().getArm().getWrist1().getValue());
+        const arm = jointAngles?.getArm();
+        for (const joint of ['Shoulder0', 'Shoulder1', 'Elbow0', 'Elbow1', 'Wrist0', 'Wrist1']) {
+          listValues.push(arm?.[`get${joint}`]()?.getValue() ?? 0);
+        }
 
         // gripper value:
-        listValues.push(k.getJointAngles().getGripperAngle().getValue());
+        listValues.push(jointAngles?.getGripperAngle()?.getValue() ?? 0);
       }
 
-      // format the values of the keyframe and write them to the *.cha animation file
-      stream.write(`${listToFormattedString(listValues, spacerVal)}\n`);
+      // format the values of the keyframe for the *.cha animation file
+      lines.push(`${listToFormattedString(listValues, spacerVal)}\n`);
     }
 
-    stream.end();
+    // Written before returning (the write stream was not awaited, and its errors crashed the process).
+    await writeFile(filePath, lines.join(''));
     console.log(`Animation *.cha file downloaded to: ${filePath}`);
     return `${name}.cha`;
   }
@@ -361,7 +366,10 @@ class ChoreographyClient extends BaseClient {
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<choreographySequencePb.ChoreographyTimeAdjustResponse>}
    */
-  choreographyTimeAdjust(overrideClientStartTime, timeDifference = null, validityTime = null, args) {
+  // Async, like executeChoreography() and choreographyCommand(): a missing time sync rejects the promise (it was
+  // thrown synchronously, not caught by a .catch()).
+
+  async choreographyTimeAdjust(overrideClientStartTime, timeDifference = null, validityTime = null, args) {
     const request = this.buildChoreographyTimeAdjustRequest(overrideClientStartTime, timeDifference, validityTime);
     return this.call(this._stub.choreographyTimeAdjust, request, null, commonHeaderErrors, false, args);
   }
@@ -376,12 +384,13 @@ class ChoreographyClient extends BaseClient {
    * to the required robot's clock timeframe.
    * @param {number} choreographyStartingSlice Which slice to start the dance at when the start
    * time is reached. By default, it will start with the first slice.
-   * @param {leasePb.Lease|null} lease A specific lease to use for the request. If nothing is
+   * @param {LeaseProto|null} lease A specific lease to use for the request. If nothing is
    * provided, the client will append the next lease sequence in this field by default.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<choreographySequencePb.ExecuteChoreographyResponse>}
    */
-  executeChoreography(choreographyName, clientStartTime, choreographyStartingSlice, lease = null, args) {
+
+  async executeChoreography(choreographyName, clientStartTime, choreographyStartingSlice, lease = null, args) {
     const request = this.buildExecuteChoreographyRequest(
       choreographyName,
       clientStartTime,
@@ -398,20 +407,23 @@ class ChoreographyClient extends BaseClient {
    * @param {number} clientEndTime The time (in seconds) that the command stops being valid. This time
    * should be provided in the local clock's timeframe and the client will convert it
    * to the required robot's clock timeframe.
-   * @param {leasePb.Lease|null} lease A specific lease to use for the request. If nothing is
+   * @param {LeaseProto|null} lease A specific lease to use for the request. If nothing is
    * provided, the client will append the next lease sequence in this field by default.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<choreographySequencePb.ChoreographyCommandResponse>}
    */
-  choreographyCommand(commandList, clientEndTime, lease = null, args) {
+
+  async choreographyCommand(commandList, clientEndTime, lease = null, args) {
     const request = this.buildChoreographyCommandRequest(commandList, clientEndTime, lease);
     return this.call(this._stub.choreographyCommand, request, null, commonHeaderErrors, false, args);
   }
-  
+
   /**
-   * Tell the robot its legs are a non-standard size to help avoid self-collision. Typically used for robots that are wearing costumes.
+   * Tell the robot its legs are a non-standard size to help avoid self-collision. Typically used for robots that are
+   * wearing costumes.
    * Configuration will be permanently stored (persisting through reboot) until cleared by sending an empty request.
-   * @param {choreographySequencePb.LegSize|number[]} frontLeftSize New leg configuration dimensions for the front left leg. Either 
+   * @param {choreographySequencePb.LegSize|number[]} frontLeftSize New leg configuration dimensions for the front
+   * left leg. Either
    * a LegSize message or a list of 4 floats. If null, all config values are set to zero.
    * @param {choreographySequencePb.LegSize|number[]} frontRightSize Same as frontLeftSize, but for the front right leg.
    * @param {choreographySequencePb.LegSize|number[]} hindLeftSize Same as frontLeftSize, but for the hind left leg.
@@ -421,23 +433,23 @@ class ChoreographyClient extends BaseClient {
    */
   legSizeConfiguration(frontLeftSize = null, frontRightSize = null, hindLeftSize = null, hindRightSize = null, args) {
     const req = this.buildLegSizeConfigurationRequest(frontLeftSize, frontRightSize, hindLeftSize, hindRightSize);
-    
+
     return this.call(this._stub.legSizeConfiguration, req, null, commonHeaderErrors, false, args);
   }
-  
+
   /**
-   * Read the current leg size configuration from the robot. On a robot with the default leg size configuration the 
+   * Read the current leg size configuration from the robot. On a robot with the default leg size configuration the
    * values for each leg's LegSize will be:
-   * * distance_inward = 0.02 m
-   * * distance_outward = 0.02 m
-   * * distance_forward = 0.035 m                                          
-   * * distance_backward = 0.035 m
+   * distance_inward = 0.02 m
+   * distance_outward = 0.02 m
+   * distance_forward = 0.035 m  
+   * distance_backward = 0.035 m
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<choreographySequencePb.LegSizeConfigurationStateResponse>}
    */
   legSizeConfigurationState(args) {
     const req = new choreographySequencePb.LegSizeConfigurationStateRequest();
-    
+
     return this.call(this._stub.legSizeConfigurationState, req, null, commonHeaderErrors, false, args);
   }
 
@@ -564,6 +576,9 @@ class ChoreographyClient extends BaseClient {
     );
   }
 
+  /**
+   * Generate the ChoreographyTimeAdjustRequest rpc with the timestamp converted into robot time.
+   */
   buildChoreographyTimeAdjustRequest(overrideClientStartTime, timeDifference, validityTime) {
     const request = new choreographySequencePb.ChoreographyTimeAdjustRequest();
     if (overrideClientStartTime) {
@@ -578,12 +593,16 @@ class ChoreographyClient extends BaseClient {
     return request;
   }
 
+  /**
+   * Generate the ExecuteChoreographyRequest rpc with the timestamp converted into robot time.
+   */
   buildExecuteChoreographyRequest(choreographyName, clientStartTime, choreographyStartingSlice, lease = null) {
     const request = new choreographySequencePb.ExecuteChoreographyRequest()
       .setChoreographySequenceName(choreographyName)
       .setChoreographyStartingSlice(choreographyStartingSlice)
       .setLease(lease);
-    if (clientStartTime !== null) {
+    // Omitted (undefined) like None: it was converted, and threw.
+    if (clientStartTime !== null && clientStartTime !== undefined) {
       request.setStartTime(this._updateTimestampFilter(clientStartTime, this.timesyncEndpoint));
     }
     return request;
@@ -596,8 +615,14 @@ class ChoreographyClient extends BaseClient {
       .setCommandsList(commandList);
   }
 
+  /**
+   * Generate a StartRecordingStateRequest proto.
+   */
   buildStartRecordingStateRequest(durationSeconds = null, continueSessionId = 0) {
-    const request = new choreographySequencePb.StartRecordingStateRequest().setRecordingSessionId(continueSessionId);
+    // An uint64 string ([jstype = JS_STRING]): jspb writes 0 for a number, rounded beyond 2^53.
+    const request = new choreographySequencePb.StartRecordingStateRequest().setRecordingSessionId(
+      toUint64String(continueSessionId),
+    );
     if (durationSeconds !== null) {
       request.setContinueRecordingDuration(secondsToDuration(durationSeconds));
     }
@@ -616,7 +641,10 @@ class ChoreographyClient extends BaseClient {
       .setAddLabelsList(addLabels)
       .setRemoveLabelsList(removeLabels);
   }
-  
+
+  /**
+   * Build and return a LegSize message from provided dimensions.
+   */
   buildLegSize(distInward = 0, distOutward = 0, distForward = 0, distBackward = 0) {
     return new choreographySequencePb.LegSize()
       .setDistanceInward(distInward)
@@ -624,25 +652,39 @@ class ChoreographyClient extends BaseClient {
       .setDistanceForward(distForward)
       .setDistanceBackward(distBackward);
   }
-  
-  buildLegSizeConfigurationRequest(frontLeftSize = null, frontRightSide = null, hindLeftSize = null, hindRightSize = null) {
+
+  /**
+   * Build a LegSizeConfigurationRequest.
+   */
+  buildLegSizeConfigurationRequest(
+    frontLeftSize = null,
+    frontRightSide = null,
+    hindLeftSize = null,
+    hindRightSize = null,
+  ) {
     const req = new choreographySequencePb.LegSizeConfigurationRequest();
-    
-    if (Array.isArray(frontLeftSize) && frontLeftSize.lenght === 4) {
+
+    // Check for an array input for each foot (.lenght was always undefined).
+    if (Array.isArray(frontLeftSize) && frontLeftSize.length === 4) {
       frontLeftSize = this.buildLegSize(frontLeftSize[0], frontLeftSize[1], frontLeftSize[2], frontLeftSize[3]);
     }
-    if (Array.isArray(frontRightSide) && frontRightSide.lenght === 4) {
+    if (Array.isArray(frontRightSide) && frontRightSide.length === 4) {
       frontRightSide = this.buildLegSize(frontRightSide[0], frontRightSide[1], frontRightSide[2], frontRightSide[3]);
     }
-    if (Array.isArray(hindLeftSize) && hindLeftSize.lenght === 4) {
+    if (Array.isArray(hindLeftSize) && hindLeftSize.length === 4) {
       hindLeftSize = this.buildLegSize(hindLeftSize[0], hindLeftSize[1], hindLeftSize[2], hindLeftSize[3]);
     }
-    if (Array.isArray(hindRightSize) && hindRightSize.lenght === 4) {
+    if (Array.isArray(hindRightSize) && hindRightSize.length === 4) {
       hindRightSize = this.buildLegSize(hindRightSize[0], hindRightSize[1], hindRightSize[2], hindRightSize[3]);
     }
-    
-    req.setFrontLeftSize(frontLeftSize).setFrontRightSize(frontRightSide).setHindLeftSize(hindLeftSize).setHindRightSize(hindRightSize);
-    
+
+    // Copy the LegSize message for each foot to the request if it was provided and valid, like Python.
+    const isLegSize = size => size instanceof choreographySequencePb.LegSize;
+    if (isLegSize(frontLeftSize)) req.setFrontLeftSize(frontLeftSize);
+    if (isLegSize(frontRightSide)) req.setFrontRightSize(frontRightSide);
+    if (isLegSize(hindLeftSize)) req.setHindLeftSize(hindLeftSize);
+    if (isLegSize(hindRightSize)) req.setHindRightSize(hindRightSize);
+
     return req;
   }
 
@@ -705,7 +747,8 @@ class AnimationUploadHelper {
     for (const move of initialMoveList.getMovesList()) {
       if (move.getName().includes(AnimationUploadHelper.ANIMATION_MOVE_PREFIX)) {
         const moveName = move.getName().split(AnimationUploadHelper.ANIMATION_MOVE_PREFIX)[1];
-        const genId = move.getAnimatedMoveGeneratedId().getValue();
+        // The id can be unset.
+        const genId = move.getAnimatedMoveGeneratedId()?.getValue() ?? '';
         this.animationNameToGeneratedId[moveName] = genId;
       }
     }
@@ -722,6 +765,8 @@ class AnimationUploadHelper {
    * @returns {Promise<choreographySequencePb.UploadAnimatedMoveResponse|null>}
    */
   async uploadAnimatedMove(animation, args) {
+    // Python initializes in the constructor, which can not wait in JavaScript: at the first upload then.
+    if (!this.choreographyClient) await this.initialize();
     const generatedId = this.generateAnimationId(animation);
     if (animation.getName() in this.animationNameToGeneratedId) {
       const genIdOnRobot = this.animationNameToGeneratedId[animation.getName()];
@@ -758,13 +803,24 @@ class AnimationUploadHelper {
   }
 }
 
+/** The uploaded choreography is invalid and unable to be performed. */
 class InvalidUploadedChoreographyError extends ResponseError {}
+/** A problem occurred when issuing the robot command containing the dance. */
 class RobotCommandIssuesError extends ResponseError {}
+/** Incorrect or invalid leases for the choreography service. Check the lease use results. */
 class LeaseError extends ResponseError {}
+/** The uploaded animation file is invalid and cannot be used in choreography sequences. */
 class AnimationValidationFailedError extends ResponseError {}
+/** The animation being uploaded was rejected because the robot was actively dancing. */
+class AnimationRejectedDanceActiveError extends ResponseError {}
+/** The choreography service has no logged robot state data. */
 class NoRecordedInformation extends ResponseError {}
+/** The recording request contains an unknown recording session ID. */
 class UnknownRecordingSessionId extends ResponseError {}
+/** The recording buffer is full and the current manual log will be truncated. */
 class RecordingBufferFull extends ResponseError {}
+/** The recording buffer filled up, the returned log will be truncated (not used, like in Python). */
+class IncompleteData extends ResponseError {}
 
 const _EXECUTE_CHOREOGRAPHY_STATUS_TO_ERROR = DefaultDict(() => [ResponseError, null]);
 _EXECUTE_CHOREOGRAPHY_STATUS_TO_ERROR.set(choreographySequencePb.ExecuteChoreographyResponse.Status.STATUS_OK, [
@@ -790,7 +846,7 @@ const _executeChoreographyErrors = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(choreographySequencePb.ExecuteChoreographyResponse.Status),
+        choreographySequencePb.ExecuteChoreographyResponse.Status,
         _EXECUTE_CHOREOGRAPHY_STATUS_TO_ERROR,
       ),
     ),
@@ -809,13 +865,20 @@ _UPLOAD_ANIMATED_MOVE_STATUS_TO_ERROR.set(
     'The uploaded animation file is invalid and cannot be used in choreography sequences.',
   ],
 );
+_UPLOAD_ANIMATED_MOVE_STATUS_TO_ERROR.set(
+  choreographySequencePb.UploadAnimatedMoveResponse.Status.STATUS_REJECTED_DANCE_ACTIVE,
+  [
+    AnimationRejectedDanceActiveError,
+    'The animation being uploaded was rejected because the robot was actively dancing.',
+  ],
+);
 
 const _uploadAnimatedMoveErrors = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(choreographySequencePb.UploadAnimatedMoveResponse.Status),
+      choreographySequencePb.UploadAnimatedMoveResponse.Status,
       _UPLOAD_ANIMATED_MOVE_STATUS_TO_ERROR,
     ),
   ),
@@ -840,7 +903,7 @@ const _startRecordingStateErrors = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(choreographySequencePb.StartRecordingStateResponse.Status),
+      choreographySequencePb.StartRecordingStateResponse.Status,
       _START_RECORDING_STATE_STATUS_TO_ERROR,
     ),
   ),
@@ -869,21 +932,14 @@ const _downloadRobotStateLogStreamErrors = handleCommonHeaderErrors(
  * }}
  */
 function _getStreamedChoreographyStateLog(response) {
-  let data = [];
-  let numChunks = 0;
-  let initialStatus = null;
-  for (const res of response) {
-    if (numChunks === 0) {
-      initialStatus = res.getStatus();
-    }
-    data.push(...res.getChunk().getData());
-    numChunks++;
-  }
+  const initialStatus = response.length > 0 ? response[0].getStatus() : null;
 
-  let choreographyLog;
-  if (numChunks > 0) {
-    choreographyLog = choreographySequencePb.ChoreographyStateLog.deserializeBinary(data);
-  }
+  // Like Python, an empty log without chunks. Buffer.concat of the chunk bytes: spreading a chunk
+  // into push() overflows the call stack above ~120 KB.
+  const choreographyLog =
+    response.length > 0
+      ? choreographySequencePb.ChoreographyStateLog.deserializeBinary(serializedFromMessages(response))
+      : new choreographySequencePb.ChoreographyStateLog();
 
   return { initialStatus, choreographyLog };
 }
@@ -898,16 +954,28 @@ function loadChoreographySequenceFromBinaryFile(filePath) {
     throw new Error(`File not found at ${filePath}`);
   }
 
-  const data = readFileSync(filePath, 'utf-8');
+  // The bytes of the file: a string was read as base64.
+  const data = readFileSync(filePath);
   return choreographySequencePb.ChoreographySequence.deserializeBinary(data);
 }
 
 /**
- * Read a choreography sequence txt file into a protobuf ChoreographySequence message.
- * @todo
+ * Read a choreography sequence txt file (the protobuf text format) into a protobuf ChoreographySequence message.
+ * @param {string} filePath
+ * @returns {choreographySequencePb.ChoreographySequence}
+ * @throws {Error} The file is not found.
+ * @throws {textFormat.ParseError} The file is not the text of a ChoreographySequence.
  */
-function loadChoreographySequenceFromTxtFile() {
-  process.emitWarning('Not implemented');
+function loadChoreographySequenceFromTxtFile(filePath) {
+  if (!existsSync(filePath)) {
+    throw new Error(`File not found at ${filePath}`);
+  }
+
+  const choreographySequence = new choreographySequencePb.ChoreographySequence();
+  // The line endings are the ones of Python's open(file_path, 'r'): '\n'.
+  const data = readFileSync(filePath, 'utf8').replace(/\r\n?/g, '\n');
+  textFormat.merge(data, choreographySequence);
+  return choreographySequence;
 }
 
 /**
@@ -933,6 +1001,16 @@ function saveChoreographySequenceToFile(filePath, fileName, choreography) {
 module.exports = {
   ChoreographyClient,
   AnimationUploadHelper,
+  // The errors of Python (they were not exported).
+  InvalidUploadedChoreographyError,
+  RobotCommandIssuesError,
+  LeaseError,
+  AnimationValidationFailedError,
+  AnimationRejectedDanceActiveError,
+  NoRecordedInformation,
+  UnknownRecordingSessionId,
+  RecordingBufferFull,
+  IncompleteData,
   loadChoreographySequenceFromBinaryFile,
   loadChoreographySequenceFromTxtFile,
   saveChoreographySequenceToFile,

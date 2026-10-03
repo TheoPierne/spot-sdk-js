@@ -1,14 +1,35 @@
+/**
+ * @file Client for the web API of Orbit: HTTPS requests to its REST endpoints.
+ */
+
 'use strict';
 
+const { readFileSync } = require('node:fs');
 const https = require('node:https');
-const axios = require('axios');
+
+const { emitWarning } = require('node:process');
 
 const { UnauthenticatedClientError } = require('./exceptions');
 const { getApiToken } = require('./utils');
-const { emitWarning } = require('node:process');
+
+// axios is loaded by the constructor (it takes 0.1 s to load, and the package root loads every module).
+/** @import * as axios from 'axios' */
 
 const DEFAULT_HEADERS = { Accept: 'application/json' };
 const OCTET_HEADER = { 'Content-type': 'application/octet-stream', Accept: 'application/octet-stream' };
+
+/**
+ * The body and the axios config of a request: data, or config.json like the json argument of the Python requests,
+ * or config.data (axios.post(url, undefined, config) sent no body: the undefined data replaced config.data).
+ * @param {*} data
+ * @param {?Object} config
+ * @returns {[*, Object]}
+ */
+function _requestBody(data, config) {
+  const { json, ...axiosConfig } = config ?? {};
+  if (data !== undefined) return [data, axiosConfig];
+  return [json !== undefined ? json : axiosConfig.data, axiosConfig];
+}
 
 /**
  * Client for the Orbit web API
@@ -16,15 +37,17 @@ const OCTET_HEADER = { 'Content-type': 'application/octet-stream', Accept: 'appl
 class OrbitClient {
   /**
    * @param {string} hostname the IP address associated with the instance
-   * @param {boolean} verify controls whether we verify the server’s TLS certificate
+   * @param {boolean|string} verify controls whether we verify the server’s TLS certificate, or the path of a CA
+   * bundle to verify it with, like Python.
    * Note that verify=false makes your application vulnerable to man-in-the-middle (MitM) attacks
    * Defaults to true
-   * @param {{ cert: string, key: string }} cert a local cert to use as client side certificate
-   * Note that the private key to your local certificate must be unencrypted because Requests does
-   * not support using encrypted keys.
+   * @param {?(string|string[]|{ cert: string|Buffer, key: string|Buffer })} cert a local cert to use as client side
+   * certificate, like Python: the path of a .pem file with the certificate and its key, or the paths of the
+   * certificate and of the key. Or an object with their contents.
+   * Note that the private key to your local certificate must be unencrypted.
    * Defaults to null.
    */
-  constructor(hostname, verify = true, { key = '', cert = '' } = cert) {
+  constructor(hostname, verify = true, cert = null) {
     /**
      * The hostname of the instance
      * @type {string}
@@ -32,40 +55,99 @@ class OrbitClient {
      */
     this._hostname = hostname;
 
-    this._session = axios.create({
+    this._session = require('axios').create({
       baseURL: `https://${this._hostname}`,
-      httpsAgent: new https.Agent({
-        rejectUnauthorized: verify,
-        cert: cert,
-        key: key,
-      }),
+      httpsAgent: new https.Agent(OrbitClient._tlsOptions(verify, cert)),
       headers: { 'Content-Type': 'application/json' },
+      // Like the Python requests, the 4xx and 5xx responses are returned (axios rejected them).
+      validateStatus: () => true,
+      // Arrays as repeated parameters (uuids=a&uuids=b), like requests (axios wrote uuids[]=a&uuids[]=b).
+      paramsSerializer: { indexes: null },
+    });
+
+    /**
+     * The cookies of the instance, sent back like the cookies of a requests.Session.
+     * @type {Map<string, string>}
+     * @private
+     */
+    this._cookies = new Map();
+    this._session.interceptors.response.use(response => {
+      this._storeCookies(response);
+      return response;
+    });
+    this._session.interceptors.request.use(config => {
+      if (this._cookies.size > 0) {
+        config.headers.Cookie = Array.from(this._cookies, ([name, value]) => `${name}=${value}`).join('; ');
+      }
+      return config;
     });
 
     this._isAuthenticated = false;
 
-    this._initSession();
+    /**
+     * The initialization of the session, that the requests wait for (it was not awaited: its errors were lost, and
+     * a request could go without the CSRF token).
+     * @type {Promise<void>}
+     * @private
+     */
+    this._ready = this._initSession();
+    this._ready.catch(() => {
+      // The requests that wait for it report its error.
+    });
+  }
+
+  /**
+   * The TLS options of the agent, like verify and cert in Python.
+   * @param {boolean|string} verify
+   * @param {?(string|string[]|{ cert: string|Buffer, key: string|Buffer })} cert
+   * @returns {import('node:https').AgentOptions}
+   * @private
+   */
+  static _tlsOptions(verify, cert) {
+    const options = { rejectUnauthorized: verify !== false };
+    if (typeof verify === 'string') {
+      options.ca = readFileSync(verify);
+    }
+    if (typeof cert === 'string') {
+      const pem = readFileSync(cert);
+      Object.assign(options, { cert: pem, key: pem });
+    } else if (Array.isArray(cert)) {
+      Object.assign(options, { cert: readFileSync(cert[0]), key: readFileSync(cert[1]) });
+    } else if (cert) {
+      Object.assign(options, { cert: cert.cert, key: cert.key });
+    }
+    return options;
+  }
+
+  /**
+   * Keep the cookies set by a response.
+   * @param {axios.AxiosResponse} response
+   * @private
+   */
+  _storeCookies(response) {
+    for (const cookie of [].concat(response.headers?.['set-cookie'] ?? [])) {
+      const [pair] = cookie.split(';');
+      // The value can contain '=' (split('=')[1] cut it).
+      const separator = pair.indexOf('=');
+      if (separator > 0) {
+        this._cookies.set(pair.slice(0, separator).trim(), pair.slice(separator + 1).trim());
+      }
+    }
   }
 
   async _initSession() {
-    try {
-      // Perform an initial GET request to initialize session and cookies
-      const response = await this._session.get('/');
+    // Perform an initial GET request to initialize session and cookies
+    await this._session.get('/');
 
-      // Set default headers for future requests
-      this._session.defaults.headers.common = { ...this._session.defaults.headers.common, ...DEFAULT_HEADERS };
+    // Set default headers for future requests
+    Object.assign(this._session.defaults.headers.common, DEFAULT_HEADERS);
 
-      // Set the CSRF token in the headers (assuming it's in cookies)
-      const csrfToken = response.headers['set-cookie'].find(cookie => cookie.includes('x-csrf-token'));
-      if (csrfToken) {
-        const tokenValue = csrfToken.split(';')[0].split('=')[1];
-        this._session.defaults.headers.common['x-csrf-token'] = tokenValue;
-      }
-
-      console.log('Session initialized successfully.');
-    } catch (error) {
-      console.error('Error initializing session:', error);
+    // Like Python, the CSRF token of the cookies goes in a header.
+    const csrfToken = this._cookies.get('x-csrf-token');
+    if (csrfToken === undefined) {
+      throw new Error(`The instance ${this._hostname} did not set the x-csrf-token cookie.`);
     }
+    this._session.defaults.headers.common['x-csrf-token'] = csrfToken;
   }
 
   /**
@@ -75,23 +157,22 @@ class OrbitClient {
    * @returns {Promise<axios.AxiosResponse>}
    */
   async authenticateWithApiToken(apiToken) {
+    await this._ready;
     if (!apiToken) {
       apiToken = await getApiToken();
     }
 
-    this._session.defaults.headers.common = {
-      ...this._session.defaults.headers.common,
-      Authorization: `Bearer ${apiToken}`,
-    };
+    this._session.defaults.headers.common.Authorization = `Bearer ${apiToken}`;
 
     const authenticateResponse = await this._session.get('/api/v0/api_token/authenticate');
 
-    if (authenticateResponse.statusText.toLowerCase() === 'ok') {
+    // Like response.ok of the Python requests (a login failure made axios throw).
+    if (authenticateResponse.status < 400) {
       this._isAuthenticated = true;
     } else {
-      console.error(
-        `Client: Login failed: ${authenticateResponse.data} Please, obtain a valid API token from the instance!`,
-      );
+      const { data } = authenticateResponse;
+      const text = typeof data === 'string' ? data : JSON.stringify(data);
+      console.error(`Client: Login failed: ${text} Please, obtain a valid API token from the instance!`);
       delete this._session.defaults.headers.common.Authorization;
     }
 
@@ -104,11 +185,27 @@ class OrbitClient {
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
    * @returns {Promise<axios.AxiosResponse>}
    */
-  getResource(path, config) {
+  async getResource(path, config) {
+    await this._ready;
     if (!this._isAuthenticated) {
       throw new UnauthenticatedClientError();
     }
-    return this._session.get(`/api/v0/${path}`, config);
+    // With a trailing slash, like Python.
+    return this._session.get(`/api/v0/${path}/`, config);
+  }
+
+  /**
+   * Base function for getting a resource in data acquisition.
+   * @param {string} path the path to the resource
+   * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
+   * @returns {Promise<axios.AxiosResponse>}
+   */
+  async getResourceFromDataAcquisition(path, config) {
+    await this._ready;
+    if (!this._isAuthenticated) {
+      throw new UnauthenticatedClientError();
+    }
+    return this._session.get(`/${path}`, config);
   }
 
   /**
@@ -118,13 +215,15 @@ class OrbitClient {
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the post request
    * @returns {Promise<axios.AxiosResponse>}
    */
-  postResource(path, data, config) {
+  async postResource(path, data, config) {
+    await this._ready;
     if (!this._isAuthenticated && path !== 'login') {
       throw new UnauthenticatedClientError();
     }
-    return this._session.post(`/api/v0/${path}`, data, config);
+    const [body, axiosConfig] = _requestBody(data, config);
+    return this._session.post(`/api/v0/${path}`, body, axiosConfig);
   }
-  
+
   /**
    * Base function for patching a resource in /api/v0/
    * @param {string} path the path appended to /api/v0/
@@ -132,11 +231,13 @@ class OrbitClient {
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the post request
    * @returns {Promise<axios.AxiosResponse>}
    */
-  patchResource(path, data, config) {
+  async patchResource(path, data, config) {
+    await this._ready;
     if (!this._isAuthenticated && path !== 'login') {
       throw new UnauthenticatedClientError();
     }
-    return this._session.patch(`/api/v0/${path}`, data, config);
+    const [body, axiosConfig] = _requestBody(data, config);
+    return this._session.patch(`/api/v0/${path}`, body, axiosConfig);
   }
 
   /**
@@ -145,7 +246,8 @@ class OrbitClient {
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the delete request
    * @returns {Promise<axios.AxiosResponse>}
    */
-  deleteResource(path, config) {
+  async deleteResource(path, config) {
+    await this._ready;
     if (!this._isAuthenticated) {
       throw new UnauthenticatedClientError();
     }
@@ -206,6 +308,16 @@ class OrbitClient {
    */
   getSiteWalkById(uuid, config) {
     return this.getResource(`site_walks/${uuid}`, config);
+  }
+
+  /**
+   * Returns SiteWalk as a zip archive which represents a collection of graph and mission data, like Python.
+   * @param {string} uuid the ID associated with the site walk
+   * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
+   * @returns {Promise<axios.AxiosResponse>} The response, whose data is the bytes of the archive.
+   */
+  getSiteWalkArchiveById(uuid, config) {
+    return this.getResource('site_walks/archive', { params: { uuids: uuid }, responseType: 'arraybuffer', ...config });
   }
 
   /**
@@ -329,7 +441,8 @@ class OrbitClient {
    * @returns {Promise<axios.AxiosResponse>}
    */
   getRunArchivesById(uuid, config) {
-    return this.getResource(`run_archives/${uuid}`, config);
+    // The bytes of the archive (decoded as UTF-8, it was corrupted).
+    return this.getResource(`run_archives/${uuid}`, { responseType: 'arraybuffer', ...config });
   }
 
   /**
@@ -339,12 +452,30 @@ class OrbitClient {
    * @returns {Promise<axios.AxiosResponse>}
    */
   async getImage(url, config) {
+    await this._ready;
     if (!this._isAuthenticated) {
       throw new UnauthenticatedClientError();
     }
 
-    const response = await this._session.get(url, { ...config, responseType: 'stream' });
+    // An error status rejects, like raise_for_status() in Python (the body of an error page was returned as the
+    // image).
+    const response = await this._session.get(url, { ...config, responseType: 'stream', validateStatus: s => s < 400 });
     return response.data;
+  }
+
+  /**
+   * Given a data capture url, returns an image response, like Python (the status is not checked).
+   * @param {string} url The url associated with the data capture in the form of https://hostname +
+   * runCapture["dataUrl"].
+   * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
+   * @returns {Promise<axios.AxiosResponse>} The response, whose data is a stream.
+   */
+  async getImageResponse(url, config) {
+    await this._ready;
+    if (!this._isAuthenticated) {
+      throw new UnauthenticatedClientError();
+    }
+    return this._session.get(url, { ...config, responseType: 'stream' });
   }
 
   /**
@@ -365,7 +496,7 @@ class OrbitClient {
   getWebhookById(uuid, config) {
     return this.getResource(`webhooks/${uuid}`, config);
   }
-  
+
   /**
    * Given a robot nickname, returns information about the robot.
    * @param {string} robotNickname The nickname of the robot
@@ -375,7 +506,7 @@ class OrbitClient {
   getRobotInfo(robotNickname, config) {
     return this.getResource(`robot-session/${robotNickname}/session`, config);
   }
-  
+
   /**
    * Given a dictionary of query params, returns anomalies.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -384,7 +515,7 @@ class OrbitClient {
   getAnomalies(config) {
     return this.getResource('anomalies', config);
   }
-  
+
   /**
    * Retrieves a *.zip containing an Orbit backup.
    * @param {string} taskId The task ID returned from the postBackupTask method.
@@ -392,9 +523,14 @@ class OrbitClient {
    * @returns {Promise<axios.AxiosResponse>}
    */
   getBackup(taskId, config) {
-    return this.getResource(`backups/${taskId}`, { ...config, headers: { ...OCTET_HEADER } });
+    // The bytes of the zip file (decoded as UTF-8, it was corrupted).
+    return this.getResource(`backups/${taskId}`, {
+      responseType: 'arraybuffer',
+      ...config,
+      headers: { ...OCTET_HEADER, ...config?.headers },
+    });
   }
-  
+
   /**
    * Retrieves the status of a backup task started by the postBackupTask method.
    * @param {string} taskId The task ID returned from the postBackupTask method.
@@ -404,7 +540,7 @@ class OrbitClient {
   getBackupTask(taskId, config) {
     return this.getResource(`backup_tasks/${taskId}`, config);
   }
-  
+
   /**
    * Retrieves session statistics.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -413,7 +549,7 @@ class OrbitClient {
   getRunStatistics(config) {
     return this.getResource('run_statistics/sessions', config);
   }
-  
+
   /**
    * Retrieves session summary.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -422,7 +558,7 @@ class OrbitClient {
   getRunStatisticsSessionSummary(config) {
     return this.getResource('run_statistics/sessions_summary', config);
   }
-  
+
   /**
    * Given a SiteWalk uuid, it exports the walksPb.Walk equivalent.
    * @param {string} siteWalkUuid the ID associated with the SiteWalk.
@@ -432,7 +568,7 @@ class OrbitClient {
   postExportAsWalk(siteWalkUuid, config) {
     return this.postResource('site_walks/export_as_walk', { siteWalkUuid }, config);
   }
-  
+
   /**
    * Given a walk data, imports it to the specified instance.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -441,7 +577,7 @@ class OrbitClient {
   postImportFromWalk(config) {
     return this.postResource('site_walks/import_from_walk', undefined, config);
   }
-  
+
   /**
    * Create a SiteElement. It also updates a pre-existing SiteElement using the associated UUID.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -450,7 +586,7 @@ class OrbitClient {
   postSiteElement(config) {
     return this.postResource('site_elements', undefined, config);
   }
-  
+
   /**
    * Create a SiteWalk. It also updates a pre-existing SiteWalk using the associated UUID.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -459,7 +595,7 @@ class OrbitClient {
   postSiteWalk(config) {
     return this.postResource('site_walks', undefined, config);
   }
-  
+
   /**
    * Create a SiteElement. It also updates a pre-existing SiteDock using the associated UUID.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -468,7 +604,7 @@ class OrbitClient {
   postSiteDock(config) {
     return this.postResource('site_docks', undefined, config);
   }
-  
+
   /**
    * Add a robot to the specified instance.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -477,22 +613,25 @@ class OrbitClient {
   postRobot(config) {
     return this.postResource('robots', undefined, config);
   }
-  
+
   /**
    * This function serves two purposes. It creates a new calendar event on using the following arguments
    * when Event ID is not specified. When the Event ID associated with a pre-existing calendar event is specified,
    * the function overwrites the attributes of the pre-existing calendar event.
-   * @param {?string} nickname The name associated with the robot. 
+   * @param {?string} nickname The name associated with the robot.
    * @param {?number} timeMs The first kickoff time in terms of milliseconds since epoch.
    * @param {?number} repeatMs The delay time in milliseconds for repeating calendar events.
    * @param {?string} missionId The UUID associated with the mission (also known as SiteWalk).
    * @param {?boolean} forceAcquireEstop Instructs the system to force acquire the estop when the mission kicks off.
    * @param {?boolean} requireDocked Determines whether the event will require the robot to be docked to start.
    * @param {?string} scheduleName The desired name of the calendar event.
-   * @param {?Array<{startMs: number, endMs: number}>} blackoutTimes A specification for a time period over the course of a week when a schedule should not run
+   * @param {?Array<{startMs: number, endMs: number}>} blackoutTimes A specification for a time period over the course
+   * of a week when a schedule should not run
    * specified as array of object defined as {startMs: <number>, endMs: <number>}
-   * with startMs (inclusive) being the millisecond offset from the beginning of the week (Sunday) when this blackout period starts
-   * and endMs (exclusive) being the millisecond offset from beginning of the week(Sunday) when this blackout period ends.
+   * with startMs (inclusive) being the millisecond offset from the beginning of the week (Sunday) when this blackout
+   * period starts
+   * and endMs (exclusive) being the millisecond offset from beginning of the week(Sunday) when this blackout period
+   * ends.
    * @param {?string} disableReason (optional) A reason for disabling the calendar event.
    * @param {?string} eventId The auto-generated ID for a calendar event that is already posted on the instance.
    * This is only useful when editing a pre-existing calendar event.
@@ -500,18 +639,26 @@ class OrbitClient {
    * @returns {Promise<axios.AxiosResponse>}
    */
   postCalendarEvent(
-    nickname = null, timeMs = null, repeatMs = null, 
-    missionId = null, forceAcquireEstop = null, requireDocked = null, 
-    scheduleName = null, blackoutTimes = null, disableReason = null, 
-    eventId = null, config
+    nickname = null,
+    timeMs = null,
+    repeatMs = null,
+    missionId = null,
+    forceAcquireEstop = null,
+    requireDocked = null,
+    scheduleName = null,
+    blackoutTimes = null,
+    disableReason = null,
+    eventId = null,
+    config,
   ) {
-    if ('json' in config) {
+    // A given json body (the 'in' operator threw without config).
+    if (config?.json !== undefined) {
       return this.postResource('calendar/schedule', undefined, config);
     }
-    
+
     const payload = {
       agent: {
-        nickname
+        nickname,
       },
       schedule: {
         timeMs,
@@ -527,12 +674,12 @@ class OrbitClient {
       eventMetadata: {
         name: scheduleName,
         eventId,
-      }
+      },
     };
-    
+
     return this.postResource('calendar/schedule', payload, config);
   }
-  
+
   /**
    * Disable all scheduled missions.
    * @param {?string} disableReason Reason for disabling all scheduled missions.
@@ -542,7 +689,7 @@ class OrbitClient {
   postCalendarEventsDisableAll(disableReason = null, config) {
     return this.postResource('calendar/disable-enable', { disableReason }, config);
   }
-  
+
   /**
    * Disable specific scheduled mission by event ID.
    * @param {string} eventId Event Id associated with a mission to disable.
@@ -553,7 +700,7 @@ class OrbitClient {
   postCalendarEventDisableById(eventId, disableReason, config) {
     return this.postResource('calendar/disable-enable', { disableReason, eventId }, config);
   }
-  
+
   /**
    * Enable all scheduled missions.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -562,7 +709,7 @@ class OrbitClient {
   postCalendarEventsEnableAll(config) {
     return this.postResource('calendar/disable-enable', { disableReason: '' }, config);
   }
-  
+
   /**
    * Enable specific scheduled mission by event ID.
    * @param {string} eventId Event Id associated with a mission to enable.
@@ -572,7 +719,7 @@ class OrbitClient {
   postCalendarEventEnableById(eventId, config) {
     return this.postResource('calendar/disable-enable', { disableReason: '', eventId }, config);
   }
-  
+
   /**
    * Create a webhook instance.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
@@ -581,7 +728,7 @@ class OrbitClient {
   postWebhook(config) {
     return this.postResource('webhooks', undefined, config);
   }
-  
+
   /**
    * Update an existing webhook instance.
    * @param {string} uuid The ID associated with the desired webhook instance.
@@ -591,7 +738,7 @@ class OrbitClient {
   postWebhookById(uuid, config) {
     return this.postResource(`webhooks/${uuid}`, undefined, config);
   }
-  
+
   /**
    * Generate a mission to send the robot back to the dock.
    * @param {string} robotNickname The nickname of the robot.
@@ -602,13 +749,14 @@ class OrbitClient {
   postReturnToDockMission(robotNickname, siteDockUuid, config) {
     return this.postResource('graph/send-robot', { nickname: robotNickname, siteDockUuid }, config);
   }
-  
+
   /**
    * Dispatch the robot to a mission given a mission uuid.
    * @param {string} robotNickname The nickname of the robot.
    * @param {string} driverId The current driver ID of the mission.
    * @param {string} missionUuid DEPRECATED. Use 'walk' instead.
-   * @param {boolean} deleteMission DEPRECATED and no longer supported. Instead, use a temporary walk file that will not be reused.
+   * @param {boolean} deleteMission DEPRECATED and no longer supported. Instead, use a temporary walk file that will
+   * not be reused.
    * @param {boolean} forceAcquireEstop Whether to force acquire E-stop from the previous client.
    * @param {boolean} skipInitialization Whether to skip initialization when starting the return to dock mission.
    * @param {boolean} walk The walk to dispatch the robot to. If this is set, missionUuid should be null.
@@ -623,26 +771,28 @@ class OrbitClient {
     forceAcquireEstop = false,
     skipInitialization = true,
     walk = null,
-    config
+    config,
   ) {
     if ((missionUuid !== null && walk !== null) || (missionUuid === null && walk === null)) {
       throw new Error('Exactly one of missionUuid or walk must be set (not both or neither).');
     }
-    
+
     if (deleteMission) {
-      throw new Error("'deleteMission' is deprecated and no longer supported. Instead, pass in a 'walk' object that only temporarily exists and will not be reused.");
+      throw new Error(
+        "'deleteMission' is deprecated and no longer supported. Instead, pass in a 'walk' object that only temporarily exists and will not be reused.",
+      );
     }
-    
+
     const dispatchTarget = {};
     if (missionUuid !== null) {
       emitWarning("'missionUuid' is deprecated and will be removed in a future release. Please use 'walk' instead.");
-      dispatchTarget['missionId'] = missionUuid;
+      dispatchTarget.missionId = missionUuid;
     }
-    
+
     if (walk !== null) {
-      dispatchTarget['walk'] = walk;
+      dispatchTarget.walk = walk;
     }
-    
+
     const payload = {
       agent: {
         nickname: robotNickname,
@@ -666,17 +816,17 @@ class OrbitClient {
         skipInitialization,
       },
       eventMetadata: {
-        name: `Driver Triggered Mission (${driverId})`
-      }
+        name: `Driver Triggered Mission (${driverId})`,
+      },
     };
-    
+
     return this.postResource(`calendar/mission/dispatch/${robotNickname}?currentDriverId=${driverId}`, payload, config);
   }
-  
+
   /**
    * Starts creating a backup zip file.
    * @param {boolean} includeMissions Specifies whether to include missions and maps in the backup.
-   * @param {boolean} includeCaptures Specifies whether to include all inspection data captures in the backup. 
+   * @param {boolean} includeCaptures Specifies whether to include all inspection data captures in the backup.
    * @param {axios.AxiosRequestConfig} config a variable number of keyword arguments for the get request
    * @returns {Promise<axios.AxiosResponse>}
    */
@@ -691,9 +841,9 @@ class OrbitClient {
    * @returns {Promise<axios.AxiosResponse>}
    */
   patchBulkCloseAnomalies(elementIds, config) {
-    return this.patchResource('anomalies', { command: 'close', elementIds }, config);  
+    return this.patchResource('anomalies', { command: 'close', elementIds }, config);
   }
-  
+
   /**
    * Patch an Anomaly by uuid.
    * @param {string} anomalyUuid The uuid of the anomaly to patch fields in.
@@ -704,7 +854,7 @@ class OrbitClient {
   patchAnomalyById(anomalyUuid, patchedFields, config) {
     return this.patchResource(`anomalies/${anomalyUuid}`, patchedFields, config);
   }
-  
+
   /**
    * Given a SiteWalk uuid, deletes the SiteWalk associated with the uuid on the specified instance.
    * @param {string} uuid The ID associated with the desired SiteWalk
@@ -714,7 +864,7 @@ class OrbitClient {
   deleteSiteWalk(uuid, config) {
     return this.deleteResource(`site_walks/${uuid}`, config);
   }
-  
+
   /**
    * Given a robot hostname, deletes the robot associated with the hostname on the specified instance
    * @param {string} robotHostname The IP address associated with the robot.
@@ -724,7 +874,7 @@ class OrbitClient {
   deleteRobot(robotHostname, config) {
     return this.deleteResource(`robots/${robotHostname}`, config);
   }
-  
+
   /**
    * Delete the specified calendar event on the specified instance.
    * @param {string} eventId The ID associated with the calendar event.
@@ -734,7 +884,7 @@ class OrbitClient {
   deleteCalendarEvent(eventId, config) {
     return this.deleteResource(`calendar/schedule/${eventId}`, config);
   }
-  
+
   /**
    * Delete the specified webhook instance on the specified instance.
    * @param {string} uuid The ID associated with the desired webhook.
@@ -744,7 +894,7 @@ class OrbitClient {
   deleteWebhook(uuid, config) {
     return this.deleteResource(`webhooks/${uuid}`, config);
   }
-  
+
   /**
    * Deletes the backup zip file from the Orbit instance.
    * @param {string} taskId The task id associated with the backup.
@@ -754,17 +904,43 @@ class OrbitClient {
   deleteBackup(taskId, config) {
     return this.deleteResource(`backups/${taskId}`, config);
   }
-
 }
 
 /**
  * Creates an orbit client object.
- * @param {{ hostname: string, verify: boolean, cert: {cert: string, key: string }}} options The options from argparse
+ * @param {{ hostname: string, verify: ?(boolean|string), cert: ?(string|string[]), key: ?string }} options The
+ * options from argparse: verify is 'True' or 'False' (in any case, like Python 5.2.0), or the path of a CA bundle,
+ * cert the path of a .pem file with the certificate and its key, or the paths of both. With key, cert and key are their
+ * contents.
  * @returns {Promise<OrbitClient>}
  */
 async function createClient(options) {
-  const client = new OrbitClient(options.hostname, options.verify, { cert: options.cert, key: options.key });
+  // Determine the value for the argument "verify".
+  let verify = options.verify ?? true;
+  if (typeof verify === 'string') {
+    const value = verify.trim().toLowerCase();
+    if (value === 'true' || value === 'false') {
+      verify = value === 'true';
+    } else {
+      console.log(
+        `The provided value for the argument verify [${verify}] is not either 'True' or 'False'. Assuming verify is set to 'path/to/CA bundle'`,
+      );
+    }
+  }
 
+  // Sanitize the format of the cert option: a single pathname, or the paths of the certificate and of the key.
+  let cert = options.cert ?? null;
+  if (Array.isArray(cert) && cert.length === 1) {
+    [cert] = cert;
+  }
+  if (options.key !== undefined && options.key !== null) {
+    cert = { cert: options.cert, key: options.key };
+  }
+
+  // A client object represents a single instance.
+  const client = new OrbitClient(options.hostname, verify, cert);
+
+  // The client needs to be authenticated before using its functions
   await client.authenticateWithApiToken();
 
   return client;

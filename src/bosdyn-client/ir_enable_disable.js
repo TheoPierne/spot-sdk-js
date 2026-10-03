@@ -1,3 +1,7 @@
+/**
+ * @file A client for the ir-enable-disable service.
+ */
+
 'use strict';
 
 const { BaseClient, commonHeaderErrors } = require('./common');
@@ -21,7 +25,7 @@ class IREnableDisableServiceClient extends BaseClient {
   /**
    * Enable and/or disable the robot's IR light emitters.
    * @param {boolean} enable Whether or not to enable the emitters.
-   * @param {Object} args Args to be send with the gRPC request
+   * @param {Object} [args] Args to be send with the gRPC request
    * @returns {Promise<irEnableDisablePb.IREnableDisableResponse>}
    */
   setIrEnabled(enable, args) {

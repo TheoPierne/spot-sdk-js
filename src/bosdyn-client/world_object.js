@@ -1,3 +1,7 @@
+/**
+ * @file For clients to use the world object service
+ */
+
 'use strict';
 
 const { BaseClient, commonHeaderErrors } = require('./common');
@@ -8,6 +12,13 @@ const geometryPb = require('../bosdyn/api/geometry_pb');
 const worldObjectPb = require('../bosdyn/api/world_object_pb');
 const { WorldObjectServiceClient } = require('../bosdyn/api/world_object_service_grpc_pb');
 const { nowTimestamp } = require('../bosdyn-core/util');
+
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ * @typedef {import('./math_helpers').SE3Pose} SE3Pose
+ * @typedef {import('./time_sync').TimeSyncEndpoint} TimeSyncEndpoint
+ * @typedef {import('google-protobuf/google/protobuf/timestamp_pb').Timestamp} Timestamp
+ */
 
 /**
  * @typedef {import('./robot').Robot} Robot
@@ -44,7 +55,6 @@ class WorldObjectClient extends BaseClient {
    * Accessor for timesync-endpoint that is grabbed via 'updateFrom()'.
    * @type {*}
    * @throws {NoTimeSyncError} Could not find the timesync endpoint for the robot.
-   * @readonly
    */
   get timesyncEndpoint() {
     if (!this._timesyncEndpoint) {
@@ -57,8 +67,8 @@ class WorldObjectClient extends BaseClient {
    * Get a list of World Objects.
    * @param {?Array<worldObjectPb.WorldObjectType>} objectType Specific types to include in the response,
    * all other types will be filtered out.
-   * @param {?number} timeStartPoint A client timestamp to filter objects in the response. All objects
-   * will have a timestamp after this time.
+   * @param {?number} timeStartPoint A client time in seconds since the epoch, like Python (e.g. nowSec(), not
+   * Date.now()), to filter objects in the response. All objects will have a timestamp after this time.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<worldObjectPb.ListWorldObjectResponse>} The response message,
    * which includes the filtered list of all world objects.
@@ -86,7 +96,8 @@ class WorldObjectClient extends BaseClient {
    * @throws {NoTimeSyncError} Couldn't convert the timestamp into robot time.
    */
   mutateWorldObjects(mutationReq, args) {
-    if (mutationReq.getMutation().getObject().hasAcquisitionTime()) {
+    // Unset sub-messages read as the defaults, like Python (a request without mutation threw a TypeError).
+    if (mutationReq.getMutation()?.getObject()?.hasAcquisitionTime()) {
       const clientTimestamp = mutationReq.getMutation().getObject().getAcquisitionTime();
       mutationReq
         .getMutation()
@@ -98,7 +109,8 @@ class WorldObjectClient extends BaseClient {
 
   /**
    * Set or convert fields of the proto that need timestamps in the robot's clock.
-   * @param {number} timestamp Client time, such as from Date.now().
+   * @param {number} timestamp Client time in seconds since the epoch, such as from nowSec() (not Date.now(), which
+   * is in milliseconds).
    * @param {TimeSyncEndpoint} timesyncEndpoint A timesync endpoint associated with the robot object.
    * @returns {*}
    * @throws {NoTimeSyncError} Couldn't convert the timestamp into robot time.
@@ -114,9 +126,9 @@ class WorldObjectClient extends BaseClient {
 
   /**
    * Set or convert fields of the proto that need timestamps in the robot's clock.
-   * @param {google.protobuf.Timestamp} timestamp Client time.
+   * @param {Timestamp} timestamp Client time.
    * @param {TimeSyncEndpoint} timesyncEndpoint A timesync endpoint associated with the robot object.
-   * @returns {google.protobuf.Timestamp}
+   * @returns {Timestamp}
    * @throws {NoTimeSyncError} Couldn't convert the timestamp into robot time.
    * @private
    */
@@ -203,9 +215,10 @@ class WorldObjectClient extends BaseClient {
    * @param {string} name The human-readable name of the world object.
    * @param {string} drawableBoxFrameName The frame name for the drawable box frame.
    * @param {string} frameName The frame name which the drawable box is described relative to.
-   * @param {geometryPb.SE3Pose} frameNameTformDrawableBox The SE3 pose of the drawable box relative to frame name.
-   * @param {number[]} sizeEwrtBoxVec3 The size of the box (x,y,z) expressed with respect to the
-   * drawable box frame.
+   * @param {geometryPb.SE3Pose|SE3Pose} frameNameTformDrawableBox The SE3 pose of the drawable box relative to frame
+   * name.
+   * @param {geometryPb.Vec3|number[]} sizeEwrtBoxVec3 The size of the box (x,y,z) expressed with respect to the
+   * drawable box frame: a Vec3 like Python, or [x, y, z] (an array was set as the Vec3, which could not be serialized).
    * @param {number[]} rgba The RGBA color, where RGB are int values in [0,255] and A is a float in [0,1].
    * @param {boolean} wireframe Should this be drawn as a wireframe [wireframe=true] or a solid object
    * [wireframe=false].
@@ -235,7 +248,10 @@ class WorldObjectClient extends BaseClient {
 
     const timeNow = nowTimestamp();
 
-    const box = new worldObjectPb.DrawableBox().setSize(sizeEwrtBoxVec3);
+    const size = Array.isArray(sizeEwrtBoxVec3)
+      ? new geometryPb.Vec3().setX(sizeEwrtBoxVec3[0]).setY(sizeEwrtBoxVec3[1]).setZ(sizeEwrtBoxVec3[2])
+      : sizeEwrtBoxVec3;
+    const box = new worldObjectPb.DrawableBox().setSize(size);
     const drawColor = new worldObjectPb.DrawableProperties.Color()
       .setR(rgba[0])
       .setG(rgba[1])
@@ -340,7 +356,7 @@ async function sendAddMutationRequests(worldObjectClient, worldObjectArray) {
   for (let i = 0; i < worldObjectArray.length; i++) {
     const obj = worldObjectArray[i];
     const addReq = makeAddWorldObjectReq(obj);
-    // eslint-disable-next-line no-await-in-loop
+
     const addResp = await worldObjectClient.mutateWorldObjects(addReq);
     objId[i] = addResp.getMutatedObjectId();
   }
@@ -367,7 +383,7 @@ async function sendDeleteMutationRequests(worldObjectClient, deleteObjectIdArray
       const deleteId = deleteObjectIdArray[i];
       if (thisObjectId === deleteId) {
         const delReq = makeDeleteWorldObjectReq(obj);
-        // eslint-disable-next-line no-await-in-loop
+
         await worldObjectClient.mutateWorldObjects(delReq);
         continue;
       }

@@ -1,68 +1,114 @@
+/**
+ * @file A class for reading message data from a DataFile.
+ */
+
 'use strict';
 
 const { PROTOBUF_CONTENT_TYPE } = require('./common');
 
+/**
+ * A class for reading message data from a DataFile.
+ *
+ * Methods throw ParseError if there is a problem with the format of the file.
+ */
 class MessageReader {
-  constructor(data_reader, require_protobuf = false) {
-    this._data_reader = data_reader;
-    this._channel_name_to_series_descriptor = {};
-    this._channel_name_to_series_index = {};
-    for (const [series_index, series_identifier] of data_reader.file_index.getSeriesIdentifiersList()) {
-      let channel_name;
+  constructor(dataReader) {
+    /**
+     * @type {import('./data_reader').DataReader}
+     */
+    this._dataReader = dataReader;
+    this._channelNameToSeriesDescriptor = {};
+    this._channelNameToSeriesIndex = {};
+  }
 
-      if (series_identifier.getSpecMap().has('bosdyn:channel')) {
-        channel_name = series_identifier.getSpecMap().get('bosdyn:channel');
+  /**
+   * @template {new (...args: any[]) => any} T
+   * @this {T}
+   * @param {import('./data_reader').DataReader} dataReader
+   * @param {boolean} [requireProtobuf]
+   * @returns {Promise<InstanceType<T>>}
+   */
+  static async create(dataReader, requireProtobuf = false) {
+    /** @type {InstanceType<T>} */
+    const messageReader = new this(dataReader);
+
+    for (const [seriesIndex, seriesIdentifier] of dataReader.fileIndex.getSeriesIdentifiersList().entries()) {
+      let channelName;
+
+      if (seriesIdentifier.getSpecMap().has('bosdyn:channel')) {
+        channelName = seriesIdentifier.getSpecMap().get('bosdyn:channel');
       } else {
         continue;
       }
 
-      const series_descriptor = this._data_reader.series_descriptor(series_index);
-      if (!series_descriptor.hasMessageType()) continue;
+      const seriesDescriptor = await messageReader._dataReader.seriesDescriptor(seriesIndex);
+      if (!seriesDescriptor.hasMessageType()) continue;
 
-      const message_type = series_descriptor.getMessageType();
-      if (require_protobuf && message_type.getContentType() !== PROTOBUF_CONTENT_TYPE) continue;
-      this._channel_name_to_series_descriptor[channel_name] = series_descriptor;
-      this._channel_name_to_series_index[channel_name] = series_descriptor.getSeriesIndex();
+      const messageType = seriesDescriptor.getMessageType();
+      if (requireProtobuf && messageType.getContentType() !== PROTOBUF_CONTENT_TYPE) continue;
+      messageReader._channelNameToSeriesDescriptor[channelName] = seriesDescriptor;
+      messageReader._channelNameToSeriesIndex[channelName] = seriesDescriptor.getSeriesIndex();
     }
+
+    return messageReader;
   }
 
-  get data_reader() {
-    return this._data_reader;
+  /**
+   * Return underlying DataReader this object is using.
+   */
+  get dataReader() {
+    return this._dataReader;
   }
 
-  get channel_name_to_series_descriptor() {
-    return this._channel_name_to_series_descriptor;
+  /**
+   * Return a mapping of {channel name -> series descriptor} for message series.
+   */
+  get channelNameToSeriesDescriptor() {
+    return this._channelNameToSeriesDescriptor;
   }
 
-  series_index(channel_name, message_type = null) {
-    if (message_type === null) return this._channel_name_to_series_index[channel_name];
+  /**
+   * Return series index (int) to access SeriesDescriptors and messages.
+   */
+  async seriesIndex(channelName, messageType = null) {
+    if (messageType === null) return this._channelNameToSeriesIndex[channelName];
 
-    for (const [series_index, series_identifier] of this._data_reader.file_index.getSeriesIdentifiersList()) {
-      let series_channel;
+    for (const [seriesIndex, seriesIdentifier] of this._dataReader.fileIndex.getSeriesIdentifiersList().entries()) {
+      let seriesChannel;
 
-      if (series_identifier.getSpecMap().has('bosdyn:channel')) {
-        series_channel = series_identifier.getSpecMap().get('bosdyn:channel');
+      if (seriesIdentifier.getSpecMap().has('bosdyn:channel')) {
+        seriesChannel = seriesIdentifier.getSpecMap().get('bosdyn:channel');
       } else {
         continue;
       }
 
-      if (series_channel !== channel_name) continue;
+      if (seriesChannel !== channelName) continue;
 
-      const series_descriptor = this._data_reader.series_descriptor(series_index);
-      if (!series_descriptor.hasMessageType()) continue;
+      const seriesDescriptor = await this._dataReader.seriesDescriptor(seriesIndex);
+      if (!seriesDescriptor.hasMessageType()) continue;
 
-      if (message_type === series_descriptor.getMessageType().getTypeName()) return series_index;
+      if (messageType === seriesDescriptor.getMessageType().getTypeName()) return seriesIndex;
     }
 
-    throw new TypeError(`No series with channel_name=${channel_name} and message_type=${message_type}`);
+    throw new TypeError(`No series with channelName=${channelName} and messageType=${messageType}`);
   }
 
-  series_index_to_descriptor(series_index) {
-    return this._data_reader.file_index.series_descriptor(series_index);
+  /**
+   * Given a series index, return the associated SeriesDescriptor. Python reads file_index.series_descriptor, which does
+   * not exist (an AttributeError): the SeriesDescriptor of the DataReader, as documented (the SeriesIdentifier was
+   * returned).
+   * @param {number} seriesIndex index from the seriesIndex() call
+   * @returns {Promise<import('../../bosdyn/api/bddf_pb').SeriesDescriptor>}
+   */
+  seriesIndexToDescriptor(seriesIndex) {
+    return this._dataReader.seriesDescriptor(seriesIndex);
   }
 
-  get_blob(series_index, index_in_series) {
-    return this._data_reader.read(series_index, index_in_series);
+  /**
+   * Return binary data from message stored in the file.
+   */
+  getBlob(seriesIndex, indexInSeries) {
+    return this._dataReader.read(seriesIndex, indexInSeries);
   }
 }
 

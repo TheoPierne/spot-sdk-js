@@ -1,43 +1,74 @@
+/**
+ * @file Class for registering a series which stores protobuf messages in a message series.
+ */
+
 'use strict';
 
 const { MessageChannel } = require('./bosdyn');
 const { PROTOBUF_CONTENT_TYPE } = require('./common');
 
+const { protoTypeName } = require('../../bosdyn-client/util');
+
+/**
+ * A class for registering a series which stores protobuf messages in a message series.
+ *
+ * The series is named by a 'channel_name' which defaults to the full type name of the protobuf type.
+ */
 class ProtobufSeriesWriter {
   constructor(
-    data_writer,
-    protobuf_type,
-    channel_name = null,
-    is_metadata = false,
+    dataWriter,
+    protobufType,
+    channelName = null,
+    isMetadata = false,
     annotations = null,
-    additional_index_names = null,
+    additionalIndexNames = null,
   ) {
-    this._data_writer = data_writer;
-    this._protobuf_type = protobuf_type;
-    this._type_name = protobuf_type.DESCRIPTOR.full_name;
-    this._channel_name = channel_name || this._type_name;
-    this._series_spec = { 'bosdyn:channel': this._channel_name };
-    this._series_index = this._data_writer.add_message_series(
-      this.series_type,
-      this.series_spec,
+    /**
+     * @type {import('./data_writer').DataWriter}
+     */
+    this._dataWriter = dataWriter;
+    this._protobufType = protobufType;
+
+    // The full name of any type (the index of bosdyn.api gave null for the others, e.g. google.protobuf.Timestamp).
+    this._typeName = protoTypeName(protobufType);
+    if (this._typeName === null) throw new TypeError(`Not a protobuf message class: ${protobufType?.name}`);
+    this._channelName = channelName || this._typeName;
+    this._seriesSpec = { 'bosdyn:channel': this._channelName };
+    this._seriesIndex = this._dataWriter.addMessageSeries(
+      this.seriesType,
+      this.seriesSpec,
       PROTOBUF_CONTENT_TYPE,
-      this._type_name,
-      is_metadata,
+      this._typeName,
+      isMetadata,
       annotations,
-      additional_index_names,
+      additionalIndexNames,
     );
   }
 
-  write(timestamp_nsec, protobuf, additional_indexs = null) {
-    this._data_writer.write_data(this._series_index, timestamp_nsec, protobuf.serializeBinary(), additional_indexs);
+  /**
+   * Store protobuf in the file.
+   * @param {bigint|number|string} timestampNsec Nanoseconds since the Unix epoch: exact as a BigInt.
+   * @param {import('google-protobuf').Message} protobuf A protobuf message, not serialized.
+   * @param {?Array<bigint|number|string>} [additionalIndexes=null] The values of the additional indexes of the
+   * series (int64, e.g. other timestamps in nanoseconds): exact as BigInts or strings.
+   * @throws {import('./common').DataFormatError} The additional indexes are not valid for this series.
+   */
+  write(timestampNsec, protobuf, additionalIndexes = null) {
+    this._dataWriter.writeData(this._seriesIndex, timestampNsec, protobuf.serializeBinary(), additionalIndexes);
   }
 
-  get series_type() {
+  /**
+   * Return the series type string.
+   */
+  get seriesType() {
     return MessageChannel.SERIES_TYPE;
   }
 
-  get series_spec() {
-    return this._series_spec;
+  /**
+   * Return the seriesSpec for the series.
+   */
+  get seriesSpec() {
+    return this._seriesSpec;
   }
 }
 

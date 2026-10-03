@@ -1,11 +1,19 @@
+/**
+ * @file Helper for managing hierarchy of lease resources.
+ */
+
 'use strict';
+
+/**
+ * @typedef {import('../bosdyn/api/lease_pb').ResourceTree} ResourceTree
+ */
 
 /**
  * Helper for managing hierarchy of lease resources.
  */
 class ResourceHierarchy {
   constructor(resourceTreeProto) {
-    /** @type {leasePb.ListLeasesResponse} */
+    /** @type {ResourceTree} */
     this._resourceTree = resourceTreeProto;
 
     /**
@@ -13,7 +21,8 @@ class ResourceHierarchy {
      * and value = ResourceHierarchy obj rooted at the key's resource.
      * @type {Object<string, ResourceHierarchy>}
      */
-    this._subHierarchies = {};
+    // Without prototype: hasResource('constructor') was true.
+    this._subHierarchies = Object.create(null);
 
     /**
      * Set of the lease resources (strings) in this hierarchy.
@@ -66,7 +75,7 @@ class ResourceHierarchy {
 
   /**
    * Get the resource tree protobuf message corresponding with this hierarchy.
-   * @returns {leasePb.ResourceTree}
+   * @returns {ResourceTree}
    */
   getResourceTree() {
     return this._resourceTree;

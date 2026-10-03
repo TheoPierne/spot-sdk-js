@@ -1,6 +1,10 @@
+/**
+ * @file Clients and helpers for the lease service: LeaseClient, the LeaseWallet, LeaseKeepAlive and the lease errors.
+ */
+
 'use strict';
 
-const { setInterval, clearInterval } = require('node:timers');
+const { setTimeout: sleep } = require('node:timers/promises');
 
 const {
   BaseClient,
@@ -10,25 +14,43 @@ const {
   handleCommonHeaderErrors,
 } = require('./common');
 const { ResponseError, ValueError } = require('./exceptions');
-const { LoggerUtil } = require('./loggerUtil');
-const { DefaultDict } = require('./util');
+const { LoggerUtil } = require('./logger_util');
+const { DefaultDict, checkOptions } = require('./util');
 
 const leasePb = require('../bosdyn/api/lease_pb');
 const { LeaseServiceClient } = require('../bosdyn/api/lease_service_grpc_pb');
 
+/**
+ * @typedef {import('./exceptions').InternalServerError} InternalServerError
+ * @typedef {import('./exceptions').LeaseUseError} LeaseUseError
+ */
+
 const _RESOURCE_BODY = 'body';
 
+/** General class of errors for LeaseResponseError service. */
 class LeaseResponseError extends ResponseError {}
+/** The provided lease is invalid. */
 class InvalidLeaseError extends LeaseResponseError {}
+/** Lease is older than the current lease. */
 class DisplacedLeaseError extends LeaseResponseError {}
+/** Resource is not known to the LeaseService. */
 class InvalidResourceError extends LeaseResponseError {}
+/** LeaseService is not authoritative so Acquire should not work. */
 class NotAuthoritativeServiceError extends LeaseResponseError {}
+/** Use TakeLease method to forcefully grab the already claimed lease. */
 class ResourceAlreadyClaimedError extends LeaseResponseError {}
+/** Lease is stale because the lease-holder did not check in regularly enough. */
 class RevokedLeaseError extends LeaseResponseError {}
+/** LeaseService does not manage this resource. */
 class UnmanagedResourceError extends LeaseResponseError {}
+/** Lease is for the wrong epoch. */
 class WrongEpochError extends LeaseResponseError {}
+/** Lease is not the active lease. */
 class NotActiveLeaseError extends LeaseResponseError {}
 
+/**
+ * The requested lease does not exist.
+ */
 class NoSuchLease extends Error {
   constructor(resource) {
     super(`No lease for resource "${resource}"`);
@@ -41,6 +63,9 @@ class NoSuchLease extends Error {
   }
 }
 
+/**
+ * The lease is not owned by the wallet.
+ */
 class LeaseNotOwnedByWallet extends Error {
   constructor(resource, leaseState) {
     super(`Lease on "${resource}" has state (${leaseState?.leaseStatus ? leaseState.leaseStatus : '<unknown>'})`);
@@ -102,30 +127,15 @@ _RETURN_LEASE_STATUS_TO_ERROR.set(leasePb.ReturnLeaseResponse.Status.STATUS_NOT_
 ]);
 
 const _handleAcquireErrors = handleCommonHeaderErrors(response =>
-  errorFactory(
-    response,
-    response.getStatus(),
-    Object.keys(leasePb.AcquireLeaseResponse.Status),
-    _ACQUIRE_LEASE_STATUS_TO_ERROR,
-  ),
+  errorFactory(response, response.getStatus(), leasePb.AcquireLeaseResponse.Status, _ACQUIRE_LEASE_STATUS_TO_ERROR),
 );
 
 const _handleTakeErrors = handleCommonHeaderErrors(response =>
-  errorFactory(
-    response,
-    response.getStatus(),
-    Object.keys(leasePb.TakeLeaseResponse.Status),
-    _TAKE_LEASE_STATUS_TO_ERROR,
-  ),
+  errorFactory(response, response.getStatus(), leasePb.TakeLeaseResponse.Status, _TAKE_LEASE_STATUS_TO_ERROR),
 );
 
 const _handleReturnErrors = handleCommonHeaderErrors(response =>
-  errorFactory(
-    response,
-    response.getStatus(),
-    Object.keys(leasePb.ReturnLeaseResponse.Status),
-    _RETURN_LEASE_STATUS_TO_ERROR,
-  ),
+  errorFactory(response, response.getStatus(), leasePb.ReturnLeaseResponse.Status, _RETURN_LEASE_STATUS_TO_ERROR),
 );
 
 /**
@@ -356,7 +366,8 @@ class LeaseState {
 class LeaseWallet {
   constructor() {
     /** @type {Object<string, LeaseState>} */
-    this._leaseStateMap = {};
+    // Without prototype: getLease('constructor') found Object.
+    this._leaseStateMap = Object.create(null);
     this.clientName = null;
   }
 
@@ -443,7 +454,8 @@ class LeaseWallet {
    * by the lease_use_result.
    */
   onLeaseUseResult(leaseUseResult, resource = null) {
-    resource = resource || leaseUseResult.getAttemptedLease().getResource();
+    // An unset attempted lease reads as an empty resource, like the default proto in Python.
+    resource = resource || (leaseUseResult.getAttemptedLease()?.getResource() ?? '');
     const leaseState = this._leaseStateMap[resource];
     if (!leaseState) return;
     const newLeaseState = leaseState.updateFromLeaseUseResult(leaseUseResult);
@@ -482,7 +494,7 @@ class LeaseClient extends BaseClient {
   /**
    * Acquire a lease for the given resource.
    * @param {string} resource Resource for the lease.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<Lease>}
    * @throws {ResourceAlreadyClaimedError} Use TakeLease method to forcefully grab the already
    * claimed lease.
@@ -491,13 +503,20 @@ class LeaseClient extends BaseClient {
    */
   acquire(resource = _RESOURCE_BODY, args) {
     const req = LeaseClient._makeAcquireRequest(resource);
-    return this.call(this._stub.acquireLease, req, this._handleAcquireSuccess.bind(this), _handleAcquireErrors, false, args);
+    return this.call(
+      this._stub.acquireLease,
+      req,
+      this._handleAcquireSuccess.bind(this),
+      _handleAcquireErrors,
+      false,
+      args,
+    );
   }
 
   /**
    * Take the lease for the given resource.
    * @param {string} resource Resource for the lease.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<Lease>}
    * @throws {InvalidResourceError} Resource is not known to the LeaseService.
    * @throws {NotAuthoritativeServiceError} LeaseService is not authoritative so Acquire should not work.
@@ -510,7 +529,7 @@ class LeaseClient extends BaseClient {
   /**
    * Return an acquired lease.
    * @param {Lease} lease Lease to return. This should be a Lease class object, and not the proto.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<leasePb.ReturnLeaseResponse>}
    * @throws {InvalidResourceError} Resource is not known to the LeaseService.
    * @throws {NotActiveLeaseError} Lease is not the active lease.
@@ -525,7 +544,7 @@ class LeaseClient extends BaseClient {
   /**
    * Retain the lease.
    * @param {Lease} lease Lease to retain.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<leasePb.RetainLeaseResponse>}
    * @throws {InternalServerError} Service experienced an unexpected error state.
    * @throws {LeaseUseError} Request was rejected due to using an invalid lease.
@@ -540,7 +559,7 @@ class LeaseClient extends BaseClient {
    * @param {boolean} includeFullLeaseInfo Whether the returned list of LeaseResources should include
    * all of the available information about the last lease used.
    * Defaults to False.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<leasePb.LeaseResource[]>}
    * @throws {InternalServerError} Service experienced an unexpected error state.
    * @throws {LeaseUseError} Request was rejected due to using an invalid lease.
@@ -555,7 +574,7 @@ class LeaseClient extends BaseClient {
    * @param {boolean} includeFullLeaseInfo Whether the returned list of LeaseResources should include
    * all of the available information about the last lease used.
    * Defaults to False.
-   * @param {Object} args Passed to underlying RPC.
+   * @param {Object} [args] Passed to underlying RPC.
    * @returns {Promise<leasePb.ListLeasesResponse>}
    */
   listLeasesFull(includeFullLeaseInfo = false, args) {
@@ -635,14 +654,15 @@ class LeaseWalletRequestProcessor {
       this.logger.error('LeaseWalletRequestProcessor assigned multiple leases, but request only wants one.');
     }
 
+    // Copies, like Python's CopyFrom: changing the request must not change the lease of the wallet.
     if (multipleLeases) {
       for (const resource of resourceList) {
         const lease = this.leaseWallet.advance(resource);
-        request.addLeases(lease.leaseProto);
+        request.addLeases(lease.leaseProto.clone());
       }
     } else {
       const lease = this.leaseWallet.advance(resourceList[0]);
-      request.setLease(lease.leaseProto);
+      request.setLease(lease.leaseProto.clone());
     }
   }
 
@@ -652,29 +672,14 @@ class LeaseWalletRequestProcessor {
    * @returns {{multipleLeases: ?boolean, skipMutation: boolean }}
    */
   static getLeaseState(request) {
-    let skipMutation = false;
-    let multipleLeases = null;
-
-    let isCatchFirst = false;
-
-    try {
-      skipMutation = request.hasLease();
-    } catch (err) {
-      let isCatchSecond = false;
-      isCatchFirst = true;
-      try {
-        skipMutation = request.getLeasesList().length > 0;
-      } catch (err2) {
-        isCatchSecond = true;
-        skipMutation = true;
-      }
-
-      if (!isCatchSecond) multipleLeases = true;
+    if (typeof request.hasLease === 'function') {
+      return { multipleLeases: false, skipMutation: request.hasLease() };
     }
-
-    if (!isCatchFirst) multipleLeases = false;
-
-    return { multipleLeases, skipMutation };
+    if (typeof request.getLeasesList === 'function') {
+      return { multipleLeases: true, skipMutation: request.getLeasesList().length > 0 };
+    }
+    // No lease fields in the request, skip mutation.
+    return { multipleLeases: null, skipMutation: true };
   }
 }
 
@@ -695,15 +700,15 @@ class LeaseWalletResponseProcessor {
    * @param {any} response The lease response
    */
   mutate(response) {
-    let leaseUseResults = null;
-    try {
-      leaseUseResults = [response.getLeaseUseResult()];
-    } catch (err) {
-      try {
-        leaseUseResults = response.getLeaseUseResult();
-      } catch (err2) {
-        return;
-      }
+    let leaseUseResults;
+    if (typeof response.getLeaseUseResult === 'function') {
+      // The field may exist without being filled out: nothing to update then.
+      leaseUseResults = response.hasLeaseUseResult() ? [response.getLeaseUseResult()] : [];
+    } else if (typeof response.getLeaseUseResultsList === 'function') {
+      // Responses with several leases, e.g. NavigateTo, missions or choreography.
+      leaseUseResults = response.getLeaseUseResultsList();
+    } else {
+      return;
     }
 
     for (const result of leaseUseResults) {
@@ -738,13 +743,25 @@ function addLeaseWalletProcessors(client, leaseWallet, resourceList = null) {
  * lease liveness check. Developers can also manage liveness checks directly
  * by using the retain_lease methods on the LeaseClient object.
  */
+const _LEASE_KEEP_ALIVE_OPTIONS = [
+  'leaseWallet',
+  'resource',
+  'rpcIntervalMs',
+  'keepRunningCb',
+  'hostName',
+  'onFailureCallback',
+  'warnings',
+  'mustAcquire',
+  'returnAtExit',
+];
+
 class LeaseKeepAlive {
   /**
    * LeaseKeepAlive issues lease liveness checks on a background interval.
    * @param {LeaseClient} leaseClient The LeaseClient object to issue requests on.
    * @param {Object} [options] Optional parameters.
    * @param {LeaseWallet} [options.leaseWallet=null] The LeaseWallet to retrieve current leases from.
-   * @param {string} [options.resource='_RESOURCE_BODY'] The resource to do liveness checks for.
+   * @param {string} [options.resource='body'] The resource to do liveness checks for.
    * @param {number} [options.rpcIntervalMs=2000] Duration in milliseconds between liveness checks.
    * @param {Function} [options.keepRunningCb=null] Callable object to determine if checks should proceed.
    * @param {string} [options.hostName=''] Host name for logging purposes.
@@ -753,11 +770,12 @@ class LeaseKeepAlive {
    * @param {boolean} [options.mustAcquire=false] If true, exceptions when acquiring the lease are not caught.
    * @param {boolean} [options.returnAtExit=false] If true, return the lease when shutting down.
    */
-  constructor(
-    leaseClient,
-    {
+  constructor(leaseClient, options) {
+    // Unknown options are refused like the keyword arguments of Python: e.g. must_acquire and return_at_exit were
+    // silently ignored (the lease was neither acquired as required nor returned).
+    const {
       leaseWallet = null,
-      resource = '_RESOURCE_BODY',
+      resource = _RESOURCE_BODY,
       rpcIntervalMs = 2000,
       keepRunningCb = null,
       hostName = '',
@@ -765,8 +783,7 @@ class LeaseKeepAlive {
       warnings = true,
       mustAcquire = false,
       returnAtExit = false,
-    } = {},
-  ) {
+    } = checkOptions(options, _LEASE_KEEP_ALIVE_OPTIONS, 'LeaseKeepAlive');
     if (!leaseClient) {
       throw new Error('leaseClient must be set');
     }
@@ -797,21 +814,35 @@ class LeaseKeepAlive {
       (() => {
         /* empty */
       });
-    this.curInterval = null;
-
     this.logger = LoggerUtil.getLogger('LeaseKeepAlive');
 
-    this.intitializationPromise = this.initializeLease(mustAcquire)
-      .then(() => {
-        this.startPeriodicCheckIn();
-      })
-      .catch(error => {
-        this.logger.error('Failed to initialize lease in LeaseKeepAlive:', error);
-      });
+    /**
+     * Aborted to stop the check-in loop, including the wait between two check-ins.
+     * @type {AbortController}
+     * @private
+     */
+    this._stopController = new AbortController();
 
-    this.endCheckInSignal = false;
+    /**
+     * The running check-in loop, null when it is not running.
+     * @type {?Promise<void>}
+     * @private
+     */
+    this._loopPromise = null;
+
     this.donePromise = new Promise(resolve => {
       this.resolveDonePromise = resolve;
+    });
+
+    // Like Python's constructor: acquire the lease if needed, then start checking in. With mustAcquire,
+    // waitForInitialization() rejects with the acquire error, and no check-in is done.
+    this.intitializationPromise = this.initializeLease(mustAcquire).then(() => {
+      if (!this._stopController.signal.aborted) this.startPeriodicCheckIn();
+    });
+    // Nobody may await the initialization: report its failure instead of an unhandled rejection.
+    this.intitializationPromise.catch(error => {
+      this.logger.error(`Failed to initialize lease in LeaseKeepAlive: ${error?.message ?? error}`);
+      this.resolveDonePromise();
     });
   }
 
@@ -834,33 +865,70 @@ class LeaseKeepAlive {
     }
   }
 
+  /**
+   * Start the check-in loop, if it is not running already.
+   */
   startPeriodicCheckIn() {
-    this.curInterval = setInterval(async () => {
-      if (!this.keepRunning()) {
-        this.stopPeriodicCheckIn();
-        return;
-      }
+    if (this._loopPromise !== null || this._stopController.signal.aborted) return;
+    this._loopPromise = this._periodicCheckIn().finally(() => {
+      this._loopPromise = null;
+      this.resolveDonePromise();
+    });
+  }
+
+  /**
+   * Periodically check in and retain the lease, like Python's thread: the first check-in is immediate,
+   * and a check-in never starts before the previous one is done (a setInterval would pile up the
+   * RetainLease calls on a slow link).
+   * @private
+   */
+  async _periodicCheckIn() {
+    this.logger.info('Starting lease check-in');
+    const { signal } = this._stopController;
+    while (!signal.aborted) {
+      const execStart = Date.now();
+      if (!this.keepRunning()) break;
       try {
         await this.checkIn();
         this.ok();
       } catch (error) {
         if (this.printWarnings) {
-          this.logger.warn('Generic exception during check-in:', error);
+          this.logger.warn(
+            `Generic exception for ${this.hostName} during check-in: ${error?.message ?? error} (resuming check-in)`,
+          );
         }
-        this.retainLeaseFailedCb(error);
+        try {
+          await this.retainLeaseFailedCb(error);
+        } catch (callbackError) {
+          this.logger.error(`Lease check-in failure callback failed: ${callbackError?.message ?? callbackError}`);
+        }
       }
-    }, this.rpcIntervalMs);
-  }
-
-  stopPeriodicCheckIn() {
-    if (this.curInterval) {
-      clearInterval(this.curInterval);
-      this.curInterval = null;
-      this.resolveDonePromise();
-      this.logger.info('Lease check-in stopped');
+      const waitMs = this.rpcIntervalMs - (Date.now() - execStart);
+      if (waitMs > 0) {
+        try {
+          await sleep(waitMs, undefined, { signal });
+        } catch (e) {
+          // Aborted by stopPeriodicCheckIn().
+          break;
+        }
+      }
     }
+    this.logger.info('Lease check-in stopped');
   }
 
+  /**
+   * Stop the check-in loop. A check-in in progress finishes: await waitUntilDone() for it.
+   */
+  stopPeriodicCheckIn() {
+    this.logger.debug('Stopping check-in');
+    this._stopController.abort();
+    // The loop resolves the done promise when it ends; if it is not running, nothing else would.
+    if (this._loopPromise === null) this.resolveDonePromise();
+  }
+
+  /**
+   * Retain lease associated with the resource in this class.
+   */
   async checkIn() {
     const lease = this.leaseWallet.getLease(this.resource);
     if (!lease) {
@@ -873,23 +941,43 @@ class LeaseKeepAlive {
     this.logger.debug('Check-in successful');
   }
 
+  /**
+   * Stop the liveness checks, and return the lease if returnAtExit. Can be called multiple times.
+   * Like Python, the check-in in progress ends before the lease is returned.
+   */
   async shutdown() {
     this.logger.debug('Shutting down');
     this.stopPeriodicCheckIn();
+    // An acquire in progress ends first, so that its lease is returned: it was acquired after the shutdown, and
+    // kept by the wallet without check-ins.
+    await Promise.allSettled([this.intitializationPromise]);
+    await this.waitUntilDone();
     if (this.returnAtExit) {
       try {
         await this.leaseClient.returnLease(this.leaseWallet.getLease(this.resource), { timeout: 2000 });
       } catch (error) {
-        this.logger.error('Failed to return the lease at the end:', error);
+        // These all mean that we don't own the lease anymore, which is fine.
+        if (!(
+          error instanceof LeaseResponseError ||
+          error instanceof NoSuchLease ||
+          error instanceof LeaseNotOwnedByWallet
+        )) {
+          this.logger.error(`Failed to return the lease at the end: ${error?.message ?? error}`);
+        }
       }
     }
-    await this.waitUntilDone();
   }
 
   isAlive() {
-    return this.curInterval !== null;
+    return this._loopPromise !== null;
   }
 
+  /**
+   * Waits until the check-in loop exits.
+   *
+   * Most client code stops the loop with shutdown(), or with the keepRunningCb option of the constructor. However, this
+   * can be useful in unit tests for ensuring exits.
+   */
   async waitUntilDone() {
     await this.donePromise;
   }

@@ -1,16 +1,26 @@
-'use strict';
+/**
+ * @file Flashes the LEDs of the Spot CAM, like the LightsHelper context manager of Python.
+ */
 
-const Event = require('node-threading-event');
+'use strict';
 
 const { LightingClient } = require('./lighting');
 
-const { TimedOutError } = require('../exceptions');
-const { LoggerUtil } = require('../loggerUtil');
+const { Event } = require('../../bosdyn-core/event');
+const { BosdynError, TimedOutError } = require('../exceptions');
+const { LoggerUtil } = require('../logger_util');
 
 const _LOGGER = LoggerUtil.getLogger('lights_helper');
 
 /**
- * Context manager that flashes Spot CAM LEDs for the duration of the context.
+ * Flashes Spot CAM LEDs between start() and stop(), like the Python context manager:
+ *
+ *   const lights = new LightsHelper(frequency, brightness);
+ *   await lights.init(robot);
+ *   lights.start();
+ *   // Lights will flash here
+ *   await lights.stop();
+ *   // Lights are off here.
  */
 class LightsHelper {
   /**
@@ -20,6 +30,10 @@ class LightsHelper {
   constructor(frequency, brightness) {
     this.freq = frequency;
     this.brightness = brightness;
+    /**
+     * The flashing loop, while it runs.
+     * @type {?Promise<void>}
+     */
     this.thread = null;
     this.stopEvent = new Event();
   }
@@ -29,12 +43,39 @@ class LightsHelper {
     this.lightingClient = await robot.ensureClient(LightingClient.defaultServiceName);
   }
 
+  /**
+   * Start flashing the lights (Python's __enter__).
+   * @returns {void}
+   */
   start() {
-    this.setLightsWithFreqAndBrightness(this.lightingClient, this.freq, this.brightness);
+    this.stopEvent.clear();
+    // Already flashing, or stop() was called but the loop has not ended yet: keep it running.
+    if (this.thread) return;
+    this.thread = this.setLightsWithFreqAndBrightness(this.lightingClient, this.freq, this.brightness)
+      .catch(e => {
+        // Like Python, an error that is not an SDK error ends the loop. Log it: it would otherwise be an
+        // unhandled rejection, which ends the Node process.
+        _LOGGER.error(`Stopped flashing the lights: ${e?.stack ?? e}`);
+        this.stopEvent.set();
+      })
+      .finally(() => {
+        this.thread = null;
+        // start() was called while the loop was ending: run it again.
+        if (!this.stopEvent.isSet()) this.start();
+      });
   }
 
+  /**
+   * Stop flashing the lights (Python's __exit__).
+   * @returns {Promise<void>} Resolves once the loop has ended and the lights are off, like Python's join().
+   */
   stop() {
     this.stopEvent.set();
+    return this.thread ?? Promise.resolve();
+  }
+
+  async [Symbol.asyncDispose]() {
+    await this.stop();
   }
 
   /**
@@ -48,15 +89,17 @@ class LightsHelper {
   async setLightsWithFreqAndBrightness(lightingClient, frequency, brightness) {
     while (!this.stopEvent.isSet()) {
       try {
-        // eslint-disable-next-line no-await-in-loop
         await _setLightsToBlink(this.stopEvent, lightingClient, frequency, brightness);
       } catch (e) {
         if (e instanceof TimedOutError) {
           _LOGGER.error('Timed out trying to set lights. Retrying.');
-        } else {
-          _LOGGER.error('Failed to set lights. Retrying.');
-          // eslint-disable-next-line no-await-in-loop
+        } else if (e instanceof BosdynError) {
+          _LOGGER.error(`Failed to set lights. Retrying. ${e}`);
+          // Wait up to 1 second so as to not hammer the service.
+
           await this.stopEvent.wait(1_000);
+        } else {
+          throw e;
         }
       }
     }

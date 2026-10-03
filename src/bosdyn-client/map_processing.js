@@ -1,3 +1,7 @@
+/**
+ * @file For clients of the graph_nav map processing service.
+ */
+
 'use strict';
 
 const { BaseClient, handleCommonHeaderErrors, handleUnsetStatusError } = require('./common');
@@ -5,16 +9,29 @@ const { ResponseError } = require('./exceptions');
 
 const mapProcessingPb = require('../bosdyn/api/graph_nav/map_processing_pb');
 const mapProcessing = require('../bosdyn/api/graph_nav/map_processing_service_grpc_pb');
+const { mergeFrom } = require('../bosdyn-core/descriptor_pool');
 
+/** General class of errors for the GraphNav map processing service. */
 class MapProcessingServiceResponseError extends ResponseError {}
+/** The uploaded map has missing waypoint snapshots. */
 class MissingSnapshotsError extends MapProcessingServiceResponseError {}
+/** The anchoring optimization failed. */
 class OptimizationFailureError extends MapProcessingServiceResponseError {}
+/** The graph is invalid topologically, for example containing missing waypoints referenced by edges. */
 class InvalidGraphError extends MapProcessingServiceResponseError {}
+/** The parameters passed to the optimizer do not make sense (e.g. negative weights). */
 class InvalidParamsError extends MapProcessingServiceResponseError {}
+/** The optimizer reached the maximum number of iterations before converging. */
 class MaxIterationsError extends MapProcessingServiceResponseError {}
+/** The optimizer timed out before converging. */
 class MaxTimeError extends MapProcessingServiceResponseError {}
+/** One or more of the hints passed in to the optimizer are invalid (do not correspond to real waypoints or objects). */
 class InvalidHintsError extends MapProcessingServiceResponseError {}
+/** One or more anchoring hints disagrees with gravity. Ensure the orientation of any hints is correct. */
+class InvalidGravityAlignmentError extends MapProcessingServiceResponseError {}
+/** One or more anchors were moved outside of the desired constraints. */
 class ConstraintViolationError extends MapProcessingServiceResponseError {}
+/** The map was modified on the server by another client during processing. Please try again. */
 class MapModifiedError extends MapProcessingServiceResponseError {}
 
 const _processTopologyCommonErrors = handleCommonHeaderErrors(
@@ -82,6 +99,11 @@ const _ANCHORING_COMMON_ERRORS = {
     InvalidHintsError,
     'One or more of the hints passed in to the optimizer are invalid (do not correspond to real waypoints or objects).',
   ],
+  // It was missing: the status was not an error.
+  [mapProcessingPb.ProcessAnchoringResponse.Status.STATUS_INVALID_GRAVITY_ALIGNMENT]: [
+    InvalidGravityAlignmentError,
+    'One or more anchoring hints disagrees with gravity. Ensure the orientation of any hints is correct.',
+  ],
   [mapProcessingPb.ProcessAnchoringResponse.Status.STATUS_MAP_MODIFIED_DURING_PROCESSING]: [
     MapModifiedError,
     'The map was modified on the server by another client during processing. Please try again.',
@@ -107,22 +129,26 @@ function _processAnchoringStreamedErrors(responses) {
   return null;
 }
 
-function _getStreamedTopologyResponse(response) {
-  let mergedResponse;
+/**
+ * Merge streamed responses with MergeFrom(), like Python (only the last response was kept: e.g. the new edges of the
+ * first responses of a topology were lost).
+ * @param {Array<import('google-protobuf').Message>} responses
+ * @param {typeof import('google-protobuf').Message} type
+ * @returns {import('google-protobuf').Message}
+ * @private
+ */
+function _mergeStreamedResponses(responses, type) {
+  const merged = new type();
+  for (const resp of responses) mergeFrom(merged, resp);
+  return merged;
+}
 
-  for (const resp of response) {
-    mergedResponse = mapProcessingPb.ProcessTopologyResponse.deserializeBinary(resp.serializeBinary());
-  }
-  return mergedResponse;
+function _getStreamedTopologyResponse(response) {
+  return _mergeStreamedResponses(response, mapProcessingPb.ProcessTopologyResponse);
 }
 
 function _getStreamedAnchoringResponse(response) {
-  let mergedResponse;
-
-  for (const resp of response) {
-    mergedResponse = mapProcessingPb.ProcessAnchoringResponse.deserializeBinary(resp.serializeBinary());
-  }
-  return mergedResponse;
+  return _mergeStreamedResponses(response, mapProcessingPb.ProcessAnchoringResponse);
 }
 
 /**
@@ -162,7 +188,7 @@ class MapProcessingServiceClient extends BaseClient {
    * @param {boolean} modifyMapOnServer if true, the map will be modified on the server. If false,
    * the subgraph returned by this function should be uploaded back to the server if it
    * is to be reused.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<mapProcessingPb.ProcessTopologyResponse>}
    */
   processTopology(params, modifyMapOnServer, args) {
@@ -179,25 +205,25 @@ class MapProcessingServiceClient extends BaseClient {
 
   /**
    * Process the anchoring of the map on the server, producing a metrically consistent anchoring.
-   * @param {mapProcessingPb.ProcessTopologyRequest.Params} params a ProcessAnchoringRequest.Params object
+   * @param {mapProcessingPb.ProcessAnchoringRequest.Params} params a ProcessAnchoringRequest.Params object
    * @param {boolean} modifyAnchoringOnServer if true, the map will be modified on the server. If false,
    * the anchoring returned by this function should be uploaded back to the server if it
    * is to be reused.
    * @param {boolean} streamIntermediateResults if true, anchorings from earlier optimizer
    * iterations may be included in the response. If false, only the last iteration will be returned.
-   * @param {mapProcessingPb.AnchoringHint} initiaHint Initial guess at some number of
+   * @param {?mapProcessingPb.AnchoringHint} [initialHint=null] Initial guess at some number of
    * waypoints and world objects and their anchorings.
    * This field is an AnchoringHint object (see map_processing.proto)
-   * @param {boolean} applyGpsResults if true, the annotations of waypoints in the graph will be modified to include
-   * the pose of each waypoint in a GPS centered frame, if the map has GPS (see map_processing.proto)
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {boolean} [applyGpsResults=false] if true, the annotations of waypoints in the graph will be modified to
+   * include the pose of each waypoint in a GPS centered frame, if the map has GPS (see map_processing.proto)
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<mapProcessingPb.ProcessAnchoringResponse>}
    */
   processAnchoring(
     params,
     modifyAnchoringOnServer,
     streamIntermediateResults,
-    initiaHint = null,
+    initialHint = null,
     applyGpsResults = false,
     args,
   ) {
@@ -205,7 +231,7 @@ class MapProcessingServiceClient extends BaseClient {
       params,
       modifyAnchoringOnServer,
       streamIntermediateResults,
-      initiaHint,
+      initialHint,
       applyGpsResults,
     );
     return this.call(
@@ -221,7 +247,19 @@ class MapProcessingServiceClient extends BaseClient {
 
 module.exports = {
   MapProcessingServiceClient,
-  InvalidGraphError,
+  MapProcessingServiceResponseError,
   MissingSnapshotsError,
+  OptimizationFailureError,
+  InvalidGraphError,
+  InvalidParamsError,
+  MaxIterationsError,
+  MaxTimeError,
+  InvalidHintsError,
+  InvalidGravityAlignmentError,
+  ConstraintViolationError,
+  MapModifiedError,
   _ANCHORING_COMMON_ERRORS,
+  _getStreamedTopologyResponse,
+  _getStreamedAnchoringResponse,
+  _processAnchoringStreamedErrors,
 };

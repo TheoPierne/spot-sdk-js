@@ -1,8 +1,18 @@
+/**
+ * @file Client for the payload service.
+ *
+ * This allows client code to read from the robot payload registry.
+ */
+
 'use strict';
 
+const { BaseClient, commonHeaderErrors } = require('./common');
 const payloadPb = require('../bosdyn/api/payload_pb');
 const { PayloadServiceClient } = require('../bosdyn/api/payload_service_grpc_pb');
-const { BaseClient, commonHeaderErrors } = require('../bosdyn-client/common');
+
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ */
 
 function _getEntryValue(response) {
   return response.getPayloadsList();
@@ -22,7 +32,7 @@ class PayloadClient extends BaseClient {
 
   /**
    * List all payloads registered on the robot.
-   * @param {Object} args Extra arguments to pass to grpc call invocation.
+   * @param {Object} [args] Extra arguments to pass to grpc call invocation.
    * @returns {Promise<payloadPb.Payload[]>} A list of the proto message definitions of all registered payloads
    * @throws {RpcError} Problem communicating with the robot.
    */

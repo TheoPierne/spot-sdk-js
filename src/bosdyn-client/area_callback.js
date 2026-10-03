@@ -1,3 +1,8 @@
+/**
+ * @file Client for the area callback services: the services GraphNav calls when the robot crosses an area callback
+ * region of a map.
+ */
+
 'use strict';
 
 const {
@@ -35,8 +40,15 @@ class AreaCallbackClient extends BaseClient {
     return this.call(this._stub.beginCallback, request, null, _beginCallbackError, false, args);
   }
 
-  beginControll(request, args) {
+  beginControl(request, args) {
     return this.call(this._stub.beginControl, request, null, _beginControlError, false, args);
+  }
+
+  /**
+   * @deprecated Misspelled: use beginControl().
+   */
+  beginControll(request, args) {
+    return this.beginControl(request, args);
   }
 
   updateCallback(request, args) {
@@ -48,11 +60,17 @@ class AreaCallbackClient extends BaseClient {
   }
 }
 
+/** General class of errors for AreaCallback service. */
 class AreaCallbackResponseError extends ResponseError {}
+/** Provided command id does not match the current command id. */
 class InvalidCommandIdError extends AreaCallbackResponseError {}
+/** The provided configuration does not provide the necessary data. */
 class InvalidConfigError extends AreaCallbackResponseError {}
+/** The provided end time has already expired. */
 class ExpiredEndTimeError extends AreaCallbackResponseError {}
+/** A required lease resource was not provided. */
 class MissingLeaseResourcesError extends AreaCallbackResponseError {}
+/** The callback failed to shut down properly. */
 class ShutdownCallbackFailedError extends AreaCallbackResponseError {}
 
 const _BEGIN_CALLBACK_TO_ERROR = DefaultDict(() => [AreaCallbackResponseError, null]);
@@ -67,16 +85,17 @@ _BEGIN_CALLBACK_TO_ERROR.set(areaCallbackPb.BeginCallbackResponse.Status.STATUS_
 ]);
 
 const _BEGIN_CONTROL_TO_ERROR = DefaultDict(() => [AreaCallbackResponseError, null]);
-_BEGIN_CALLBACK_TO_ERROR.set(areaCallbackPb.BeginControlResponse.Status.STATUS_OK, [null, null]);
-_BEGIN_CALLBACK_TO_ERROR.set(areaCallbackPb.BeginControlResponse.Status.STATUS_INVALID_COMMAND_ID, [
+_BEGIN_CONTROL_TO_ERROR.set(areaCallbackPb.BeginControlResponse.Status.STATUS_OK, [null, null]);
+_BEGIN_CONTROL_TO_ERROR.set(areaCallbackPb.BeginControlResponse.Status.STATUS_INVALID_COMMAND_ID, [
   InvalidCommandIdError,
   'Provided command id does not match the current command id.',
 ]);
-_BEGIN_CALLBACK_TO_ERROR.set(areaCallbackPb.BeginControlResponse.Status.STATUS_MISSING_LEASE_RESOURCES, [
+_BEGIN_CONTROL_TO_ERROR.set(areaCallbackPb.BeginControlResponse.Status.STATUS_MISSING_LEASE_RESOURCES, [
   MissingLeaseResourcesError,
   'A required lease resource was not provided.',
 ]);
-_BEGIN_CALLBACK_TO_ERROR.set(areaCallbackPb.BeginControlResponse.Status.STATUS_LEASE_ERROR, [
+// This one generally shouldn't happen because it should get first caught by handleLeaseUseResultErrors.
+_BEGIN_CONTROL_TO_ERROR.set(areaCallbackPb.BeginControlResponse.Status.STATUS_LEASE_ERROR, [
   LeaseUseError,
   'Request was rejected due to using an invalid lease.',
 ]);
@@ -109,7 +128,7 @@ const _beginCallbackError = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(areaCallbackPb.BeginCallbackResponse.Status),
+        areaCallbackPb.BeginCallbackResponse.Status,
         _BEGIN_CALLBACK_TO_ERROR,
       ),
     ),
@@ -119,12 +138,7 @@ const _beginCallbackError = handleCommonHeaderErrors(
 const _beginControlError = handleCommonHeaderErrors(
   handleLeaseUseResultErrors(
     handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-      errorFactory(
-        response,
-        response.getStatus(),
-        Object.keys(areaCallbackPb.BeginControlResponse.Status),
-        _BEGIN_CONTROL_TO_ERROR,
-      ),
+      errorFactory(response, response.getStatus(), areaCallbackPb.BeginControlResponse.Status, _BEGIN_CONTROL_TO_ERROR),
     ),
   ),
 );
@@ -134,7 +148,7 @@ const _updateCallbackError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(areaCallbackPb.UpdateCallbackResponse.Status),
+      areaCallbackPb.UpdateCallbackResponse.Status,
       _UPDATE_CALLBACK_TO_ERROR,
     ),
   ),
@@ -142,15 +156,16 @@ const _updateCallbackError = handleCommonHeaderErrors(
 
 const _endCallbackError = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(
-      response,
-      response.getStatus(),
-      Object.keys(areaCallbackPb.EndCallbackResponse.Status),
-      _END_CALLBACK_TO_ERROR,
-    ),
+    errorFactory(response, response.getStatus(), areaCallbackPb.EndCallbackResponse.Status, _END_CALLBACK_TO_ERROR),
   ),
 );
 
 module.exports = {
   AreaCallbackClient,
+  AreaCallbackResponseError,
+  InvalidCommandIdError,
+  InvalidConfigError,
+  ExpiredEndTimeError,
+  MissingLeaseResourcesError,
+  ShutdownCallbackFailedError,
 };

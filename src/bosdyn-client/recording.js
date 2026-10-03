@@ -1,4 +1,11 @@
+/**
+ * @file For clients to use the graph nav recording service
+ */
+
 'use strict';
+
+const { FieldMask } = require('google-protobuf/google/protobuf/field_mask_pb');
+const { BoolValue, DoubleValue } = require('google-protobuf/google/protobuf/wrappers_pb');
 
 const {
   BaseClient,
@@ -13,8 +20,15 @@ const { DefaultDict } = require('./util');
 
 const mapPb = require('../bosdyn/api/graph_nav/map_pb');
 const recordingPb = require('../bosdyn/api/graph_nav/recording_pb');
-const recordingService = require('../bosdyn/api/graph_nav/recording_service_grpc_pb');
+const {
+  GraphNavRecordingServiceClient: GraphNavRecordingServiceClientPb,
+} = require('../bosdyn/api/graph_nav/recording_service_grpc_pb');
 const robotCommandPb = require('../bosdyn/api/spot/robot_command_pb');
+
+/**
+ * @typedef {import('../bosdyn/api/geometry_pb').SE2VelocityLimit} SE2VelocityLimit
+ * @typedef {import('../bosdyn/api/geometry_pb').SE3Pose} SE3Pose
+ */
 
 /**
  * Helper enum to describe the localization region type for a waypoint
@@ -28,23 +42,24 @@ const WaypointRegion = {
 
 /**
  * Client for the GraphNav recording service.
- * @extends {BaseClient<recordingService.GraphNavRecordingServiceClient>}
+ * @extends {BaseClient<GraphNavRecordingServiceClientPb>}
  */
 class GraphNavRecordingServiceClient extends BaseClient {
   static defaultServiceName = 'recording-service';
   static serviceType = 'bosdyn.api.graph_nav.GraphNavRecordingService';
 
   constructor() {
-    super(recordingService.GraphNavRecordingServiceClient);
+    super(GraphNavRecordingServiceClientPb);
   }
 
   /**
    * Start the recording service to create/update a map.
-   * @param {leasePb.Lease} lease Leases to show ownership of necessary resources.
+   * @param {import('../bosdyn/api/lease_pb').Lease} lease Leases to show ownership of necessary resources.
    * Will use the client's leases by default.
    * @param {recordingPb.RecordingEnvironment} recordingEnvironment RecordingEnvironment protobuf to be used
    * for the initial waypoint created at start.
-   * @param {boolean} requireFiducials Boolean to show whether a fiducial is needed to start the recording.
+   * @param {?number[]} requireFiducials The ids of the fiducials which must be seen to start the recording (the
+   * proto field is a list: the boolean of the Python documentation cannot be set).
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<number>}
    */
@@ -55,11 +70,11 @@ class GraphNavRecordingServiceClient extends BaseClient {
 
   /**
    * Same as startRecording() but returns a full response
-   * @param {leasePb.Lease} lease Leases to show ownership of necessary resources.
+   * @param {import('../bosdyn/api/lease_pb').Lease} lease Leases to show ownership of necessary resources.
    * Will use the client's leases by default.
    * @param {recordingPb.RecordingEnvironment} recordingEnvironment RecordingEnvironment protobuf to be used
    * for the initial waypoint created at start.
-   * @param {boolean} requireFiducials Boolean to show whether a fiducial is needed to start the recording.
+   * @param {?number[]} requireFiducials The ids of the fiducials which must be seen to start the recording.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<recordingPb.StartRecordingResponse>}
    */
@@ -70,7 +85,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
 
   /**
    * Stop the recording service.
-   * @param {leasePb.Lease} lease Leases to show ownership of necessary resources.
+   * @param {import('../bosdyn/api/lease_pb').Lease} lease Leases to show ownership of necessary resources.
    * Will use the client's leases by default.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<number>}
@@ -92,7 +107,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
 
   /**
    * Set the persistent recording environment.
-   * @param {leasePb.Lease} lease Leases to show ownership of necessary resources.
+   * @param {import('../bosdyn/api/lease_pb').Lease} lease Leases to show ownership of necessary resources.
    * Will use the client's leases by default.
    * @param {recordingPb.RecordingEnvironment} recordingEnvironment RecordingEnvironment protobuf
    * to be set as the persistent environment.
@@ -106,7 +121,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
 
   /**
    * Create a waypoint in the map at the current robot state.
-   * @param {leasePb.Lease} lease Leases to show ownership of necessary resources.
+   * @param {import('../bosdyn/api/lease_pb').Lease} lease Leases to show ownership of necessary resources.
    * Will use the client's leases by default.
    * @param {string} waypointName Human readable string for the waypoint name.
    * @param {recordingPb.RecordingEnvironment} recordingEnvironment RecordingEnvironment protobuf to be
@@ -121,9 +136,9 @@ class GraphNavRecordingServiceClient extends BaseClient {
 
   /**
    * Create an edge in the map between two existing waypoints.
-   * @param {leasePb.Lease} lease Leases to show ownership of necessary resources.
+   * @param {import('../bosdyn/api/lease_pb').Lease} lease Leases to show ownership of necessary resources.
    * Will use the client's leases by default.
-   * @param {recordingPb.Edge} edge An edge protobuf, which must include valid from/to waypoint
+   * @param {mapPb.Edge} edge An edge protobuf, which must include valid from/to waypoint
    * id's and a fromTTo transform.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<recordingPb.CreateEdgeResponse>}
@@ -172,7 +187,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
    * for the edge environment.
    * @returns {recordingPb.RecordingEnvironment}
    */
-  static makeRecordingEnvironment(name, waypointEnv, edgeEnv) {
+  static makeRecordingEnvironment(name = null, waypointEnv = null, edgeEnv = null) {
     return new recordingPb.RecordingEnvironment()
       .setNamePrefix(name)
       .setWaypointEnvironment(waypointEnv)
@@ -249,15 +264,23 @@ class GraphNavRecordingServiceClient extends BaseClient {
 
   /**
    * Create an edge environment.
-   * @param {geometryPb.SE2VelocityLimit} velLimit A SE2VelocityLimit to use while traversing the edge.
+   *
+   * It always threw (setGratedFloor() does not exist, and a boolean was set as the BoolValue require_alignment), and
+   * the make_edge_environment() of Python raises an AttributeError (CopyFrom() on booleans, and grated_floor is no
+   * longer in map.proto): the environment follows the current map.proto. The ground friction, the grated floor and
+   * the velocity limit are mobility params of the edge, and override_mobility_params lists them, so that the other
+   * mobility params are not annotated (an empty FieldMask activates all of them).
+   * @param {?SE2VelocityLimit} [velLimit=null] A SE2VelocityLimit to use while traversing the edge.
    * Note this is not a target speed, just a max/min.
-   * @param {mapPb.Edge.Annotations.DirectionConstraint} directionConstraint A direction constraints on the
-   * robot's orientation when traversing the edge.
-   * @param {boolean} requireAlignment Boolean where if true, the robot must be aligned with the edge in
+   * @param {mapPb.Edge.Annotations.DirectionConstraint} [directionConstraint=DIRECTION_CONSTRAINT_NONE] A direction
+   * constraints on the robot's orientation when traversing the edge.
+   * @param {boolean} [requireAlignment=false] Boolean where if true, the robot must be aligned with the edge in
    * yaw before traversing it.
-   * @param {DoubleValue} groundMuHint Terrain coefficient of friction user hint. Suggested values lie between [.4, .8].
-   * @param {boolean} gratedFloor Boolean where if true, the edge crosses over grated metal.
-   * @returns {Promise<mapPb.Edge.Annotations>}
+   * @param {number} [groundMuHint=0.8] Terrain coefficient of friction user hint. Suggested values lie between
+   * [.4, .8]. 0 or less: not annotated.
+   * @param {boolean} [gratedFloor=false] Boolean where if true, the edge crosses over grated metal (grated surfaces
+   * mode on); false leaves the mode of the robot.
+   * @returns {mapPb.Edge.Annotations}
    */
   static makeEdgeEnvironment(
     velLimit = null,
@@ -266,21 +289,30 @@ class GraphNavRecordingServiceClient extends BaseClient {
     groundMuHint = 0.8,
     gratedFloor = false,
   ) {
-    const edgeEnv = new mapPb.Edge.Annotations();
-    edgeEnv.setRequireAlignment(requireAlignment);
-    edgeEnv.setGratedFloor(gratedFloor);
-    if (groundMuHint || velLimit) {
-      edgeEnv.setMobilityParams(new robotCommandPb.MobilityParams());
-      if (groundMuHint > 0) {
-        edgeEnv.getMobilityParams().setTerrainParams(new robotCommandPb.TerrainParams().setGroundMuHint(groundMuHint));
-      }
-      if (velLimit !== null) {
-        edgeEnv.getMobilityParams().setVelLimit(velLimit);
-      }
+    const edgeEnv = new mapPb.Edge.Annotations()
+      .setRequireAlignment(new BoolValue().setValue(requireAlignment))
+      .setDirectionConstraint(directionConstraint)
+      .setStairs(new mapPb.Edge.Annotations.StairData().setState(mapPb.AnnotationState.ANNOTATION_STATE_NONE));
+
+    const mobilityParams = new robotCommandPb.MobilityParams();
+    const terrainParams = new robotCommandPb.TerrainParams();
+    const overridden = [];
+    if (groundMuHint > 0) {
+      terrainParams.setGroundMuHint(new DoubleValue().setValue(groundMuHint));
+      overridden.push('terrain_params.ground_mu_hint');
     }
-    edgeEnv.setDirectionConstraint(directionConstraint);
-    const stairs = new mapPb.Edge.Annotations.StairData().setState(mapPb.AnnotationState.ANNOTATION_STATE_NONE);
-    edgeEnv.setStairs(stairs);
+    if (gratedFloor) {
+      terrainParams.setGratedSurfacesMode(robotCommandPb.TerrainParams.GratedSurfacesMode.GRATED_SURFACES_MODE_ON);
+      overridden.push('terrain_params.grated_surfaces_mode');
+    }
+    if (overridden.length > 0) mobilityParams.setTerrainParams(terrainParams);
+    if (velLimit !== null) {
+      mobilityParams.setVelLimit(velLimit);
+      overridden.push('vel_limit');
+    }
+    if (overridden.length > 0) {
+      edgeEnv.setMobilityParams(mobilityParams).setOverrideMobilityParams(new FieldMask().setPathsList(overridden));
+    }
     return edgeEnv;
   }
 
@@ -288,7 +320,7 @@ class GraphNavRecordingServiceClient extends BaseClient {
    * Create an edge between two waypoint ids.
    * @param {string} fromWaypointId A waypoint string id for the from waypoint.
    * @param {string} toWaypointId A waypoint string id for the to waypoint.
-   * @param {geometryPb.SE3Pose} fromTformTo An SE3Pose representing the transform of from_waypoint to to_waypoint.
+   * @param {SE3Pose} fromTformTo An SE3Pose representing the transform of from_waypoint to to_waypoint.
    * @param {?mapPb.Edge} edgeEnvironment Any edge environment to be associated with the created edge.
    * @returns {mapPb.Edge}
    */
@@ -300,23 +332,43 @@ class GraphNavRecordingServiceClient extends BaseClient {
   }
 }
 
+/** General class of errors for the GraphNav Recording Service. */
 class RecordingServiceResponseError extends ResponseError {}
-class NotLocalizedToEndError extends ResponseError {}
+/** Stop recording failed to localize to the last created waypoint. */
+// A RecordingServiceResponseError, like Python.
+class NotLocalizedToEndError extends RecordingServiceResponseError {}
+/** Service could not create a waypoint. */
 class CouldNotCreateWaypointError extends RecordingServiceResponseError {}
+/** The recording service has not been started. */
 class NotRecordingError extends RecordingServiceResponseError {}
+/** The edge requested has a waypoint id that is unknown. */
 class UnknownWaypointError extends RecordingServiceResponseError {}
+/** The edge requested with the given ID already exists in the map. */
 class EdgeExistsError extends RecordingServiceResponseError {}
+/** The edge requested is missing the from_T_to transform in the edge. */
 class EdgeMissingTransformError extends RecordingServiceResponseError {}
+/** Cannot start recording while the robot is already following a route. */
 class FollowingRouteError extends RecordingServiceResponseError {}
+/** The robot is not localized to the existing map and cannot start recording. */
 class NotLocalizedToExistingMapError extends RecordingServiceResponseError {}
+/** The robot is too far from the existing map and cannot start recording. */
 class TooFarFromExistingMapError extends RecordingServiceResponseError {}
+/** Failed to start recording because a remote point cloud (e.g. a LIDAR) is not registered to the service directory. */
 class RemoteCloudFailureNotInDirectoryError extends RecordingServiceResponseError {}
+/** Failed to start recording because a remote point cloud (e.g. a LIDAR) is not delivering data. */
 class RemoteCloudFailureNoDataError extends RecordingServiceResponseError {}
+/** The service is processing the map at its current position. Try again in 1-2 seconds. */
 class NotReadyYetError extends RecordingServiceResponseError {}
+/** Map exceeds the size allowed by the license. */
 class MapTooLargeLicenseError extends RecordingServiceResponseError {}
+/** One or more required fiducials were not detected. */
 class MissingFiducialsError extends RecordingServiceResponseError {}
+/** The pose of one or more required fiducials could not be determined accurately. */
 class FiducialPoseError extends RecordingServiceResponseError {}
 
+/**
+ * Failed to start recording because the robot is impaired.
+ */
 class RobotImpairedError extends RecordingServiceResponseError {
   constructor(response, errorMessage) {
     super(response, errorMessage);
@@ -442,7 +494,7 @@ const _startRecordingError = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(recordingPb.StartRecordingResponse.Status),
+        recordingPb.StartRecordingResponse.Status,
         _START_RECORDING_STATUS_TO_ERROR,
       ),
     ),
@@ -454,7 +506,7 @@ const _stopRecordingError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(recordingPb.StopRecordingResponse.Status),
+      recordingPb.StopRecordingResponse.Status,
       _STOP_RECORDING_STATUS_TO_ERROR,
     ),
   ),
@@ -466,7 +518,7 @@ const _createWaypointError = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(recordingPb.CreateWaypointResponse.Status),
+        recordingPb.CreateWaypointResponse.Status,
         _CREATE_WAYPOINT_STATUS_TO_ERROR,
       ),
     ),
@@ -475,16 +527,12 @@ const _createWaypointError = handleCommonHeaderErrors(
 
 const _createEdgeError = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(
-      response,
-      response.getStatus(),
-      Object.keys(recordingPb.CreateEdgeResponse.Status),
-      _CREATE_EDGE_STATUS_TO_ERROR,
-    ),
+    errorFactory(response, response.getStatus(), recordingPb.CreateEdgeResponse.Status, _CREATE_EDGE_STATUS_TO_ERROR),
   ),
 );
 
 module.exports = {
+  WaypointRegion,
   GraphNavRecordingServiceClient,
   RecordingServiceResponseError,
   CouldNotCreateWaypointError,
@@ -495,5 +543,12 @@ module.exports = {
   NotLocalizedToEndError,
   FollowingRouteError,
   NotLocalizedToExistingMapError,
+  TooFarFromExistingMapError,
+  RemoteCloudFailureNotInDirectoryError,
+  RemoteCloudFailureNoDataError,
   NotReadyYetError,
+  MapTooLargeLicenseError,
+  MissingFiducialsError,
+  FiducialPoseError,
+  RobotImpairedError,
 };

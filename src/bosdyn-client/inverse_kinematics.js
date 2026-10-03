@@ -1,7 +1,15 @@
+/**
+ * @file A client for the inverse-kinematics service.
+ */
+
 'use strict';
 
 const { BaseClient, commonHeaderErrors } = require('./common');
 const { InverseKinematicsServiceClient } = require('../bosdyn/api/spot/inverse_kinematics_service_grpc_pb');
+
+/**
+ * @typedef {import('../bosdyn/api/spot/inverse_kinematics_pb').InverseKinematicsRequest} InverseKinematicsRequest
+ */
 
 /**
  * Client to request inverse kinematics solutions.
@@ -17,8 +25,8 @@ class InverseKinematicsClient extends BaseClient {
 
   /**
    * Request an IK solution.
-   * @param {inverseKinematicsPb.InverseKinematicsRequest} request Request to issue
-   * @param {Object} args Extra arguments
+   * @param {InverseKinematicsRequest} request Request to issue
+   * @param {Object} [args] Extra arguments
    * @returns {Promise<any>}
    */
   inverseKinematics(request, args) {

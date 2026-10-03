@@ -1,10 +1,21 @@
+/**
+ * @file For clients to the Spot CAM MediaLog service.
+ */
+
 'use strict';
 
-const process = require('node:process');
+const { Buffer } = require('node:buffer');
 
 const loggingPb = require('../../bosdyn/api/spot_cam/logging_pb');
 const { MediaLogServiceClient } = require('../../bosdyn/api/spot_cam/service_grpc_pb');
 const { BaseClient, handleCommonHeaderErrors } = require('../common');
+const { LoggerUtil } = require('../logger_util');
+
+/**
+ * @typedef {import('../../bosdyn/api/spot_cam/camera_pb').Camera} Camera
+ */
+
+const _LOGGER = LoggerUtil.getLogger('media_log');
 
 /**
  * A client calling Spot CAM MediaLog service.
@@ -48,7 +59,14 @@ class MediaLogClient extends BaseClient {
       .setEnableShock(shock)
       .setEnableSystemStat(systemStats);
 
-    return this.call(this._stub.enableDebug, request, this._enableDebugFromResponse, _mediaLogErrorFromResponse, false, args);
+    return this.call(
+      this._stub.enableDebug,
+      request,
+      this._enableDebugFromResponse,
+      _mediaLogErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
@@ -59,17 +77,31 @@ class MediaLogClient extends BaseClient {
    */
   getStatus(logpoint, args) {
     const request = new loggingPb.GetStatusRequest().setPoint(logpoint);
-    return this.call(this._stub.getStatus, request, this._getStatusFromResponse, _mediaLogErrorFromResponse, false, args);
+    return this.call(
+      this._stub.getStatus,
+      request,
+      this._getStatusFromResponse,
+      _mediaLogErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
    * List cameras on Spot CAM
    * @param {Object} [args] Extra arguments for controlling RPC details
-   * @returns {Promise<cameraPb.Camera[]>}
+   * @returns {Promise<Camera[]>}
    */
   listCameras(args) {
     const request = new loggingPb.ListCamerasRequest();
-    return this.call(this._stub.listCameras, request, this._listCamerasFromResponse, _mediaLogErrorFromResponse, false, args);
+    return this.call(
+      this._stub.listCameras,
+      request,
+      this._listCamerasFromResponse,
+      _mediaLogErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
@@ -93,7 +125,7 @@ class MediaLogClient extends BaseClient {
    * Retrieves the image associated with the Logpoint.
    * @param {loggingPb.Logpoint} logpoint Logpoint.name must be filled out.
    * @param {Object} [args] Extra arguments for controlling RPC details
-   * @returns {Promise<{ logpoint: loggingPb.Logpoint, data: any[] }>}
+   * @returns {Promise<{ logpoint: loggingPb.Logpoint, data: Buffer }>} The logpoint, and the bytes of its data.
    */
   retrieve(logpoint, args) {
     const request = new loggingPb.RetrieveRequest().setPoint(logpoint);
@@ -104,23 +136,47 @@ class MediaLogClient extends BaseClient {
    * Retrieves the image associated with the Logpoint.
    * @param {loggingPb.Logpoint} logpoint Logpoint.name must be filled out.
    * @param {Object} [args] Extra arguments for controlling RPC details
-   * @returns {Promise<{ logpoint: loggingPb.Logpoint, data: any[] }>}
+   * @returns {Promise<{ logpoint: loggingPb.Logpoint, data: Buffer }>} The logpoint, and the bytes of its data.
    */
   retrieveRawData(logpoint, args) {
     const request = new loggingPb.RetrieveRawDataRequest().setPoint(logpoint);
-    return this.call(this._stub.retrieveRawData, request, this._retrieveFromResponse, _mediaLogErrorFromResponse, false, args);
+    return this.call(
+      this._stub.retrieveRawData,
+      request,
+      this._retrieveFromResponse,
+      _mediaLogErrorFromResponse,
+      false,
+      args,
+    );
+  }
+
+  /**
+   * Set password for Spot CAM filesystem.
+   * @param {string} passphrase The passphrase.
+   * @param {Object} [args] Extra arguments for controlling RPC details
+   * @returns {Promise<void>}
+   */
+  setPassphrase(passphrase, args) {
+    const request = new loggingPb.SetPassphraseRequest().setPassphrase(passphrase);
+    return this.call(
+      this._stub.setPassphrase,
+      request,
+      this._setPassphraseFromResponse,
+      _mediaLogErrorFromResponse,
+      false,
+      args,
+    );
   }
 
   /**
    * Store media on the Spot CAM.
-   * @param {cameraPb.Camera} camera Protobuf describing the camera to store media on.
+   * @param {Camera} camera Protobuf describing the camera to store media on.
    * @param {loggingPb.Logpoint.RecordType} recordType Indicating the type of recording.
    * @param {string} tag Optional string to associate with the stored media.
    * @param {Object} [args] Extra arguments for controlling RPC details
    * @returns {Promise<loggingPb.Logpoint>}
    */
   store(camera, recordType, tag = null, args) {
-    // eslint-disable-next-line
     const request = new loggingPb.StoreRequest().setCamera(camera).setType(recordType).setTag(tag);
     return this.call(this._stub.store, request, this._storeFromResponse, _mediaLogErrorFromResponse, false, args);
   }
@@ -156,7 +212,8 @@ class MediaLogClient extends BaseClient {
     const logpoints = [];
 
     for (const response of responses) {
-      logpoints.concat(response.getLogpointsList());
+      // concat() returned a new array: the list stayed empty.
+      logpoints.push(...response.getLogpointsList());
     }
 
     return logpoints;
@@ -171,12 +228,14 @@ class MediaLogClient extends BaseClient {
       if (logpoint === null) logpoint = response.getLogpoint();
       if (response.hasData()) {
         const chunk = response.getData();
-        total += chunk.getData().length;
-        console.debug(`Retrieved ${chunk.getData().length} bytes (${total}/${chunk.getTotalSize()})`);
+        total += chunk.getData_asU8().length;
+        // At debug level, like Python (console.debug() printed a line for each chunk).
+        _LOGGER.debug(`Retrieved ${chunk.getData_asU8().length} bytes (${total}/${chunk.getTotalSize()})`);
         localChunks.push(chunk);
       }
     }
-    return { logpoint, data: localChunks.map(e => e.getData()) };
+    // The bytes of the chunks joined, like Python (it was the list of the chunks).
+    return { logpoint, data: Buffer.concat(localChunks.map(chunk => chunk.getData_asU8())) };
   }
 
   _setPassphraseFromResponse() {

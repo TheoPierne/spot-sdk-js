@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the graphnav service.
+ */
+
 'use strict';
 
 const { mkdirSync, writeFileSync } = require('node:fs');
@@ -12,6 +16,7 @@ const {
   handleUnsetStatusError,
   handleLicenseErrorsIfPresent,
 } = require('./common');
+const { serializedFromMessages } = require('./data_chunk');
 const { ResponseError, UnimplementedError } = require('./exceptions');
 const { addLeaseWalletProcessors } = require('./lease');
 const { DefaultDict } = require('./util');
@@ -22,6 +27,12 @@ const { GraphNavServiceClient } = require('../bosdyn/api/graph_nav/graph_nav_ser
 const mapPb = require('../bosdyn/api/graph_nav/map_pb');
 const navPb = require('../bosdyn/api/graph_nav/nav_pb');
 const leasePb = require('../bosdyn/api/lease_pb');
+const { nowSec } = require('../bosdyn-core/util');
+
+/**
+ * @typedef {import('../bosdyn/api/geometry_pb').SE2Pose} SE2Pose
+ * @typedef {import('../bosdyn/api/geometry_pb').SE3Pose} SE3Pose
+ */
 
 /**
  * @typedef {import('./robot').Robot} Robot
@@ -49,7 +60,7 @@ class GraphNavClient extends BaseClient {
   }
 
   /**
-   * @param {Robot} other 
+   * @param {Robot} other
    */
   async updateFrom(other) {
     super.updateFrom(other);
@@ -138,7 +149,7 @@ class GraphNavClient extends BaseClient {
     koTformBody = null,
     maxDistance = null,
     maxYaw = null,
-    fiducialInit = graphNavPb.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST,
+    fiducialInit = graphNavPb.SetLocalizationRequest.FiducialInit.FIDUCIAL_INIT_NEAREST,
     useFiducialId = null,
     refineFiducialResultWithIcp = false,
     doAmbiguityCheck = false,
@@ -163,11 +174,14 @@ class GraphNavClient extends BaseClient {
 
   /**
    * Obtain current localization state of the robot.
-   * @param {boolean} requestLivePointCloud Request live point cloud
-   * @param {boolean} requestLiveImages Request live images
-   * @param {boolean} requestLiveTerrainMaps Request live terrain maps
-   * @param {boolean} requestLiveWorldObjects Request live world objects
-   * @param {boolean} requestLiveRobotState Request live robot state
+   * @param {boolean} [requestLivePointCloud=false] Request live point cloud
+   * @param {boolean} [requestLiveImages=false] Request live images
+   * @param {boolean} [requestLiveTerrainMaps=false] Request live terrain maps
+   * @param {boolean} [requestLiveWorldObjects=false] Request live world objects
+   * @param {boolean} [requestLiveRobotState=false] Request live robot state
+   * @param {?string} [waypointId=null] The waypoint relative to which the localization is expressed (the waypoint of
+   * the localization if unset), like Python.
+   * @param {boolean} [requestGpsState=false] Request the GPS state, like Python.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<graphNavPb.GetLocalizationStateResponse>}
    */
@@ -177,6 +191,8 @@ class GraphNavClient extends BaseClient {
     requestLiveTerrainMaps = false,
     requestLiveWorldObjects = false,
     requestLiveRobotState = false,
+    waypointId = null,
+    requestGpsState = false,
     args,
   ) {
     const req = GraphNavClient._buildGetLocalizationStateRequest(
@@ -185,6 +201,8 @@ class GraphNavClient extends BaseClient {
       requestLiveTerrainMaps,
       requestLiveWorldObjects,
       requestLiveRobotState,
+      waypointId,
+      requestGpsState,
     );
     return this.call(this._stub.getLocalizationState, req, null, commonHeaderErrors, false, args);
   }
@@ -201,12 +219,15 @@ class GraphNavClient extends BaseClient {
    * endpoint by default.
    * @param {?number} commandId If not null, this continues an existing navigateRoute command with the given ID.
    * If null, a new commandId will be used.
-   * @param {?geometryPb.SE2Pose} destinationWaypointTformBodyGoal SE2Pose protobuf of an offset relative to the
+   * @param {?SE2Pose} destinationWaypointTformBodyGoal SE2Pose protobuf of an offset relative to the
    * destination waypoint.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<number>}
    */
-  navigateRoute(
+  // The navigate methods are async: a missing time sync (or a failure of the time conversion) rejects their promise,
+  // it was thrown synchronously (not caught by a .catch()).
+
+  async navigateRoute(
     route,
     cmdDuration,
     routeFollowParams = null,
@@ -229,11 +250,18 @@ class GraphNavClient extends BaseClient {
       commandId,
       destinationWaypointTformBodyGoal,
     );
-    return this.call(this._stub.navigateRoute, request, _commandIdFromNavigateRouteResponse, _navigateRouteError, false, args);
+    return this.call(
+      this._stub.navigateRoute,
+      request,
+      _commandIdFromNavigateRouteResponse,
+      _navigateRouteError,
+      false,
+      args,
+    );
   }
 
   /**
-   * Identical to {@link navigateRoute}, except will return the full NavigateRouteResponse.
+   * Identical to {@link GraphNavClient#navigateRoute}, except will return the full NavigateRouteResponse.
    * @param {navPb.Route} route Route protobuf of the route to follow.
    * @param {number} cmdDuration Number of seconds the command can run for.
    * @param {?graphNavPb.RouteFollowingParams} routeFollowParams What should the robot do if it is not at
@@ -244,12 +272,13 @@ class GraphNavClient extends BaseClient {
    * endpoint by default.
    * @param {?number} commandId If not null, this continues an existing navigateRoute command with the given ID.
    * If null, a new commandId will be used.
-   * @param {?geometryPb.SE2Pose} destinationWaypointTformBodyGoal SE2Pose protobuf of an offset relative to the
+   * @param {?SE2Pose} destinationWaypointTformBodyGoal SE2Pose protobuf of an offset relative to the
    * destination waypoint.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<graphNavPb.NavigateRouteResponse>}
    */
-  navigateRouteFull(
+
+  async navigateRouteFull(
     route,
     cmdDuration,
     routeFollowParams = null,
@@ -284,16 +313,17 @@ class GraphNavClient extends BaseClient {
    * @param {*} leases Leases to show ownership of necessary resources. Will use the client's leases by default.
    * @param {?TimeSyncEndpoint} timesyncEndpoint Use this endpoint for timesync fields. Will use the client's
    * endpoint by default.
-   * @param {?number} commandId If not null, this continues an existing {@link navigateTo} command with
+   * @param {?number} commandId If not null, this continues an existing {@link GraphNavClient#navigateTo} command with
    * the given ID. If null, a new commandId will be used.
-   * @param {?geometryPb.SE2Pose} destinationWaypointTformBodyGoal SE2Pose protobuf of an offset relative to
+   * @param {?SE2Pose} destinationWaypointTformBodyGoal SE2Pose protobuf of an offset relative to
    * the destination waypoint.
    * @param {graphNavPb.RouteFollowingParams.RouteBlockedBehavior} routeBlockedBehavior Defines robot behavior when
    * route is block. If None robot will reroute.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<number>}
    */
-  navigateTo(
+
+  async navigateTo(
     destinationWaypointId,
     cmdDuration,
     routeParams = null,
@@ -318,11 +348,18 @@ class GraphNavClient extends BaseClient {
       destinationWaypointTformBodyGoal,
       routeBlockedBehavior,
     );
-    return this.call(this._stub.navigateTo, request, _commandIdFromNavigateRouteResponse, _navigateToError, false, args);
+    return this.call(
+      this._stub.navigateTo,
+      request,
+      _commandIdFromNavigateRouteResponse,
+      _navigateToError,
+      false,
+      args,
+    );
   }
 
   /**
-   * Identical to {@link navigateTo}, except will return the full NavigateToResponse.
+   * Identical to {@link GraphNavClient#navigateTo}, except will return the full NavigateToResponse.
    * @param {string} destinationWaypointId Waypoint id string for where to go to.
    * @param {number} cmdDuration Number of seconds the command can run for.
    * @param {?graphNavPb.RouteGenParams} routeParams API RouteGenParams for the route.
@@ -330,16 +367,18 @@ class GraphNavClient extends BaseClient {
    * @param {*} leases Leases to show ownership of necessary resources. Will use the client's leases by default.
    * @param {?TimeSyncEndpoint} timesyncEndpoint Use this endpoint for timesync fields. Will use the client's
    * endpoint by default.
-   * @param {?number} commandId If not null, this continues an existing {@link navigateToFull} command with
+   * @param {?number} commandId If not null, this continues an existing {@link GraphNavClient#navigateToFull} command
+   * with
    * the given ID. If null, a new commandId will be used.
-   * @param {?geometryPb.SE2Pose} destinationWaypointTformBodyGoal SE2Pose protobuf of an offset relative to
+   * @param {?SE2Pose} destinationWaypointTformBodyGoal SE2Pose protobuf of an offset relative to
    * the destination waypoint.
    * @param {graphNavPb.RouteFollowingParams.RouteBlockedBehavior} routeBlockedBehavior Defines robot behavior when
    * route is block. If None robot will reroute.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<graphNavPb.NavigateToResponse>}
    */
-  navigateToFull(
+
+  async navigateToFull(
     destinationWaypointId,
     cmdDuration,
     routeParams = null,
@@ -374,12 +413,13 @@ class GraphNavClient extends BaseClient {
 
   /**
    * Navigate to a pose in seed frame along a route chosen by the GraphNav service.
-   * @param {geometryPb.SE3Pose} seedTformGoal SE3Pose protobuf of the goal pose in seed frame.
+   * @param {SE3Pose} seedTformGoal SE3Pose protobuf of the goal pose in seed frame.
    * @param {number} cmdDuration Number of seconds the command can run for.
    * @param {?graphNavPb.RouteGenParams} routeParams API RouteGenParams for the route.
    * @param {?graphNavPb.TravelParams} travelParams API TravelParams for the route.
    * @param {*} leases Leases to show ownership of necessary resources. Will use the client's leases by default.
-   * @param {?TimeSyncEndpoint} timesyncEndpoint Use this endpoint for timesync fields. Will use the client's endpoint by default.
+   * @param {?TimeSyncEndpoint} timesyncEndpoint Use this endpoint for timesync fields. Will use the client's endpoint
+   * by default.
    * @param {*} goalWaypointRtSeedEwrtSeedTolerance Vec3 protobuf of the tolerances for goal waypoint selection.
    * @param {*} commandId If not null, this continues an existing navigate_to command with the given ID. If null,
    * a new command_id will be used.
@@ -389,7 +429,8 @@ class GraphNavClient extends BaseClient {
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<number>}
    */
-  navigateToAnchor(
+
+  async navigateToAnchor(
     seedTformGoal,
     cmdDuration,
     routeParams = null,
@@ -459,28 +500,33 @@ class GraphNavClient extends BaseClient {
    * Will use the client's leases by default.
    * @param {?mapPb.Graph} graph Graph protobuf that represents the map with waypoints and edges.
    * @param {?boolean} generateNewAnchoring Whether to generate an (overwrite the) anchoring on upload.
+   * @param {?boolean} replaceGraph If true, replaces the existing graph with the new one rather than adding to it.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<graphNavPb.UploadGraphResponse>}
    */
-  uploadGraph(lease = null, graph = null, generateNewAnchoring = false, args) {
-    let request = GraphNavClient._buildUploadGraphRequest(lease, graph, generateNewAnchoring);
+  async uploadGraph(lease = null, graph = null, generateNewAnchoring = false, replaceGraph = false, args) {
+    let request = GraphNavClient._buildUploadGraphRequest(lease, graph, generateNewAnchoring, replaceGraph);
     if (this._useStreamingGraphUpload) {
+      // Need to manually apply request processors since this will be serialized and chunked.
       this._applyRequestProcessors(request, false);
       const serialized = request.serializeBinary();
 
       try {
-        return this.call(
+        // `await` so that the rejection is caught here and the fallback can run.
+        return await this.call(
           this._stub.uploadGraphStreaming,
           GraphNavClient._dataChunkIteratorUploadGraph(serialized, this._dataChunkSize),
           _getResponse,
           _uploadGraphError,
+          false,
           args,
         );
       } catch (err) {
-        if (err instanceof UnimplementedError) {
-          console.error(`UploadGraphStreaming unimplemented. Old robot release?`);
-          request = GraphNavClient._buildUploadGraphRequest(lease, graph, generateNewAnchoring);
-        }
+        // Like Python, only an old robot release without streaming falls back to UploadGraph.
+        if (!(err instanceof UnimplementedError)) throw err;
+        this.logger.warn('UploadGraphStreaming unimplemented. Old robot release?');
+        // Recreate the request so that we clear any state that might have happened during our attempt to stream.
+        request = GraphNavClient._buildUploadGraphRequest(lease, graph, generateNewAnchoring, replaceGraph);
       }
     }
     return this.call(this._stub.uploadGraph, request, _getResponse, _uploadGraphError, false, args);
@@ -496,6 +542,8 @@ class GraphNavClient extends BaseClient {
    * @returns {Promise<graphNavPb.UploadWaypointSnapshotResponse>}
    */
   uploadWaypointSnapshot(waypointSnapshot, lease = null, args) {
+    // Like Python: an empty lease rather than none, so the lease wallet does not advance a lease per chunk.
+    lease = lease || new leasePb.Lease();
     const serialized = waypointSnapshot.serializeBinary();
     const request = GraphNavClient._dataChunkIteratorUploadWaypointSnapshot(serialized, lease, this._dataChunkSize);
     return this.call(this._stub.uploadWaypointSnapshot, request, null, _uploadWaypointSnapshotError, true, args);
@@ -511,9 +559,56 @@ class GraphNavClient extends BaseClient {
    * @returns {Promise<graphNavPb.UploadWaypointSnapshotResponse>}
    */
   uploadEdgeSnapshot(edgeSnapshot, lease = null, args) {
+    // Like Python: an empty lease rather than none, so the lease wallet does not advance a lease per chunk.
+    lease = lease || new leasePb.Lease();
     const serialized = edgeSnapshot.serializeBinary();
     const request = GraphNavClient._dataChunkIteratorUploadEdgeSnapshot(serialized, lease, this._dataChunkSize);
-    return this.call(this._stub.uploadEdgeSnapshot, request, null, handleCommonHeaderErrors(commonLeaseErrors), true, args);
+    return this.call(
+      this._stub.uploadEdgeSnapshot,
+      request,
+      null,
+      handleCommonHeaderErrors(commonLeaseErrors),
+      true,
+      args,
+    );
+  }
+
+  /**
+   * Uploads multiple snapshots as a stream.
+   * graph_nav only processes complete Snapshots so large protos are discouraged;
+   * any network interruption would require the data to be resent. Clients are
+   * encouraged to send data in batches on the order of a few MB to strike a
+   * balance between eliminating per-RPC overhead and recovering from errors.
+   * @param {graphNavPb.UploadSnapshotsRequest.Snapshots} snapshots UploadSnapshotsRequest.Snapshots protobuf that will
+   * be stream-uploaded to the robot.
+   * @param {?leasePb.Lease} lease Leases to show ownership of necessary resources. Will use the client's leases by
+   * default.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<graphNavPb.UploadSnapshotsResponse>}
+   */
+  uploadSnapshots(snapshots, lease = null, args = {}) {
+    lease = lease || new leasePb.Lease();
+    const serialized = snapshots.serializeBinary();
+    const request = GraphNavClient._dataChunkIteratorUploadSnapshots(serialized, lease, this._dataChunkSize);
+    return this.call(
+      this._stub.uploadSnapshots,
+      request,
+      null,
+      handleCommonHeaderErrors(commonLeaseErrors),
+      true,
+      args,
+    );
+  }
+
+  /**
+   * Alias of uploadSnapshots(), the name of Python.
+   * @param {graphNavPb.UploadSnapshotsRequest.Snapshots} snapshots
+   * @param {?leasePb.Lease} [lease=null]
+   * @param {Object} [args]
+   * @returns {Promise<graphNavPb.UploadSnapshotsResponse>}
+   */
+  uploadSnapshot(snapshots, lease = null, args = {}) {
+    return this.uploadSnapshots(snapshots, lease, args);
   }
 
   /**
@@ -521,22 +616,24 @@ class GraphNavClient extends BaseClient {
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<mapPb.Graph>}
    */
-  downloadGraph(args) {
+  async downloadGraph(args) {
     const request = GraphNavClient._buildDownloadGraphRequest();
 
     if (this._useStreamingGraphUpload) {
       try {
-        return this.call(
+        // `await` so that the rejection is caught here and the fallback can run.
+        return await this.call(
           this._stub.downloadGraphStreaming,
           request,
           _getStreamedDownloadGraph,
           _downloadGraphStreamErrors,
+          false,
           args,
         );
       } catch (err) {
-        if (err instanceof UnimplementedError) {
-          console.error('DownloadGraphStreaming unimplemented. Old robot release?');
-        }
+        // Like Python, only an old robot release without streaming falls back to DownloadGraph.
+        if (!(err instanceof UnimplementedError)) throw err;
+        this.logger.warn('DownloadGraphStreaming unimplemented. Old robot release?');
       }
     }
 
@@ -599,7 +696,6 @@ class GraphNavClient extends BaseClient {
     const graphBytes = graph.serializeBinary();
     this._writeBytes(directory, '/graph', graphBytes);
 
-    /* eslint-disable no-await-in-loop */
     for (const waypoint of graph.getWaypointsList()) {
       if (waypoint.getSnapshotId().length === 0) continue;
       const waypointSnapshot = await this.downloadWaypointSnapshot(waypoint.getSnapshotId());
@@ -615,7 +711,6 @@ class GraphNavClient extends BaseClient {
       const edgeSnapshot = await this.downloadEdgeSnapshot(edge.getSnapshotId());
       this._writeBytes(`${directory}/edge_snapshots`, `/${edge.getSnapshotId()}`, edgeSnapshot.serializeBinary());
     }
-    /* eslint-enable no-await-in-loop */
   }
 
   static _buildSetLocalizationRequest(
@@ -623,7 +718,7 @@ class GraphNavClient extends BaseClient {
     koTformBody = null,
     maxDistance = null,
     maxYaw = null,
-    fiducialInit = graphNavPb.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST,
+    fiducialInit = graphNavPb.SetLocalizationRequest.FiducialInit.FIDUCIAL_INIT_NEAREST,
     useFiducialId = null,
     refineFiducialResultWithIcp = false,
     doAmbiguityCheck = false,
@@ -638,7 +733,7 @@ class GraphNavClient extends BaseClient {
     if (maxDistance !== null) request.setMaxDistance(maxDistance);
     if (maxYaw !== null) request.setMaxYaw(maxYaw);
 
-    if (fiducialInit === graphNavPb.SetLocalizationRequest.FIDUCIAL_INIT_SPECIFIC) {
+    if (fiducialInit === graphNavPb.SetLocalizationRequest.FiducialInit.FIDUCIAL_INIT_SPECIFIC) {
       if (useFiducialId !== null) request.setUseFiducialId(useFiducialId);
     }
 
@@ -661,15 +756,17 @@ class GraphNavClient extends BaseClient {
     requestLiveTerrainMaps,
     requestLiveWorldObjects,
     requestLiveRobotState,
-    waypointId,
+    waypointId = null,
+    requestGpsState = false,
   ) {
     return new graphNavPb.GetLocalizationStateRequest()
-      .setWaypointId(waypointId)
+      .setWaypointId(waypointId ?? '')
       .setRequestLivePointCloud(requestLivePointCloud)
       .setRequestLiveImages(requestLiveImages)
       .setRequestLiveTerrainMaps(requestLiveTerrainMaps)
       .setRequestLiveWorldObjects(requestLiveWorldObjects)
-      .setRequestLiveRobotState(requestLiveRobotState);
+      .setRequestLiveRobotState(requestLiveRobotState)
+      .setRequestGpsState(requestGpsState);
   }
 
   static _buildNavigateRouteRequest(
@@ -689,7 +786,7 @@ class GraphNavClient extends BaseClient {
       .setDestinationWaypointTformBodyGoal(destinationWaypointTformBodyGoal)
       .setClockIdentifier(timesyncEndpoint.clockIdentifier);
     if (travelParams) request.setTravelParams(travelParams);
-    request.setEndTime(converter.robotTimestampFromLocalSecs(Date.now() + endTimeSecs));
+    request.setEndTime(converter.robotTimestampFromLocalSecs(nowSec() + endTimeSecs));
     if (commandId) request.setCommandId(commandId);
     return request;
   }
@@ -710,11 +807,44 @@ class GraphNavClient extends BaseClient {
       .setDestinationWaypointId(destinationWaypointId)
       .setClockIdentifier(timesyncEndpoint.clockIdentifier)
       .setDestinationWaypointTformBodyGoal(destinationWaypointTformBodyGoal)
-      .setEndTime(converter.robotTimestampFromLocalSecs(Date.now() + endTimeSecs));
+      .setEndTime(converter.robotTimestampFromLocalSecs(nowSec() + endTimeSecs));
     if (travelParams !== null) request.setTravelParams(travelParams);
     if (routeParams !== null) request.setRouteParams(routeParams);
     if (commandId) request.setCommandId(commandId);
     if (routeBlockedBehavior) request.setRouteBlockedBehavior(routeBlockedBehavior);
+    return request;
+  }
+
+  static _buildNavigateToAnchorRequest(
+    seedTformGoal,
+    travelParams,
+    routeParams,
+    endTimeSecs,
+    leases,
+    timesyncEndpoint,
+    commandId,
+    goalWaypointRtSeedEwrtSeedTolerance,
+    gpsNavigationParams,
+  ) {
+    const converter = timesyncEndpoint.getRobotTimeConverter();
+    const request = new graphNavPb.NavigateToAnchorRequest()
+      .setSeedTformGoal(seedTformGoal)
+      .setGoalWaypointRtSeedEwrtSeedTolerance(goalWaypointRtSeedEwrtSeedTolerance)
+      .setClockIdentifier(timesyncEndpoint.clockIdentifier)
+      .setEndTime(converter.robotTimestampFromLocalSecs(nowSec() + endTimeSecs));
+
+    if (gpsNavigationParams) {
+      request.setGpsNavigationParams(gpsNavigationParams);
+    }
+    if (travelParams) {
+      request.setTravelParams(travelParams);
+    }
+    if (routeParams) {
+      request.setRouteParams(routeParams);
+    }
+    if (commandId) {
+      request.setCommandId(commandId);
+    }
     return request;
   }
 
@@ -723,12 +853,13 @@ class GraphNavClient extends BaseClient {
     return new graphNavPb.ClearGraphRequest().setLease(lease);
   }
 
-  static _buildUploadGraphRequest(lease, graph, generateNewAnchoring) {
+  static _buildUploadGraphRequest(lease, graph, generateNewAnchoring, replaceGraph) {
     lease = lease || new leasePb.Lease();
     return new graphNavPb.UploadGraphRequest()
       .setGraph(graph)
       .setLease(lease)
-      .setGenerateNewAnchoring(generateNewAnchoring);
+      .setGenerateNewAnchoring(generateNewAnchoring)
+      .setReplaceGraph(replaceGraph);
   }
 
   static *_dataChunkIteratorUploadGraph(serializedUploadGraph, dataChunkByteSize) {
@@ -740,9 +871,9 @@ class GraphNavClient extends BaseClient {
       const endIndex = (i + 1) * dataChunkByteSize;
       const chunk = new dataChunkPb.DataChunk().setTotalSize(totalByteSize);
       if (endIndex > totalByteSize) {
-        chunk.setData(serializedUploadGraph.slice(startIndex, totalByteSize));
+        chunk.setData(serializedUploadGraph.subarray(startIndex, totalByteSize));
       } else {
-        chunk.setData(serializedUploadGraph.slice(startIndex, endIndex));
+        chunk.setData(serializedUploadGraph.subarray(startIndex, endIndex));
       }
 
       yield new graphNavPb.UploadGraphStreamingRequest().setChunk(chunk);
@@ -757,27 +888,48 @@ class GraphNavClient extends BaseClient {
       const endIndex = (i + 1) * dataChunkByteSize;
       const chunk = new dataChunkPb.DataChunk().setTotalSize(totalBytesSize);
       if (endIndex > totalBytesSize) {
-        chunk.setData(serializedWaypointSnapshot.slice(startIndex, totalBytesSize));
+        chunk.setData(serializedWaypointSnapshot.subarray(startIndex, totalBytesSize));
       } else {
-        chunk.setData(serializedWaypointSnapshot.slice(startIndex, endIndex));
+        chunk.setData(serializedWaypointSnapshot.subarray(startIndex, endIndex));
       }
       yield new graphNavPb.UploadWaypointSnapshotRequest().setChunk(chunk).setLease(lease);
     }
   }
 
-  static *_dataChunkIteratorUploadEdgeSnapshot(serializedEdgeSnapshot, lease, dataChunkBytesize) {
+  static *_dataChunkIteratorUploadEdgeSnapshot(serializedEdgeSnapshot, lease, dataChunkByteSize) {
     const totalBytesSize = serializedEdgeSnapshot.length;
-    const numChunks = Math.ceil(totalBytesSize / dataChunkBytesize);
+    const numChunks = Math.ceil(totalBytesSize / dataChunkByteSize);
     for (const i of Array.from({ length: numChunks }, (a, ind) => ind)) {
-      const startIndex = i * dataChunkBytesize;
-      const endIndex = (i + 1) * dataChunkBytesize;
+      const startIndex = i * dataChunkByteSize;
+      const endIndex = (i + 1) * dataChunkByteSize;
       const chunk = new dataChunkPb.DataChunk().setTotalSize(totalBytesSize);
       if (endIndex > totalBytesSize) {
-        chunk.setData(serializedEdgeSnapshot.slice(startIndex, totalBytesSize));
+        chunk.setData(serializedEdgeSnapshot.subarray(startIndex, totalBytesSize));
       } else {
-        chunk.setData(serializedEdgeSnapshot.slice(startIndex, endIndex));
+        chunk.setData(serializedEdgeSnapshot.subarray(startIndex, endIndex));
       }
-      yield new graphNavPb.UploadWaypointSnapshotRequest().setChunk(chunk).setLease(lease);
+      yield new graphNavPb.UploadEdgeSnapshotRequest().setChunk(chunk).setLease(lease);
+    }
+  }
+
+  static *_dataChunkIteratorUploadSnapshots(serializedSnapshots, lease, dataChunkByteSize) {
+    const totalBytesSize = serializedSnapshots.length;
+    if (totalBytesSize === 0) {
+      const req = new graphNavPb.UploadSnapshotsRequest().setLease(lease);
+      yield req;
+    }
+
+    const numChunks = Math.ceil(totalBytesSize / dataChunkByteSize);
+    for (const i of Array.from({ length: numChunks }, (a, ind) => ind)) {
+      const startIndex = i * dataChunkByteSize;
+      const endIndex = (i + 1) * dataChunkByteSize;
+      const chunk = new dataChunkPb.DataChunk().setTotalSize(totalBytesSize);
+      if (endIndex > totalBytesSize) {
+        chunk.setData(serializedSnapshots.subarray(startIndex, totalBytesSize));
+      } else {
+        chunk.setData(serializedSnapshots.subarray(startIndex, endIndex));
+      }
+      yield new graphNavPb.UploadSnapshotsRequest().setLease(lease).setChunk(chunk);
     }
   }
 
@@ -796,56 +948,130 @@ class GraphNavClient extends BaseClient {
     return new graphNavPb.DownloadEdgeSnapshotRequest().setEdgeSnapshotId(edgeSnapshotId);
   }
 
+  /**
+   * Generate the API TravelParams for navigation requests.
+   */
   static generateTravelParams(maxDistance, maxYaw, velocityLimit = null) {
     const travelParams = new graphNavPb.TravelParams().setMaxDistance(maxDistance).setMaxYaw(maxYaw);
     if (velocityLimit !== null) travelParams.setVelocityLimit(velocityLimit);
     return travelParams;
   }
 
+  /**
+   * Generate the API Route for navigation requests.
+   */
   static buildRoute(waypointIdList, edgeIdList) {
     return new navPb.Route().setWaypointIdList(waypointIdList).setEdgeIdList(edgeIdList);
   }
 }
 
+/** General class of errors for the GraphNav Recording Service. */
 class GraphNavServiceResponseError extends ResponseError {}
 
+/** Errors related to uploading a waypoint snapshot */
+class UploadWaypointSnapshotError extends GraphNavServiceResponseError {}
+/** Errors related to uploading a graph. */
 class UploadGraphError extends GraphNavServiceResponseError {}
+/** The map is too large for the license on the robot. */
 class MapTooLargeLicenseError extends UploadGraphError {}
+/** The graph is invalid topologically, e.g. missing waypoints referenced by edges. */
 class InvalidGraphError extends UploadGraphError {}
 
+/**
+ * The map was recorded with using a sensor configuration which is incompatible with the robot (for example, LIDAR
+ * configuration).
+ */
 class IncompatibleSensorsError extends GraphNavServiceResponseError {}
+/** The map specified an area callback that is not registered or is faulted. */
 class AreaCallbackMapError extends GraphNavServiceResponseError {}
+/** Request was aborted by the system. */
 class RequestAbortedError extends GraphNavServiceResponseError {}
+/** Request failed to complete by the system. */
 class RequestFailedError extends GraphNavServiceResponseError {}
+/** Robot is experiencing a fault condition that prevents localization. */
 class RobotFaultedError extends GraphNavServiceResponseError {}
+/** The given map information (waypoints,edges,routes) is unknown by the system. */
 class UnknownMapInformationError extends GraphNavServiceResponseError {}
 
+/** Errors associated with timestamps and time sync. */
 class TimeError extends GraphNavServiceResponseError {}
+/** The command was received after its end time had already passed. */
 class CommandExpiredError extends TimeError {}
+/** Client has not performed timesync with robot. */
 class NoTimeSyncError extends TimeError {}
+/** The command was too far in the future. */
 class TooDistantError extends TimeError {}
 
+/** Errors associated with the current state of the robot. */
 class RobotStateError extends GraphNavServiceResponseError {}
+/** Cannot navigate a route while recording a map. */
 class IsRecordingError extends RobotStateError {}
+/** Cannot clear the map during recording. Call StopRecording first. */
 class CannotModifyMapDuringRecordingError extends RobotStateError {}
+/** Robot has a critical perception or behavior fault and cannot navigate. */
 class RobotImpairedError extends RobotStateError {}
 
+/** Errors associated with the specified route. */
 class RouteError extends GraphNavServiceResponseError {}
+/** Route parameters contained a constraint fault. */
 class ConstraintFaultError extends RouteError {}
+/** One or more edges do not connect to expected waypoints. */
 class InvalidEdgeError extends RouteError {}
-class UnknownRouteElementsError extends RouteError {}
+/** Deprecated name (misspelled) of Python, the parent class of UnknownRouteElementsError. */
+class UnkownRouteElementsError extends RouteError {}
+/** One or more waypoints/edges are not in the map. */
+class UnknownRouteElementsError extends UnkownRouteElementsError {}
+/** There is no path to the specified waypoint. */
 class NoPathError extends RouteError {}
+/** One or more waypoints are not in the map. */
 class UnknownWaypointError extends RouteError {}
+/** There is no anchoring. */
 class NoAnchoringError extends RouteError {}
+/** The requested pose is invalid, or known to be unachievable. */
 class InvalidPoseError extends RouteError {}
 
+/** Errors related to how the robot navigates the route. */
 class RouteNavigationError extends GraphNavServiceResponseError {}
+/** Route contained too many waypoints with low-quality features. */
 class FeatureDesertError extends RouteNavigationError {}
+/** Graph nav was unable to update and follow the specified route. */
 class RouteNotUpdatingError extends RouteNavigationError {}
+/** Cannot issue a navigation request when the robot is already lost. */
 class RobotLostError extends RouteNavigationError {}
+
+/**
+ * Cannot issue the GPS command because it is invalid.
+ */
+class InvalidGPSError extends RouteNavigationError {
+  _gpsStatusToString(status) {
+    const { GPSStatus } = graphNavPb.NavigateToAnchorResponse;
+    if (status === GPSStatus.GPS_STATUS_OK) return 'OK';
+    if (status === GPSStatus.GPS_STATUS_NO_COORDS_IN_MAP) {
+      return 'The uploaded map did not contain any valid GPS coordinates.';
+    }
+    if (status === GPSStatus.GPS_STATUS_TOO_FAR_FROM_MAP) {
+      return 'The given coordinates were too far from any coordinates in the uploaded map.';
+    }
+    return 'Unknown error';
+  }
+
+  toString() {
+    return `${this.message} (reason: ${this._gpsStatusToString(this.response?.getGpsStatus?.())})`;
+  }
+}
+
+/** The current localization doesn't refer to any waypoint in the route (possibly uninitialized localization). */
 class RobotNotLocalizedToRouteError extends RouteNavigationError {}
+/**
+ * The robot is stuck or unable to find a way forward. Resend the command with a new ID, or send a different command to
+ * try again.
+ */
 class RobotStuckError extends RouteNavigationError {}
+/** Happens when you try to continue a command that was either expired, or had an unrecognized id. */
+// The misspelled name is deprecated, like in Python: UnrecognizedCommandError is the error raised.
 class UnrecongizedCommandError extends RouteNavigationError {}
+/** Happens when you try to continue a command that was either expired, or had an unrecognized id. */
+class UnrecognizedCommandError extends UnrecongizedCommandError {}
 
 function _localizationFromResponse(response) {
   return response.getLocalization();
@@ -860,15 +1086,13 @@ function _getResponse(response) {
 }
 
 function _getGraph(response) {
-  return response.getGraph();
+  // An empty graph when the robot has no map, like the default proto in Python (it was undefined).
+  return response.getGraph() ?? new mapPb.Graph();
 }
 
 function _getStreamedData(response, dataType) {
-  const data = [];
-  for (const res of response) {
-    data.push(...res.getChunk().getData());
-  }
-  return dataType.deserializeBinary(data);
+  // Buffer.concat of the chunk bytes: spreading a chunk into push() overflows the call stack above ~120 KB.
+  return dataType.deserializeBinary(serializedFromMessages(response));
 }
 
 function _getStreamedWaypointSnapshot(response) {
@@ -876,7 +1100,8 @@ function _getStreamedWaypointSnapshot(response) {
 }
 
 function _getStreamedDownloadGraph(response) {
-  return _getStreamedData(response, graphNavPb.DownloadGraphResponse).getGraph();
+  // An empty graph when the robot has no map, like the default proto in Python.
+  return _getStreamedData(response, graphNavPb.DownloadGraphResponse).getGraph() ?? new mapPb.Graph();
 }
 
 function _getStreamedEdgeSnapshot(response) {
@@ -895,7 +1120,7 @@ _UPLOAD_GRAPH_STATUS_TO_ERROR.set(graphNavPb.UploadGraphResponse.Status.STATUS_I
 ]);
 _UPLOAD_GRAPH_STATUS_TO_ERROR.set(graphNavPb.UploadGraphResponse.Status.STATUS_INCOMPATIBLE_SENSORS, [
   IncompatibleSensorsError,
-  // eslint-disable-next-line max-len
+
   'The map was recorded with using a sensor configuration which is incompatible with the robot (for example, LIDAR configuration).',
 ]);
 _UPLOAD_GRAPH_STATUS_TO_ERROR.set(graphNavPb.UploadGraphResponse.Status.STATUS_AREA_CALLBACK_ERROR, [
@@ -908,7 +1133,7 @@ _UPLOAD_WAYPOINT_SNAPSHOT_TO_ERROR.set(graphNavPb.UploadWaypointSnapshotResponse
 _UPLOAD_WAYPOINT_SNAPSHOT_TO_ERROR.set(graphNavPb.UploadWaypointSnapshotResponse.Status.STATUS_OK, [null, null]);
 _UPLOAD_WAYPOINT_SNAPSHOT_TO_ERROR.set(graphNavPb.UploadWaypointSnapshotResponse.Status.STATUS_INCOMPATIBLE_SENSORS, [
   IncompatibleSensorsError,
-  // eslint-disable-next-line max-len
+
   'The map was recorded with using a sensor configuration which is incompatible with the robot (for example, LIDAR configuration).',
 ]);
 
@@ -940,7 +1165,7 @@ _SET_LOCALIZATION_STATUS_TO_ERROR.set(graphNavPb.SetLocalizationResponse.Status.
 ]);
 _SET_LOCALIZATION_STATUS_TO_ERROR.set(graphNavPb.SetLocalizationResponse.Status.STATUS_INCOMPATIBLE_SENSORS, [
   IncompatibleSensorsError,
-  // eslint-disable-next-line max-len
+
   'The map was recorded with using a sensor configuration which is incompatible with the robot (for example, LIDAR configuration).',
 ]);
 
@@ -1004,11 +1229,11 @@ _NAVIGATE_ROUTE_STATUS_TO_ERROR.set(graphNavPb.NavigateRouteResponse.Status.STAT
 ]);
 _NAVIGATE_ROUTE_STATUS_TO_ERROR.set(graphNavPb.NavigateRouteResponse.Status.STATUS_STUCK, [
   RobotStuckError,
-  // eslint-disable-next-line
+
   'The robot is stuck or unable to find a way forward. Resend the command with a new ID, or send a different command to try again.',
 ]);
 _NAVIGATE_ROUTE_STATUS_TO_ERROR.set(graphNavPb.NavigateRouteResponse.Status.STATUS_UNRECOGNIZED_COMMAND, [
-  UnrecongizedCommandError,
+  UnrecognizedCommandError,
   'Happens when you try to continue a command that was either expired, or had an unrecognized id.',
 ]);
 _NAVIGATE_ROUTE_STATUS_TO_ERROR.set(graphNavPb.NavigateRouteResponse.Status.STATUS_AREA_CALLBACK_ERROR, [
@@ -1065,11 +1290,11 @@ _NAVIGATE_TO_STATUS_TO_ERROR.set(graphNavPb.NavigateToResponse.Status.STATUS_COU
 ]);
 _NAVIGATE_TO_STATUS_TO_ERROR.set(graphNavPb.NavigateToResponse.Status.STATUS_STUCK, [
   RobotStuckError,
-  // eslint-disable-next-line max-len
+
   'The robot is stuck or unable to find a way forward. Resend the command with a new ID, or send a different command to try again.',
 ]);
 _NAVIGATE_TO_STATUS_TO_ERROR.set(graphNavPb.NavigateToResponse.Status.STATUS_UNRECOGNIZED_COMMAND, [
-  UnrecongizedCommandError,
+  UnrecognizedCommandError,
   'Happens when you try to continue a command that was either expired, or had an unrecognized id.',
 ]);
 _NAVIGATE_TO_STATUS_TO_ERROR.set(graphNavPb.NavigateToResponse.Status.STATUS_AREA_CALLBACK_ERROR, [
@@ -1126,7 +1351,7 @@ _NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.set(graphNavPb.NavigateToAnchorResponse.Stat
 ]);
 _NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.set(graphNavPb.NavigateToAnchorResponse.Status.STATUS_STUCK, [
   RobotStuckError,
-  // eslint-disable-next-line max-len
+
   'The robot is stuck or unable to find a way forward. Resend the command with a new ID, or send a different command to try again.',
 ]);
 _NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.set(graphNavPb.NavigateToAnchorResponse.Status.STATUS_INVALID_POSE, [
@@ -1134,8 +1359,13 @@ _NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.set(graphNavPb.NavigateToAnchorResponse.Stat
   'The requested pose is invalid, or known to be unachievable.',
 ]);
 _NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.set(graphNavPb.NavigateToAnchorResponse.Status.STATUS_UNRECOGNIZED_COMMAND, [
-  UnrecongizedCommandError,
+  UnrecognizedCommandError,
   'Happens when you try to continue a command that was either expired, or had an unrecognized id.',
+]);
+// It was missing: an invalid GPS command was a generic ResponseError.
+_NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.set(graphNavPb.NavigateToAnchorResponse.Status.STATUS_INVALID_GPS_COMMAND, [
+  InvalidGPSError,
+  'Cannot issue the GPS command because it is invalid.',
 ]);
 _NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.set(graphNavPb.NavigateToAnchorResponse.Status.STATUS_AREA_CALLBACK_ERROR, [
   AreaCallbackMapError,
@@ -1149,7 +1379,7 @@ const _uploadGraphError = handleCommonHeaderErrors(
         errorFactory(
           response,
           response.getStatus(),
-          Object.keys(graphNavPb.UploadGraphResponse.Status),
+          graphNavPb.UploadGraphResponse.Status,
           _UPLOAD_GRAPH_STATUS_TO_ERROR,
         ),
       ),
@@ -1159,12 +1389,7 @@ const _uploadGraphError = handleCommonHeaderErrors(
 
 const _clearGraphError = handleCommonHeaderErrors(
   handleLeaseUseResultErrors(response =>
-    errorFactory(
-      response,
-      response.getStatus(),
-      Object.keys(graphNavPb.ClearGraphResponse.Status),
-      _CLEAR_GRAPH_STATUS_TO_ERROR,
-    ),
+    errorFactory(response, response.getStatus(), graphNavPb.ClearGraphResponse.Status, _CLEAR_GRAPH_STATUS_TO_ERROR),
   ),
 );
 
@@ -1173,7 +1398,7 @@ const _uploadWaypointSnapshotError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(graphNavPb.UploadWaypointSnapshotResponse.Status),
+      graphNavPb.UploadWaypointSnapshotResponse.Status,
       _UPLOAD_WAYPOINT_SNAPSHOT_TO_ERROR,
     ),
   ),
@@ -1185,7 +1410,7 @@ const _setLocalizationError = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(graphNavPb.SetLocalizationResponse.Status),
+        graphNavPb.SetLocalizationResponse.Status,
         _SET_LOCALIZATION_STATUS_TO_ERROR,
       ),
     ),
@@ -1198,7 +1423,7 @@ const _navigateRouteError = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(graphNavPb.NavigateRouteResponse.Status),
+        graphNavPb.NavigateRouteResponse.Status,
         _NAVIGATE_ROUTE_STATUS_TO_ERROR,
       ),
     ),
@@ -1208,12 +1433,7 @@ const _navigateRouteError = handleCommonHeaderErrors(
 const _navigateToError = handleCommonHeaderErrors(
   handleLeaseUseResultErrors(
     handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-      errorFactory(
-        response,
-        response.getStatus(),
-        Object.keys(graphNavPb.NavigateToResponse.Status),
-        _NAVIGATE_TO_STATUS_TO_ERROR,
-      ),
+      errorFactory(response, response.getStatus(), graphNavPb.NavigateToResponse.Status, _NAVIGATE_TO_STATUS_TO_ERROR),
     ),
   ),
 );
@@ -1224,7 +1444,7 @@ const _navigateToAnchorError = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(graphNavPb.NavigateToAnchorResponse.Status),
+        graphNavPb.NavigateToAnchorResponse.Status,
         _NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR,
       ),
     ),
@@ -1266,6 +1486,15 @@ const _downloadEdgeSnapshotStreamErrors = handleCommonHeaderErrors(
 module.exports = {
   GraphNavClient,
   GraphNavServiceResponseError,
+  UploadWaypointSnapshotError,
+  UploadGraphError,
+  IncompatibleSensorsError,
+  AreaCallbackMapError,
+  CannotModifyMapDuringRecordingError,
+  NoAnchoringError,
+  InvalidPoseError,
+  InvalidGPSError,
+  UnrecognizedCommandError,
   RequestAbortedError,
   RequestFailedError,
   RobotFaultedError,
@@ -1280,6 +1509,7 @@ module.exports = {
   RouteError,
   ConstraintFaultError,
   InvalidEdgeError,
+  UnkownRouteElementsError,
   UnknownRouteElementsError,
   NoPathError,
   UnknownWaypointError,

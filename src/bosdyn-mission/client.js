@@ -1,3 +1,7 @@
+/**
+ * @file For clients to the mission service.
+ */
+
 'use strict';
 
 const { Int64Value } = require('google-protobuf/google/protobuf/wrappers_pb');
@@ -13,20 +17,38 @@ const {
   handleLeaseUseResultErrors,
 } = require('../bosdyn-client/common');
 const { chunkMessage } = require('../bosdyn-client/data_chunk');
-const { ValueError, ResponseError, TimeSyncRequired } = require('../bosdyn-client/exceptions');
-const { DefaultDict } = require('../bosdyn-client/util');
+const { ValueError, ResponseError, TimeSyncRequired, UnimplementedError } = require('../bosdyn-client/exceptions');
 const { addLeaseWalletProcessors } = require('../bosdyn-client/lease');
+const { DefaultDict } = require('../bosdyn-client/util');
 
+/**
+ * @typedef {import('../bosdyn-client/lease').Lease} Lease
+ * @typedef {import('../bosdyn/api/lease_pb').Lease} LeaseProto
+ * @typedef {import('../bosdyn/api/service_customization_pb').DictParam} DictParam
+ */
+
+/** General class of errors for mission service. */
 class MissionResponseError extends ResponseError {}
+/** The indicated question is unknown. */
 class InvalidQuestionId extends MissionResponseError {}
+/** The indicated answer code is invalid for the specified question. */
 class InvalidAnswerCode extends MissionResponseError {}
+/** The indicated question was already answered. */
 class QuestionAlreadyAnswered extends MissionResponseError {}
+/** The indicated answer does not match the spec for the indicated answer */
 class CustomParamsError extends MissionResponseError {}
+/** The indicated answer is not in a format expected by the indicated question. */
 class IncompatibleAnswer extends MissionResponseError {}
+/** Mission could not be compiled. */
 class CompilationError extends MissionResponseError {}
+/** There is no mission to be played/restarted. */
 class NoMissionError extends MissionResponseError {}
+/** There is no mission to be paused. */
 class NoMissionPlayingError extends MissionResponseError {}
 
+/**
+ * Mission could not be validated.
+ */
 class ValidationError extends MissionResponseError {
   constructor(res, msg) {
     super(res, msg);
@@ -41,6 +63,7 @@ class ValidationError extends MissionResponseError {
 
 /**
  * @typedef {import('../bosdyn-client/robot').Robot} Robot
+ * @typedef {import('../bosdyn/api/mission/nodes_pb').Node} Node
  */
 
 /**
@@ -57,15 +80,15 @@ class MissionClient extends BaseClient {
   }
 
   /**
-   * @param {Robot} other 
+   * @param {Robot} other
    */
   async updateFrom(other) {
     super.updateFrom(other);
-    
+
     if (this.leaseWallet) {
       addLeaseWalletProcessors(this, this.leaseWallet);
     }
-    
+
     try {
       this._timesyncEndpoint = (await other.timeSync).endpoint;
     } catch (e) {
@@ -73,6 +96,9 @@ class MissionClient extends BaseClient {
     }
   }
 
+  /**
+   * Accessor for timesync endpoint that was grabbed via 'updateFrom()'.
+   */
   get timesyncEndpoint() {
     if (!this._timesyncEndpoint) {
       throw new TimeSyncRequired();
@@ -86,7 +112,7 @@ class MissionClient extends BaseClient {
    * Leave unset for the latest data.
    * @param {number|string} lowerTickBound Tick counter for the lower bound of per-node state to retrieve.
    * @param {number|string} pastTicks Number of ticks to look into the past from the upper bound.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.State>}
    */
   getState(upperTickBound = null, lowerTickBound = null, pastTicks = null, args) {
@@ -105,8 +131,8 @@ class MissionClient extends BaseClient {
    * Specify an answer to the question asked by the mission.
    * @param {number} questionId ID of the question to answer.
    * @param {number} code Answer code.
-   * @param {serviceCustomizationPb.DictParam} customParams Answer to a custom params prompt.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {DictParam} customParams Answer to a custom params prompt.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.AnswerQuestionResponse>}
    */
   answerQuestion(questionId, code, customParams = null, args) {
@@ -120,9 +146,9 @@ class MissionClient extends BaseClient {
 
   /**
    * Load a mission onto the robot.
-   * @param {missionPb.Node} root Root node in a mission.
+   * @param {Node} root Root node in a mission.
    * @param {Lease[]} leases All leases necessary to initialize a mission.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.LoadMissionResponse>}
    */
   loadMission(root, leases = [], args) {
@@ -132,15 +158,16 @@ class MissionClient extends BaseClient {
 
   /**
    * Load a mission onto the robot.
-   * @param {missionPb.Node} root  Root node in a mission.
+   * @param {Node} root  Root node in a mission.
    * @param {Lease[]} leases All leases necessary to initialize a mission.
    * @param {number} dataChunkByteSize max size of each streamed message
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.LoadMissionResponse>}
    */
   loadMissionAsChunks(root, leases = [], dataChunkByteSize = 1_000 * 1_000, args) {
     const req = this._loadMissionRequest(root, leases);
-    this._applyRequestProcessors(req);
+    // In place, like Python: the processed copy was thrown away, and the mission sent without header nor leases.
+    this._applyRequestProcessors(req, false);
     return this.call(
       this._stub.loadMissionAsChunks,
       [...chunkMessage(req, dataChunkByteSize)],
@@ -152,6 +179,27 @@ class MissionClient extends BaseClient {
   }
 
   /**
+   * Load a mission onto the robot, the response being streamed as chunks too.
+   * @param {Node} root  Root node in a mission.
+   * @param {Lease[]} leases All leases necessary to initialize a mission.
+   * @param {number} dataChunkByteSize max size of each streamed message
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<missionPb.LoadMissionResponse>}
+   */
+  loadMissionAsChunks2(root, leases = [], dataChunkByteSize = 1_000 * 1_000, args) {
+    const req = this._loadMissionRequest(root, leases);
+    this._applyRequestProcessors(req, false);
+    return this.call(
+      this._stub.loadMissionAsChunks2,
+      [...chunkMessage(req, dataChunkByteSize)],
+      null,
+      _loadMissionErrorFromResponse,
+      false,
+      { ...args, assembleType: missionPb.LoadMissionResponse },
+    );
+  }
+
+  /**
    * Play the loaded mission.
    * @param {number} pauseTimeSecs Absolute time when the mission should pause execution. Subsequent RPCs
    * will override this value, so you can use this to say "if you don't hear from me again,
@@ -159,11 +207,17 @@ class MissionClient extends BaseClient {
    * @param {Lease[]} leases Leases the mission service will need to use. Unlike other clients, these MUST
    * be specified.
    * @param {missionPb.PlaySettings} settings Settings active until the next PlayMission or RestartMission request.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.PlayMissionResponse>}
    */
   playMission(pauseTimeSecs, leases = [], settings = null, args) {
-    const req = this._playMissionRequest(pauseTimeSecs, leases, settings);
+    let req;
+    try {
+      req = this._playMissionRequest(pauseTimeSecs, leases, settings);
+    } catch (err) {
+      // e.g. TimeSyncRequired: a rejection, not a synchronous throw.
+      return Promise.reject(err);
+    }
     return this.call(this._stub.playMission, req, null, _playMissionErrorFromResponse, false, args);
   }
 
@@ -175,17 +229,22 @@ class MissionClient extends BaseClient {
    * @param {Lease[]} leases Leases the mission service will need to use. Unlike other clients, these MUST
    * be specified.
    * @param {missionPb.PlaySettings} settings Settings active until the next PlayMission or RestartMission request.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.RestartMissionResponse>}
    */
   restartMission(pauseTimeSecs, leases = [], settings = null, args) {
-    const req = this._restartMissionRequest(pauseTimeSecs, leases, settings);
+    let req;
+    try {
+      req = this._restartMissionRequest(pauseTimeSecs, leases, settings);
+    } catch (err) {
+      return Promise.reject(err);
+    }
     return this.call(this._stub.restartMission, req, null, _restartMissionErrorFromResponse, false, args);
   }
 
   /**
    * Pause the running mission.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.PauseMissionResponse>}
    */
   pauseMission(args) {
@@ -195,25 +254,28 @@ class MissionClient extends BaseClient {
 
   /**
    * Stop the running mission.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.StopMissionResponse>}
    */
   stopMission(args) {
     const req = new missionPb.StopMissionRequest();
-    return this.call(this._stub.StopMission, req, null, _stopMissionErrorFromResponse, false, args);
+    return this.call(this._stub.stopMission, req, null, _stopMissionErrorFromResponse, false, args);
   }
 
   /**
    * Get static information about the loaded mission.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.MissionInfo|null>}
    */
-  getInfo(args) {
+  async getInfo(args) {
     const req = new missionPb.GetInfoRequest();
 
     try {
-      return this._getInfoAsChunksCall(req, args);
+      return await this._getInfoAsChunksCall(req, args);
     } catch (err) {
+      // This indicates that the software release running on robot does not yet have
+      // the implementation for the streaming response of GetInfo.
+      if (!(err instanceof UnimplementedError)) throw err;
       return this.call(this._stub.getInfo, req, _getInfoValue, commonHeaderErrors, false, args);
     }
   }
@@ -221,25 +283,32 @@ class MissionClient extends BaseClient {
   /**
    * Issues the GetInfoAsChunks RPC to the mission service.
    * @param {missionPb.GetInfoRequest} req The request to send
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.MissionInfo|null>}
    * @private
    */
   _getInfoAsChunksCall(req, args) {
-    return this.call(this._stub.getInfoAsChunks, req, _getInfoValue, commonHeaderErrors, false, args);
+    // The DataChunks are assembled into a GetInfoResponse, like Python.
+    return this.call(this._stub.getInfoAsChunks, req, _getInfoValue, commonHeaderErrors, false, {
+      ...args,
+      assembleType: missionPb.GetInfoResponse,
+    });
   }
 
   /**
    * Get the loaded mission.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.GetMissionResponse>}
    */
-  getMission(args) {
+  async getMission(args) {
     const req = new missionPb.GetMissionRequest();
 
     try {
-      return this._getMissionAsChunksCall(req, args);
+      return await this._getMissionAsChunksCall(req, args);
     } catch (err) {
+      // This indicates that the software release running on robot does not yet have
+      // the implementation for the streaming response of GetMission.
+      if (!(err instanceof UnimplementedError)) throw err;
       return this.call(this._stub.getMission, req, null, commonHeaderErrors, false, args);
     }
   }
@@ -247,33 +316,37 @@ class MissionClient extends BaseClient {
   /**
    * Issues the GetMissionAsChunks RPC to the mission service.
    * @param {missionPb.GetMissionRequest} req The request to send
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<missionPb.GetMissionResponse>}
    * @private
    */
   _getMissionAsChunksCall(req, args) {
-    return this.call(this._stub.getMissionAsChunks, req, null, commonHeaderErrors, false, args);
+    return this.call(this._stub.getMissionAsChunks, req, null, commonHeaderErrors, false, {
+      ...args,
+      assembleType: missionPb.GetMissionResponse,
+    });
   }
 
   _getStateRequest(upperTickBound, lowerTickBound, pastTicks) {
-    if (lowerTickBound && pastTicks) throw new ValueError('Cannot specify both lowerTickBound and pastTicks');
+    // 0 is a bound too.
+    const isSet = value => value !== null && value !== undefined;
+    if (isSet(lowerTickBound) && isSet(pastTicks)) {
+      throw new ValueError('Cannot specify both lowerTickBound and pastTicks');
+    }
 
-    const request = new missionPb.GetStateRequest()
-      .setHistoryLowerTickBound(lowerTickBound)
-      .setHistoryPastTicks(pastTicks);
+    // They are in a oneof: setting the one that is null cleared the other.
+    const request = new missionPb.GetStateRequest();
+    if (isSet(lowerTickBound)) request.setHistoryLowerTickBound(lowerTickBound);
+    if (isSet(pastTicks)) request.setHistoryPastTicks(pastTicks);
 
-    if (upperTickBound) request.setHistoryUpperTickBound(new Int64Value().setValue(upperTickBound));
+    if (isSet(upperTickBound)) request.setHistoryUpperTickBound(new Int64Value().setValue(upperTickBound));
 
     return request;
   }
 
   _loadMissionRequest(root, leases) {
     const request = new missionPb.LoadMissionRequest().setRoot(root);
-
-    for (const lease of leases) {
-      request.addLeases(lease.leaseProto);
-    }
-
+    _addLeases(request, leases);
     return request;
   }
 
@@ -281,11 +354,7 @@ class MissionClient extends BaseClient {
     const request = new missionPb.PlayMissionRequest()
       .setPauseTime(this.timesyncEndpoint.robotTimestampFromLocalSecs(pauseTimeSecs))
       .setSettings(settings);
-
-    for (const lease of leases) {
-      request.addLeases(lease.leaseProto);
-    }
-
+    _addLeases(request, leases);
     return request;
   }
 
@@ -293,12 +362,20 @@ class MissionClient extends BaseClient {
     const request = new missionPb.RestartMissionRequest()
       .setPauseTime(this.timesyncEndpoint.robotTimestampFromLocalSecs(pauseTimeSecs))
       .setSettings(settings);
-
-    for (const lease of leases) {
-      request.addLeases(lease.leaseProto);
-    }
-
+    _addLeases(request, leases);
     return request;
+  }
+}
+
+/**
+ * Add the lease protos of Lease objects to a request (a lease proto is taken as is: its leaseProto was undefined,
+ * which added an empty lease).
+ * @param {missionPb.LoadMissionRequest|missionPb.PlayMissionRequest|missionPb.RestartMissionRequest} request
+ * @param {Array<Lease|LeaseProto>} leases
+ */
+function _addLeases(request, leases) {
+  for (const lease of leases) {
+    request.addLeases(lease.leaseProto ?? lease);
   }
 }
 
@@ -372,7 +449,7 @@ const _answerQuestionErrorFromResponse = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(missionPb.AnswerQuestionResponse.Status),
+      missionPb.AnswerQuestionResponse.Status,
       _ANSWER_QUESTION_STATUS_TO_ERROR,
     ),
   ),
@@ -381,12 +458,7 @@ const _answerQuestionErrorFromResponse = handleCommonHeaderErrors(
 const _loadMissionErrorFromResponse = handleCommonHeaderErrors(
   handleLeaseUseResultErrors(
     handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-      errorFactory(
-        response,
-        response.getStatus(),
-        Object.keys(missionPb.LoadMissionResponse.Status),
-        _LOAD_MISSION_STATUS_TO_ERROR,
-      ),
+      errorFactory(response, response.getStatus(), missionPb.LoadMissionResponse.Status, _LOAD_MISSION_STATUS_TO_ERROR),
     ),
   ),
 );
@@ -394,12 +466,7 @@ const _loadMissionErrorFromResponse = handleCommonHeaderErrors(
 const _playMissionErrorFromResponse = handleCommonHeaderErrors(
   handleLeaseUseResultErrors(
     handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-      errorFactory(
-        response,
-        response.getStatus(),
-        Object.keys(missionPb.PlayMissionResponse.Status),
-        _PLAY_MISSION_STATUS_TO_ERROR,
-      ),
+      errorFactory(response, response.getStatus(), missionPb.PlayMissionResponse.Status, _PLAY_MISSION_STATUS_TO_ERROR),
     ),
   ),
 );
@@ -410,7 +477,7 @@ const _pauseMissionErrorFromResponse = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(missionPb.PauseMissionResponse.Status),
+        missionPb.PauseMissionResponse.Status,
         _PAUSE_MISSION_STATUS_TO_ERROR,
       ),
     ),
@@ -420,12 +487,7 @@ const _pauseMissionErrorFromResponse = handleCommonHeaderErrors(
 const _stopMissionErrorFromResponse = handleCommonHeaderErrors(
   handleLeaseUseResultErrors(
     handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-      errorFactory(
-        response,
-        response.getStatus(),
-        Object.keys(missionPb.StopMissionResponse.Status),
-        _STOP_MISSION_STATUS_TO_ERROR,
-      ),
+      errorFactory(response, response.getStatus(), missionPb.StopMissionResponse.Status, _STOP_MISSION_STATUS_TO_ERROR),
     ),
   ),
 );
@@ -436,7 +498,7 @@ const _restartMissionErrorFromResponse = handleCommonHeaderErrors(
       errorFactory(
         response,
         response.getStatus(),
-        Object.keys(missionPb.RestartMissionResponse.Status),
+        missionPb.RestartMissionResponse.Status,
         _RESTART_MISSION_STATUS_TO_ERROR,
       ),
     ),

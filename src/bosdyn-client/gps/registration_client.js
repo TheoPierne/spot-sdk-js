@@ -1,3 +1,7 @@
+/**
+ * @file Client for the GPS registration service: the registration of the GPS in the frame of the robot.
+ */
+
 'use strict';
 
 const registrationPb = require('../../bosdyn/api/gps/registration_pb');

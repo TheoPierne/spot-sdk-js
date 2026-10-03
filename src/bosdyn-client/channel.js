@@ -1,18 +1,22 @@
-'use strict';
+/**
+ * @file The gRPC channels to the robot: secure channels with the certificate of the robot and the refreshed user token,
+ * the channel options, and the translation of the gRPC errors into the errors of the SDK.
+ */
 
-const process = require('node:process');
+'use strict';
 
 const grpc = require('@grpc/grpc-js');
 
 const {
   ClientCancelledOperationError,
+  ConnectionResetError,
+  InternalDeserializationError,
   InvalidClientCertificateError,
   NonexistentAuthorityError,
   NotFoundError,
   PermissionDeniedError,
   ProxyConnectionError,
   ResponseTooLargeError,
-  RetryableUnavailableError,
   RpcError,
   ServiceFailedDuringExecutionError,
   ServiceUnavailableError,
@@ -24,6 +28,9 @@ const {
   UnimplementedError,
   UnknownDnsNameError,
 } = require('./exceptions');
+const { LoggerUtil } = require('./logger_util');
+
+const _LOGGER = LoggerUtil.getLogger('channel');
 
 /**
  * Set default max message length for sending and receiving to 100MB. This value is used when
@@ -73,19 +80,9 @@ function refreshingAccessTokenAuthMetadataPlugin(tokenCb) {
  * @returns {grpc.ChannelCredentials}
  */
 function createSecureChannelCreds(cert, tokenCb) {
-  let transportCreds;
-  if (process.env.NODE_ENV !== 'production') {
-    const { readFileSync } = require('node:fs');
-    const path = require('node:path');
-
-    transportCreds = grpc.credentials.createSsl(
-      cert,
-      readFileSync(path.join(__dirname, 'resources', 'client.key')),
-      readFileSync(path.join(__dirname, 'resources', 'client.crt')),
-    );
-  } else {
-    transportCreds = grpc.credentials.createSsl(cert);
-  }
+  // Like Python, no client certificate. A test certificate and its private key, shipped with the package, were sent
+  // whenever NODE_ENV was not 'production' (the mock robot does not ask for one).
+  const transportCreds = grpc.credentials.createSsl(cert);
 
   const plugin = refreshingAccessTokenAuthMetadataPlugin(tokenCb);
   const authCreds = grpc.credentials.createFromMetadataGenerator(plugin);
@@ -117,7 +114,7 @@ function createSecureChannel(address, port, creds, authority, options = {}) {
  * communicate with services running on Spot.
  * @param {string} address Connection host address.
  * @param {string|number} port Connection port.
- * @param {Object} authority Authority option for the channel.
+ * @param {string} authority Authority option for the channel.
  * @param {Object} [options={}] A list of additional parameters for the GRPC channel.
  * @returns {grpc.Channel} An insecure channel.
  */
@@ -134,7 +131,7 @@ function createInsecureChannel(address, port, authority = null, options = {}) {
 
 /**
  * Generate the array of options to specify in the creation of a client channel or server.
-
+ 
  * The list contains the values for max allowed message length for both sending and
  * receiving. If no values are provided, the default values of 100 MB are used.
  * @param {?number} [maxSendMessageLength=104_857_600] Max message length allowed for message to send.
@@ -162,8 +159,8 @@ function generateChannelOptions(
  * @returns {Error} Specific sub-type of RpcError.
  */
 function translateException(rpcError) {
-  const code = rpcError.code;
-  const msg = rpcError.details || rpcError.message;
+  const code = rpcError?.code;
+  const msg = String(rpcError?.details || rpcError?.message || '');
 
   if (code === grpc.status.CANCELLED) {
     if (msg.includes('401')) {
@@ -204,8 +201,21 @@ function translateException(rpcError) {
       'The user needs to authenticate or does not have permission to access requested service.',
     );
   }
+  // A response that cannot be parsed (Python 5.2.0), in the words of gRPC C-core and of grpc-js.
+  if (
+    code === grpc.status.INTERNAL &&
+    (msg.includes('Exception deserializing response!') || msg.includes('Response message parsing error'))
+  ) {
+    return new InternalDeserializationError(
+      rpcError,
+      'GRPC deserialization failed, indicating corrupted channel state. The channel has been reset automatically; ' +
+        'retrying the RPC should succeed.',
+    );
+  }
 
-  if (msg.includes('is not in peer certificate')) {
+  // The messages of gRPC C-core (Python), and the ones of grpc-js: a DNS failure was a retryable
+  // UnableToConnectToRobotError (retry loops never gave up on a wrong host name).
+  if (msg.includes('is not in peer certificate') || msg.includes("is not in the cert's altnames")) {
     return new NonexistentAuthorityError(rpcError, "The app token's authority field names a nonexistent service.");
   } else if (msg.includes('Failed to connect to remote host') || msg.includes('Failed to create subchannel')) {
     return new ProxyConnectionError(rpcError, 'The proxy on the robot could not be reached.');
@@ -213,7 +223,7 @@ function translateException(rpcError) {
     return new ServiceFailedDuringExecutionError(rpcError, 'The service encountered an unexpected failure.');
   } else if (msg.includes('Handshake failed')) {
     return new InvalidClientCertificateError(rpcError, 'The provided client certificate is invalid.');
-  } else if (msg.includes('Name resolution failure')) {
+  } else if (msg.includes('Name resolution failure') || msg.includes('Name resolution failed')) {
     return new UnknownDnsNameError(rpcError, 'The system is unable to translate the domain name.');
   } else if (msg.includes('channel is in state TRANSIENT_FAILURE')) {
     return new TransientFailureError(
@@ -226,9 +236,10 @@ function translateException(rpcError) {
 
   if (code === grpc.status.UNAVAILABLE) {
     if (msg.includes('Socket closed') || msg.includes('Connection reset by peer')) {
-      return new RetryableUnavailableError(
+      // A RetryableUnavailableError before Python 5.2.0 (its parent class).
+      return new ConnectionResetError(
         rpcError,
-        'Service unavailable or channel reset. Likely transient and can be resolved by retrying.',
+        'The connection was reset by the remote host. Likely transient and can be resolved by retrying.',
       );
     }
     if (msg.includes(502)) {
@@ -243,7 +254,7 @@ function translateException(rpcError) {
     return new UnableToConnectToRobotError(rpcError, 'The robot may be offline or otherwise unreachable.');
   }
 
-  console.warn(`Unclassified exception: ${rpcError}`);
+  _LOGGER.warn(`Unclassified exception: ${rpcError}`);
 
   return new RpcError(rpcError, 'An error occurred trying to reach a service on the robot.');
 }

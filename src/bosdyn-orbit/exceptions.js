@@ -1,15 +1,37 @@
+/**
+ * @file The errors of the Orbit client.
+ */
+
 'use strict';
 
-class UnauthenticatedClientError extends Error {
-  toString() {
-    // eslint-disable-next-line max-len
-    return 'The client is not authenticated properly. Run the proper authentication before calling other client functions!';
+/** Base exception. */
+class OrbitError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
   }
 }
 
-class WebhookSignatureVerificationError extends Error {}
+/** The client is not authenticated properly. */
+class UnauthenticatedClientError extends OrbitError {
+  // The message is given to Error (err.message was '').
+  constructor(
+    message = 'The client is not authenticated properly. ' +
+      'Run the proper authentication before calling other client functions!',
+  ) {
+    super(message);
+  }
+
+  toString() {
+    return this.message;
+  }
+}
+
+/** The webhook signature could not be verified. */
+class WebhookSignatureVerificationError extends OrbitError {}
 
 module.exports = {
+  OrbitError,
   UnauthenticatedClientError,
   WebhookSignatureVerificationError,
 };

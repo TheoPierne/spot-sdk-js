@@ -1,7 +1,10 @@
+/**
+ * @file Client implementation of the Keepalive service.
+ */
+
 'use strict';
 
 const { setTimeout: sleep } = require('node:timers/promises');
-const Event = require('node-threading-event');
 
 const {
   BaseClient,
@@ -10,17 +13,21 @@ const {
   handleCommonHeaderErrors,
   handleUnsetStatusError,
 } = require('./common');
-const { ResponseError } = require('./exceptions');
+const { ErrorCallbackResult } = require('./error_callback_result');
+const { ResponseError, RetryableRpcError, ValueError } = require('./exceptions');
 const { Lease } = require('./lease');
-const { LoggerUtil } = require('./loggerUtil');
+const { LoggerUtil } = require('./logger_util');
 const { DefaultDict } = require('./util');
 
 const keepalivePb = require('../bosdyn/api/keepalive/keepalive_pb');
 const { KeepaliveServiceClient } = require('../bosdyn/api/keepalive/keepalive_service_grpc_pb');
-const { durationToSeconds, secondsToDuration } = require('../bosdyn-core/util');
+const { durationToSeconds, secondsToDuration, nowSec, toUint64String } = require('../bosdyn-core/util');
 
+/** Error in Keepalive RPC */
 class KeepaliveResponseError extends ResponseError {}
+/** A policy's associated lease was not the same, super, or sub lease of the active lease. */
 class InvalidLeaseError extends KeepaliveResponseError {}
+/** The specified policy ID was not valid. */
 class InvalidPolicyError extends KeepaliveResponseError {}
 
 /**
@@ -31,6 +38,9 @@ class Policy {
     this.policyProto = proto || new keepalivePb.Policy();
   }
 
+  /**
+   * Get or set the name of the Policy
+   */
   get name() {
     return this.policyProto.getName();
   }
@@ -76,10 +86,13 @@ class Policy {
    * @returns {void}
    */
   addRecordEventAction(events, after) {
+    // jspb does not create sub-messages on access, unlike Python's `action.record_event.events`.
     function copyEvents(action) {
+      const recordEvent = new keepalivePb.ActionAfter.RecordEvent();
       for (const event of events) {
-        action.getRecordEvent().addEvents(event);
+        recordEvent.addEvents(event);
       }
+      action.setRecordEvent(recordEvent);
     }
 
     this._configureAction(after, copyEvents);
@@ -109,7 +122,9 @@ class Policy {
    */
   addLeaseStaleAction(leases, after) {
     function copyLeases(action) {
-      leases.forEach(lease => action.getLeaseStale().addLeases(lease.leaseProto));
+      const leaseStale = new keepalivePb.ActionAfter.LeaseStale();
+      leases.forEach(lease => leaseStale.addLeases(lease.leaseProto));
+      action.setLeaseStale(leaseStale);
     }
 
     this._configureAction(after, copyLeases);
@@ -166,8 +181,9 @@ class KeepaliveClient extends BaseClient {
   /**
    * Add given policy and remove policies with given ids.
    * @param {Policy} toAdd List of policies to add
-   * @param {Array<number>} policyIdsToRemove List of policies id to remove
-   * @param {Object} args Extra arguments to pass to the service.
+   * @param {Array<string|bigint|number>} policyIdsToRemove List of policies id to remove (uint64: the ids are
+   * strings, exact beyond 2^53)
+   * @param {Object} [args] Extra arguments to pass to the service.
    * @returns {Promise<keepalivePb.ModifyPolicyResponse>}
    */
   modifyPolicy(toAdd = null, policyIdsToRemove = null, args) {
@@ -177,8 +193,8 @@ class KeepaliveClient extends BaseClient {
 
   /**
    * Check in for given policy_id, refreshing that policy's timer.
-   * @param {number} policyId Policy id
-   * @param {Object} args Extra arguments to pass to the service.
+   * @param {string|bigint|number} policyId Policy id
+   * @param {Object} [args] Extra arguments to pass to the service.
    * @returns {Promise<keepalivePb.CheckInResponse>}
    */
   checkIn(policyId, args) {
@@ -188,7 +204,7 @@ class KeepaliveClient extends BaseClient {
 
   /**
    * Get status on all policies.
-   * @param {Object} args Extra arguments to pass to the service.
+   * @param {Object} [args] Extra arguments to pass to the service.
    * @returns {Promise<keepalivePb.GetStatusResponse>}
    */
   getStatus(args) {
@@ -197,17 +213,20 @@ class KeepaliveClient extends BaseClient {
   }
 
   _modifyPolicyRequest(toAdd, policyIdsToRemove) {
-    let request = new keepalivePb.ModifyPolicyRequest();
-    if (toAdd instanceof Policy) {
-      request.setToAdd(toAdd.policyProto).addPolicyIdsToRemove(policyIdsToRemove);
-    } else {
-      request.setToAdd(toAdd).addPolicyIdsToRemove(policyIdsToRemove);
+    const request = new keepalivePb.ModifyPolicyRequest();
+    if (toAdd) {
+      request.setToAdd(toAdd instanceof Policy ? toAdd.policyProto : toAdd);
+    }
+    // A list of ids: addPolicyIdsToRemove() would add the whole array (or null) as a single id.
+    if (policyIdsToRemove?.length) {
+      // uint64 strings ([jstype = JS_STRING]): jspb writes 0 for a number.
+      request.setPolicyIdsToRemoveList(Array.from(policyIdsToRemove, toUint64String));
     }
     return request;
   }
 
   _checkInRequest(policyId) {
-    return new keepalivePb.CheckInRequest().setPolicyId(policyId);
+    return new keepalivePb.CheckInRequest().setPolicyId(toUint64String(policyId));
   }
 }
 
@@ -232,7 +251,7 @@ const modifyPolicyError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(keepalivePb.ModifyPolicyResponse.Status),
+      keepalivePb.ModifyPolicyResponse.Status,
       _MODIFY_POLICY_STATUS_TO_ERROR,
     ),
   ),
@@ -240,12 +259,7 @@ const modifyPolicyError = handleCommonHeaderErrors(
 
 const checkInError = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(
-      response,
-      response.getStatus(),
-      Object.keys(keepalivePb.CheckInResponse.Status),
-      _CHECK_IN_STATUS_TO_ERROR,
-    ),
+    errorFactory(response, response.getStatus(), keepalivePb.CheckInResponse.Status, _CHECK_IN_STATUS_TO_ERROR),
   ),
 );
 
@@ -253,6 +267,16 @@ const checkInError = handleCommonHeaderErrors(
  * Specify a keepalive Policy that should be held to.
  */
 class PolicyKeepalive {
+  /**
+   * @param {KeepaliveClient} client
+   * @param {Policy} policy
+   * @param {?number} [rpcTimeoutSeconds=null] Timeout of the check-ins, in seconds.
+   * @param {?number} [rpcIntervalSeconds=null] Interval of the check-ins, in seconds (a third of the shortest delay
+   * of the actions of the policy by default).
+   * @param {?Object} [logger=null]
+   * @param {boolean} [removePolicyOnExit=false] Whether shutdown() removes the policy.
+   * @param {number} [initialRetrySeconds=1.0] First wait of the retries with exponential back-off, in seconds.
+   */
   constructor(
     client,
     policy,
@@ -260,6 +284,7 @@ class PolicyKeepalive {
     rpcIntervalSeconds = null,
     logger = null,
     removePolicyOnExit = false,
+    initialRetrySeconds = 1.0,
   ) {
     this.logger = logger || LoggerUtil.getLogger('PolicyKeepalive');
     this.removePolicyOnExit = removePolicyOnExit;
@@ -269,17 +294,55 @@ class PolicyKeepalive {
     this._policy = policy;
     this._policyId = null;
     this._rpcIntervalSeconds = rpcIntervalSeconds || policy.shortestActionDelay() / 3;
+    if (!(this._rpcIntervalSeconds > 0)) {
+      // A policy without action has no delay: the check-ins would run without any pause.
+      throw new ValueError('rpcIntervalSeconds must be > 0: give it, or add an action to the policy');
+    }
     this._rpcTimeoutSeconds = rpcTimeoutSeconds;
-    this._endCheckInSignal = new Event();
+    this._initialRetrySeconds = initialRetrySeconds;
+
+    /**
+     * Optional callback called when a check-in fails with an error which is not a RetryableRpcError, like Python:
+     * it returns (or resolves to) an ErrorCallbackResult. Without callback, such an error stops the check-ins, and
+     * the robot then applies the actions of the policy (they were retried forever).
+     * @type {?function(Error): (number|Promise<number>)}
+     */
+    this.keepaliveErrorCallback = null;
+
+    /**
+     * Aborted to stop the check-in loop, including the wait between two check-ins.
+     * @type {AbortController}
+     * @private
+     */
+    this._stopController = new AbortController();
+
+    /**
+     * The running check-in loop.
+     * @type {?Promise<void>}
+     * @private
+     */
+    this._task = null;
   }
 
+  /**
+   * Starts the check-ins.
+   */
   async start() {
+    if (this._task) throw new Error('PolicyKeepalive is already running.');
     this._policyId = (await this._client.modifyPolicy(this._policy)).getAddedPolicy().getPolicyId();
-    this._periodicCheckIn();
+    this._task = this._periodicCheckIn().catch(err => {
+      this.logger.error(`Policy check-in stopped by an error: ${err?.message ?? err}`);
+    });
+    return this;
   }
 
+  /**
+   * Stop the check-ins, and remove the policy if removePolicyOnExit. Like Python's join, the check-in in
+   * progress ends before the policy is removed.
+   */
   async shutdown() {
-    this._endCheckInSignal.set();
+    this._stopController.abort();
+    await this._task;
     if (this.removePolicyOnExit) {
       await this.removePolicy();
     }
@@ -294,36 +357,79 @@ class PolicyKeepalive {
    * @returns {Promise<void>}
    */
   async removePolicy() {
-    if (this._policyId) {
+    // A string: '0' is no policy, like the 0 of Python.
+    if (this._policyId && this._policyId !== '0') {
       await this._client.modifyPolicy(undefined, [this._policyId]);
       this._policyId = null;
     }
   }
 
   async _checkIn() {
-    await this._client.checkIn(this._policyId, { timeout: this._rpcTimeoutSeconds });
+    // rpcTimeoutSeconds is in seconds like in Python, but call() takes milliseconds. None in Python: no deadline.
+    const timeout = this._rpcTimeoutSeconds == null ? null : this._rpcTimeoutSeconds * 1000;
+    await this._client.checkIn(this._policyId, { timeout });
   }
 
+  /**
+   * Check in periodically, like the thread of Python (whose first check-in waits an interval; here it is immediate):
+   * the retryable RPC errors are logged, the other errors go to keepaliveErrorCallback, or end the check-ins.
+   * @private
+   */
   async _periodicCheckIn() {
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const execStart = Date.now();
+    const { signal } = this._stopController;
+    let retryInterval = this._initialRetrySeconds;
+
+    while (!signal.aborted) {
+      const execStart = nowSec();
+      let action = ErrorCallbackResult.RESUME_NORMAL_OPERATION;
 
       try {
-        // eslint-disable-next-line no-await-in-loop
         await this._checkIn();
       } catch (err) {
-        this.logger.warning(`exception during check-in:\n${err}\n`);
-        this.logger.info('continuing check-in');
+        if (err instanceof RetryableRpcError) {
+          this.logger.warn(`exception during check-in: ${err?.message ?? err} (continuing check-in)`);
+        } else if (this.keepaliveErrorCallback !== null) {
+          action = ErrorCallbackResult.DEFAULT_ACTION;
+          try {
+            action = await this.keepaliveErrorCallback(err);
+          } catch (callbackError) {
+            this.logger.error(
+              `Exception thrown in the provided keepalive error callback: ${callbackError?.message ?? callbackError}`,
+            );
+          }
+        } else {
+          throw err;
+        }
       }
 
-      const execSeconds = Date.now() - execStart;
-
-      // eslint-disable-next-line no-await-in-loop
-      if (await this._endCheckInSignal.wait(this._rpcIntervalSeconds - execSeconds)) {
+      // How long did the RPC and processing of said RPC take?
+      const execSeconds = nowSec() - execStart;
+      let waitSeconds;
+      if (action === ErrorCallbackResult.ABORT) {
+        this.logger.warn('Callback directed the keepalive thread to exit.');
         break;
+      } else if (action === ErrorCallbackResult.RETRY_IMMEDIATELY) {
+        waitSeconds = 0;
+      } else if (action === ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF) {
+        waitSeconds = retryInterval - execSeconds;
+        retryInterval = Math.min(2 * retryInterval, this._rpcIntervalSeconds);
+      } else {
+        // Success path, or default action (resume normal operation)
+        waitSeconds = this._rpcIntervalSeconds - execSeconds;
+        retryInterval = this._initialRetrySeconds;
+      }
+
+      // The interval is in seconds: wait for the rest of it in milliseconds, interrupted by shutdown().
+      const waitMs = waitSeconds * 1000;
+      if (waitMs > 0) {
+        try {
+          await sleep(waitMs, undefined, { signal });
+        } catch (e) {
+          break;
+        }
       }
     }
+
     this.logger.debug('Policy check-in stopped');
   }
 }
@@ -338,19 +444,18 @@ async function removeAllPolicies(keepaliveClient, attempts = 1) {
   let lastExc = null;
   for (let i = 0; i < attempts; i++) {
     if (lastExc) {
-      // eslint-disable-next-line no-await-in-loop
       await sleep(500);
       lastExc = null;
     }
 
-    // eslint-disable-next-line no-await-in-loop
     const allPolicyIds = (await keepaliveClient.getStatus()).getStatusList().map(p => p.getPolicyId());
-    if (allPolicyIds) {
+    if (allPolicyIds.length) {
       try {
-        // eslint-disable-next-line no-await-in-loop
         await keepaliveClient.modifyPolicy(undefined, allPolicyIds);
         break;
       } catch (e) {
+        // Like Python, only retry when another client removed a policy meanwhile.
+        if (!(e instanceof InvalidPolicyError)) throw e;
         lastExc = e;
       }
     } else {
@@ -367,5 +472,7 @@ module.exports = {
   KeepaliveClient,
   PolicyKeepalive,
   removeAllPolicies,
+  KeepaliveResponseError,
   InvalidLeaseError,
+  InvalidPolicyError,
 };

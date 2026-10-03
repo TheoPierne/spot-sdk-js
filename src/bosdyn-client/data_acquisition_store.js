@@ -1,7 +1,11 @@
+/**
+ * @file Client implementation for data acquisition store service.
+ */
+
 'use strict';
 
 const { Buffer } = require('node:buffer');
-const { closeSync, openSync, readFileSync, readSync, statSync } = require('node:fs');
+const { closeSync, openSync, readSync, statSync } = require('node:fs');
 const { resolve } = require('node:path');
 
 const { DEFAULT_MAX_MESSAGE_LENGTH, DEFAULT_HEADER_BUFFER_LENGTH } = require('./channel');
@@ -11,6 +15,12 @@ const { splitSerialized } = require('./data_chunk');
 const dataAcquisitionStore = require('../bosdyn/api/data_acquisition_store_pb');
 const { DataAcquisitionStoreServiceClient } = require('../bosdyn/api/data_acquisition_store_service_grpc_pb');
 const dataChunkPb = require('../bosdyn/api/data_chunk_pb');
+
+/**
+ * @typedef {import('../bosdyn/api/data_acquisition_pb').AssociatedMetadata} AssociatedMetadata
+ * @typedef {import('../bosdyn/api/data_acquisition_pb').DataIdentifier} DataIdentifier
+ * @typedef {import('../bosdyn/api/image_pb').ImageCapture} ImageCapture
+ */
 
 const DEFAULT_CHUNK_SIZE_BYTES = DEFAULT_MAX_MESSAGE_LENGTH - DEFAULT_HEADER_BUFFER_LENGTH;
 
@@ -80,6 +90,17 @@ class DataAcquisitionStoreClient extends BaseClient {
   }
 
   /**
+   * List AlertData that satisfy the query parameters.
+   * @param {dataAcquisitionStore.DataQueryParams} query Query parameters.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<Array|Object>} DataIdentifiers for the AlertData matching the query parameters.
+   */
+  listStoredAlertdata(query, args) {
+    const request = new dataAcquisitionStore.ListStoredAlertDataRequest().setQuery(query);
+    return this.call(this._stub.listStoredAlertData, request, _getDataIds, commonHeaderErrors, false, args);
+  }
+
+  /**
    * List data that satisfy the query parameters.
    * @param {dataAcquisitionStore.DataQueryParams} query Query parameters.
    * @param {Object} [args] Extra arguments for controlling RPC details.
@@ -92,8 +113,8 @@ class DataAcquisitionStoreClient extends BaseClient {
 
   /**
    * Store image.
-   * @param {imagePb.ImageCapture} image Image to store.
-   * @param {dataAcquisitionPb.DataIdentifier} dataId Data identifier to use for storing the image.
+   * @param {ImageCapture} image Image to store.
+   * @param {DataIdentifier} dataId Data identifier to use for storing the image.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataAcquisitionStore.StoreImageResponse>} StoreImageResponse response.
    */
@@ -104,10 +125,10 @@ class DataAcquisitionStoreClient extends BaseClient {
 
   /**
    * Store metadata.
-   * @param {dataAcquisitionStore.AssociatedMetadata} associatedMetadata Metadata to store. If metadata is
+   * @param {AssociatedMetadata} associatedMetadata Metadata to store. If metadata is
    * not associated with a particular piece of data, the dataId field in this object
    * needs to specify only the action_id part.
-   * @param {dataAcquisitionStore.DataIdentifier} dataId Data identifier to use for storing this
+   * @param {DataIdentifier} dataId Data identifier to use for storing this
    * associated metadata.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataAcquisitionStore.StoreMetadataResponse>} StoreMetadataResponse response.
@@ -119,16 +140,16 @@ class DataAcquisitionStoreClient extends BaseClient {
 
   /**
    * Store AlertData
-   * @param {dataAcquisitionStore.AssociatedMetadata} associatedAlertData AlertData to store. If AlertData is
+   * @param {AssociatedMetadata} associatedAlertData AlertData to store. If AlertData is
    * not associated with a particular piece of data, the dataId field in this object
    * needs to specify only the action_id part.
-   * @param {dataAcquisitionStore.DataIdentifier} dataId Data identifier to use for storing this
+   * @param {DataIdentifier} dataId Data identifier to use for storing this
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataAcquisitionStore.StoreAlertDataResponse>}
    */
   storeAlertdata(associatedAlertData, dataId, args) {
     const request = new dataAcquisitionStore.StoreAlertDataRequest()
-      .setAlertDate(associatedAlertData)
+      .setAlertData(associatedAlertData)
       .setDataId(dataId);
     return this.call(this._stub.storeAlertData, request, null, commonHeaderErrors, false, args);
   }
@@ -136,7 +157,7 @@ class DataAcquisitionStoreClient extends BaseClient {
   /**
    * Store data.
    * @param {Uint8Array|string} data Arbitrary data to store.
-   * @param {dataAcquisitionStore.DataIdentifier} dataId Data identifier to use for storing this data.
+   * @param {DataIdentifier} dataId Data identifier to use for storing this data.
    * @param {?string} [fileExtension=null] File extension to use for writing the data to a file.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataAcquisitionStore.StoreDataResponse>} StoreDataResponse response.
@@ -153,7 +174,7 @@ class DataAcquisitionStoreClient extends BaseClient {
    * Store data using streaming, supports storing of large data that is too large for a single storeData rpc.
    * Note: using this rpc means that the data must be loaded into memory.
    * @param {Uint8Array|string} data Arbitrary data to store.
-   * @param {dataAcquisitionStore.DataIdentifier} dataId Data identifier to use for storing this data.
+   * @param {DataIdentifier} dataId Data identifier to use for storing this data.
    * @param {?string} [fileExtension=null] File extension to use for writing the data to a file.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataAcquisitionStore.StoreStreamResponse[]>}
@@ -172,16 +193,17 @@ class DataAcquisitionStoreClient extends BaseClient {
   /**
    * Store file using file path, supports storing of large files that are too large for a single storeData rpc.
    * @param {string} filePath File path to arbitrary data to store.
-   * @param {dataAcquisitionStore.DataIdentifier} dataId Data identifier to use for storing this data.
+   * @param {DataIdentifier} dataId Data identifier to use for storing this data.
    * @param {?string} [fileExtension=null] File extension to use for writing the data to a file.
    * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataAcquisitionStore.StoreStreamResponse[]>}
    */
   storeFile(filePath, dataId, fileExtension = null, args) {
-    const file = readFileSync(resolve(filePath));
+    // The file is read chunk by chunk while the request is streamed (it was read at once, and its content was
+    // then used as a path).
     return this.call(
       this._stub.storeDataStream,
-      _iterateStoreFile(file, dataId, fileExtension),
+      _iterateStoreFile(resolve(filePath), dataId, fileExtension),
       null,
       commonHeaderErrors,
       false,
@@ -198,7 +220,11 @@ class DataAcquisitionStoreClient extends BaseClient {
   queryStoredCaptures(query = null, args) {
     const request = new dataAcquisitionStore.QueryStoredCapturesRequest().setQuery(query);
     this._applyRequestProcessors(request);
-    return this.call(this._stub.queryStoredCaptures, request, null, commonHeaderErrors, false, args);
+    // The response is streamed as DataChunks: they are assembled into the response, like Python.
+    return this.call(this._stub.queryStoredCaptures, request, null, commonHeaderErrors, false, {
+      ...args,
+      assembleType: dataAcquisitionStore.QueryStoredCapturesResponse,
+    });
   }
 
   /**
@@ -213,28 +239,32 @@ class DataAcquisitionStoreClient extends BaseClient {
 }
 
 function _getActionIds(response) {
-  return response.getActionIds();
+  return response.getActionIdsList();
 }
 
 function _getDataIds(response) {
-  return response.getDataIds();
+  return response.getDataIdsList();
 }
 
 function _getMaxCaptureId(response) {
   return response.getMaxCaptureId();
 }
 
-function* _iterateStoreFile(file, dataId, fileExtension = null) {
-  const totalSize = statSync(file).size;
-  const fd = openSync(file, 'r');
+function* _iterateStoreFile(filePath, dataId, fileExtension = null) {
+  const totalSize = statSync(filePath).size;
+  const fd = openSync(filePath, 'r');
 
-  let buffer = Buffer.alloc(DEFAULT_CHUNK_SIZE_BYTES);
   let bytesRead = 0;
   let position = 0;
 
   try {
-    while ((bytesRead = readSync(fd, buffer, 0, DEFAULT_CHUNK_SIZE_BYTES, position)) > 0) {
-      const data = buffer.toString('utf8', 0, bytesRead);
+    while (position < totalSize) {
+      // A new buffer for each chunk, as large as needed: the requests may be serialized after the next chunk is read.
+      const buffer = Buffer.alloc(Math.min(DEFAULT_CHUNK_SIZE_BYTES, totalSize - position));
+      bytesRead = readSync(fd, buffer, 0, buffer.length, position);
+      if (bytesRead <= 0) break;
+      // Bytes, not a string: jspb reads a string as base64.
+      const data = new Uint8Array(buffer.buffer, buffer.byteOffset, bytesRead);
       const chunk = new dataChunkPb.DataChunk().setData(data).setTotalSize(totalSize);
       yield new dataAcquisitionStore.StoreStreamRequest()
         .setChunk(chunk)

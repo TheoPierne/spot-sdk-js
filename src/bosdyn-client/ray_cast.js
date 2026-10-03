@@ -1,3 +1,7 @@
+/**
+ * @file Client implementation of the RayCast service.
+ */
+
 'use strict';
 
 const { BaseClient, errorFactory, handleCommonHeaderErrors, handleUnsetStatusError } = require('./common');
@@ -8,9 +12,13 @@ const geometryPb = require('../bosdyn/api/geometry_pb');
 const rayCastPb = require('../bosdyn/api/ray_cast_pb');
 const { RayCastServiceClient } = require('../bosdyn/api/ray_cast_service_grpc_pb');
 
+/** General class of errors for ray cast service. */
 class RayCastResponseError extends ResponseError {}
+/** Request was invalid / malformed in some way. */
 class InvalidRequestError extends RayCastResponseError {}
+/** Requested source not valid for current robot configuration. */
 class InvalidIntersectionTypeError extends RayCastResponseError {}
+/** The frame_name for a command was not a known frame. */
 class UnknownFrameError extends RayCastResponseError {}
 
 const _STATUS_TO_ERROR = DefaultDict(() => [ResponseError, null]);
@@ -30,7 +38,7 @@ _STATUS_TO_ERROR.set(rayCastPb.RaycastResponse.Status.STATUS_UNKNOWN_FRAME, [
 
 const _errorFromResponse = handleCommonHeaderErrors(
   handleUnsetStatusError('STATUS_UNKNOWN')(response =>
-    errorFactory(response, response.getStatus(), Object.keys(rayCastPb.RaycastResponse.Status), _STATUS_TO_ERROR),
+    errorFactory(response, response.getStatus(), rayCastPb.RaycastResponse.Status, _STATUS_TO_ERROR),
   ),
 );
 
@@ -55,7 +63,7 @@ class RayCastClient extends BaseClient {
    * @param {?number} minDistance a positive real value denoting how far (meters) behind a ray an intersection
    * can occur.
    * @param {?string} frameName the frame the ray is in.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<rayCastPb.RaycastResponse>}
    */
   raycast(rayOrigin, rayDirection, raycastTypes, minDistance = 0, frameName = null, args) {
@@ -64,6 +72,8 @@ class RayCastClient extends BaseClient {
   }
 
   _raycastRequest(rayOrigin, rayDirection, raycastTypes, minDistance, frameName) {
+    // null: no type, which casts into all sources (it was [null]).
+    const types = Array.isArray(raycastTypes) ? raycastTypes : raycastTypes === null ? [] : [raycastTypes];
     const originProto = new geometryPb.Vec3().setX(rayOrigin[0]).setY(rayOrigin[1]).setZ(rayOrigin[2]);
     const dirProto = new geometryPb.Vec3().setX(rayDirection[0]).setY(rayDirection[1]).setZ(rayDirection[2]);
     const ray = new geometryPb.Ray().setOrigin(originProto).setDirection(dirProto);
@@ -71,7 +81,7 @@ class RayCastClient extends BaseClient {
       .setRay(ray)
       .setMinIntersectionDistance(minDistance)
       .setRayFrameName(frameName)
-      .setIntersectionTypesList(Array.isArray(raycastTypes) ? raycastTypes : [raycastTypes]);
+      .setIntersectionTypesList(types);
   }
 }
 

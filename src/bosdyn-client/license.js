@@ -1,3 +1,7 @@
+/**
+ * @file Client for the license service.
+ */
+
 'use strict';
 
 const { BaseClient, commonHeaderErrors } = require('./common');
@@ -26,7 +30,7 @@ class LicenseClient extends BaseClient {
 
   /**
    * Get the robot's installed license.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<licensePb.LicenseInfo>}
    */
   getLicenseInfo(args) {
@@ -37,7 +41,7 @@ class LicenseClient extends BaseClient {
   /**
    * Check if the installed license allow a list of feature codes.
    * @param {string[]} featureList Features code.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<JspbMap>}
    */
   getFeatureEnabled(featureList = [], args) {

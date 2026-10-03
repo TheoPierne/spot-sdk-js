@@ -1,24 +1,46 @@
+/**
+ * @file For clients to use the image service.
+ */
+
 'use strict';
 
+const { Buffer } = require('node:buffer');
 const { writeFileSync } = require('node:fs');
 const path = require('node:path');
+const process = require('node:process');
 
-const { max, array, divide, multiply, subtract, stack } = require('@d4c/numjs').default;
-const sharp = require('sharp');
+const { array, zeros } = require('@d4c/numjs').default;
 
-const { BaseClient, errorFactory, commonHeaderErrors, customParamsError } = require('./common');
-const { ResponseError, UnsetStatusError } = require('./exceptions');
+const {
+  BaseClient,
+  errorFactory,
+  commonHeaderErrors,
+  customParamsError,
+  handleCommonHeaderErrors,
+} = require('./common');
+const { ResponseError, UnsetStatusError, ValueError } = require('./exceptions');
 const { DefaultDict } = require('./util');
 
 const imagePb = require('../bosdyn/api/image_pb');
 const { ImageServiceClient } = require('../bosdyn/api/image_service_grpc_pb');
 
+/**
+ * @typedef {import('@d4c/numjs').NdArray} NdArray
+ */
+
+/** General class of errors for Image service. */
 class ImageResponseError extends ResponseError {}
+/** System cannot find the requested image source name. */
 class UnknownImageSourceError extends ImageResponseError {}
+/** System cannot generate the ImageSource at this time. */
 class SourceDataError extends ImageResponseError {}
+/** System cannot generate image data for the ImageCapture at this time. */
 class ImageDataError extends ImageResponseError {}
+/** The image service cannot return data in the requested format. */
 class UnsupportedImageFormatRequestedError extends ImageResponseError {}
+/** The image service cannot return data in the requested pixel format. */
 class UnsupportedPixelFormatRequestedError extends ImageResponseError {}
+/** The image service cannot return data with the requested resize ratio. */
 class UnsupportedResizeRatioRequestedError extends ImageResponseError {}
 
 const _STATUS_TO_ERROR = DefaultDict(() => [ResponseError, null]);
@@ -53,7 +75,12 @@ _STATUS_TO_ERROR.set(imagePb.ImageResponse.Status.STATUS_UNKNOWN, [
   "Response's status field (in either message or common header) was UNKNOWN value.",
 ]);
 
-function _errorFromResponse(response) {
+/**
+ * Return a custom exception based on the first invalid image response, null if no error.
+ * @param {imagePb.GetImageResponse} response
+ * @returns {?Error}
+ */
+const _errorFromResponse = handleCommonHeaderErrors(response => {
   for (const imageResponse of response.getImageResponsesList()) {
     let result = customParamsError(imageResponse, null, 'status', 'custom_param_error', response);
 
@@ -61,12 +88,7 @@ function _errorFromResponse(response) {
       return result;
     }
 
-    result = errorFactory(
-      response,
-      imageResponse.getStatus(),
-      Object.keys(imagePb.ImageResponse.Status),
-      _STATUS_TO_ERROR,
-    );
+    result = errorFactory(response, imageResponse.getStatus(), imagePb.ImageResponse.Status, _STATUS_TO_ERROR);
 
     if (result) {
       result.response = response;
@@ -74,7 +96,7 @@ function _errorFromResponse(response) {
     }
   }
   return null;
-}
+});
 
 /**
  * Client for the image service.
@@ -90,7 +112,7 @@ class ImageClient extends BaseClient {
 
   /**
    * Obtain the list of ImageSources.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<imagePb.ImageSource[]>}
    */
   listImageSources(args) {
@@ -101,7 +123,7 @@ class ImageClient extends BaseClient {
   /**
    * Obtain images from sources using default parameters.
    * @param {string[]} imageSources The different image sources to request images from.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<imagePb.ImageResponse[]>}
    */
   getImageFromSources(imageSources, args) {
@@ -115,7 +137,7 @@ class ImageClient extends BaseClient {
    * Obtain the set of images from the robot.
    * @param {imagePb.ImageRequest[]} imageRequests A list of the ImageRequest protobuf messages which
    * specify which images to collect.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<imagePb.ImageResponse[]>}
    */
   getImage(imageRequests, args) {
@@ -173,6 +195,35 @@ function _getImageValue(response) {
 }
 
 /**
+ * Name of a pixel format, e.g. 'PIXEL_FORMAT_RGB_U8'.
+ * @param {imagePb.Image.PixelFormat} pixelFormat
+ * @returns {string}
+ */
+function _pixelFormatName(pixelFormat) {
+  return Object.keys(imagePb.Image.PixelFormat).find(key => imagePb.Image.PixelFormat[key] === pixelFormat);
+}
+
+/**
+ * Bytes per value of the pixel formats that PGM/PPM files support, like pixel_format_to_numpy_type() in Python.
+ * @param {imagePb.Image.PixelFormat} pixelFormat
+ * @returns {number}
+ */
+function _pixelFormatBytes(pixelFormat) {
+  const { PixelFormat } = imagePb.Image;
+  switch (pixelFormat) {
+    case PixelFormat.PIXEL_FORMAT_GREYSCALE_U8:
+    case PixelFormat.PIXEL_FORMAT_RGB_U8:
+    case PixelFormat.PIXEL_FORMAT_RGBA_U8:
+      return 1;
+    case PixelFormat.PIXEL_FORMAT_DEPTH_U16:
+    case PixelFormat.PIXEL_FORMAT_GREYSCALE_U16:
+      return 2;
+    default:
+      throw new Error(`Image PixelFormat type ${pixelFormat} not supported`);
+  }
+}
+
+/**
  * Write raw data from image_response to a PGM file.
  * @param {imagePb.ImageResponse} imageResponse The ImageResponse proto to parse.
  * @param {string} filename Name of the output file, if None is passed, then "image-{SOURCENAME}.pgm" is used.
@@ -182,72 +233,69 @@ function _getImageValue(response) {
  * @returns {void}
  */
 function writePgmOrPpm(imageResponse, filename = '', filepath = './', includePixelFormat = false) {
+  const { PixelFormat } = imagePb.Image;
+  const image = imageResponse.getShot()?.getImage() ?? new imagePb.Image();
+  const sourceName = imageResponse.getSource()?.getName() ?? '';
+  const pixelFormat = image.getPixelFormat();
+  // Determine the data type to decode the image.
+  const bytesPerValue = _pixelFormatBytes(pixelFormat);
+  const maxVal = bytesPerValue === 2 ? 0xffff : 0xff;
+
   let numChannels = 1;
   let pgmHeaderNumber = 'P5';
   let fileExtension = '.pgm';
 
-  if (imageResponse.getShot().getImage().getPixelFormat() === imagePb.Image.PixelFormat.PIXEL_FORMAT_RGB_U8) {
+  // Determine the pixel format to get the number of channels the data comes in.
+  if (pixelFormat === PixelFormat.PIXEL_FORMAT_RGB_U8) {
     numChannels = 3;
     pgmHeaderNumber = 'P6';
     fileExtension = '.ppm';
-  } else if (imageResponse.getShot().getImage().getPixelFormat() === imagePb.Image.PixelFormat.PIXEL_FORMAT_RGBA_U8) {
+  } else if (pixelFormat === PixelFormat.PIXEL_FORMAT_RGBA_U8) {
     console.log('[IMAGE] PGM/PPM format does not support RGBA encodings.');
     return;
   } else if (
-    imageResponse.getShot().getImage().getPixelFormat() in
-    [
-      imagePb.Image.PixelFormat.PIXEL_FORMAT_GREYSCALE_U8,
-      imagePb.Image.PixelFormat.PIXEL_FORMAT_DEPTH_U16,
-      imagePb.Image.PixelFormat.PIXEL_FORMAT_GREYSCALE_U16,
-    ]
+    ![
+      PixelFormat.PIXEL_FORMAT_GREYSCALE_U8,
+      PixelFormat.PIXEL_FORMAT_DEPTH_U16,
+      PixelFormat.PIXEL_FORMAT_GREYSCALE_U16,
+    ].includes(pixelFormat)
   ) {
-    numChannels = 1;
-  } else {
-    console.log(
-      `[IMAGE] Unsupported pixel format for PGM/PPM: ${
-        imagePb.Image.PixelFormat[imageResponse.getShot().getImage().getPixelFormat()]
-      }.`,
-    );
+    console.log(`[IMAGE] Unsupported pixel format for PGM/PPM: ${_pixelFormatName(pixelFormat)}.`);
     return;
   }
 
-  let img = sharp(imageResponse.getShot().getImage().getData(), {
-    raw: {
-      channels: numChannels,
-    },
-  });
-  const height = imageResponse.getShot().getImage().getRows();
-  const width = imageResponse.getShot().getImage().getCols();
-  try {
-    img = img.resize(width, height);
-  } catch (err) {
+  const data = image.getData_asU8();
+  const height = image.getRows();
+  const width = image.getCols();
+  if (data.length !== height * width * numChannels * bytesPerValue) {
     // eslint-disable-next-line
     console.log(`[IMAGE] Cannot convert raw image into expected shape (rows ${height}, cols ${width}, color channels ${numChannels}).`);
-    console.error(err);
     return;
   }
-  if (filename.length === 0) {
+  // Like Python, the values are written in the byte order of the machine (little-endian): GREYSCALE_U16
+  // images come big-endian.
+  const pixels = Buffer.from(data);
+  if (pixelFormat === PixelFormat.PIXEL_FORMAT_GREYSCALE_U16) {
+    pixels.swap16();
+  }
+
+  if (!filename) {
     if (includePixelFormat) {
-      filename = `image-${imageResponse.getSource().getName()}-${Object.keys(imagePb.Image.PixelFormat).find(
-        key => imagePb.Image.PixelFormat[key] === imageResponse.getShot().getImage().getPixelFormat(),
-      )}${fileExtension}`;
+      filename = `image-${sourceName}-${_pixelFormatName(pixelFormat)}${fileExtension}`;
     } else {
-      filename = `image-${imageResponse.getSource().getName()}${fileExtension}`;
+      filename = `image-${sourceName}${fileExtension}`;
     }
   }
   filename = path.join(filepath, filename);
 
-  img.toArray().then(data => {
-    const maxVal = max(array(data));
-    const pgmHeader = `${pgmHeaderNumber} ${width} ${height} ${maxVal}\n`;
-    writeFileSync(filename, pgmHeader);
-    img.toFile(filename);
-    console.log(
-      `[IMAGE] Saved matrix with pixel values from camera "${imageResponse
-        .getSource()
-        .getName()}" to file "${filename}".`,
-    );
-  });
+  const pgmHeader = `${pgmHeaderNumber} ${width} ${height} ${maxVal}\n`;
+  try {
+    writeFileSync(filename, Buffer.concat([Buffer.from(pgmHeader, 'latin1'), pixels]));
+  } catch (err) {
+    console.log(`[IMAGE] Cannot open file ${filename}. Exception thrown: ${err}`);
+    return;
+  }
+  console.log(`[IMAGE] Saved matrix with pixel values from camera "${sourceName}" to file "${filename}".`);
 }
 
 /**
@@ -260,29 +308,30 @@ function writePgmOrPpm(imageResponse, filename = '', filepath = './', includePix
  * a filename ("image-{SOURCENAME}-{PIXELFORMAT}.jpg").
  */
 function writeImageData(imageResponse, filename = '', filepath = './', includePixelFormat = false) {
-  if (filename.length === 0) {
+  const image = imageResponse.getShot()?.getImage() ?? new imagePb.Image();
+  const sourceName = imageResponse.getSource()?.getName() ?? '';
+  if (!filename) {
     if (includePixelFormat) {
-      filename = `image-${imageResponse.getSource().getName()}-${Object.keys(imagePb.Image.PixelFormat).find(
-        key => imagePb.Image.PixelFormat[key] === imageResponse.getShot().getImage().getPixelFormat(),
-      )}.jpg`;
+      filename = `image-${sourceName}-${_pixelFormatName(image.getPixelFormat())}.jpg`;
     } else {
-      filename = `image-${imageResponse.getSource().getName()}.jpg`;
+      filename = `image-${sourceName}.jpg`;
     }
   }
 
   filename = path.join(filepath, filename);
   try {
-    writeFileSync(filename, imageResponse.getShot().getImage().getData());
-    console.log(`[IMAGE] Saved "${imageResponse.source.name}" to "${filename}".`);
+    writeFileSync(filename, image.getData_asU8());
+    console.log(`[IMAGE] Saved "${sourceName}" to "${filename}".`);
   } catch (err) {
-    console.log(`[IMAGE] Failed to save "${imageResponse.source.name}".`);
+    console.log(`[IMAGE] Failed to save "${sourceName}".`);
     console.error(err);
   }
 }
 
 /**
  * Write image responses to files.
- * @param {imagePb.ImageResponse[]} imageResponses The list of image responses to save.
+ * @param {imagePb.ImageResponse[]|imagePb.GetImageResponse} imageResponses The list of image responses to save,
+ * as returned by ImageClient.getImage(), or the GetImageResponse that contains them.
  * @param {string} filename Name prefix of the output files (made unique by an integer suffix), if null
  * is passed the image source name is used.
  * @param {string} filepath The directory to save the image files.
@@ -290,20 +339,28 @@ function writeImageData(imageResponse, filename = '', filepath = './', includePi
  * a filename ("image-{SOURCENAME}-{PIXELFORMAT}.jpg").
  */
 function saveImagesAsFiles(imageResponses, filename = '', filepath = './', includePixelFormat = false) {
-  for (const [index, image] of imageResponses.getImageResponsesList().entries()) {
+  const responses = Array.isArray(imageResponses) ? imageResponses : imageResponses.getImageResponsesList();
+  for (const [index, image] of responses.entries()) {
     let saveFileName = '';
-    if (filename.length !== 0) {
+    if (filename) {
+      // Add a suffix of the index of the image to ensure the filename is unique.
       saveFileName = `${filename}${index}`;
     }
-    if (image.getShot().getImage().getFormat() === imagePb.Image.Format.FORMAT_UNKNOWN) {
+    const format = image.getShot()?.getImage()?.getFormat() ?? imagePb.Image.Format.FORMAT_UNKNOWN;
+    if (format === imagePb.Image.Format.FORMAT_UNKNOWN) {
+      // Don't save an image with no format.
       continue;
-    } else if (image.getShot().getImage().getFormat() !== imagePb.Image.Format.FORMAT_JPEG) {
+    } else if (format !== imagePb.Image.Format.FORMAT_JPEG) {
+      // Save raw and rle sources as PGM/PPM files.
       writePgmOrPpm(image, saveFileName, filepath, includePixelFormat);
     } else {
+      // Save jpeg format as a jpeg image.
       writeImageData(image, saveFileName, filepath, includePixelFormat);
     }
   }
 }
+
+let _warnedImageSourceDeprecation = false;
 
 /**
  * Using the camera intrinsics, determine the [x,y,z] point in the camera frame for
@@ -314,14 +371,28 @@ function saveImagesAsFiles(imageResponses, filename = '', filepath = './', inclu
  * @param {number} pixelY y-coordinate.
  * @param {number} depth The depth from the camera to the point of interest.
  * @returns {number[]}
+ * @throws {ValueError} The image source has no pinhole camera model.
  */
 function pixelToCameraSpace(imageProto, pixelX, pixelY, depth = 1.0) {
-  if (!imageProto.hasPinhole()) {
-    throw new TypeError('Requires a pinhole camera_model.');
+  let imageSource = imageProto;
+  if (imageProto instanceof imagePb.ImageResponse || imageProto instanceof imagePb.ImageCaptureAndSource) {
+    if (!_warnedImageSourceDeprecation) {
+      _warnedImageSourceDeprecation = true;
+      process.emitWarning(
+        'Use of imagePb.ImageCaptureAndSource or imagePb.ImageResponse types for imageProto argument have ' +
+          'been deprecated, use imagePb.ImageSource instead. version=4.0.0',
+        'DeprecationWarning',
+      );
+    }
+    imageSource = imageProto.getSource() ?? new imagePb.ImageSource();
   }
 
-  const focalLength = imageProto.getPinhole().getIntrinsics().getFocalLength();
-  const principalPoint = imageProto.getPinhole().getIntrinsics().getPrincipalPoint();
+  if (!imageSource.hasPinhole()) {
+    throw new ValueError('Requires a pinhole camera_model.');
+  }
+
+  const focalLength = imageSource.getPinhole().getIntrinsics().getFocalLength();
+  const principalPoint = imageSource.getPinhole().getIntrinsics().getPrincipalPoint();
 
   const focalX = focalLength.getX();
   const focalY = focalLength.getY();
@@ -342,52 +413,48 @@ function pixelToCameraSpace(imageProto, pixelX, pixelY, depth = 1.0) {
 const MAX_DEPTH_IMAGE_RANGE = Math.pow(2, 16) - 1;
 
 /**
- * Returns an array of indices containing valid depth data.
- * @param {number[]} depthArray An array representation of the depth data.
- * @param {number} minDist All points in the returned point cloud will be greater than min_dist from the image plane.
- * @param {number} maxDist All points in the returned point cloud will be less than max_dist from the image plane.
- * @returns {boolean[]}
+ * Round to the nearest integer, halves to the nearest even integer, like numpy.rint.
+ * @param {number} value
+ * @returns {number}
  */
-function _depthImageGetValidIndices(depthArray, minDist = 1, maxDist = MAX_DEPTH_IMAGE_RANGE - 1) {
-  minDist = Math.min(Math.max(minDist, 1), MAX_DEPTH_IMAGE_RANGE - 1);
-  maxDist = Math.min(Math.max(maxDist, 1), MAX_DEPTH_IMAGE_RANGE - 1);
-
-  return depthArray.map(value => value >= minDist && value <= maxDist);
+function _rint(value) {
+  const rounded = Math.round(value);
+  return Math.abs(value - Math.trunc(value)) === 0.5 && rounded % 2 !== 0 ? rounded - 1 : rounded;
 }
 
 /**
- * Interprets the image data as an array.
- * @param {imagePb.ImageResponse} imageResponse An ImageResponse containing a depth image.
- * @returns {any[]}
+ * Returns which values of the depth data are valid.
+ * @param {ArrayLike<number>} depthArray The depth data.
+ * @param {number} minDist All points in the returned point cloud will be greater than min_dist from the image plane.
+ * @param {number} maxDist All points in the returned point cloud will be less than max_dist from the image plane.
+ * @returns {boolean[]} For each value of the depth data, whether it is valid.
  */
-function _depthImageDataToNumpy(imageResponse) {
-  const image = imageResponse.getShot().getImage();
-  const data = image.getData();
+function _depthImageGetValidIndices(depthArray, minDist = 1, maxDist = MAX_DEPTH_IMAGE_RANGE - 1) {
+  // Saturate the input to valid values.
+  minDist = Math.min(Math.max(minDist, 1), MAX_DEPTH_IMAGE_RANGE - 1);
+  maxDist = Math.min(Math.max(maxDist, 1), MAX_DEPTH_IMAGE_RANGE - 1);
 
-  const depthArray = array(new Uint16Array(data.buffer, data.byteOffset, data.length / 2));
-  const reshaped = depthArray.reshape(image.getRows(), image.getCols(), -1);
-
-  if (reshaped.shape[2] === 1) {
-    return reshaped.reshape(image.getRows(), image.getCols());
-  }
-
-  return reshaped;
+  return Array.from(depthArray, value => value >= minDist && value <= maxDist);
 }
 
-function _generateGrid(rows, cols) {
-  const firstAxis = [];
-  const secondAxis = [];
-
-  for (let i = 0; i < rows; i++) {
-    firstAxis.push([]);
-    secondAxis.push([]);
-    for (let j = 0; j < cols; j++) {
-      firstAxis[i].push(i);
-      secondAxis[i].push(j);
-    }
+/**
+ * Interprets the image data as 16-bit depth values.
+ * @param {imagePb.ImageResponse} imageResponse An ImageResponse containing a depth image.
+ * @returns {Uint16Array} The depth values, row by row.
+ * @throws {ValueError} The data does not fit the shape of the image.
+ */
+function _depthImageData(imageResponse) {
+  const image = imageResponse.getShot().getImage();
+  const data = image.getData_asU8();
+  if (data.length % 2 !== 0 || data.length / 2 !== image.getRows() * image.getCols()) {
+    throw new ValueError(
+      `cannot reshape ${data.length} bytes of depth data into shape (${image.getRows()}, ${image.getCols()})`,
+    );
   }
-
-  return [array(firstAxis), array(secondAxis)];
+  // The bytes of the data can start at an odd offset: they are read one value at a time, little-endian like
+  // numpy on the usual machines.
+  const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+  return Uint16Array.from({ length: data.length / 2 }, (_, i) => view.getUint16(2 * i, true));
 }
 
 /**
@@ -405,50 +472,53 @@ function _generateGrid(rows, cols) {
  * from the image plane [meters].
  * @param {number} maxDist All points in the returned point cloud will be less than maxDist
  * from the image plane [meters].
- * @returns {NdArray}
+ * @returns {NdArray} The [x,y,z] values of the point cloud, expressed in the sensor frame: an array of
+ * shape (N, 3).
+ * @throws {ValueError} The image is not a depth image with a pinhole camera model.
  */
 function depthImageToPointcloud(imageResponse, minDist = 0, maxDist = 1000) {
-  if (imageResponse.getSource().getImageType() !== imagePb.ImageSource.IMAGE_TYPE_DEPTH) {
-    throw new TypeError('requires an image_type of IMAGE_TYPE_DEPTH.');
+  const source = imageResponse.getSource() ?? new imagePb.ImageSource();
+  if (source.getImageType() !== imagePb.ImageSource.ImageType.IMAGE_TYPE_DEPTH) {
+    throw new ValueError('requires an image_type of IMAGE_TYPE_DEPTH.');
   }
 
-  if (imageResponse.getShot().getImage().getPixelFormat() !== imagePb.Image.PIXEL_FORMAT_DEPTH_U16) {
-    throw new TypeError('IMAGE_TYPE_DEPTH with an unsupported format, requires PIXEL_FORMAT_DEPTH_U16.');
+  if (imageResponse.getShot()?.getImage()?.getPixelFormat() !== imagePb.Image.PixelFormat.PIXEL_FORMAT_DEPTH_U16) {
+    throw new ValueError('IMAGE_TYPE_DEPTH with an unsupported format, requires PIXEL_FORMAT_DEPTH_U16.');
   }
 
-  if (!imageResponse.getSource().hasPinhole()) {
-    throw new Error('Requires a pinhole camera_model.');
+  if (!source.hasPinhole()) {
+    throw new ValueError('Requires a pinhole camera_model.');
   }
 
-  const sourceRows = imageResponse.getSource().getRows();
-  const sourceCols = imageResponse.getSource().getCols();
-  const fx = imageResponse.getSource().getPinhole().getIntrinsics().getFocalLength().getX();
-  const fy = imageResponse.getSource().getPinhole().getIntrinsics().getFocalLength().getY();
-  const cx = imageResponse.getSource().getPinhole().getIntrinsics().getPrincipalPoint().getX();
-  const cy = imageResponse.getSource().getPinhole().getIntrinsics().getPrincipalPoint().getY();
-  const depthScale = imageResponse.getSource().getDepthScale();
+  const sourceRows = source.getRows();
+  const sourceCols = source.getCols();
+  const intrinsics = source.getPinhole().getIntrinsics();
+  const fx = intrinsics.getFocalLength().getX();
+  const fy = intrinsics.getFocalLength().getY();
+  const cx = intrinsics.getPrincipalPoint().getX();
+  const cy = intrinsics.getPrincipalPoint().getY();
+  const depthScale = source.getDepthScale();
 
-  // Convert the proto representation into a numpy array.
-  let depthArray = _depthImageDataToNumpy(imageResponse);
+  const depthArray = _depthImageData(imageResponse);
+  if (depthArray.length !== sourceRows * sourceCols) {
+    throw new ValueError(`the depth image does not have the ${sourceRows} rows and ${sourceCols} cols of its source`);
+  }
 
   // Determine which indices have valid data in the user requested range.
-  const validInds = _depthImageGetValidIndices(
-    depthArray,
-    Math.round(minDist * depthScale),
-    Math.round(maxDist * depthScale),
-  );
+  const validInds = _depthImageGetValidIndices(depthArray, _rint(minDist * depthScale), _rint(maxDist * depthScale));
 
-  // Compute the valid data.
-  let [rows, cols] = _generateGrid(sourceRows, sourceCols);
-  depthArray = array(depthArray.tolist().filter((_, index) => validInds[index]));
-  rows = array(rows.tolist().filter((_, index) => validInds[index]));
-  cols = array(cols.tolist().filter((_, index) => validInds[index]));
-
-  // Convert the valid distance data to (x,y,z) values expressed in the sensor frame.
-  const z = divide(depthArray, depthArray);
-  const x = divide(multiply(z, subtract(cols, cx)), fx);
-  const y = divide(multiply(z, subtract(rows, cy)), fy);
-  return stack([x, y, z]).T;
+  // Convert the valid distance data to (x,y,z) values expressed in the sensor frame, row by row.
+  const points = [];
+  for (let row = 0; row < sourceRows; row++) {
+    for (let col = 0; col < sourceCols; col++) {
+      const index = row * sourceCols + col;
+      if (validInds[index]) {
+        const z = depthArray[index] / depthScale;
+        points.push([(z * (col - cx)) / fx, (z * (row - cy)) / fy, z]);
+      }
+    }
+  }
+  return points.length > 0 ? array(points) : zeros([0, 3]);
 }
 
 module.exports = {
@@ -463,4 +533,8 @@ module.exports = {
   saveImagesAsFiles,
   pixelToCameraSpace,
   depthImageToPointcloud,
+  MAX_DEPTH_IMAGE_RANGE,
+  UnsupportedImageFormatRequestedError,
+  UnsupportedPixelFormatRequestedError,
+  UnsupportedResizeRatioRequestedError,
 };

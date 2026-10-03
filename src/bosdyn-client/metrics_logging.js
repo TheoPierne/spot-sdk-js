@@ -1,11 +1,26 @@
+/**
+ * @file Clients for the metrics logging service.
+ */
+
 'use strict';
 
 const { BaseClient, commonHeaderErrors, handleCommonHeaderErrors } = require('./common');
+const { ResponseError } = require('./exceptions');
 
 const metricsLoggingRobotPb = require('../bosdyn/api/metrics_logging/metrics_logging_robot_pb');
 const {
   MetricsLoggingRobotServiceClient,
 } = require('../bosdyn/api/metrics_logging/metrics_logging_robot_service_grpc_pb');
+
+/**
+ * @typedef {import('../bosdyn/api/metrics_logging/signed_proto_pb').SignedProto} SignedProto
+ */
+
+/** Metrics requested from the metrics service did not exist. */
+class MissingKeysError extends ResponseError {}
+
+/** Unable to opt-out of metrics logging due to invalid license permissions. */
+class UnableToOptOutError extends ResponseError {}
 
 /**
  * A client for the metrics logging service on the robot.
@@ -23,7 +38,7 @@ class MetricsLoggingClient extends BaseClient {
    * Get metrics from the robot.
    * @param {string[]|null} keys A list of strings representing the keys for metrics that should be returned.
    * @param {boolean} includeEvents Whether events should be included in the response.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<metricsLoggingRobotPb.GetMetricsResponse>}
    */
   getMetrics(keys = null, includeEvents = false, args) {
@@ -33,7 +48,7 @@ class MetricsLoggingClient extends BaseClient {
 
   /**
    * Determine the range of sequence numbers currently being used by the metrics system's store.
-   * @param {Object} args Extra arguments for controlling RPC details.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<number[]>}
    */
   getStoreSequenceRange(args) {
@@ -52,8 +67,8 @@ class MetricsLoggingClient extends BaseClient {
    * Get absolute metric snapshots for specific sequence numbers' entries.
    * @param {number[]} sequenceNumbers The list of sequence numbers whose entries should be returned as
    * absolute metric snapshots.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<signedProtoPb.SignedProto[]>}
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<SignedProto[]>}
    */
   getAbsoluteMetricSnapshot(sequenceNumbers, args) {
     const req = new metricsLoggingRobotPb.GetAbsoluteMetricSnapshotRequest().setSequenceNumbersList(sequenceNumbers);
@@ -76,8 +91,14 @@ class MetricsLoggingClient extends BaseClient {
   }
 }
 
+// Like Python, no MissingKeysError for the missing keys: the metrics not reported yet would be errors too (e.g. on
+// a new robot).
 const _getMetricsErrorFromResponse = handleCommonHeaderErrors(() => null);
 
+// make_parameter_update() of Python is not ported: bosdyn.api.metrics_logging has no ParameterUpdate message (it
+// raises an AttributeError).
 module.exports = {
   MetricsLoggingClient,
+  MissingKeysError,
+  UnableToOptOutError,
 };

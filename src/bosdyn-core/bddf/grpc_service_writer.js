@@ -1,62 +1,81 @@
+/**
+ * @file GrpcSeriesWriter is a class for registering a series which stores GRPC request/response pairs.
+ */
+
 'use strict';
 
 const { GrpcRequests, GrpcResponses } = require('./bosdyn');
 const { PROTOBUF_CONTENT_TYPE } = require('./common');
 
-const { timestamp_to_nsec } = require('../util');
+const { protoTypeName } = require('../../bosdyn-client/util');
 
+const { timestampToNsecBigInt } = require('../util');
+
+/**
+ * A class for logging GRPC request and response messages.
+ */
 class GrpcServiceWriter {
-  constructor(data_writer, service_name) {
-    this._data_writer = data_writer;
-    this._service_name = service_name;
-    this._request_types = {};
-    this._response_types = {};
+  constructor(dataWriter, serviceName) {
+    /** @type {import('./data_writer').DataWriter} */
+    this._dataWriter = dataWriter;
+    this._serviceName = serviceName;
+    this._requestTypes = {};
+    this._responseTypes = {};
   }
 
-  log_request(protobuf) {
-    const series_index = this._get_series_index(protobuf, true);
-    this._data_writer.write_data(
-      series_index,
-      timestamp_to_nsec(protobuf.getHeader().getRequestTimestamp()),
+  /**
+   * Store request protobuf in the file.
+   */
+  logRequest(protobuf) {
+    const seriesIndex = this._getSeriesIndex(protobuf, true);
+    this._dataWriter.writeData(
+      seriesIndex,
+      // Exact, like timestamp_to_nsec() in Python.
+      timestampToNsecBigInt(protobuf.getHeader().getRequestTimestamp()),
       protobuf.serializeBinary(),
     );
   }
 
-  log_response(protobuf) {
-    const series_index = this._get_series_index(protobuf, false);
-    this._data_writer.write_data(
-      series_index,
-      timestamp_to_nsec(protobuf.getHeader().getResponseTimestamp()),
+  /**
+   * Store response protobuf in the file.
+   */
+  logResponse(protobuf) {
+    const seriesIndex = this._getSeriesIndex(protobuf, false);
+    this._dataWriter.writeData(
+      seriesIndex,
+      timestampToNsecBigInt(protobuf.getHeader().getResponseTimestamp()),
       protobuf.serializeBinary(),
     );
   }
 
-  _get_series_index(protobuf, is_request) {
-    const message_name = protobuf.DESCRIPTOR.full_name;
-    let name_to_index, series_type;
-    if (is_request) {
-      name_to_index = this._request_types;
-      series_type = GrpcRequests;
+  _getSeriesIndex(protobuf, isRequest) {
+    // A cached index of the types (it was rebuilt for each message: about 24 ms).
+    const messageName = protoTypeName(protobuf);
+    let nameToIndex, seriesType;
+    if (isRequest) {
+      nameToIndex = this._requestTypes;
+      seriesType = GrpcRequests;
     } else {
-      name_to_index = this._response_types;
-      series_type = GrpcResponses;
+      nameToIndex = this._responseTypes;
+      seriesType = GrpcResponses;
     }
 
-    if (message_name in name_to_index) return name_to_index[message_name];
+    if (messageName in nameToIndex) return nameToIndex[messageName];
 
-    const series_spec = {
-      [series_type.SERVICE_NAME]: this._service_name,
-      [series_type.MESSAGE_TYPE]: message_name,
+    const seriesSpec = {
+      [seriesType.SERVICE_NAME]: this._serviceName,
+      [seriesType.MESSAGE_TYPE]: messageName,
     };
 
-    const series_index = this._data_writer.add_message_series(
-      series_type.SERIES_TYPE,
-      series_spec,
+    const seriesIndex = this._dataWriter.addMessageSeries(
+      seriesType.SERIES_TYPE,
+      seriesSpec,
       PROTOBUF_CONTENT_TYPE,
-      message_name,
+      messageName,
     );
-    name_to_index[message_name] = series_index;
-    return series_index;
+    nameToIndex[messageName] = seriesIndex;
+
+    return seriesIndex;
   }
 }
 

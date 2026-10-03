@@ -1,4 +1,10 @@
+/**
+ * @file General client implementation for the main, on-robot data-acquisition service.
+ */
+
 'use strict';
+
+const { Struct } = require('google-protobuf/google/protobuf/struct_pb');
 
 const {
   commonHeaderErrors,
@@ -8,16 +14,28 @@ const {
   handleCommonHeaderErrors,
   handleUnsetStatusError,
 } = require('./common');
-const { ResponseError, InternalServerError } = require('./exceptions');
+const { ResponseError, InternalServerError, ValueError } = require('./exceptions');
 const { DefaultDict } = require('./util');
 
 const dataAcquisitionPb = require('../bosdyn/api/data_acquisition_pb');
 const { DataAcquisitionServiceClient } = require('../bosdyn/api/data_acquisition_service_grpc_pb');
 const { nowTimestamp, secondsToDuration, nowSec } = require('../bosdyn-core/util');
 
+/**
+ * @typedef {import('./exceptions').RpcError} RpcError
+ * @typedef {import('./robot').Robot} Robot
+ * @typedef {import('./time_sync').TimeSyncEndpoint} TimeSyncEndpoint
+ * @typedef {import('google-protobuf/google/protobuf/timestamp_pb').Timestamp} Timestamp
+ * @typedef {import('../bosdyn/api/data_acquisition_pb').Metadata} Metadata
+ */
+
+/** Error in Data Acquisition RPC */
 class DataAcquisitionResponseError extends ResponseError {}
+/** The provided request id does not exist or is invalid. */
 class RequestIdDoesNotExistError extends DataAcquisitionResponseError {}
+/** The provided request contains unknown capture requests. */
 class UnknownCaptureTypeError extends DataAcquisitionResponseError {}
+/** The data acquisition request was unable to be cancelled. */
 class CancellationFailedError extends DataAcquisitionResponseError {}
 
 /**
@@ -53,19 +71,65 @@ class DataAcquisitionClient extends BaseClient {
   }
 
   /**
+   * Make an AcquireDataRequest message, with the data timestamp in robot time when time sync is available.
+   * @param {dataAcquisitionPb.AcquisitionRequestList} acquisitionRequests The different image sources and
+   * data sources to capture from and save to the data buffer with the same timestamp.
+   * @param {string} actionName The unique action name that all data will be saved with.
+   * @param {string} groupName The unique group name that all data will be saved with.
+   * @param {?Timestamp} dataTimestamp The unique timestamp that all data will be
+   * saved with.
+   * @param {?(Metadata|object)} metadata The JSON structured metadata to be associated with
+   * the data returned by the DataAcquisitionService when logged in the data buffer service.
+   * @param {?number} minTimeout The minimum time to wait, in seconds.
+   * @returns {dataAcquisitionPb.AcquireDataRequest}
+   * @throws {ValueError} Metadata is not in the right format.
+   */
+  makeAcquireDataRequest(
+    acquisitionRequests,
+    actionName,
+    groupName,
+    dataTimestamp = null,
+    metadata = null,
+    minTimeout = null,
+  ) {
+    if (dataTimestamp === null) {
+      if (!this._timesyncEndpoint) {
+        dataTimestamp = nowTimestamp();
+      } else {
+        dataTimestamp = this._timesyncEndpoint.robotTimestampFromLocalSecs(nowSec());
+      }
+    }
+    const actionId = new dataAcquisitionPb.CaptureActionId()
+      .setActionName(actionName)
+      .setGroupName(groupName)
+      .setTimestamp(dataTimestamp);
+
+    const request = new dataAcquisitionPb.AcquireDataRequest()
+      .setActionId(actionId)
+      .setMetadata(metadataToProto(metadata))
+      .setAcquisitionRequests(acquisitionRequests);
+
+    if (minTimeout) {
+      request.setMinTimeout(secondsToDuration(minTimeout));
+    }
+    return request;
+  }
+
+  /**
    * Trigger a data acquisition to save data and metadata to the data buffer.
    * @param {Object} acquisitionRequests The different image sources and
    * data sources to capture from and save to the data buffer with the same timestamp.
    * @param {string} actionName The unique action name that all data will be saved with.
    * @param {string} groupName The unique group name that all data will be saved with.
-   * @param {?google.protobuf.Timestamp} dataTimestamp The unique timestamp that all data will be
+   * @param {?Timestamp} dataTimestamp The unique timestamp that all data will be
    * saved with.
    * @param {?(Metadata|object)} metadata The JSON structured metadata to be associated with
    * the data returned by the DataAcquisitionService when logged in the data buffer
    * service.
-   * @param {?number} minTimeout The minimum time to wait
+   * @param {?number} minTimeout The minimum time to wait, in seconds like Python (unlike the timeout of args, in
+   * milliseconds).
    * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise<dataAcquisitionPb.AcquireDataResponse.RequestId>} If the RPC is successful, then it will return
+   * @returns {Promise<number>} If the RPC is successful, then it will return
    * the acquire data request id, which can be used to check the status of the acquisition and get feedback.
    * @throws {RpcError} Problem communicating with the robot.
    */
@@ -78,29 +142,14 @@ class DataAcquisitionClient extends BaseClient {
     minTimeout = null,
     args,
   ) {
-    if (dataTimestamp === null) {
-      if (!this._timesync_endpoint) {
-        dataTimestamp = nowTimestamp();
-      } else {
-        dataTimestamp = this._timesyncEndpoint.robotTimestampFromLocalSecs(nowSec());
-      }
-    }
-    const actionId = new dataAcquisitionPb.CaptureActionId()
-      .setActionName(actionName)
-      .setGroupName(groupName)
-      .setTimestamp(dataTimestamp);
-
-    const metadataProto = metadataToProto(metadata);
-
-    const request = new dataAcquisitionPb.AcquireDataRequest()
-      .setActionId(actionId)
-      .setMetadata(metadataProto)
-      .setAcquisitionRequests(acquisitionRequests);
-
-    if (minTimeout) {
-      request.setMinTimeout(secondsToDuration(minTimeout));
-    }
-
+    const request = this.makeAcquireDataRequest(
+      acquisitionRequests,
+      actionName,
+      groupName,
+      dataTimestamp,
+      metadata,
+      minTimeout,
+    );
     return this.call(this._stub.acquireData, request, getRequestId, acquireDataError, false, args);
   }
 
@@ -132,7 +181,7 @@ class DataAcquisitionClient extends BaseClient {
    * Get information from a DAQ service to list it's capabilities - which data, metadata,
    * or processing the DAQ service will perform.
    * @param {Object} [args] Extra arguments for controlling RPC details.
-   * @returns {Promise<dataAcquisitionPb.GetServiceInfoResponse.Capabilities>} The GetServiceInfoResponse message,
+   * @returns {Promise<dataAcquisitionPb.AcquisitionCapabilityList>} The GetServiceInfoResponse message,
    * which contains all the different capabilities.
    * @throws {RpcError} Problem communicating with the robot.
    */
@@ -159,10 +208,11 @@ class DataAcquisitionClient extends BaseClient {
   /**
    * Call the GetLiveData RPC of the plugin service.
    * @param {dataAcquisitionPb.LiveDataRequest} request The data_acquisition_pb.LiveDataRequest to be send
+   * @param {Object} [args] Extra arguments for controlling RPC details.
    * @returns {Promise<dataAcquisitionPb.LiveDataResponse>}
    */
-  getLiveData(request) {
-    return this.call(this._stub.getLiveData, request, null, _getLiveDataError, true);
+  getLiveData(request, args) {
+    return this.call(this._stub.getLiveData, request, null, _getLiveDataError, true, args);
   }
 }
 
@@ -203,19 +253,24 @@ _CAPABILITY_LIVE_DATA_STATUS_TO_ERROR.set(
   [InternalServerError, 'Service experienced an unexpected error state.'],
 );
 
+/**
+ * The Metadata proto of metadata given as a proto or as an object.
+ * @param {?(dataAcquisitionPb.Metadata|Object)} metadata The JSON structured metadata.
+ * @returns {?dataAcquisitionPb.Metadata} null if there is no metadata.
+ * @throws {ValueError} Metadata is not in the right format.
+ */
 function metadataToProto(metadata) {
-  if (!metadata) {
+  if (metadata === null || metadata === undefined) {
     return null;
   }
-
-  let metadataProto = null;
   if (metadata instanceof dataAcquisitionPb.Metadata) {
-    metadataProto = metadata;
-  } else {
-    metadataProto = new dataAcquisitionPb.Metadata();
-    metadataProto.setData(metadata);
+    return metadata;
   }
-  return metadataProto;
+  if (typeof metadata === 'object' && !Array.isArray(metadata)) {
+    // The data is a google.protobuf.Struct message: setData() threw on an object.
+    return new dataAcquisitionPb.Metadata().setData(Struct.fromJavaScript(metadata));
+  }
+  throw new ValueError('Invalid metadata, not an object or data_acquisition.Metadata');
 }
 
 const acquireDataError = handleCommonHeaderErrors(
@@ -223,7 +278,7 @@ const acquireDataError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(dataAcquisitionPb.AcquireDataResponse.Status),
+      dataAcquisitionPb.AcquireDataResponse.Status,
       _ACQUIRE_DATA_STATUS_TO_ERROR,
     ),
   ),
@@ -234,7 +289,7 @@ const _getStatusError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(dataAcquisitionPb.GetStatusResponse.Status),
+      dataAcquisitionPb.GetStatusResponse.Status,
       _GET_STATUS_STATUS_TO_ERROR,
     ),
   ),
@@ -245,15 +300,15 @@ const _cancelAcquisitionError = handleCommonHeaderErrors(
     errorFactory(
       response,
       response.getStatus(),
-      Object.keys(dataAcquisitionPb.CancelAcquisitionResponse.Status),
+      dataAcquisitionPb.CancelAcquisitionResponse.Status,
       _CANCEL_ACQUISITION_STATUS_TO_ERROR,
     ),
   ),
 );
 
 const _getLiveDataError = handleCommonHeaderErrors(response => {
-  for (const capabilityLiveData of response.getLiveData()) {
-    let result = customParamsError(capabilityLiveData, null, '', '', response);
+  for (const capabilityLiveData of response.getLiveDataList()) {
+    let result = customParamsError(capabilityLiveData, null, 'status', 'custom_param_error', response);
     if (result !== null) {
       return result;
     }
@@ -261,7 +316,7 @@ const _getLiveDataError = handleCommonHeaderErrors(response => {
     result = errorFactory(
       response,
       capabilityLiveData.getStatus(),
-      Object.keys(dataAcquisitionPb.LiveDataResponse.Status),
+      dataAcquisitionPb.LiveDataResponse.CapabilityLiveData.Status,
       _CAPABILITY_LIVE_DATA_STATUS_TO_ERROR,
     );
 

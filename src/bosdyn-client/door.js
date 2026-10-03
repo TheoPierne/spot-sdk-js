@@ -1,8 +1,21 @@
+/**
+ * @file For clients to the door service.
+ */
+
 'use strict';
 
 const { BaseClient, handleCommonHeaderErrors, handleLeaseUseResultErrors } = require('./common');
 const { addLeaseWalletProcessors } = require('./lease');
 const { DoorServiceClient } = require('../bosdyn/api/spot/door_service_grpc_pb');
+
+/**
+ * @typedef {import('./exceptions').LeaseUseError} LeaseUseError
+ * @typedef {import('./exceptions').RpcError} RpcError
+ * @typedef {import('../bosdyn/api/spot/door_pb').OpenDoorCommandRequest} OpenDoorCommandRequest
+ * @typedef {import('../bosdyn/api/spot/door_pb').OpenDoorCommandResponse} OpenDoorCommandResponse
+ * @typedef {import('../bosdyn/api/spot/door_pb').OpenDoorFeedbackRequest} OpenDoorFeedbackRequest
+ * @typedef {import('../bosdyn/api/spot/door_pb').OpenDoorFeedbackResponse} OpenDoorFeedbackResponse
+ */
 
 /**
  * @typedef {import('./robot').Robot} Robot
@@ -36,9 +49,9 @@ class DoorClient extends BaseClient {
 
   /**
    * Issue a open door command to the robot.
-   * @param {doorPb.OpenDoorCommandRequest} request The door command.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<doorPb.OpenDoorCommandResponse>} The full OpenDoorCommandResponse message,
+   * @param {OpenDoorCommandRequest} request The door command.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<OpenDoorCommandResponse>} The full OpenDoorCommandResponse message,
    * which includes a command id for feedback.
    * @throws {RpcError} Problem communicating with the robot.
    * @throws {LeaseUseError} The lease for the request failed.
@@ -49,9 +62,9 @@ class DoorClient extends BaseClient {
 
   /**
    * Get feedback from the robot on a specific door command.
-   * @param {doorPb.OpenDoorFeedbackRequest} request The request for feedback of the door command.
-   * @param {Object} args Extra arguments for controlling RPC details.
-   * @returns {Promise<doorPb.OpenDoorFeedbackResponse>} The full OpenDoorFeedbackResponse message.
+   * @param {OpenDoorFeedbackRequest} request The request for feedback of the door command.
+   * @param {Object} [args] Extra arguments for controlling RPC details.
+   * @returns {Promise<OpenDoorFeedbackResponse>} The full OpenDoorFeedbackResponse message.
    * @throws {RpcError} Problem communicating with the robot.
    */
   openDoorFeedback(request, args) {

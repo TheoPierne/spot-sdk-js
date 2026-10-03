@@ -1,8 +1,17 @@
+/**
+ * @file For clients to use the Gps Aggregator service.
+ */
+
 'use strict';
 
 const { NewGpsDataRequest, NewGpsDataResponse } = require('../../bosdyn/api/gps/aggregator_pb');
 const { AggregatorServiceClient } = require('../../bosdyn/api/gps/aggregator_service_grpc_pb');
 const { BaseClient, handleCommonHeaderErrors } = require('../common');
+
+/**
+ * @typedef {import('../../bosdyn/api/gps/gps_pb').GpsDataPoint} GpsDataPoint
+ * @typedef {import('../../bosdyn/api/gps/gps_pb').GpsDevice} GpsDevice
+ */
 
 /**
  * Client for the Gps Aggregator service.
@@ -18,8 +27,8 @@ class AggregatorClient extends BaseClient {
 
   /**
    * Tell the robot about new GPS data that was collected.
-   * @param {gpsPb.GpsDataPoint[]} dataPoints All the data you want to send.
-   * @param {gpsPb.GpsDevice} gpsDevice The identifier of this device.
+   * @param {GpsDataPoint[]} dataPoints All the data you want to send.
+   * @param {GpsDevice} gpsDevice The identifier of this device.
    * @param {Object} [args] Options for GRPC request
    * @returns {Promise<NewGpsDataResponse>}
    */
