@@ -97,12 +97,12 @@ class MockPtzService extends PtzServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new PtzClient();
   const service = new MockPtzService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: PtzServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -112,14 +112,14 @@ function _createFakePtzDesc(name = 'fake-ptz') {
 }
 
 test('test_list_ptz', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const ptzs = await client.listPtz();
   server.forceShutdown();
   assert.ok(ptzs.length === 6);
 });
 
 test('test_get_ptz_position', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const desc = _createFakePtzDesc();
   const position = await client.getPtzPosition(desc);
   server.forceShutdown();
@@ -130,7 +130,7 @@ test('test_get_ptz_position', async () => {
 });
 
 test('test_get_ptz_velocity', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const desc = _createFakePtzDesc();
   const position = await client.getPtzVelocity(desc);
   server.forceShutdown();
@@ -141,7 +141,7 @@ test('test_get_ptz_velocity', async () => {
 });
 
 test('test_set_ptz_position', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const desc = _createFakePtzDesc();
   const position = await client.setPtzPosition(desc, 1, 2, 3);
   server.forceShutdown();
@@ -152,7 +152,7 @@ test('test_set_ptz_position', async () => {
 });
 
 test('test_set_ptz_velocity', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const desc = _createFakePtzDesc();
   const position = await client.setPtzVelocity(desc, 1, 2, 3);
   server.forceShutdown();

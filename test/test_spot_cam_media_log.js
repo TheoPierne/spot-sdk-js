@@ -144,12 +144,12 @@ class MockMediaLogService extends MediaLogServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new MediaLogClient();
   const service = new MockMediaLogService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: MediaLogServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -164,20 +164,20 @@ function _createFakeLogpoint(
 }
 
 test('test_delete', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const completedLp = _createFakeLogpoint();
   await client.delete(completedLp);
   server.forceShutdown();
 });
 
 test('test_enable_debug', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   await client.enableDebug();
   server.forceShutdown();
 });
 
 test('test_get_status', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const completedLp = _createFakeLogpoint();
   const lp = await client.getStatus(completedLp);
   server.forceShutdown();
@@ -186,28 +186,28 @@ test('test_get_status', async () => {
 
 test('test_get_status_timeout', async () => {
   const timeout = 100;
-  const { client, server } = _setup(timeout * 2);
+  const { client, server } = await _setup(timeout * 2);
   const completedLp = _createFakeLogpoint();
   await assert.rejects(() => client.getStatus(completedLp, { timeout }), TimedOutError);
   server.forceShutdown();
 });
 
 test('test_list_cameras', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const cameras = await client.listCameras();
   server.forceShutdown();
   assert.ok(cameras.length === 0);
 });
 
 test('test_list_logpoints', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const lps = await client.listLogpoints();
   server.forceShutdown();
   assert.ok(lps.length === 0);
 });
 
 test('test_retrieve', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const completedLp = _createFakeLogpoint();
   const { logpoint, data } = await client.retrieve(completedLp);
   server.forceShutdown();
@@ -216,7 +216,7 @@ test('test_retrieve', async () => {
 });
 
 test('test_retrieve_raw_data', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const completedLp = _createFakeLogpoint();
   const { logpoint, data } = await client.retrieveRawData(completedLp);
   server.forceShutdown();
@@ -225,13 +225,13 @@ test('test_retrieve_raw_data', async () => {
 });
 
 test('test_set_passphrase', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   await client.setPassphrase('good');
   server.forceShutdown();
 });
 
 test('test_store', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const camera = new cameraPb.Camera().setName('pano');
   const cameraTag = 'pano-tag';
   const lp = await client.store(camera, loggingPb.Logpoint.RecordType.STILLIMAGE, cameraTag);
@@ -242,7 +242,7 @@ test('test_store', async () => {
 });
 
 test('test_tag', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const completedLp = _createFakeLogpoint();
   await client.tag(completedLp);
   server.forceShutdown();

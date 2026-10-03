@@ -59,18 +59,19 @@ class MockMissionServicer extends MissionServiceClient {
 
     const response = new missionPb.GetStateResponse().setState(new missionPb.State().setQuestionsList([question]));
 
-    callback(null, response);
+    callback(null, helpers.addCommonHeader(response, call.request));
   }
 
-  answerQuestion({ request }, callback) {
+  answerQuestion(call, callback) {
+    const { request } = call;
     const response = new missionPb.AnswerQuestionResponse();
     if (request.getQuestionId() in this.answeredQuestions) {
       response.setStatus(missionPb.AnswerQuestionResponse.Status.STATUS_ALREADY_ANSWERED);
-      return callback(null, response);
+      return callback(null, helpers.addCommonHeader(response, call.request));
     }
     if (!(request.getQuestionId() in this.activeQuestions)) {
       response.setStatus(missionPb.AnswerQuestionResponse.Status.STATUS_INVALID_QUESTION_ID);
-      return callback(null, response);
+      return callback(null, helpers.addCommonHeader(response, call.request));
     }
     const question = this.activeQuestions[request.getQuestionId()];
     if (
@@ -80,32 +81,32 @@ class MockMissionServicer extends MissionServiceClient {
         .includes(request.getCode())
     ) {
       response.setStatus(missionPb.AnswerQuestionResponse.Status.STATUS_INVALID_CODE);
-      return callback(null, response);
+      return callback(null, helpers.addCommonHeader(response, call.request));
     }
     this.answeredQuestions[request.getQuestionId()] = request;
     delete this.activeQuestions[request.getQuestionId()];
     response.setStatus(missionPb.AnswerQuestionResponse.Status.STATUS_OK);
-    return callback(null, response);
+    return callback(null, helpers.addCommonHeader(response, call.request));
   }
 
   playMission(call, callback) {
     const response = new missionPb.PlayMissionResponse().setStatus(this.playMissionResponseStatus);
-    callback(null, response);
+    callback(null, helpers.addCommonHeader(response, call.request));
   }
 
   restartMission(call, callback) {
     const response = new missionPb.RestartMissionResponse().setStatus(this.restartMissionResponseStatus);
-    callback(null, response);
+    callback(null, helpers.addCommonHeader(response, call.request));
   }
 
   pauseMission(call, callback) {
     const response = new missionPb.PauseMissionResponse().setStatus(this.pauseMissionResponseStatus);
-    callback(null, response);
+    callback(null, helpers.addCommonHeader(response, call.request));
   }
 
   loadMission(call, callback) {
     const response = new missionPb.LoadMissionResponse().setStatus(this.loadMissionResponseStatus);
-    callback(null, response);
+    callback(null, helpers.addCommonHeader(response, call.request));
   }
 
   resetAnsweredQuestions() {
@@ -113,21 +114,21 @@ class MockMissionServicer extends MissionServiceClient {
   }
 }
 
-function _setup() {
+async function _setup() {
   const client = new MissionClient();
   client._timesyncEndpoint = {
     robotTimestampFromLocalSecs: () => new Timestamp().setSeconds(12345).setNanos(6789),
   };
   const service = new MockMissionServicer();
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: MissionServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
 
 test('test_simple', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
 
   // Test the getState. Should return the question state from the mock.
   const res = await client.getState();
@@ -145,7 +146,7 @@ test('test_simple', async () => {
 });
 
 test('test_errors', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
   const resp = await client.getState();
 
   const questionId = resp.getQuestionsList()[0].getId();
@@ -165,7 +166,7 @@ test('test_errors', async () => {
 
   // Run through misc error codes.
   service.playMissionResponseStatus = missionPb.PlayMissionResponse.Status.STATUS_NO_MISSION;
-  await assert.rejects(() => client.playMission(Date.now() / 1000, []), NoMissionError);
+  await assert.rejects(() => client.playMission(Math.floor(Date.now() / 1_000), []), NoMissionError);
 
   service.loadMissionResponseStatus = missionPb.LoadMissionResponse.Status.STATUS_COMPILE_ERROR;
   await assert.rejects(() => client.loadMission(null, []), CompilationError);
@@ -174,10 +175,10 @@ test('test_errors', async () => {
   await assert.rejects(() => client.loadMission(null, []), ValidationError);
 
   service.restartMissionResponseStatus = missionPb.RestartMissionResponse.Status.STATUS_NO_MISSION;
-  await assert.rejects(() => client.restartMission(Date.now() / 1000, []), NoMissionError);
+  await assert.rejects(() => client.restartMission(Math.floor(Date.now() / 1_000), []), NoMissionError);
 
   service.restartMissionResponseStatus = missionPb.RestartMissionResponse.Status.STATUS_VALIDATE_ERROR;
-  await assert.rejects(() => client.restartMission(Date.now() / 1000, []), ValidationError);
+  await assert.rejects(() => client.restartMission(Math.floor(Date.now() / 1_000), []), ValidationError);
 
   service.pauseMissionResponseStatus = missionPb.PauseMissionResponse.Status.STATUS_NO_MISSION_PLAYING;
   await assert.rejects(() => client.pauseMission(), NoMissionPlayingError);

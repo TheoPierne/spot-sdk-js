@@ -70,12 +70,12 @@ class MockDirectoryServicer extends DirectoryServiceClient {
   }
 }
 
-function _setup() {
+async function _setup() {
   const client = new DirectoryClient();
   const service = new MockDirectoryServicer();
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: DirectoryServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -106,7 +106,7 @@ function _hasServiceName(name, directoryList) {
 }
 
 test('test_list_empty', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
 
   const directoryList = await client.list();
   assert.ok(directoryList.length === 0);
@@ -115,7 +115,7 @@ test('test_list_empty', async () => {
 });
 
 test('test_list_single_entry', async () => {
-  const { client, server, service } = _setup();
+  const { client, server, service } = await _setup();
   _addServiceDetails(service, 1);
 
   const directoryList = await client.list();
@@ -126,7 +126,7 @@ test('test_list_single_entry', async () => {
 });
 
 test('test_list_multiple_entries', async () => {
-  const { client, server, service } = _setup();
+  const { client, server, service } = await _setup();
   _addServiceDetails(service, 2);
 
   const directoryList = await client.list();
@@ -138,7 +138,7 @@ test('test_list_multiple_entries', async () => {
 });
 
 test('test_list_internal_error', async () => {
-  const { client, server, service } = _setup();
+  const { client, server, service } = await _setup();
   service.errorCode = headerPb.CommonError.Code.CODE_INTERNAL_SERVER_ERROR;
   service.errorMessage = 'Something is wrong';
 
@@ -152,7 +152,7 @@ test('test_list_internal_error', async () => {
 });
 
 test('test_get_entry_match', async () => {
-  const { client, server, service } = _setup();
+  const { client, server, service } = await _setup();
   _addServiceDetails(service, 2);
 
   const entry = await client.getEntry('foo');
@@ -162,7 +162,7 @@ test('test_get_entry_match', async () => {
 });
 
 test('test_get_entry_miss', async () => {
-  const { client, server, service } = _setup();
+  const { client, server, service } = await _setup();
   _addServiceDetails(service, 2);
 
   try {
@@ -175,7 +175,7 @@ test('test_get_entry_miss', async () => {
 });
 
 test('test_get_entry_unspecified', async () => {
-  const { client, server, service } = _setup();
+  const { client, server, service } = await _setup();
   _addServiceDetails(service, 2);
   service.useUnspecifiedStatus = true;
 

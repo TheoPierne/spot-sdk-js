@@ -45,12 +45,12 @@ class MockStreamQualityService extends StreamQualityServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new StreamQualityClient();
   const service = new MockStreamQualityService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: StreamQualityServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -69,7 +69,7 @@ function _mockStreamParams(
 }
 
 test('test_set_stream_params', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const mock = _mockStreamParams();
   const result = await client.setStreamParams({
     targetBitrate: mock.getTargetbitrate().getValue(),
@@ -82,7 +82,7 @@ test('test_set_stream_params', async () => {
 });
 
 test('test_get_stream_params', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const mock = _mockStreamParams();
   const result = await client.getStreamParams();
   server.forceShutdown();

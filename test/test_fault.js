@@ -16,7 +16,7 @@ const {
 
 test('test_trigger_service_fault_error', () => {
   // Test unset header error
-  let response = new serviceFaultPb.TriggerServiceFaultResponse();
+  const response = new serviceFaultPb.TriggerServiceFaultResponse();
   assert.ok(_triggerServiceFaultError(response) instanceof UnsetStatusError);
 
   // Test header error
@@ -42,7 +42,7 @@ test('test_trigger_service_fault_error', () => {
 
 test('test_clear_service_fault_error', () => {
   // Test unset header error
-  let response = new serviceFaultPb.ClearServiceFaultResponse();
+  const response = new serviceFaultPb.ClearServiceFaultResponse();
   assert.ok(_clearServiceFaultError(response) instanceof UnsetStatusError);
 
   // Test header error

@@ -3,6 +3,8 @@
 const assert = require('node:assert');
 const test = require('node:test');
 
+const jspb = require('google-protobuf');
+
 const { AlertData } = require('../src/bosdyn/api/alerts_pb');
 const { LiveDataResponse } = require('../src/bosdyn/api/data_acquisition_pb');
 const {
@@ -32,7 +34,9 @@ test('test_building_live_data_response', () => {
 
   const responseSignal1 = testResponse.getLiveDataList()[0].getSignalsMap().get('test_signal_1');
 
-  assert.strictEqual(responseSignal1, testSignal1);
+  // Equal values, like == of the Python messages (the live data are copies of the signals).
+  assert.ok(jspb.Message.equals(responseSignal1, testSignal1));
+  assert.notStrictEqual(responseSignal1, testSignal1);
   assert.strictEqual(responseSignal1.getSignalSpec().getInfo().getName(), 'Test Signal Name 1');
   assert.strictEqual(responseSignal1.getSignalSpec().getSensor().getUnits().getName(), '%');
   assert.strictEqual(responseSignal1.getSignalData().getData().getDouble(), 10);
@@ -41,7 +45,9 @@ test('test_building_live_data_response', () => {
 
   const responseSignal2 = testResponse.getLiveDataList()[0].getSignalsMap().get('test_signal_2');
 
-  assert.strictEqual(responseSignal2, testSignal2);
+  // Equal values, like == of the Python messages (the live data are copies of the signals).
+  assert.ok(jspb.Message.equals(responseSignal2, testSignal2));
+  assert.notStrictEqual(responseSignal2, testSignal2);
   assert.strictEqual(responseSignal2.getSignalSpec().getInfo().getName(), 'Test Signal Name 2');
   assert.strictEqual(responseSignal2.getSignalSpec().getSensor().getUnits().getName(), '%');
   assert.strictEqual(responseSignal2.getSignalData().getData().getDouble(), 20);

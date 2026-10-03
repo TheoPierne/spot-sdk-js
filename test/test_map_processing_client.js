@@ -53,7 +53,7 @@ class MockMapProcessingServicer extends MapProcessingServiceClient {
   }
 }
 
-function _setup() {
+async function _setup() {
   const timeSync = new TimeSyncEndpoint(null);
   timeSync._previousResponse = new timeSyncPb.TimeSyncUpdateResponse();
   timeSync.response.setState(
@@ -67,15 +67,15 @@ function _setup() {
   /** @todo remove this line and adapt test */
   client._useStreamingGraphUpload = false;
   const service = new MockMapProcessingServicer();
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: MapProcessingServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
 
 test('test_process_topology_exceptions', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   await client.processTopology(new mapProcessingPb.ProcessTopologyRequest.Params(), true);
 
@@ -99,14 +99,13 @@ test('test_process_topology_exceptions', async () => {
 });
 
 test('test_process_anchoring_exceptions', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   await client.processAnchoring(new mapProcessingPb.ProcessAnchoringRequest.Params(), true, false);
 
   for (const [status, error] of Object.entries(_ANCHORING_COMMON_ERRORS)) {
     service.anchoringProcessStatus = status;
     try {
-      // eslint-disable-next-line no-await-in-loop
       await client.processAnchoring(new mapProcessingPb.ProcessAnchoringRequest.Params(), true, false);
     } catch (err) {
       assert.ok(err instanceof error[0]);

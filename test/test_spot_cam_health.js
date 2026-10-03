@@ -57,24 +57,24 @@ class MockHealthService extends HealthServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new HealthClient();
   const service = new MockHealthService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: HealthServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
 
 test('test_clear_bit_events', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   await client.clearBitEvents();
   server.forceShutdown();
 });
 
 test('test_get_bit_status', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const { events, degradations } = await client.getBitStatus();
   assert.ok(events.length === 0);
   assert.ok(degradations.length === 1);
@@ -82,7 +82,7 @@ test('test_get_bit_status', async () => {
 });
 
 test('test_get_temperature', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const temp = await client.getTemperature();
   assert.ok(temp.length === 1);
   server.forceShutdown();

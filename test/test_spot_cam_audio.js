@@ -125,12 +125,12 @@ class MockAudioService extends AudioServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new AudioClient();
   const service = new MockAudioService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: AudioServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -140,7 +140,7 @@ function _createFakeSound(name = 'fake-sound') {
 }
 
 test('test_list_sounds', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const sounds = await client.listSounds();
   assert.ok(sounds.length === 2);
   assert.ok(sounds[0].getName() === 'good');
@@ -149,34 +149,34 @@ test('test_list_sounds', async () => {
 });
 
 test('test_set_volume', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   await client.setVolume(100);
   server.forceShutdown();
 });
 
 test('test_play_sound', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const sound = _createFakeSound();
   await client.playSound(sound, 100);
   server.forceShutdown();
 });
 
 test('test_play_sound_no_gain', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const sound = _createFakeSound();
   await client.playSound(sound);
   server.forceShutdown();
 });
 
 test('test_delete_sound', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const sound = _createFakeSound();
   await client.deleteSound(sound);
   server.forceShutdown();
 });
 
 test('test_load_sound_small_chunk', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const sound = _createFakeSound();
   const data = Buffer.alloc(10, 'a');
   await client.loadSound(sound, data, 100);
@@ -184,7 +184,7 @@ test('test_load_sound_small_chunk', async () => {
 });
 
 test('test_load_sound_exact_large_chunk', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const sound = _createFakeSound();
   const data = Buffer.alloc(100, 'b');
   await client.loadSound(sound, data, 100);
@@ -192,7 +192,7 @@ test('test_load_sound_exact_large_chunk', async () => {
 });
 
 test('test_load_sound_large_chunk', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const sound = _createFakeSound();
   const data = Buffer.alloc(200, 'c');
   await client.loadSound(sound, data, 100);

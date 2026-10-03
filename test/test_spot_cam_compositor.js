@@ -62,12 +62,12 @@ class MockCompositorService extends CompositorServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new CompositorClient();
   const service = new MockCompositorService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: CompositorServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -85,21 +85,21 @@ function _mockStream(name = 'good', xOffset = 0, yOffset = 0, width = 2, height 
 }
 
 test('test_set_screen', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const result = await client.setScreen('good');
   assert.ok(result === 'good');
   server.forceShutdown();
 });
 
 test('test_get_screen', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const result = await client.getScreen();
   assert.ok(result === 'good');
   server.forceShutdown();
 });
 
 test('test_list_screens', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const result = await client.listScreens();
   assert.ok(result.length === 1);
   assert.ok(result[0].getName() === 'good');
@@ -107,7 +107,7 @@ test('test_list_screens', async () => {
 });
 
 test('test_get_visible_cameras', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const mock = _mockStream();
   const result = await client.getVisibleCameras();
   assert.ok(result.length === 1);

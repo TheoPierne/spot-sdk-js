@@ -73,7 +73,7 @@ class MockRobotStateClient {
 
 test('test_power_command_error', () => {
   // Test unset header error
-  let response = new powerPb.PowerCommandResponse();
+  const response = new powerPb.PowerCommandResponse();
   response.setLicenseStatus(licencePb.LicenseInfo.Status.STATUS_VALID);
   assert.ok(_powerCommandErrorFromResponse(response) instanceof UnsetStatusError);
 
@@ -134,7 +134,7 @@ test('test_power_command_error', () => {
 
 test('test_power_feedback_error', () => {
   // Test unset header error
-  let response = new powerPb.PowerCommandFeedbackResponse();
+  const response = new powerPb.PowerCommandFeedbackResponse();
   assert.ok(_powerFeedbackErrorFromResponse(response) instanceof UnsetStatusError);
 
   // Test header internal server error
@@ -203,7 +203,7 @@ test('test_power_on_timeout', async () => {
     mockClient.feedbackFn = feedbackFn;
     const start = Date.now();
     const timeout = 1000;
-    // eslint-disable-next-line no-await-in-loop
+
     await assert.rejects(() => powerOnMotors(mockClient, timeout, 100), CommandTimedOutError);
     const dt = Date.now() - start;
     if (feedbackFn) {
@@ -237,7 +237,7 @@ test('test_emergency_power_off_timeout', async () => {
     mockClient.feedbackFn = feedbackFn;
     const start = Date.now();
     const timeout = 1000;
-    // eslint-disable-next-line no-await-in-loop
+
     await assert.rejects(() => powerOffMotors(mockClient, timeout, 100), CommandTimedOutError);
     const dt = Date.now() - start;
     if (feedbackFn) {
@@ -276,7 +276,7 @@ test('test_safe_power_off_motors_timeout', async () => {
     mockStateClient.feedbackFn = feedbackFn;
     const start = Date.now();
     const timeout = 1000;
-    // eslint-disable-next-line no-await-in-loop
+
     await assert.rejects(
       () => safePowerOffMotors(mockCommandClient, mockStateClient, timeout, 100),
       CommandTimedOutError,
@@ -324,7 +324,6 @@ test('test_safe_power_off_robot_timeout', async () => {
     const start = Date.now();
     mockStateClient.feedbackFn = feedbackFn;
 
-    // eslint-disable-next-line no-await-in-loop
     await assert.rejects(
       () => safePowerOffRobot(mockCommandClient, mockStateClient, mockPowerClient, timeout, 100),
       CommandTimedOutError,
@@ -369,7 +368,6 @@ test('test_safe_power_cycle_robot_timeout', async () => {
     const start = Date.now();
     mockStateClient.feedbackFn = feedbackFn;
 
-    // eslint-disable-next-line no-await-in-loop
     await assert.rejects(
       () => safePowerCycleRobot(mockCommandClient, mockStateClient, mockPowerClient, timeout, 100),
       CommandTimedOutError,

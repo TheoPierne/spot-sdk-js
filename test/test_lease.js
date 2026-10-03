@@ -51,27 +51,27 @@ function _createLeaseUseResult(status, attemptedLease, previousLease = null) {
 test('test_bad_lease_constructors', () => {
   assert.throws(() => {
     // eslint-disable-next-line no-unused-vars
-    let a = new Lease(null);
+    const a = new Lease(null);
   }, ValueError);
 
   assert.throws(() => {
     const leaseProto = new leasePb.Lease();
     // eslint-disable-next-line no-unused-vars
-    let a = new Lease(leaseProto);
+    const a = new Lease(leaseProto);
   }, ValueError);
 
   assert.throws(() => {
     const leaseProto = new leasePb.Lease();
     leaseProto.setResource(LLAMA);
     // eslint-disable-next-line no-unused-vars
-    let a = new Lease(leaseProto);
+    const a = new Lease(leaseProto);
   }, ValueError);
 
   assert.throws(() => {
     const leaseProto = new leasePb.Lease();
     leaseProto.setSequenceList(SEQ);
     // eslint-disable-next-line no-unused-vars
-    let a = new Lease(leaseProto);
+    const a = new Lease(leaseProto);
   }, ValueError);
 });
 
@@ -250,7 +250,7 @@ test('test_compare_newer', () => {
 
 test('test_lease_wallet_constructor', () => {
   // eslint-disable-next-line no-unused-vars
-  let a = new LeaseWallet();
+  const a = new LeaseWallet();
 });
 
 test('test_lease_wallet_normal_operation', () => {

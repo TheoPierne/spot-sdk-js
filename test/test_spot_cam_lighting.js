@@ -43,18 +43,18 @@ class MockLightingService extends LightingServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new LightingClient();
   const service = new MockLightingService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: LightingServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
 
 test('test_get_led_brightness', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const brightnesses = await client.getLedBrightness();
   assert.ok(brightnesses.length === 4);
 
@@ -66,7 +66,7 @@ test('test_get_led_brightness', async () => {
 });
 
 test('test_set_led_brightness', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   await client.setLedBrightness([1]);
   server.forceShutdown();
 });

@@ -1,0 +1,4186 @@
+{
+ "signatures": {
+  "directory.list": {
+   "js": "list",
+   "params": []
+  },
+  "directory.get_entry": {
+   "js": "getEntry",
+   "params": [
+    "service_name"
+   ]
+  },
+  "directory-registration.register": {
+   "js": "register",
+   "params": [
+    "name",
+    "service_type",
+    "authority",
+    "host_ip",
+    "port",
+    [
+     "user_token_required",
+     true
+    ],
+    [
+     "liveness_timeout_secs",
+     0
+    ]
+   ]
+  },
+  "directory-registration.unregister": {
+   "js": "unregister",
+   "params": [
+    "name"
+   ]
+  },
+  "payload.list_payloads": {
+   "js": "listPayloads",
+   "params": []
+  },
+  "payload-registration.register_payload": {
+   "js": "registerPayload",
+   "params": [
+    "payload",
+    "secret"
+   ]
+  },
+  "robot-state.get_robot_state": {
+   "js": "getRobotState",
+   "params": []
+  },
+  "robot-state.get_robot_metrics": {
+   "js": "getRobotMetrics",
+   "params": []
+  },
+  "robot-state.get_robot_hardware_configuration": {
+   "js": "getRobotHardwareConfiguration",
+   "params": []
+  },
+  "robot-state.get_robot_link_model": {
+   "js": "getRobotLinkModel",
+   "params": [
+    "link_name"
+   ]
+  },
+  "robot-id.get_id": {
+   "js": "getId",
+   "params": []
+  },
+  "license.get_license_info": {
+   "js": "getLicenseInfo",
+   "params": []
+  },
+  "license.get_feature_enabled": {
+   "js": "getFeatureEnabled",
+   "params": [
+    "feature_list"
+   ]
+  },
+  "log-status.get_log_status": {
+   "js": "getLogStatus",
+   "params": [
+    "id"
+   ]
+  },
+  "log-status.get_active_log_statuses": {
+   "js": "getActiveLogStatuses",
+   "params": []
+  },
+  "log-status.start_experiment_log": {
+   "js": "startExperimentLog",
+   "params": [
+    "seconds",
+    [
+     "past_textlog_duration",
+     0
+    ]
+   ]
+  },
+  "log-status.start_retro_log": {
+   "js": "startRetroLog",
+   "params": [
+    "seconds"
+   ]
+  },
+  "log-status.update_experiment": {
+   "js": "updateExperiment",
+   "params": [
+    "id",
+    "seconds"
+   ]
+  },
+  "log-status.terminate_log": {
+   "js": "terminateLog",
+   "params": [
+    "id"
+   ]
+  },
+  "data-buffer.add_text_messages": {
+   "js": "addTextMessages",
+   "params": [
+    "text_messages"
+   ]
+  },
+  "data.get_events_comments": {
+   "js": "getEventsComments",
+   "params": [
+    "query"
+   ]
+  },
+  "data.get_data_buffer_status": {
+   "js": "getDataBufferStatus",
+   "params": [
+    [
+     "get_blob_specs",
+     false
+    ]
+   ]
+  },
+  "lease.list_leases": {
+   "js": "listLeases",
+   "params": [
+    [
+     "include_full_lease_info",
+     false
+    ]
+   ]
+  },
+  "estop.get_config": {
+   "js": "getConfig",
+   "params": []
+  },
+  "estop.get_status": {
+   "js": "getStatus",
+   "params": []
+  },
+  "image.list_image_sources": {
+   "js": "listImageSources",
+   "params": []
+  },
+  "image.get_image": {
+   "js": "getImage",
+   "params": [
+    "image_requests"
+   ]
+  },
+  "other-image.list_image_sources": {
+   "js": "listImageSources",
+   "params": []
+  },
+  "other-image.get_image": {
+   "js": "getImage",
+   "params": [
+    "image_requests"
+   ]
+  },
+  "local-grid-service.get_local_grid_types": {
+   "js": "getLocalGridTypes",
+   "params": []
+  },
+  "local-grid-service.get_local_grids": {
+   "js": "getLocalGrids",
+   "params": [
+    "local_grid_type_names"
+   ]
+  },
+  "data-acquisition.get_service_info": {
+   "js": "getServiceInfo",
+   "params": []
+  },
+  "data-acquisition.get_status": {
+   "js": "getStatus",
+   "params": [
+    "request_id"
+   ]
+  },
+  "data-acquisition.get_live_data": {
+   "js": "getLiveData",
+   "params": [
+    "request"
+   ]
+  },
+  "keepalive.get_status": {
+   "js": "getStatus",
+   "params": []
+  },
+  "keepalive.modify_policy": {
+   "js": "modifyPolicy",
+   "params": [
+    [
+     "to_add",
+     null
+    ],
+    [
+     "policy_ids_to_remove",
+     null
+    ]
+   ]
+  },
+  "power.get_fan_info": {
+   "js": "getFanInfo",
+   "params": [
+    [
+     "timeout",
+     null
+    ]
+   ]
+  }
+ },
+ "scenarios": [
+  {
+   "name": "dir list",
+   "argv": [
+    "host",
+    "dir",
+    "list"
+   ],
+   "clients": {
+    "directory": {
+     "list": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListServiceEntriesResponse",
+        "b64": "EkcKC3JvYm90LXN0YXRlEhxib3NkeW4uYXBpLlJvYm90U3RhdGVTZXJ2aWNlGhBzdGF0ZS5zcG90LnJvYm90IgYIgOLPqgYoARIgChRteS1sb25nLXNlcnZpY2UtbmFtZRIDeC5ZGgNhLmI="
+       },
+       "field": "service_entries"
+      }
+     ]
+    }
+   },
+   "stdout": "name                     type                             authority            tokens\n------------------------------------------------------------------------------------\nrobot-state              bosdyn.api.RobotStateService     state.spot.robot     user\nmy-long-service-name     x.Y                              a.b                  \n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory"
+    ],
+    [
+     "directory.list"
+    ]
+   ]
+  },
+  {
+   "name": "dir list --proto",
+   "argv": [
+    "host",
+    "dir",
+    "list",
+    "--proto"
+   ],
+   "clients": {
+    "directory": {
+     "list": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListServiceEntriesResponse",
+        "b64": "EkcKC3JvYm90LXN0YXRlEhxib3NkeW4uYXBpLlJvYm90U3RhdGVTZXJ2aWNlGhBzdGF0ZS5zcG90LnJvYm90IgYIgOLPqgYoARIgChRteS1sb25nLXNlcnZpY2UtbmFtZRIDeC5ZGgNhLmI="
+       },
+       "field": "service_entries"
+      }
+     ]
+    }
+   },
+   "stdout": "name: \"robot-state\"\ntype: \"bosdyn.api.RobotStateService\"\nauthority: \"state.spot.robot\"\nlast_update {\n  seconds: 1700000000\n}\nuser_token_required: true\n\nname: \"my-long-service-name\"\ntype: \"x.Y\"\nauthority: \"a.b\"\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory"
+    ],
+    [
+     "directory.list"
+    ]
+   ]
+  },
+  {
+   "name": "dir list empty",
+   "argv": [
+    "host",
+    "dir",
+    "list"
+   ],
+   "clients": {
+    "directory": {
+     "list": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListServiceEntriesResponse",
+        "b64": ""
+       },
+       "field": "service_entries"
+      }
+     ]
+    }
+   },
+   "stdout": "No services found\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory"
+    ],
+    [
+     "directory.list"
+    ]
+   ]
+  },
+  {
+   "name": "dir get",
+   "argv": [
+    "host",
+    "dir",
+    "get",
+    "robot-state"
+   ],
+   "clients": {
+    "directory": {
+     "get_entry": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetServiceEntryResponse",
+        "b64": "EAEaPwoLcm9ib3Qtc3RhdGUSHGJvc2R5bi5hcGkuUm9ib3RTdGF0ZVNlcnZpY2UaEHN0YXRlLnNwb3Qucm9ib3QoAQ=="
+       },
+       "field": "service_entry"
+      }
+     ]
+    }
+   },
+   "stdout": "name                    type                            authority                   tokens\n------------------------------------------------------------------------------------------\nrobot-state             bosdyn.api.RobotStateService    state.spot.robot            user\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory"
+    ],
+    [
+     "directory.get_entry",
+     "robot-state"
+    ]
+   ]
+  },
+  {
+   "name": "dir get --proto",
+   "argv": [
+    "host",
+    "dir",
+    "get",
+    "--proto",
+    "robot-state"
+   ],
+   "clients": {
+    "directory": {
+     "get_entry": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetServiceEntryResponse",
+        "b64": "EAEaPwoLcm9ib3Qtc3RhdGUSHGJvc2R5bi5hcGkuUm9ib3RTdGF0ZVNlcnZpY2UaEHN0YXRlLnNwb3Qucm9ib3QoAQ=="
+       },
+       "field": "service_entry"
+      }
+     ]
+    }
+   },
+   "stdout": "name: \"robot-state\"\ntype: \"bosdyn.api.RobotStateService\"\nauthority: \"state.spot.robot\"\nuser_token_required: true\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory"
+    ],
+    [
+     "directory.get_entry",
+     "robot-state"
+    ]
+   ]
+  },
+  {
+   "name": "dir get missing",
+   "argv": [
+    "host",
+    "dir",
+    "get",
+    "nope"
+   ],
+   "clients": {
+    "directory": {
+     "get_entry": [
+      {
+       "raise": "NonexistentServiceError",
+       "response": {
+        "type": "bosdyn.api.GetServiceEntryResponse",
+        "b64": "EAI="
+       }
+      }
+     ],
+     "list": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListServiceEntriesResponse",
+        "b64": "EkcKC3JvYm90LXN0YXRlEhxib3NkeW4uYXBpLlJvYm90U3RhdGVTZXJ2aWNlGhBzdGF0ZS5zcG90LnJvYm90IgYIgOLPqgYoARIgChRteS1sb25nLXNlcnZpY2UtbmFtZRIDeC5ZGgNhLmI="
+       },
+       "field": "service_entries"
+      }
+     ]
+    }
+   },
+   "stdout": "The requested service name \"nope\" does not exist.  Available services:\nname                     type                             authority            tokens\n------------------------------------------------------------------------------------\nrobot-state              bosdyn.api.RobotStateService     state.spot.robot     user\nmy-long-service-name     x.Y                              a.b                  \n",
+   "stderr": "",
+   "result": false,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory"
+    ],
+    [
+     "directory.get_entry",
+     "nope"
+    ],
+    [
+     "robot.ensure_client",
+     "directory"
+    ],
+    [
+     "directory.list"
+    ]
+   ]
+  },
+  {
+   "name": "dir register",
+   "argv": [
+    "host",
+    "dir",
+    "register",
+    "--service-name",
+    "svc",
+    "--service-type",
+    "bosdyn.api.X",
+    "--service-authority",
+    "svc.spot.robot",
+    "--service-hostname",
+    "192.168.50.5",
+    "--service-port",
+    "50051"
+   ],
+   "clients": {
+    "directory-registration": {
+     "register": [
+      {
+       "message": {
+        "type": "bosdyn.api.RegisterServiceResponse",
+        "b64": "EAE="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Successfully registered service svc\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory-registration"
+    ],
+    [
+     "directory-registration.register",
+     "svc",
+     "bosdyn.api.X",
+     "svc.spot.robot",
+     "192.168.50.5",
+     50051,
+     true,
+     0
+    ]
+   ]
+  },
+  {
+   "name": "dir register --no-user-token failure",
+   "argv": [
+    "host",
+    "dir",
+    "register",
+    "--service-name",
+    "svc",
+    "--service-type",
+    "bosdyn.api.X",
+    "--service-authority",
+    "svc.spot.robot",
+    "--service-hostname",
+    "192.168.50.5",
+    "--service-port",
+    "50051",
+    "--no-user-token"
+   ],
+   "clients": {
+    "directory-registration": {
+     "register": [
+      {
+       "raise": "ServiceAlreadyExistsError",
+       "response": {
+        "type": "bosdyn.api.RegisterServiceResponse",
+        "b64": "EAI="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Failed to register service svc.\nResponse Status: STATUS_ALREADY_EXISTS\n",
+   "stderr": "",
+   "result": false,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory-registration"
+    ],
+    [
+     "directory-registration.register",
+     "svc",
+     "bosdyn.api.X",
+     "svc.spot.robot",
+     "192.168.50.5",
+     50051,
+     false,
+     0
+    ]
+   ]
+  },
+  {
+   "name": "dir unregister",
+   "argv": [
+    "host",
+    "dir",
+    "unregister",
+    "--service-name",
+    "svc"
+   ],
+   "clients": {
+    "directory-registration": {
+     "unregister": [
+      {
+       "message": {
+        "type": "bosdyn.api.UnregisterServiceResponse",
+        "b64": "EAE="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Successfully unregistered service svc\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory-registration"
+    ],
+    [
+     "directory-registration.unregister",
+     "svc"
+    ]
+   ]
+  },
+  {
+   "name": "dir unregister failure",
+   "argv": [
+    "host",
+    "dir",
+    "unregister",
+    "--service-name",
+    "svc"
+   ],
+   "clients": {
+    "directory-registration": {
+     "unregister": [
+      {
+       "raise": "ServiceDoesNotExistError",
+       "response": {
+        "type": "bosdyn.api.UnregisterServiceResponse",
+        "b64": "EAI="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Failed to unregister service svc.\nResponse Status: STATUS_NONEXISTENT_SERVICE\n",
+   "stderr": "",
+   "result": false,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory-registration"
+    ],
+    [
+     "directory-registration.unregister",
+     "svc"
+    ]
+   ]
+  },
+  {
+   "name": "payload list",
+   "argv": [
+    "host",
+    "payload",
+    "list"
+   ],
+   "clients": {
+    "payload": {
+     "list_payloads": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListPayloadsResponse",
+        "b64": "EkkKJDc4YjA3NmEyLWI0YmEtNDkxZC1hMDk5LTczODkyOGM0NDEwYxIIU3BvdCBDQU0aDkNhbWVyYSBwYXlsb2FkIAFSBRUAAMA/EgkKAmcyEgNBcm0="
+       },
+       "field": "payloads"
+      }
+     ]
+    }
+   },
+   "stdout": "\nName                           Description                                                  GUID                                \n-----------------------------------------------------------------------------------------------------------------------------------\nSpot CAM                       Camera payload                                               78b076a2-b4ba-491d-a099-738928c4410c\nArm                                                                                         g2                                  \n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "payload"
+    ],
+    [
+     "payload.list_payloads"
+    ]
+   ]
+  },
+  {
+   "name": "payload list --proto",
+   "argv": [
+    "host",
+    "payload",
+    "list",
+    "--proto"
+   ],
+   "clients": {
+    "payload": {
+     "list_payloads": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListPayloadsResponse",
+        "b64": "EkkKJDc4YjA3NmEyLWI0YmEtNDkxZC1hMDk5LTczODkyOGM0NDEwYxIIU3BvdCBDQU0aDkNhbWVyYSBwYXlsb2FkIAFSBRUAAMA/EgkKAmcyEgNBcm0="
+       },
+       "field": "payloads"
+      }
+     ]
+    }
+   },
+   "stdout": "GUID: \"78b076a2-b4ba-491d-a099-738928c4410c\"\nname: \"Spot CAM\"\ndescription: \"Camera payload\"\nis_authorized: true\nmass_volume_properties {\n  total_mass: 1.5\n}\n\nGUID: \"g2\"\nname: \"Arm\"\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "payload"
+    ],
+    [
+     "payload.list_payloads"
+    ]
+   ]
+  },
+  {
+   "name": "payload list empty",
+   "argv": [
+    "host",
+    "payload",
+    "list"
+   ],
+   "clients": {
+    "payload": {
+     "list_payloads": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListPayloadsResponse",
+        "b64": ""
+       },
+       "field": "payloads"
+      }
+     ]
+    }
+   },
+   "stdout": "No payloads found\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "payload"
+    ],
+    [
+     "payload.list_payloads"
+    ]
+   ]
+  },
+  {
+   "name": "payload register",
+   "argv": [
+    "host",
+    "payload",
+    "register",
+    "--payload-name",
+    "p",
+    "--payload-guid",
+    "g",
+    "--payload-secret",
+    "s"
+   ],
+   "clients": {
+    "payload-registration": {
+     "register_payload": [
+      {
+       "none": true
+      }
+     ]
+    }
+   },
+   "stdout": "\nPayload successfully registered with the robot.\nBefore it can be used, the payload must be authorized in the Admin Console.\n",
+   "stderr": "",
+   "result": null,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "payload-registration"
+    ],
+    [
+     "payload-registration.register_payload",
+     "GUID: \"g\" name: \"p\"",
+     "s"
+    ]
+   ],
+   "js_result": true
+  },
+  {
+   "name": "payload register exists",
+   "argv": [
+    "host",
+    "payload",
+    "register",
+    "--payload-name",
+    "p",
+    "--payload-guid",
+    "g",
+    "--payload-secret",
+    "s"
+   ],
+   "clients": {
+    "payload-registration": {
+     "register_payload": [
+      {
+       "raise": "PayloadAlreadyExistsError",
+       "response": {
+        "type": "bosdyn.api.RegisterPayloadResponse",
+        "b64": "EAI="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "\nA payload with this GUID is already registered. Check the robot Admin Console.\n",
+   "stderr": "",
+   "result": null,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "payload-registration"
+    ],
+    [
+     "payload-registration.register_payload",
+     "GUID: \"g\" name: \"p\"",
+     "s"
+    ]
+   ],
+   "js_result": true
+  },
+  {
+   "name": "fault show",
+   "argv": [
+    "host",
+    "fault",
+    "show"
+   ],
+   "clients": {
+    "robot-state": {
+     "get_robot_state": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotState",
+        "b64": "Ii0KHAoDaW11EgkIgOLPqgYQiCcqCklNVSBmYWlsZWQKDQoDZmFuEgYIgeLPqgY6FgoUCAESDAiC4s+qBhCAyrXuARgBIAFSNgo0ChwKCG15LWZhdWx0EgpteS1zZXJ2aWNlGgRndWlkEgxTZXJ2aWNlIGRvd24qBgiD4s+qBg=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "\n--------------------------------------------------------------------------------\n\nimu\n    Error Message: IMU failed\n    Onset Time: 2023-11-14 22:13:20.000005\n\nfan\n    Error Message: \n    Onset Time: 2023-11-14 22:13:21\n\n\nCAUSE_FALL\n    Onset Time: 2023-11-14 22:13:22.500000\n    Clearable: STATUS_CLEARABLE\n\n\nmy-fault\n    Service Name: my-service\n    Payload GUID: guid\n    Error Message: Service down\n    Onset Time: 2023-11-14 22:13:23\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "robot-state"
+    ],
+    [
+     "robot-state.get_robot_state"
+    ]
+   ]
+  },
+  {
+   "name": "fault show none",
+   "argv": [
+    "host",
+    "fault",
+    "show"
+   ],
+   "clients": {
+    "robot-state": {
+     "get_robot_state": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotState",
+        "b64": ""
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "\n--------------------------------------------------------------------------------\nNo active system faults.\n\nNo active behavior faults.\n\nNo active service faults.\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "robot-state"
+    ],
+    [
+     "robot-state.get_robot_state"
+    ]
+   ]
+  },
+  {
+   "name": "fault watch",
+   "argv": [
+    "host",
+    "fault",
+    "watch"
+   ],
+   "clients": {
+    "robot-state": {
+     "get_robot_state": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotState",
+        "b64": "Ii0KHAoDaW11EgkIgOLPqgYQiCcqCklNVSBmYWlsZWQKDQoDZmFuEgYIgeLPqgY6FgoUCAESDAiC4s+qBhCAyrXuARgBIAFSNgo0ChwKCG15LWZhdWx0EgpteS1zZXJ2aWNlGgRndWlkEgxTZXJ2aWNlIGRvd24qBgiD4s+qBg=="
+       }
+      },
+      {
+       "interrupt": true
+      }
+     ]
+    }
+   },
+   "stdout": "Press Ctrl-C or send SIGINT to exit\n\n\n\n--------------------------------------------------------------------------------\n\nimu\n    Error Message: IMU failed\n    Onset Time: 2023-11-14 22:13:20.000005\n\nfan\n    Error Message: \n    Onset Time: 2023-11-14 22:13:21\n\n\nCAUSE_FALL\n    Onset Time: 2023-11-14 22:13:22.500000\n    Clearable: STATUS_CLEARABLE\n\n\nmy-fault\n    Service Name: my-service\n    Payload GUID: guid\n    Error Message: Service down\n    Onset Time: 2023-11-14 22:13:23\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "robot-state"
+    ],
+    [
+     "robot-state.get_robot_state"
+    ],
+    [
+     "robot.ensure_client",
+     "robot-state"
+    ],
+    [
+     "robot-state.get_robot_state"
+    ]
+   ]
+  },
+  {
+   "name": "id",
+   "argv": [
+    "host",
+    "id"
+   ],
+   "clients": {
+    "robot-id": {
+     "get_id": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotIdResponse",
+        "b64": "ElEKEGJldGEtQkQtOTA0OTAwMDcSBHNwb3QaAlYzIiUKBggFEAEYBCILCIDiz6oGEJWa7zoqBmFiYzEyM0IGCKDv1aoGKgZzcG90dHkyBENQVTE="
+       },
+       "field": "robot_id"
+      }
+     ]
+    }
+   },
+   "stdout": "beta-BD-90490007     CPU1            spotty     spot (V3)\n Software: 5.1.4 (abc123 2023-11-14 22:13:20.123457)\n  Installed: 2023-11-16 02:00:00\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.ensure_client",
+     "robot-id"
+    ],
+    [
+     "robot-id.get_id"
+    ]
+   ]
+  },
+  {
+   "name": "id --proto",
+   "argv": [
+    "host",
+    "id",
+    "--proto"
+   ],
+   "clients": {
+    "robot-id": {
+     "get_id": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotIdResponse",
+        "b64": "ElEKEGJldGEtQkQtOTA0OTAwMDcSBHNwb3QaAlYzIiUKBggFEAEYBCILCIDiz6oGEJWa7zoqBmFiYzEyM0IGCKDv1aoGKgZzcG90dHkyBENQVTE="
+       },
+       "field": "robot_id"
+      }
+     ]
+    }
+   },
+   "stdout": "serial_number: \"beta-BD-90490007\"\nspecies: \"spot\"\nversion: \"V3\"\nsoftware_release {\n  version {\n    major_version: 5\n    minor_version: 1\n    patch_level: 4\n  }\n  changeset_date {\n    seconds: 1700000000\n    nanos: 123456789\n  }\n  changeset: \"abc123\"\n  install_date {\n    seconds: 1700100000\n  }\n}\nnickname: \"spotty\"\ncomputer_serial_number: \"CPU1\"\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.ensure_client",
+     "robot-id"
+    ],
+    [
+     "robot-id.get_id"
+    ]
+   ]
+  },
+  {
+   "name": "id nickname = serial, no release",
+   "argv": [
+    "host",
+    "id"
+   ],
+   "clients": {
+    "robot-id": {
+     "get_id": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotIdResponse",
+        "b64": "EggKAlMxKgJTMQ=="
+       },
+       "field": "robot_id"
+      }
+     ]
+    }
+   },
+   "stdout": "S1                                               ()\n Software: 0.0.0 ( 1970-01-01 00:00:00)\n  Installed: 1970-01-01 00:00:00\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.ensure_client",
+     "robot-id"
+    ],
+    [
+     "robot-id.get_id"
+    ]
+   ]
+  },
+  {
+   "name": "id unreachable",
+   "argv": [
+    "host",
+    "id"
+   ],
+   "clients": {
+    "robot-id": {
+     "get_id": [
+      {
+       "raise": "ProxyConnectionError",
+       "message": "no proxy"
+      }
+     ]
+    }
+   },
+   "stdout": "",
+   "stderr": "Could not contact robot with hostname \"host\".\n",
+   "result": null,
+   "calls": [
+    [
+     "robot.ensure_client",
+     "robot-id"
+    ],
+    [
+     "robot-id.get_id"
+    ]
+   ]
+  },
+  {
+   "name": "license",
+   "argv": [
+    "host",
+    "license"
+   ],
+   "clients": {
+    "license": {
+     "get_license_info": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetLicenseInfoResponse",
+        "b64": "EiwIARICTDEaEGJldGEtQkQtOTA0OTAwMDcqBgiApKfaBjIFYmFzaWMyA2FybQ=="
+       },
+       "field": "license"
+      }
+     ]
+    }
+   },
+   "stdout": "status: STATUS_VALID\nid: \"L1\"\nrobot_serial: \"beta-BD-90490007\"\nnot_valid_after {\n  seconds: 1800000000\n}\nlicensed_features: \"basic\"\nlicensed_features: \"arm\"\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "license"
+    ],
+    [
+     "license.get_license_info"
+    ]
+   ]
+  },
+  {
+   "name": "license --proto -f arm",
+   "argv": [
+    "host",
+    "license",
+    "--proto",
+    "-f",
+    "arm"
+   ],
+   "clients": {
+    "license": {
+     "get_license_info": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetLicenseInfoResponse",
+        "b64": "EiwIARICTDEaEGJldGEtQkQtOTA0OTAwMDcqBgiApKfaBjIFYmFzaWMyA2FybQ=="
+       },
+       "field": "license"
+      }
+     ],
+     "get_feature_enabled": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetFeatureEnabledResponse",
+        "b64": "EgcKA2FybRAB"
+       },
+       "field": "feature_enabled"
+      }
+     ]
+    }
+   },
+   "stdout": "status: STATUS_VALID\nid: \"L1\"\nrobot_serial: \"beta-BD-90490007\"\nnot_valid_after {\n  seconds: 1800000000\n}\nlicensed_features: \"basic\"\nlicensed_features: \"arm\"\n\nFeature arm is enabled.\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "license"
+    ],
+    [
+     "license.get_license_info"
+    ],
+    [
+     "license.get_feature_enabled",
+     [
+      "arm"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "license -f disabled",
+   "argv": [
+    "host",
+    "license",
+    "-f",
+    "lidar"
+   ],
+   "clients": {
+    "license": {
+     "get_license_info": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetLicenseInfoResponse",
+        "b64": "EiwIARICTDEaEGJldGEtQkQtOTA0OTAwMDcqBgiApKfaBjIFYmFzaWMyA2FybQ=="
+       },
+       "field": "license"
+      }
+     ],
+     "get_feature_enabled": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetFeatureEnabledResponse",
+        "b64": "EgkKBWxpZGFyEAA="
+       },
+       "field": "feature_enabled"
+      }
+     ]
+    }
+   },
+   "stdout": "status: STATUS_VALID\nid: \"L1\"\nrobot_serial: \"beta-BD-90490007\"\nnot_valid_after {\n  seconds: 1800000000\n}\nlicensed_features: \"basic\"\nlicensed_features: \"arm\"\n\nFeature lidar is not enabled.\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "license"
+    ],
+    [
+     "license.get_license_info"
+    ],
+    [
+     "license.get_feature_enabled",
+     [
+      "lidar"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "license invalid token",
+   "argv": [
+    "host",
+    "license"
+   ],
+   "clients": {},
+   "stdout": "",
+   "stderr": "The provided user token is invalid.\n",
+   "result": null,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ]
+   ],
+   "authenticate": {
+    "raise": "InvalidTokenError",
+    "response": {
+     "type": "bosdyn.api.GetAuthTokenResponse",
+     "b64": "CgQiAggB"
+    }
+   }
+  },
+  {
+   "name": "log-status get",
+   "argv": [
+    "host",
+    "log-status",
+    "get",
+    "id1"
+   ],
+   "clients": {
+    "log-status": {
+     "get_log_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.GetLogStatusResponse",
+        "b64": "EAEaHgoDaWQxEAIYASIGCIDiz6oGKgsIiuLPqgYQgOWadw=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "id: \"id1\"\nstatus: STATUS_IN_PROGRESS\ntype: TYPE_EXPERIMENT\nstart_time {\n  seconds: 1700000000\n}\nend_time {\n  seconds: 1700000010\n  nanos: 250000000\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "log-status"
+    ],
+    [
+     "log-status.get_log_status",
+     "id1"
+    ]
+   ]
+  },
+  {
+   "name": "log-status active",
+   "argv": [
+    "host",
+    "log-status",
+    "active"
+   ],
+   "clients": {
+    "log-status": {
+     "get_active_log_statuses": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.GetActiveLogStatusesResponse",
+        "b64": "EAEaHAoBYRACGAEiBgiA4s+qBioLCIriz6oGEIDlmncaHAoBYhACGAIiBgiA4s+qBioLCIriz6oGEIDlmnc="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "[id: \"a\"\nstatus: STATUS_IN_PROGRESS\ntype: TYPE_EXPERIMENT\nstart_time {\n  seconds: 1700000000\n}\nend_time {\n  seconds: 1700000010\n  nanos: 250000000\n}\n, id: \"b\"\nstatus: STATUS_IN_PROGRESS\ntype: TYPE_RETRO\nstart_time {\n  seconds: 1700000000\n}\nend_time {\n  seconds: 1700000010\n  nanos: 250000000\n}\n]\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "log-status"
+    ],
+    [
+     "log-status.get_active_log_statuses"
+    ]
+   ]
+  },
+  {
+   "name": "log-status active none",
+   "argv": [
+    "host",
+    "log-status",
+    "active"
+   ],
+   "clients": {
+    "log-status": {
+     "get_active_log_statuses": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.GetActiveLogStatusesResponse",
+        "b64": ""
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "[]\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "log-status"
+    ],
+    [
+     "log-status.get_active_log_statuses"
+    ]
+   ]
+  },
+  {
+   "name": "log-status experiment timed",
+   "argv": [
+    "host",
+    "log-status",
+    "experiment",
+    "timed",
+    "2.5"
+   ],
+   "clients": {
+    "log-status": {
+     "start_experiment_log": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.StartExperimentLogResponse",
+        "b64": "Gh0KAmUxEAIYASIGCIDiz6oGKgsIiuLPqgYQgOWadw=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "id: \"e1\"\nstatus: STATUS_IN_PROGRESS\ntype: TYPE_EXPERIMENT\nstart_time {\n  seconds: 1700000000\n}\nend_time {\n  seconds: 1700000010\n  nanos: 250000000\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "log-status"
+    ],
+    [
+     "log-status.start_experiment_log",
+     2.5,
+     0
+    ]
+   ]
+  },
+  {
+   "name": "log-status experiment continuous inactive",
+   "argv": [
+    "host",
+    "log-status",
+    "experiment",
+    "continuous",
+    "-sleep",
+    "0.01"
+   ],
+   "clients": {
+    "log-status": {
+     "start_experiment_log": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.StartExperimentLogResponse",
+        "b64": "Gh0KAmMxEAIYASIGCIDiz6oGKgsIiuLPqgYQgOWadw=="
+       }
+      }
+     ],
+     "update_experiment": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.UpdateExperimentLogResponse",
+        "b64": ""
+       }
+      },
+      {
+       "raise": "InactiveLogError",
+       "response": {
+        "type": "bosdyn.api.log_status.UpdateExperimentLogResponse",
+        "b64": "EAM="
+       }
+      }
+     ],
+     "get_log_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.GetLogStatusResponse",
+        "b64": "Gh0KAmMxEGYYASIGCIDiz6oGKgsIiuLPqgYQgOWadw=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Experiment log id:  c1\nUse terminate command, press Ctrl-C or send SIGINT to complete log\n\n\nid: \"c1\"\nstatus: STATUS_TERMINATED\ntype: TYPE_EXPERIMENT\nstart_time {\n  seconds: 1700000000\n}\nend_time {\n  seconds: 1700000010\n  nanos: 250000000\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "log-status"
+    ],
+    [
+     "log-status.start_experiment_log",
+     0.02,
+     0
+    ],
+    [
+     "log-status.update_experiment",
+     "c1",
+     0.02
+    ],
+    [
+     "log-status.update_experiment",
+     "c1",
+     0.02
+    ],
+    [
+     "log-status.get_log_status",
+     "c1"
+    ]
+   ]
+  },
+  {
+   "name": "log-status experiment continuous interrupted",
+   "argv": [
+    "host",
+    "log-status",
+    "experiment",
+    "continuous",
+    "-sleep",
+    "0.01"
+   ],
+   "clients": {
+    "log-status": {
+     "start_experiment_log": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.StartExperimentLogResponse",
+        "b64": "Gh0KAmMyEAIYASIGCIDiz6oGKgsIiuLPqgYQgOWadw=="
+       }
+      }
+     ],
+     "update_experiment": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.UpdateExperimentLogResponse",
+        "b64": ""
+       }
+      },
+      {
+       "interrupt": true
+      }
+     ],
+     "terminate_log": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.TerminateLogResponse",
+        "b64": "Gh0KAmMyEGYYASIGCIDiz6oGKgsIiuLPqgYQgOWadw=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Experiment log id:  c2\nUse terminate command, press Ctrl-C or send SIGINT to complete log\n\n\n Received keyboard interruption\n\n\nid: \"c2\"\nstatus: STATUS_TERMINATED\ntype: TYPE_EXPERIMENT\nstart_time {\n  seconds: 1700000000\n}\nend_time {\n  seconds: 1700000010\n  nanos: 250000000\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "log-status"
+    ],
+    [
+     "log-status.start_experiment_log",
+     0.02,
+     0
+    ],
+    [
+     "log-status.update_experiment",
+     "c2",
+     0.02
+    ],
+    [
+     "log-status.update_experiment",
+     "c2",
+     0.02
+    ],
+    [
+     "log-status.terminate_log",
+     "c2"
+    ]
+   ]
+  },
+  {
+   "name": "log-status retro",
+   "argv": [
+    "host",
+    "log-status",
+    "retro",
+    "30"
+   ],
+   "clients": {
+    "log-status": {
+     "start_retro_log": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.StartRetroLogResponse",
+        "b64": "Gh0KAnIxEAIYAiIGCIDiz6oGKgsIiuLPqgYQgOWadw=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "id: \"r1\"\nstatus: STATUS_IN_PROGRESS\ntype: TYPE_RETRO\nstart_time {\n  seconds: 1700000000\n}\nend_time {\n  seconds: 1700000010\n  nanos: 250000000\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "log-status"
+    ],
+    [
+     "log-status.start_retro_log",
+     30.0
+    ]
+   ]
+  },
+  {
+   "name": "log-status terminate",
+   "argv": [
+    "host",
+    "log-status",
+    "terminate",
+    "id9"
+   ],
+   "clients": {
+    "log-status": {
+     "terminate_log": [
+      {
+       "message": {
+        "type": "bosdyn.api.log_status.TerminateLogResponse",
+        "b64": "Gh4KA2lkORBmGAEiBgiA4s+qBioLCIriz6oGEIDlmnc="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "id: \"id9\"\nstatus: STATUS_TERMINATED\ntype: TYPE_EXPERIMENT\nstart_time {\n  seconds: 1700000000\n}\nend_time {\n  seconds: 1700000010\n  nanos: 250000000\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "log-status"
+    ],
+    [
+     "log-status.terminate_log",
+     "id9"
+    ]
+   ]
+  },
+  {
+   "name": "state full",
+   "argv": [
+    "host",
+    "state",
+    "full"
+   ],
+   "clients": {
+    "robot-state": {
+     "get_robot_state": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotState",
+        "b64": "Ii0KHAoDaW11EgkIgOLPqgYQiCcqCklNVSBmYWlsZWQKDQoDZmFuEgYIgeLPqgY6FgoUCAESDAiC4s+qBhCAyrXuARgBIAFSNgo0ChwKCG15LWZhdWx0EgpteS1zZXJ2aWNlGgRndWlkEgxTZXJ2aWNlIGRvd24qBgiD4s+qBg=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "system_fault_state {\n  faults {\n    name: \"imu\"\n    onset_timestamp {\n      seconds: 1700000000\n      nanos: 5000\n    }\n    error_message: \"IMU failed\"\n  }\n  faults {\n    name: \"fan\"\n    onset_timestamp {\n      seconds: 1700000001\n    }\n  }\n}\nbehavior_fault_state {\n  faults {\n    behavior_fault_id: 1\n    onset_timestamp {\n      seconds: 1700000002\n      nanos: 500000000\n    }\n    cause: CAUSE_FALL\n    status: STATUS_CLEARABLE\n  }\n}\nservice_fault_state {\n  faults {\n    fault_id {\n      fault_name: \"my-fault\"\n      service_name: \"my-service\"\n      payload_guid: \"guid\"\n    }\n    error_message: \"Service down\"\n    onset_timestamp {\n      seconds: 1700000003\n    }\n  }\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "robot-state"
+    ],
+    [
+     "robot-state.get_robot_state"
+    ]
+   ]
+  },
+  {
+   "name": "state hardware",
+   "argv": [
+    "host",
+    "state",
+    "hardware"
+   ],
+   "clients": {
+    "robot-state": {
+     "get_robot_hardware_configuration": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotHardwareConfigurationResponse",
+        "b64": "EhYKEhIGCgRib2R5Ggg8cm9ib3QvPhAB"
+       },
+       "field": "hardware_configuration"
+      }
+     ]
+    }
+   },
+   "stdout": "skeleton {\n  links {\n    name: \"body\"\n  }\n  urdf: \"<robot/>\"\n}\ncan_power_command_request_off_robot: true\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "robot-state"
+    ],
+    [
+     "robot-state.get_robot_hardware_configuration"
+    ]
+   ]
+  },
+  {
+   "name": "state metrics",
+   "argv": [
+    "host",
+    "state",
+    "metrics"
+   ],
+   "clients": {
+    "robot-state": {
+     "get_robot_metrics": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotMetricsResponse",
+        "b64": "EqgBCgYIgOLPqgYSFgoIZGlzdGFuY2USAW0hAAAAAABKk0ASDwoLZ2FpdCBjeWNsZXMYKhIVCgVzcGVlZBIDbS9zIQAAAAAAAMA/EhQKC3RpbWUgbW92aW5nMgUIxR4QBRIbCgtsYXN0IHVwZGF0ZSoMCPWc/Y4GEIDKte4BEg4KB3Bvd2VyZWQSAXhAARIPCgRtb2RlEgF1OgR3YWxrEgoKBWVtcHR5EgF1"
+       },
+       "field": "robot_metrics"
+      }
+     ]
+    }
+   },
+   "stdout": "distance             1.23 km\ngait cycles          42 \nspeed                0.12 m/s\ntime moving          1:05:09\nlast update          2022-01-12T21:56:05.500Z\npowered              True x\nmode                 walk u\nempty                missing value\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "robot-state"
+    ],
+    [
+     "robot-state.get_robot_metrics"
+    ]
+   ]
+  },
+  {
+   "name": "state metrics --proto",
+   "argv": [
+    "host",
+    "state",
+    "metrics",
+    "--proto"
+   ],
+   "clients": {
+    "robot-state": {
+     "get_robot_metrics": [
+      {
+       "message": {
+        "type": "bosdyn.api.RobotMetricsResponse",
+        "b64": "EqgBCgYIgOLPqgYSFgoIZGlzdGFuY2USAW0hAAAAAABKk0ASDwoLZ2FpdCBjeWNsZXMYKhIVCgVzcGVlZBIDbS9zIQAAAAAAAMA/EhQKC3RpbWUgbW92aW5nMgUIxR4QBRIbCgtsYXN0IHVwZGF0ZSoMCPWc/Y4GEIDKte4BEg4KB3Bvd2VyZWQSAXhAARIPCgRtb2RlEgF1OgR3YWxrEgoKBWVtcHR5EgF1"
+       },
+       "field": "robot_metrics"
+      }
+     ]
+    }
+   },
+   "stdout": "timestamp {\n  seconds: 1700000000\n}\nmetrics {\n  label: \"distance\"\n  units: \"m\"\n  float_value: 1234.5\n}\nmetrics {\n  label: \"gait cycles\"\n  int_value: 42\n}\nmetrics {\n  label: \"speed\"\n  units: \"m/s\"\n  float_value: 0.125\n}\nmetrics {\n  label: \"time moving\"\n  duration {\n    seconds: 3909\n    nanos: 5\n  }\n}\nmetrics {\n  label: \"last update\"\n  timestamp {\n    seconds: 1642024565\n    nanos: 500000000\n  }\n}\nmetrics {\n  label: \"powered\"\n  units: \"x\"\n  bool_value: true\n}\nmetrics {\n  label: \"mode\"\n  units: \"u\"\n  string_value: \"walk\"\n}\nmetrics {\n  label: \"empty\"\n  units: \"u\"\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "robot-state"
+    ],
+    [
+     "robot-state.get_robot_metrics"
+    ]
+   ]
+  },
+  {
+   "name": "log textmsg",
+   "argv": [
+    "host",
+    "log",
+    "textmsg",
+    "hello"
+   ],
+   "clients": {
+    "data-buffer": {
+     "add_text_messages": [
+      {
+       "none": true
+      }
+     ]
+    }
+   },
+   "stdout": "",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data-buffer"
+    ],
+    [
+     "data-buffer.add_text_messages",
+     [
+      "message: \"hello\" level: LEVEL_INFO"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "log textmsg --timestamp -W --tag",
+   "argv": [
+    "host",
+    "log",
+    "textmsg",
+    "--timestamp",
+    "-W",
+    "--tag",
+    "t1",
+    "hi"
+   ],
+   "clients": {
+    "data-buffer": {
+     "add_text_messages": [
+      {
+       "none": true
+      }
+     ]
+    }
+   },
+   "stdout": "",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "time_sync.robot_timestamp_from_local_secs",
+     1.0
+    ],
+    [
+     "robot.ensure_client",
+     "data-buffer"
+    ],
+    [
+     "data-buffer.add_text_messages",
+     [
+      "message: \"hi\" timestamp { seconds: 1700000000 nanos: 42 } level: LEVEL_WARN tag: \"t1\""
+     ]
+    ]
+   ],
+   "time_sync": {
+    "robot_timestamp_from_local_secs": {
+     "message": {
+      "type": "google.protobuf.Timestamp",
+      "b64": "CIDiz6oGECo="
+     }
+    }
+   }
+  },
+  {
+   "name": "log textmsg -E",
+   "argv": [
+    "host",
+    "log",
+    "textmsg",
+    "-E",
+    "err"
+   ],
+   "clients": {
+    "data-buffer": {
+     "add_text_messages": [
+      {
+       "none": true
+      }
+     ]
+    }
+   },
+   "stdout": "",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data-buffer"
+    ],
+    [
+     "data-buffer.add_text_messages",
+     [
+      "message: \"err\" level: LEVEL_ERROR"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "log textmsg -D",
+   "argv": [
+    "host",
+    "log",
+    "textmsg",
+    "-D",
+    "dbg"
+   ],
+   "clients": {
+    "data-buffer": {
+     "add_text_messages": [
+      {
+       "none": true
+      }
+     ]
+    }
+   },
+   "stdout": "",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data-buffer"
+    ],
+    [
+     "data-buffer.add_text_messages",
+     [
+      "message: \"dbg\" level: LEVEL_DEBUG"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "log textmsg time sync failure",
+   "argv": [
+    "host",
+    "log",
+    "textmsg",
+    "--timestamp",
+    "hi"
+   ],
+   "clients": {
+    "data-buffer": {
+     "add_text_messages": [
+      {
+       "none": true
+      }
+     ]
+    }
+   },
+   "stdout": "Failed to send message with timestamp: no sync.\n",
+   "stderr": "",
+   "result": false,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "time_sync.robot_timestamp_from_local_secs",
+     1.0
+    ]
+   ],
+   "time_sync": {
+    "robot_timestamp_from_local_secs": {
+     "raise": "NotEstablishedError",
+     "message": "no sync"
+    }
+   }
+  },
+  {
+   "name": "log comment",
+   "argv": [
+    "host",
+    "log",
+    "comment",
+    "a comment"
+   ],
+   "clients": {},
+   "stdout": "",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.operator_comment",
+     "a comment",
+     null
+    ]
+   ]
+  },
+  {
+   "name": "log comment --timestamp",
+   "argv": [
+    "host",
+    "log",
+    "comment",
+    "--timestamp",
+    "a comment"
+   ],
+   "clients": {},
+   "stdout": "",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "time_sync.wait_for_sync",
+     1.0
+    ],
+    [
+     "robot.operator_comment",
+     "a comment",
+     "number"
+    ]
+   ],
+   "time_sync": {
+    "wait_for_sync": {
+     "none": true
+    }
+   }
+  },
+  {
+   "name": "log comment time sync failure",
+   "argv": [
+    "host",
+    "log",
+    "comment",
+    "--timestamp",
+    "a comment"
+   ],
+   "clients": {},
+   "stdout": "Failed to get timesync for setting comment timestamp: timed out.\n",
+   "stderr": "",
+   "result": false,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "time_sync.wait_for_sync",
+     1.0
+    ]
+   ],
+   "time_sync": {
+    "wait_for_sync": {
+     "raise": "TimedOutError",
+     "message": "timed out"
+    }
+   }
+  },
+  {
+   "name": "data comments",
+   "argv": [
+    "host",
+    "data",
+    "comments"
+   ],
+   "clients": {
+    "data": {
+     "get_events_comments": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetEventsCommentsResponse",
+        "b64": "Ek0aGQoJICBmaXJzdCAgEgwIgMq17gEQgMq17gEaFgoGc2Vjb25kEgwIgcq17gEQgcq17gEaGAoIbmV4dCBkYXkSDAiA7bruARCA7bruAQ=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "\n[1985-11-05]\n 00:53:20.500000  first\n 00:53:21.500000  second\n\n[1985-11-06]\n 00:53:20.500086  next day\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data"
+    ],
+    [
+     "data.get_events_comments",
+     "comments: true"
+    ]
+   ]
+  },
+  {
+   "name": "data comments --proto",
+   "argv": [
+    "host",
+    "data",
+    "comments",
+    "--proto"
+   ],
+   "clients": {
+    "data": {
+     "get_events_comments": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetEventsCommentsResponse",
+        "b64": "Ek0aGQoJICBmaXJzdCAgEgwIgMq17gEQgMq17gEaFgoGc2Vjb25kEgwIgcq17gEQgcq17gEaGAoIbmV4dCBkYXkSDAiA7bruARCA7bruAQ=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "[message: \"  first  \"\ntimestamp {\n  seconds: 500000000\n  nanos: 500000000\n}\n, message: \"second\"\ntimestamp {\n  seconds: 500000001\n  nanos: 500000001\n}\n, message: \"next day\"\ntimestamp {\n  seconds: 500086400\n  nanos: 500086400\n}\n]\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data"
+    ],
+    [
+     "data.get_events_comments",
+     "comments: true"
+    ]
+   ]
+  },
+  {
+   "name": "data events --type --level",
+   "argv": [
+    "host",
+    "data",
+    "events",
+    "--type",
+    "mission",
+    "--level",
+    "LEVEL_MEDIUM"
+   ],
+   "clients": {
+    "data": {
+     "get_events_comments": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetEventsCommentsResponse",
+        "b64": "EnISPwoHbWlzc2lvbhIJYSBtaXNzaW9uGghhdXRvd2FsayIBMSoMCIDKte4BEIDKte4BMgwIgsq17gEQgsq17gE4AxIvCgdpbnN0YW50GgNjbGkiATIqDAiKyrXuARCKyrXuATIMCIrKte4BEIrKte4BOAE="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "\n[1985-11-05]\n 00:53:20.500000-00:53:22.500000 (END) (             2.0) mission           HIGH             <autowalk> \n\ta mission\n 00:53:30.500000  instant           LOW               <cli> \n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data"
+    ],
+    [
+     "data.get_events_comments",
+     "events { type: \"mission\" level { value: 2 } }"
+    ]
+   ]
+  },
+  {
+   "name": "data events --proto",
+   "argv": [
+    "host",
+    "data",
+    "events",
+    "--proto"
+   ],
+   "clients": {
+    "data": {
+     "get_events_comments": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetEventsCommentsResponse",
+        "b64": "EnISPwoHbWlzc2lvbhIJYSBtaXNzaW9uGghhdXRvd2FsayIBMSoMCIDKte4BEIDKte4BMgwIgsq17gEQgsq17gE4AxIvCgdpbnN0YW50GgNjbGkiATIqDAiKyrXuARCKyrXuATIMCIrKte4BEIrKte4BOAE="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "[type: \"mission\"\ndescription: \"a mission\"\nsource: \"autowalk\"\nid: \"1\"\nstart_time {\n  seconds: 500000000\n  nanos: 500000000\n}\nend_time {\n  seconds: 500000002\n  nanos: 500000002\n}\nlevel: LEVEL_HIGH\n, type: \"instant\"\nsource: \"cli\"\nid: \"2\"\nstart_time {\n  seconds: 500000010\n  nanos: 500000010\n}\nend_time {\n  seconds: 500000010\n  nanos: 500000010\n}\nlevel: LEVEL_LOW\n]\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data"
+    ],
+    [
+     "data.get_events_comments",
+     "events { }"
+    ]
+   ]
+  },
+  {
+   "name": "data status -B",
+   "argv": [
+    "host",
+    "data",
+    "status",
+    "-B"
+   ],
+   "clients": {
+    "data": {
+     "get_data_buffer_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetDataBufferStatusResponse",
+        "b64": "EggIAxDAhD0YAg=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "data_buffer_status {\n  num_data_buffer_pages: 3\n  data_buffer_total_bytes: 1000000\n  num_comments: 2\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data"
+    ],
+    [
+     "data.get_data_buffer_status",
+     true
+    ]
+   ]
+  },
+  {
+   "name": "lease list",
+   "argv": [
+    "host",
+    "lease",
+    "list"
+   ],
+   "clients": {
+    "lease": {
+     "list_leases": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListLeasesResponse",
+        "b64": "EioKBGJvZHkSEQoEYm9keRIFZXBvY2gaAgECGg8KBnRhYmxldBIFYWRtaW4SBwoDYXJtKAE="
+       },
+       "field": "resources"
+      }
+     ]
+    }
+   },
+   "stdout": "resource: \"body\"\nlease {\n  resource: \"body\"\n  epoch: \"epoch\"\n  sequence: 1\n  sequence: 2\n}\nlease_owner {\n  client_name: \"tablet\"\n  user_name: \"admin\"\n}\n\nresource: \"arm\"\nis_stale: true\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "lease"
+    ],
+    [
+     "lease.list_leases",
+     false
+    ]
+   ]
+  },
+  {
+   "name": "lease list --proto",
+   "argv": [
+    "host",
+    "lease",
+    "list",
+    "--proto"
+   ],
+   "clients": {
+    "lease": {
+     "list_leases": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListLeasesResponse",
+        "b64": "EioKBGJvZHkSEQoEYm9keRIFZXBvY2gaAgECGg8KBnRhYmxldBIFYWRtaW4SBwoDYXJtKAE="
+       },
+       "field": "resources"
+      }
+     ]
+    }
+   },
+   "stdout": "[resource: \"body\"\nlease {\n  resource: \"body\"\n  epoch: \"epoch\"\n  sequence: 1\n  sequence: 2\n}\nlease_owner {\n  client_name: \"tablet\"\n  user_name: \"admin\"\n}\n, resource: \"arm\"\nis_stale: true\n]\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "lease"
+    ],
+    [
+     "lease.list_leases",
+     false
+    ]
+   ]
+  },
+  {
+   "name": "lease list unavailable",
+   "argv": [
+    "host",
+    "lease",
+    "list"
+   ],
+   "clients": {
+    "lease": {
+     "list_leases": [
+      {
+       "raise": "ServiceUnavailableError",
+       "message": "unavailable"
+      }
+     ]
+    }
+   },
+   "stdout": "",
+   "stderr": "ServiceUnavailableError: ServiceUnavailableError: unavailable\n",
+   "result": null,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "lease"
+    ],
+    [
+     "lease.list_leases",
+     false
+    ]
+   ]
+  },
+  {
+   "name": "estop config",
+   "argv": [
+    "host",
+    "estop",
+    "config"
+   ],
+   "clients": {
+    "estop": {
+     "get_config": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetEstopConfigResponse",
+        "b64": "GhcKEAoKUERCX3Jvb3RlZCICCAoSA2NmZw=="
+       },
+       "field": "active_config"
+      }
+     ]
+    }
+   },
+   "stdout": "endpoints {\n  role: \"PDB_rooted\"\n  timeout {\n    seconds: 10\n  }\n}\nunique_id: \"cfg\"\n\n",
+   "stderr": "",
+   "result": null,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "estop"
+    ],
+    [
+     "estop.get_config"
+    ]
+   ],
+   "js_result": true
+  },
+  {
+   "name": "estop status",
+   "argv": [
+    "host",
+    "estop",
+    "status"
+   ],
+   "clients": {
+    "estop": {
+     "get_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetEstopSystemStatusResponse",
+        "b64": "Gg0aCRABGgUQwJaxAiAE"
+       },
+       "field": "status"
+      }
+     ]
+    }
+   },
+   "stdout": "endpoints {\n  stop_level: ESTOP_LEVEL_CUT\n  time_since_valid_response {\n    nanos: 5000000\n  }\n}\nstop_level: ESTOP_LEVEL_NONE\n\n",
+   "stderr": "",
+   "result": null,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "estop"
+    ],
+    [
+     "estop.get_status"
+    ]
+   ],
+   "js_result": true
+  },
+  {
+   "name": "estop config server error",
+   "argv": [
+    "host",
+    "estop",
+    "config"
+   ],
+   "clients": {
+    "estop": {
+     "get_config": [
+      {
+       "raise": "InternalServerError",
+       "response": {
+        "type": "bosdyn.api.GetEstopConfigResponse",
+        "b64": ""
+       },
+       "message": "boom"
+      }
+     ]
+    }
+   },
+   "stdout": "",
+   "stderr": "InternalServerError: bosdyn.api.GetEstopConfigResponse (InternalServerError): boom\n",
+   "result": null,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "estop"
+    ],
+    [
+     "estop.get_config"
+    ]
+   ]
+  },
+  {
+   "name": "image list-sources",
+   "argv": [
+    "host",
+    "image",
+    "list-sources"
+   ],
+   "clients": {
+    "image": {
+     "list_image_sources": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListImageSourcesResponse",
+        "b64": "EiYSF2Zyb250bGVmdF9maXNoZXllX2ltYWdlIIAFKOADUgEBWgIBAhIZEgpoYW5kX2RlcHRoIKsBKOABUgIFA1oBAg=="
+       },
+       "field": "image_sources"
+      }
+     ]
+    }
+   },
+   "stdout": "frontleft_fisheye_image        (480x640) JPEG,RAW        GREYSCALE_U8   \nhand_depth                     (224x171) RAW             DEPTH_U16,RGB_U8\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "image"
+    ],
+    [
+     "image.list_image_sources"
+    ]
+   ]
+  },
+  {
+   "name": "image list-sources --proto other service",
+   "argv": [
+    "host",
+    "image",
+    "list-sources",
+    "--proto",
+    "--service-name",
+    "other-image"
+   ],
+   "clients": {
+    "other-image": {
+     "list_image_sources": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListImageSourcesResponse",
+        "b64": "EiYSF2Zyb250bGVmdF9maXNoZXllX2ltYWdlIIAFKOADUgEBWgIBAhIZEgpoYW5kX2RlcHRoIKsBKOABUgIFA1oBAg=="
+       },
+       "field": "image_sources"
+      }
+     ]
+    }
+   },
+   "stdout": "[name: \"frontleft_fisheye_image\"\ncols: 640\nrows: 480\npixel_formats: PIXEL_FORMAT_GREYSCALE_U8\nimage_formats: FORMAT_JPEG\nimage_formats: FORMAT_RAW\n, name: \"hand_depth\"\ncols: 171\nrows: 224\npixel_formats: PIXEL_FORMAT_DEPTH_U16\npixel_formats: PIXEL_FORMAT_RGB_U8\nimage_formats: FORMAT_RAW\n]\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "other-image"
+    ],
+    [
+     "other-image.list_image_sources"
+    ]
+   ]
+  },
+  {
+   "name": "image get-image unknown source",
+   "argv": [
+    "host",
+    "image",
+    "get-image",
+    "nope",
+    "it's"
+   ],
+   "clients": {
+    "image": {
+     "get_image": [
+      {
+       "raise": "UnknownImageSourceError",
+       "response": {
+        "type": "bosdyn.api.GetImageResponse",
+        "b64": "EgIgAg=="
+       }
+      }
+     ],
+     "list_image_sources": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListImageSourcesResponse",
+        "b64": "EiYSF2Zyb250bGVmdF9maXNoZXllX2ltYWdlIIAFKOADUgEBWgIBAhIZEgpoYW5kX2RlcHRoIKsBKOABUgIFA1oBAg=="
+       },
+       "field": "image_sources"
+      }
+     ]
+    }
+   },
+   "stdout": "Requested image source \"['nope', \"it's\"]\" does not exist.  Available image sources:\nfrontleft_fisheye_image        (480x640) JPEG,RAW        GREYSCALE_U8   \nhand_depth                     (224x171) RAW             DEPTH_U16,RGB_U8\n",
+   "stderr": "",
+   "result": false,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "image"
+    ],
+    [
+     "image.get_image",
+     [
+      "image_source_name: \"nope\" quality_percent: 75.0",
+      "image_source_name: \"it\\'s\" quality_percent: 75.0"
+     ]
+    ],
+    [
+     "robot.ensure_client",
+     "image"
+    ],
+    [
+     "image.list_image_sources"
+    ]
+   ]
+  },
+  {
+   "name": "image get-image error other service",
+   "argv": [
+    "host",
+    "image",
+    "get-image",
+    "--quality-percent",
+    "50",
+    "--service-name",
+    "other-image",
+    "frontleft_fisheye_image"
+   ],
+   "clients": {
+    "other-image": {
+     "get_image": [
+      {
+       "raise": "ImageDataError",
+       "response": {
+        "type": "bosdyn.api.GetImageResponse",
+        "b64": "EgIgAg=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Robot cannot generate the \"['frontleft_fisheye_image']\" at this time.  Retry the command.\n",
+   "stderr": "",
+   "result": false,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "other-image"
+    ],
+    [
+     "other-image.get_image",
+     [
+      "image_source_name: \"frontleft_fisheye_image\" quality_percent: 50.0"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "local_grid types",
+   "argv": [
+    "host",
+    "local_grid",
+    "types"
+   ],
+   "clients": {
+    "local-grid-service": {
+     "get_local_grid_types": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetLocalGridTypesResponse",
+        "b64": "EgkKB3RlcnJhaW4SEwoRb2JzdGFjbGVfZGlzdGFuY2U="
+       },
+       "field": "local_grid_type"
+      }
+     ]
+    }
+   },
+   "stdout": "terrain\nobstacle_distance\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "local-grid-service"
+    ],
+    [
+     "local-grid-service.get_local_grid_types"
+    ]
+   ]
+  },
+  {
+   "name": "local_grid types --proto",
+   "argv": [
+    "host",
+    "local_grid",
+    "types",
+    "--proto"
+   ],
+   "clients": {
+    "local-grid-service": {
+     "get_local_grid_types": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetLocalGridTypesResponse",
+        "b64": "EgkKB3RlcnJhaW4SEwoRb2JzdGFjbGVfZGlzdGFuY2U="
+       },
+       "field": "local_grid_type"
+      }
+     ]
+    }
+   },
+   "stdout": "[name: \"terrain\"\n, name: \"obstacle_distance\"\n]\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "local-grid-service"
+    ],
+    [
+     "local-grid-service.get_local_grid_types"
+    ]
+   ]
+  },
+  {
+   "name": "local_grid get",
+   "argv": [
+    "host",
+    "local_grid",
+    "get",
+    "terrain",
+    "no-step"
+   ],
+   "clients": {
+    "local-grid-service": {
+     "get_local_grids": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetLocalGridsResponse",
+        "b64": "EhwKB3RlcnJhaW4QARoPGgkRuB6F61G4nj8yAgAB"
+       },
+       "field": "local_grid_responses"
+      }
+     ]
+    }
+   },
+   "stdout": "local_grid_type_name: \"terrain\"\nstatus: STATUS_OK\nlocal_grid {\n  extent {\n    cell_size: 0.03\n  }\n  data: \"\\000\\001\"\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "local-grid-service"
+    ],
+    [
+     "local-grid-service.get_local_grids",
+     [
+      "terrain",
+      "no-step"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "acquire info",
+   "argv": [
+    "host",
+    "acquire",
+    "info"
+   ],
+   "clients": {
+    "data-acquisition": {
+     "get_service_info": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetServiceInfoResponse",
+        "b64": "EnoKIQoLcm9ib3Qtc3RhdGUiEGRhdGEtYWNxdWlzaXRpb24wAQoSChBkZXRlY3RlZC1vYmplY3RzGicKBWltYWdlEhJiYWNrX2Zpc2hleWVfaW1hZ2USCmhhbmRfaW1hZ2UqGAoMGgpuY2Itd29ya2VyGggKBgoEeW9sbw=="
+       },
+       "field": "capabilities"
+      }
+     ]
+    }
+   },
+   "stdout": "Data Acquisition Service's Available Capabilities\n\nData Type       Data Name                           (optional) Service Name             (optional) has_live_data      \n-------------------------------------------------------------------------------------------------------------------\ndata            robot-state                         data-acquisition                    True                          \ndata            detected-objects                                                        False                         \nimage           back_fisheye_image                  image                                                             \nimage           hand_image                          image                                                             \nmodels          yolo                                ncb-worker                                                        \n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data-acquisition"
+    ],
+    [
+     "data-acquisition.get_service_info"
+    ]
+   ]
+  },
+  {
+   "name": "acquire status",
+   "argv": [
+    "host",
+    "acquire",
+    "status",
+    "5"
+   ],
+   "clients": {
+    "data-acquisition": {
+     "get_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetStatusResponse",
+        "b64": "EAMaHAoGCgFhEgFnEgVzdGF0ZRoLcm9ib3Qtc3RhdGU="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "status: STATUS_COMPLETE\ndata_saved {\n  action_id {\n    action_name: \"a\"\n    group_name: \"g\"\n  }\n  channel: \"state\"\n  data_name: \"robot-state\"\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data-acquisition"
+    ],
+    [
+     "data-acquisition.get_status",
+     5
+    ]
+   ]
+  },
+  {
+   "name": "acquire live",
+   "argv": [
+    "host",
+    "acquire",
+    "live",
+    "--data-source",
+    "a",
+    "--data-source",
+    "b"
+   ],
+   "clients": {
+    "data-acquisition": {
+     "get_live_data": [
+      {
+       "message": {
+        "type": "bosdyn.api.LiveDataResponse",
+        "b64": "GhoKGAoHYmF0dGVyeRINEgsKCQkAAAAAAADgPw=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "live_data {\n  signals {\n    key: \"battery\"\n    value {\n      signal_data {\n        data {\n          double: 0.5\n        }\n      }\n    }\n  }\n}\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "data-acquisition"
+    ],
+    [
+     "data-acquisition.get_live_data",
+     "data_captures { name: \"a\" } data_captures { name: \"b\" }"
+    ]
+   ]
+  },
+  {
+   "name": "self-ip",
+   "argv": [
+    "host",
+    "self-ip"
+   ],
+   "clients": {},
+   "stdout": "The IP address of the computer used to talk to the robot is: 127.0.0.1\n",
+   "stderr": "",
+   "result": null,
+   "calls": [],
+   "js_result": true
+  },
+  {
+   "name": "power fan",
+   "argv": [
+    "host",
+    "power",
+    "fan"
+   ],
+   "clients": {
+    "power": {
+     "get_fan_info": [
+      {
+       "message": {
+        "type": "bosdyn.api.GetFanInformationResponse",
+        "b64": "EhMKCmJvZHlfZmFuXzASBQ0rUppE"
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Fan Information:\n----------------------------------------------------------------------\nbody_fan_0: 1234.5677490234375\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "power"
+    ],
+    [
+     "power.get_fan_info",
+     10
+    ]
+   ]
+  },
+  {
+   "name": "keepalive status",
+   "argv": [
+    "host",
+    "keepalive",
+    "status"
+   ],
+   "clients": {
+    "keepalive": {
+     "get_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.keepalive.GetStatusResponse",
+        "b64": "Cg4aDAjk4s+qBhCA0pOtAxJ8CP///////////wESWgoKc3VwZXJ2aXNvchIXCggIBRCAyrXuATILCgkKBGJvZHkaAQMSEgoCCB4aDBIKCgRib2R5GgIEBRIGCgIICSIAEgQKAggBGgoKBGJvZHkaAgECIgVhZG1pbhoLCNriz6oGEIDC1y8iBnRhYmxldBIPCAcaBgjk4s+qBiIDY2xpGgEB"
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Robot returned 2 live policies:\nid: 18446744073709551615\n client_name: tablet\n last checkin 10s ago\n policy name: 'supervisor'\n user_id: 'admin'\n associated_leases: body:[1, 2]\n actions:\n   lease_stale (body:[3]) after 5 seconds, ACTIVE\n   auto_return (body:[4, 5]) after 30 seconds, NOT active\n   controlled_motors_off after 9 seconds, ACTIVE\n   None after 1 seconds, ACTIVE\n\nid: 7\n client_name: cli\n last checkin 0s ago\n actions:\n\nActive control action: POLICY_CONTROL_ACTION_AUTO_RETURN\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "keepalive"
+    ],
+    [
+     "keepalive.get_status"
+    ]
+   ]
+  },
+  {
+   "name": "keepalive status --full",
+   "argv": [
+    "host",
+    "keepalive",
+    "status",
+    "--full"
+   ],
+   "clients": {
+    "keepalive": {
+     "get_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.keepalive.GetStatusResponse",
+        "b64": "Cg4aDAjk4s+qBhCA0pOtAxJ8CP///////////wESWgoKc3VwZXJ2aXNvchIXCggIBRCAyrXuATILCgkKBGJvZHkaAQMSEgoCCB4aDBIKCgRib2R5GgIEBRIGCgIICSIAEgQKAggBGgoKBGJvZHkaAgECIgVhZG1pbhoLCNriz6oGEIDC1y8iBnRhYmxldBIPCAcaBgjk4s+qBiIDY2xpGgEB"
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "{\n  \"header\": {\n    \"responseTimestamp\": \"2023-11-14T22:15:00.900Z\"\n  },\n  \"status\": [\n    {\n      \"policyId\": \"18446744073709551615\",\n      \"policy\": {\n        \"name\": \"supervisor\",\n        \"actions\": [\n          {\n            \"after\": \"5.500s\",\n            \"leaseStale\": {\n              \"leases\": [\n                {\n                  \"resource\": \"body\",\n                  \"sequence\": [\n                    3\n                  ]\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"30s\",\n            \"autoReturn\": {\n              \"leases\": [\n                {\n                  \"resource\": \"body\",\n                  \"sequence\": [\n                    4,\n                    5\n                  ]\n                }\n              ]\n            }\n          },\n          {\n            \"after\": \"9s\",\n            \"controlledMotorsOff\": {}\n          },\n          {\n            \"after\": \"1s\"\n          }\n        ],\n        \"associatedLeases\": [\n          {\n            \"resource\": \"body\",\n            \"sequence\": [\n              1,\n              2\n            ]\n          }\n        ],\n        \"userId\": \"admin\"\n      },\n      \"lastCheckin\": \"2023-11-14T22:14:50.100Z\",\n      \"clientName\": \"tablet\"\n    },\n    {\n      \"policyId\": \"7\",\n      \"lastCheckin\": \"2023-11-14T22:15:00Z\",\n      \"clientName\": \"cli\"\n    }\n  ],\n  \"activeControlActions\": [\n    \"POLICY_CONTROL_ACTION_AUTO_RETURN\"\n  ]\n}\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "keepalive"
+    ],
+    [
+     "keepalive.get_status"
+    ]
+   ]
+  },
+  {
+   "name": "keepalive status one policy",
+   "argv": [
+    "host",
+    "keepalive",
+    "status"
+   ],
+   "clients": {
+    "keepalive": {
+     "get_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.keepalive.GetStatusResponse",
+        "b64": "EggIAyIEb25seQ=="
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Robot returned 1 live policy:\nid: 3\n client_name: only\n last checkin 0s ago\n actions:\n\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "keepalive"
+    ],
+    [
+     "keepalive.get_status"
+    ]
+   ]
+  },
+  {
+   "name": "keepalive status none",
+   "argv": [
+    "host",
+    "keepalive",
+    "status"
+   ],
+   "clients": {
+    "keepalive": {
+     "get_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.keepalive.GetStatusResponse",
+        "b64": ""
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "No active policies\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "keepalive"
+    ],
+    [
+     "keepalive.get_status"
+    ]
+   ]
+  },
+  {
+   "name": "keepalive remove all",
+   "argv": [
+    "host",
+    "keepalive",
+    "remove"
+   ],
+   "clients": {
+    "keepalive": {
+     "get_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.keepalive.GetStatusResponse",
+        "b64": "Cg4aDAjk4s+qBhCA0pOtAxJ8CP///////////wESWgoKc3VwZXJ2aXNvchIXCggIBRCAyrXuATILCgkKBGJvZHkaAQMSEgoCCB4aDBIKCgRib2R5GgIEBRIGCgIICSIAEgQKAggBGgoKBGJvZHkaAgECIgVhZG1pbhoLCNriz6oGEIDC1y8iBnRhYmxldBIPCAcaBgjk4s+qBiIDY2xpGgEB"
+       }
+      }
+     ],
+     "modify_policy": [
+      {
+       "message": {
+        "type": "bosdyn.api.keepalive.ModifyPolicyResponse",
+        "b64": ""
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Removed 2 policies\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "keepalive"
+    ],
+    [
+     "keepalive.get_status"
+    ],
+    [
+     "keepalive.modify_policy",
+     null,
+     [
+      "18446744073709551615",
+      7
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "keepalive remove some",
+   "argv": [
+    "host",
+    "keepalive",
+    "remove",
+    "--policy-id",
+    "7",
+    "8",
+    "0018446744073709551615"
+   ],
+   "clients": {
+    "keepalive": {
+     "get_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.keepalive.GetStatusResponse",
+        "b64": "Cg4aDAjk4s+qBhCA0pOtAxJ8CP///////////wESWgoKc3VwZXJ2aXNvchIXCggIBRCAyrXuATILCgkKBGJvZHkaAQMSEgoCCB4aDBIKCgRib2R5GgIEBRIGCgIICSIAEgQKAggBGgoKBGJvZHkaAgECIgVhZG1pbhoLCNriz6oGEIDC1y8iBnRhYmxldBIPCAcaBgjk4s+qBiIDY2xpGgEB"
+       }
+      }
+     ],
+     "modify_policy": [
+      {
+       "message": {
+        "type": "bosdyn.api.keepalive.ModifyPolicyResponse",
+        "b64": ""
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "Policy '8' not found.\nRemoved 2 policies\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "keepalive"
+    ],
+    [
+     "keepalive.get_status"
+    ],
+    [
+     "keepalive.modify_policy",
+     null,
+     [
+      7,
+      "18446744073709551615"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "keepalive remove none",
+   "argv": [
+    "host",
+    "keepalive",
+    "remove"
+   ],
+   "clients": {
+    "keepalive": {
+     "get_status": [
+      {
+       "message": {
+        "type": "bosdyn.api.keepalive.GetStatusResponse",
+        "b64": ""
+       }
+      }
+     ]
+    }
+   },
+   "stdout": "No active policies\n",
+   "stderr": "",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "keepalive"
+    ],
+    [
+     "keepalive.get_status"
+    ]
+   ]
+  },
+  {
+   "name": "dir list --username --password",
+   "argv": [
+    "--username",
+    "u",
+    "--password",
+    "p",
+    "host",
+    "dir",
+    "list"
+   ],
+   "clients": {
+    "directory": {
+     "list": [
+      {
+       "message": {
+        "type": "bosdyn.api.ListServiceEntriesResponse",
+        "b64": "EkcKC3JvYm90LXN0YXRlEhxib3NkeW4uYXBpLlJvYm90U3RhdGVTZXJ2aWNlGhBzdGF0ZS5zcG90LnJvYm90IgYIgOLPqgYoARIgChRteS1sb25nLXNlcnZpY2UtbmFtZRIDeC5ZGgNhLmI="
+       },
+       "field": "service_entries"
+      }
+     ]
+    }
+   },
+   "stdout": "name                     type                             authority            tokens\n------------------------------------------------------------------------------------\nrobot-state              bosdyn.api.RobotStateService     state.spot.robot     user\nmy-long-service-name     x.Y                              a.b                  \n",
+   "stderr": "Command line credentials deprecated! Please use BOSDYN_CLIENT_USERNAME and BOSDYN_CLIENT_PASSWORD env vars instead.\nCommand line credentials deprecated! Please use BOSDYN_CLIENT_USERNAME and BOSDYN_CLIENT_PASSWORD env vars instead.\n",
+   "result": true,
+   "calls": [
+    [
+     "robot.authenticate",
+     "u",
+     "p"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.authenticate",
+     "u",
+     "p"
+    ],
+    [
+     "robot.sync_with_directory"
+    ],
+    [
+     "robot.ensure_client",
+     "directory"
+    ],
+    [
+     "directory.list"
+    ]
+   ]
+  },
+  {
+   "name": "dir list invalid login",
+   "argv": [
+    "host",
+    "dir",
+    "list"
+   ],
+   "clients": {},
+   "stdout": "",
+   "stderr": "Username and/or password are invalid.\n",
+   "result": null,
+   "calls": [
+    [
+     "robot.authenticate",
+     "user",
+     "pass"
+    ]
+   ],
+   "authenticate": {
+    "raise": "InvalidLoginError",
+    "response": {
+     "type": "bosdyn.api.GetAuthTokenResponse",
+     "b64": "CgQiAggB"
+    }
+   }
+  }
+ ]
+}

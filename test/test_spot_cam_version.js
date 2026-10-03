@@ -33,18 +33,18 @@ class MockVersionService extends VersionServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new VersionClient();
   const service = new MockVersionService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: VersionServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
 
 test('test_get_software_version', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const version = await client.getSoftwareVersion();
   server.forceShutdown();
   assert.ok(version.getMajorVersion() === 1);

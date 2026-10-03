@@ -59,18 +59,18 @@ class MockImageServicer extends ImageServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0, imageSources = [], imageResponses = [], expectedImageSources = []) {
+async function _setup(rpcDelay = 0, imageSources = [], imageResponses = [], expectedImageSources = []) {
   const client = new ImageClient();
   const service = new MockImageServicer(rpcDelay, imageSources, imageResponses, expectedImageSources);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: ImageServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
 
 test('test_list_sources_empty', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const result = await client.listImageSources();
   assert.ok(result.length === 0);
 
@@ -79,7 +79,7 @@ test('test_list_sources_empty', async () => {
 
 test('test_list_sources_timeout', async () => {
   const timeout = 100;
-  const { client, server } = _setup(timeout * 2);
+  const { client, server } = await _setup(timeout * 2);
 
   try {
     await client.listImageSources({ timeout });
@@ -92,7 +92,7 @@ test('test_list_sources_timeout', async () => {
 
 test('test_list_sources_single', async () => {
   const imageSource = new imagePb.ImageSource();
-  const { client, server } = _setup(0, [imageSource]);
+  const { client, server } = await _setup(0, [imageSource]);
   const res = await client.listImageSources();
   assert.ok(res.length === 1);
 
@@ -102,7 +102,7 @@ test('test_list_sources_single', async () => {
 test('test_list_sources_multiple', async () => {
   const imageSourceA = new imagePb.ImageSource();
   const imageSourceB = new imagePb.ImageSource();
-  const { client, server } = _setup(0, [imageSourceA, imageSourceB]);
+  const { client, server } = await _setup(0, [imageSourceA, imageSourceB]);
   const res = await client.listImageSources();
   assert.ok(res.length === 2);
 
@@ -110,7 +110,7 @@ test('test_list_sources_multiple', async () => {
 });
 
 test('test_get_image_sources_empty', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   await client.getImageFromSources([]);
 
   server.forceShutdown();
@@ -118,7 +118,7 @@ test('test_get_image_sources_empty', async () => {
 
 test('test_get_image_source_unset', async () => {
   const imageResponse = new imagePb.ImageResponse();
-  const { client, server } = _setup(0, [], [imageResponse], ['foo']);
+  const { client, server } = await _setup(0, [], [imageResponse], ['foo']);
 
   try {
     await client.getImageFromSources(['foo']);
@@ -131,7 +131,7 @@ test('test_get_image_source_unset', async () => {
 
 test('test_get_image_source_ok', async () => {
   const imageResponse = new imagePb.ImageResponse().setStatus(imagePb.ImageResponse.Status.STATUS_OK);
-  const { client, server } = _setup(0, [], [imageResponse], ['foo']);
+  const { client, server } = await _setup(0, [], [imageResponse], ['foo']);
 
   const res = await client.getImageFromSources(['foo']);
   assert.ok(res.length === 1);
@@ -141,7 +141,7 @@ test('test_get_image_source_ok', async () => {
 
 test('test_get_image_source_unknown_camera', async () => {
   const imageResponse = new imagePb.ImageResponse().setStatus(imagePb.ImageResponse.Status.STATUS_UNKNOWN_CAMERA);
-  const { client, server } = _setup(0, [], [imageResponse], ['foo']);
+  const { client, server } = await _setup(0, [], [imageResponse], ['foo']);
 
   try {
     await client.getImageFromSources(['foo']);
@@ -157,7 +157,7 @@ test('test_get_image_source_unknown_and_known_camera', async () => {
     imagePb.ImageResponse.Status.STATUS_UNKNOWN_CAMERA,
   );
   const imageResponseOk = new imagePb.ImageResponse().setStatus(imagePb.ImageResponse.Status.STATUS_OK);
-  const { client, server } = _setup(0, [], [imageResponseOk, imageResponseUnknown], ['foo', 'bar']);
+  const { client, server } = await _setup(0, [], [imageResponseOk, imageResponseUnknown], ['foo', 'bar']);
 
   try {
     await client.getImageFromSources(['foo', 'bar']);
@@ -170,7 +170,7 @@ test('test_get_image_source_unknown_and_known_camera', async () => {
 
 test('test_get_image_source_data_error', async () => {
   const imageResponse = new imagePb.ImageResponse().setStatus(imagePb.ImageResponse.Status.STATUS_SOURCE_DATA_ERROR);
-  const { client, server } = _setup(0, [], [imageResponse], ['foo']);
+  const { client, server } = await _setup(0, [], [imageResponse], ['foo']);
 
   try {
     await client.getImageFromSources(['foo']);
@@ -183,7 +183,7 @@ test('test_get_image_source_data_error', async () => {
 
 test('test_get_image_image_data_error', async () => {
   const imageResponse = new imagePb.ImageResponse().setStatus(imagePb.ImageResponse.Status.STATUS_IMAGE_DATA_ERROR);
-  const { client, server } = _setup(0, [], [imageResponse], ['foo']);
+  const { client, server } = await _setup(0, [], [imageResponse], ['foo']);
 
   try {
     await client.getImageFromSources(['foo']);
@@ -201,7 +201,7 @@ test('test_get_image_custom_params_errror', async () => {
       .setStatus(serviceCustomizationPb.CustomParamError.Status.STATUS_UNSUPPORTED_PARAMETER)
       .setErrorMessagesList(['Bad param added.']),
   );
-  const { client, server } = _setup(0, [], [imageResponse], ['foo']);
+  const { client, server } = await _setup(0, [], [imageResponse], ['foo']);
 
   try {
     await client.getImageFromSources(['foo']);

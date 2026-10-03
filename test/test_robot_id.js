@@ -30,12 +30,12 @@ class MockRobotIdServicer extends RobotIdServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0, robotId = null) {
+async function _setup(rpcDelay = 0, robotId = null) {
   const client = new RobotIdClient();
   const service = new MockRobotIdServicer(rpcDelay, robotId);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: RobotIdServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -69,7 +69,7 @@ test.beforeEach(async () => {
 });
 
 test('test_get_robot_id', async () => {
-  const { client, server } = _setup(0, _createFakeRobotId());
+  const { client, server } = await _setup(0, _createFakeRobotId());
   try {
     const robotId = await client.getId();
     _checkRobotId(robotId);
@@ -78,10 +78,10 @@ test('test_get_robot_id', async () => {
   }
 });
 
-test('test_get_robot_id_timeout', () => {
+test('test_get_robot_id_timeout', async () => {
   const timeout = 100;
-  const { client, server } = _setup(2 * timeout, _createFakeRobotId());
-  assert
+  const { client, server } = await _setup(2 * timeout, _createFakeRobotId());
+  await assert
     .rejects(async () => {
       await client.getId({ timeout });
     }, TimedOutError)
@@ -89,7 +89,7 @@ test('test_get_robot_id_timeout', () => {
 });
 
 test('test_version_array', async () => {
-  const { client, server } = _setup(0, _createFakeRobotId());
+  const { client, server } = await _setup(0, _createFakeRobotId());
   try {
     const robotId = await client.getId();
     assert.deepStrictEqual(toVersionArray(robotId.getSoftwareRelease().getVersion()), [1, 1, 12]);

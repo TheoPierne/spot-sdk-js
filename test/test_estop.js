@@ -40,7 +40,8 @@ class MockEstopServicer extends EstopServiceClient {
       res.getHeader().getError().setCode(headerPb.CommonError.Code.CODE_INTERNAL_SERVER_ERROR);
     } else if (request.getEndpoint().getName() === MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN) {
       res.setStatus(estopPb.EstopCheckInResponse.Status.STATUS_ENDPOINT_UNKNOWN);
-    } else if (!request.getChallenge()) {
+    } else if (BigInt(request.getChallenge()) === 0n) {
+      // The challenge is an uint64 string ([jstype = JS_STRING], see build.js): '0' when unset.
       res.setStatus(estopPb.EstopCheckInResponse.Status.STATUS_INCORRECT_CHALLENGE_RESPONSE);
     } else if (request.getResponse() !== responseFromChallenge(request.getChallenge()).toString(10)) {
       res.setStatus(estopPb.EstopCheckInResponse.Status.STATUS_INCORRECT_CHALLENGE_RESPONSE);
@@ -50,7 +51,7 @@ class MockEstopServicer extends EstopServiceClient {
 
     if (!MockEstopServicer.STATUSES_THAT_DO_NOT_PROVIDE_CHALLENGE.includes(res.getStatus())) {
       if (request.getChallenge() !== null) {
-        this._challenge = request.getChallenge() + 1;
+        this._challenge = (BigInt(request.getChallenge()) + 1n).toString();
       } else {
         this._challenge = 0;
       }
@@ -65,30 +66,32 @@ class MockEstopServicer extends EstopServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0, endpointName = 'test-endpoint') {
+async function _setup(rpcDelay = 0, endpointName = 'test-endpoint') {
   const client = new EstopClient();
   const service = new MockEstopServicer(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: EstopServiceService,
-    service: service,
+    service,
   });
   const endpoint = new EstopEndpoint(client, endpointName, 1000);
   return { client, service, server, endpoint };
 }
 
 test('test_check_in', async () => {
-  const { client, endpoint, server } = _setup();
+  const { client, endpoint, server } = await _setup();
   const challenge = 100;
   const response = responseFromChallenge(challenge).toString(10);
   const res = await client.checkIn(MockEstopServicer.VALID_STOP_LEVEL, endpoint, challenge, response);
-  assert.ok(res === challenge + 1);
+  // The challenges are uint64 strings.
+  assert.strictEqual(res, String(challenge + 1));
   server.forceShutdown();
 });
 
 test('test_check_in_incorrect_1', async () => {
-  const { client, endpoint, server } = _setup();
+  const { client, endpoint, server } = await _setup();
   const challenge = 22;
-  const response = (responseFromChallenge(challenge) + 2n).toString(10);
+  // responseFromChallenge() gives a string: + 2n concatenated "2" (not an uint64).
+  const response = (BigInt(responseFromChallenge(challenge)) + 2n).toString(10);
 
   try {
     await client.checkIn(MockEstopServicer.VALID_STOP_LEVEL, endpoint, challenge, response);
@@ -101,7 +104,7 @@ test('test_check_in_incorrect_1', async () => {
 });
 
 test('test_check_in_incorrect_2', async () => {
-  const { client, endpoint, server } = _setup();
+  const { client, endpoint, server } = await _setup();
   const challenge = null;
   const response = null;
 
@@ -116,7 +119,7 @@ test('test_check_in_incorrect_2', async () => {
 });
 
 test('test_check_in_incorrect_3', async () => {
-  const { client, endpoint, server } = _setup();
+  const { client, endpoint, server } = await _setup();
   const challenge = null;
   const response = null;
 
@@ -130,7 +133,7 @@ test('test_check_in_incorrect_3', async () => {
 });
 
 test('test_server_error_check_in', async () => {
-  const { client, endpoint, server } = _setup(0, MockEstopServicer.NAME_FOR_SERVER_ERROR);
+  const { client, endpoint, server } = await _setup(0, MockEstopServicer.NAME_FOR_SERVER_ERROR);
   const challenge = 100;
   const response = responseFromChallenge(challenge).toString(10);
 
@@ -144,7 +147,7 @@ test('test_server_error_check_in', async () => {
 });
 
 test('test_endpoint_unknown_check_in', async () => {
-  const { client, endpoint, server } = _setup(0, MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN);
+  const { client, endpoint, server } = await _setup(0, MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN);
   const challenge = 100;
   const response = responseFromChallenge(challenge).toString(10);
 
@@ -158,19 +161,19 @@ test('test_endpoint_unknown_check_in', async () => {
 });
 
 test('test_challenge', async () => {
-  const { endpoint, server } = _setup();
+  const { endpoint, server } = await _setup();
   const oldChallenge = 0;
 
   endpoint.setChallenge(oldChallenge);
   await endpoint.allow();
 
   // We should have gotten the next challenge from that RPC.
-  assert.ok(oldChallenge + 1 === endpoint.getChallenge());
+  assert.strictEqual(endpoint.getChallenge(), String(oldChallenge + 1));
   server.forceShutdown();
 });
 
 test('test_challenge_exc', async () => {
-  const { endpoint, server } = _setup(0, MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN);
+  const { endpoint, server } = await _setup(0, MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN);
   const oldChallenge = 0;
   endpoint.setChallenge(oldChallenge);
 
@@ -182,5 +185,5 @@ test('test_challenge_exc', async () => {
     server.forceShutdown();
   }
 
-  assert.ok(oldChallenge + 1 === endpoint.getChallenge());
+  assert.strictEqual(endpoint.getChallenge(), String(oldChallenge + 1));
 });

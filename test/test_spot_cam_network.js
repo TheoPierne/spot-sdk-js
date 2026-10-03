@@ -42,12 +42,12 @@ class MockNetworkService extends NetworkServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new NetworkClient();
   const service = new MockNetworkService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: NetworkServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -57,7 +57,7 @@ function _mockIceServer(serverType = networkPb.ICEServer.servertype.TURN, addres
 }
 
 test('test_get_ice_configuration', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const ice = await client.getICEConfiguration();
   server.forceShutdown();
   const mock = _mockIceServer();
@@ -68,7 +68,7 @@ test('test_get_ice_configuration', async () => {
 });
 
 test('test_set_ice_configuration', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   await client.setICEConfiguration([_mockIceServer()]);
   server.forceShutdown();
 });

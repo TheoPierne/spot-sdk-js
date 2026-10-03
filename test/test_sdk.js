@@ -4,7 +4,6 @@ const assert = require('node:assert');
 const { Buffer } = require('node:buffer');
 const { readFileSync } = require('node:fs');
 const path = require('node:path');
-const process = require('node:process');
 const test = require('node:test');
 
 const { BaseClient } = require('../src/bosdyn-client/common');
@@ -97,7 +96,7 @@ test('test_client_creation', async () => {
   const serviceType = ServiceClientMock.serviceType;
   const sdk = SdkTest._createSdk();
   const robot = SdkTest._createRobot(sdk, 'test-robot');
-  assert.rejects(async () => {
+  await assert.rejects(async () => {
     await robot.ensureClient(serviceName);
   }, UnregisteredServiceNameError);
   robot.serviceTypeByName[serviceName] = serviceType;
@@ -108,8 +107,10 @@ test('test_client_creation', async () => {
 test('test_load_robot_cert', () => {
   const sdk = new Sdk();
   sdk.loadRobotCert();
-  const cert = process.env.NODE_ENV !== 'production' ? 'ca.crt' : 'robot.pem';
-  assert.ok(sdk.cert.equals(readFileSync(path.join('..', 'src', 'bosdyn-client', 'resources', cert))));
+  // Like Python: the robot certificate, whatever NODE_ENV (a test CA was used in development).
+  assert.ok(
+    sdk.cert.equals(readFileSync(path.join(__dirname, '..', 'src', 'bosdyn-client', 'resources', 'robot.pem'))),
+  );
   assert.throws(() => {
     sdk.loadRobotCert('this-path-does-not-exist');
   }, Error);

@@ -46,18 +46,18 @@ class MockAutoReturnService extends AutoReturnServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new AutoReturnClient();
   const service = new MockAutoReturnService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: AutoReturnServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
 
 test('test_simple', async () => {
-  const { client, server, service } = _setup();
+  const { client, server, service } = await _setup();
   const config = await client.getConfiguration();
   assert.ok(!config.getEnabled());
   assert.ok(!config.hasRequest());

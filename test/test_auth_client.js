@@ -59,12 +59,12 @@ class MockAuthClientService extends AuthServiceClient {
   }
 }
 
-function _setup(rpcDelay = 0) {
+async function _setup(rpcDelay = 0) {
   const client = new AuthClient();
   const service = new MockAuthClientService(rpcDelay);
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: AuthServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -75,14 +75,14 @@ test.beforeEach(async () => {
 });
 
 test('test_valid', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const token = await client.auth(MockAuthClientService.USERNAME, MockAuthClientService.PASSWORD);
   assert.ok(token === MockAuthClientService.RETURN_TOKEN);
   server.forceShutdown();
 });
 
 test('test_invalid', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   try {
     await client.auth('parrot', '');
     assert.fail();
@@ -94,10 +94,10 @@ test('test_invalid', async () => {
   }
 });
 
-test('test_timeout', () => {
+test('test_timeout', async () => {
   const timeout = 100;
-  const { client, server } = _setup(timeout * 2);
-  assert
+  const { client, server } = await _setup(timeout * 2);
+  await assert
     .rejects(async () => {
       await client.auth(MockAuthClientService.USERNAME, MockAuthClientService.PASSWORD, { timeout });
     }, TimedOutError)
@@ -105,7 +105,7 @@ test('test_timeout', () => {
 });
 
 test('test_unset', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   try {
     await client.auth(MockAuthClientService.USERNAME_TO_TRIGGER_UNKNOWN, '');
     assert.fail();
@@ -118,25 +118,25 @@ test('test_unset', async () => {
 });
 
 test('test_token_valid', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
   const token = await client.authWithToken(MockAuthClientService.TOKEN_TO_REMINT);
   assert.ok(token === MockAuthClientService.RETURN_TOKEN);
   server.forceShutdown();
 });
 
-test('test_token_invalid', () => {
-  const { client, server } = _setup();
-  assert
+test('test_token_invalid', async () => {
+  const { client, server } = await _setup();
+  await assert
     .rejects(async () => {
       await client.authWithToken('not-a-valid-token');
     }, InvalidTokenError)
     .then(() => server.forceShutdown());
 });
 
-test('test_token_timeout', () => {
+test('test_token_timeout', async () => {
   const timeout = 100;
-  const { client, server } = _setup(timeout * 2);
-  assert
+  const { client, server } = await _setup(timeout * 2);
+  await assert
     .rejects(async () => {
       await client.authWithToken(MockAuthClientService.TOKEN_TO_REMINT, { timeout });
     }, TimedOutError)

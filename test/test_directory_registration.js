@@ -87,12 +87,12 @@ class MockDirectoryRegistrationServicer extends DirectoryRegistrationServiceClie
   }
 }
 
-function _setup() {
+async function _setup() {
   const client = new DirectoryRegistrationClient();
   const service = new MockDirectoryRegistrationServicer();
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: DirectoryRegistrationServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
@@ -133,7 +133,7 @@ function defaultServiceEndpoint() {
 }
 
 test('test_header_error', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
   service.errorCode = headerPb.CommonError.Code.CODE_INVALID_REQUEST;
 
   const defS = defaultServiceEntry();
@@ -149,7 +149,7 @@ test('test_header_error', async () => {
 });
 
 test('test_registration', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   const defS = defaultServiceEntry();
   const defSE = defaultServiceEndpoint();
@@ -165,7 +165,7 @@ test('test_registration', async () => {
 });
 
 test('test_register_errors', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   const defS = defaultServiceEntry();
   const defSE = defaultServiceEndpoint();
@@ -182,7 +182,7 @@ test('test_register_errors', async () => {
 });
 
 test('test_update', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   const defS = defaultServiceEntry();
   const defSE = defaultServiceEndpoint();
@@ -198,7 +198,7 @@ test('test_update', async () => {
 });
 
 test('test_update_errors', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
 
   const defS = defaultServiceEntry();
   const defSE = defaultServiceEndpoint();
@@ -213,7 +213,7 @@ test('test_update_errors', async () => {
 });
 
 test('test_unregister', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   const defS = defaultServiceEntry();
 
@@ -225,7 +225,7 @@ test('test_unregister', async () => {
 });
 
 test('test_unregister_errors', async () => {
-  const { client, server } = _setup();
+  const { client, server } = await _setup();
 
   const defS = defaultServiceEntry();
 
@@ -239,7 +239,7 @@ test('test_unregister_errors', async () => {
 });
 
 test('test_keep_alive', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   const keepAlive = new DirectoryRegistrationKeepAlive(client);
 
@@ -264,9 +264,9 @@ test('test_keep_alive', async () => {
 });
 
 test('test_keep_alive_update', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
-  const intervalSeconds = 100;
+  const intervalSeconds = 0.1;
   const keepAlive = new DirectoryRegistrationKeepAlive(client, { rpcIntervalSeconds: intervalSeconds });
 
   const defS = defaultServiceEntry();
@@ -283,7 +283,8 @@ test('test_keep_alive_update', async () => {
   await keepAlive.start(name, defS.getType(), newAuthority, defSE.getHostIp(), defSE.getPort());
   assert.ok(service.serviceEntries[name].getAuthority() === newAuthority);
 
-  await sleep(intervalSeconds * 3);
+  // Make sure the loop is still alive after a few re-registrations.
+  await sleep(intervalSeconds * 3 * 1000);
   assert.ok(keepAlive.isAlive());
 
   keepAlive.shutdown();

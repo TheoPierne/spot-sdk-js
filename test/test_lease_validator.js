@@ -293,8 +293,8 @@ test('test_lease_validator_response_processor', async () => {
   // Test an incoming lease when nothing is set in the lease map. An incoming lease
   // with a valid resource that just isn't tracked yet should be ok and will now become
   // a tracked lease.
-  let incoming = _createLease('body', 'epoch', [1, 2]);
-  let res = leaseValidator.testAndSetActiveLease(incoming, false);
+  const incoming = _createLease('body', 'epoch', [1, 2]);
+  const res = leaseValidator.testAndSetActiveLease(incoming, false);
   assert.ok(res.getStatus() === leasePb.LeaseUseResult.Status.STATUS_OK);
 
   // Now make a response proto with lease use results that have a newer, latest lease.

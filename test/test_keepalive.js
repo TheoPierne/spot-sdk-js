@@ -17,7 +17,8 @@ const { Lease } = require('../src/bosdyn-client/lease');
 const { nowNsec, setTimestampFromNsec } = require('../src/bosdyn-core/util');
 
 const MOCK_CHECK_IN_CLIENT_NAME = 'mock-client';
-const MOCK_POLICY_ID = 12345;
+// An uint64 string, like the policy ids ([jstype = JS_STRING], see build.js).
+const MOCK_POLICY_ID = '12345';
 const MOCK_LAST_CHECK_IN = new Timestamp().setSeconds(1600000000).setNanos(54321);
 
 function defaultPresentPolicy() {
@@ -136,7 +137,6 @@ test('test_context_mgr_basic', async () => {
   assert.ok(pka._rpcIntervalSeconds < policy.shortestActionDelay());
 
   while (client._stub.checkIn.mock.callCount() < 0) {
-    // eslint-disable-next-line no-await-in-loop
     await sleep(0.05);
   }
 

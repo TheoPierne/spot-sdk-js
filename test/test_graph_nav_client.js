@@ -168,7 +168,7 @@ class MockGraphNavService extends GraphNavServiceClient {
   }
 }
 
-function _setup() {
+async function _setup() {
   const timeSync = new TimeSyncEndpoint(null);
   timeSync._previousResponse = new timeSyncPb.TimeSyncUpdateResponse();
   timeSync.response.setState(
@@ -182,15 +182,15 @@ function _setup() {
   /** @todo remove this line and adapt test */
   client._useStreamingGraphUpload = false;
   const service = new MockGraphNavService();
-  const server = helpers.setupClientAndService(client, {
+  const server = await helpers.setupClientAndService(client, {
     servicer: GraphNavServiceService,
-    service: service,
+    service,
   });
   return { client, service, server };
 }
 
 test('test_feedback_exceptions', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   // Service starts with valid status codes.
   const res = await client.navigationFeedback();
@@ -203,7 +203,7 @@ test('test_feedback_exceptions', async () => {
     }
 
     service.navFeedbackStatus = value;
-    // eslint-disable-next-line no-await-in-loop
+
     const resNav = await client.navigationFeedback();
     assert.ok(resNav.getStatus() === value);
   }
@@ -230,7 +230,7 @@ test('test_feedback_exceptions', async () => {
 });
 
 test('test_navigate_to_exceptions', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   let cmdId = await client.navigateTo('somewhere-id', 2);
   assert.ok(typeof cmdId === 'number');
@@ -339,7 +339,7 @@ test('test_navigate_to_exceptions', async () => {
 });
 
 test('test_navigate_route_exceptions', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   let cmdId = await client.navigateRoute(new navPb.Route(), 2);
   assert.ok(cmdId === 0);
@@ -456,7 +456,7 @@ test('test_navigate_route_exceptions', async () => {
 });
 
 test('test_clear_graph', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   await client.clearGraph();
 
@@ -472,7 +472,7 @@ test('test_clear_graph', async () => {
 });
 
 test('test_upload_graph_exceptions', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   client._useStreamingGraphUpload = false;
 
@@ -519,7 +519,7 @@ test('test_upload_graph_exceptions', async () => {
 });
 
 test('test_upload_graph_exceptions_streaming', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   await client.uploadGraph(null, new mapPb.Graph());
 
@@ -564,7 +564,7 @@ test('test_upload_graph_exceptions_streaming', async () => {
 });
 
 test('test_upload_waypoint_exceptions', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   await client.uploadWaypointSnapshot(new mapPb.WaypointSnapshot());
 
@@ -580,7 +580,7 @@ test('test_upload_waypoint_exceptions', async () => {
 });
 
 test('test_upload_edge_exceptions', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   await client.uploadEdgeSnapshot(new mapPb.EdgeSnapshot());
 
@@ -596,7 +596,7 @@ test('test_upload_edge_exceptions', async () => {
 });
 
 test('test_set_localization_exceptions', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   await client.setLocalization(new navPb.Localization());
 
@@ -647,7 +647,7 @@ test('test_set_localization_exceptions', async () => {
 });
 
 test('test_download_waypoint_snapshot', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   await client.downloadWaypointSnapshot('mywaypoint');
 
@@ -672,7 +672,7 @@ test('test_download_waypoint_snapshot', async () => {
 });
 
 test('test_download_edge_snapshot', async () => {
-  const { client, service, server } = _setup();
+  const { client, service, server } = await _setup();
 
   await client.downloadEdgeSnapshot('myedge');
 
