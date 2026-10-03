@@ -1,5 +1,7 @@
 # spot-sdk-js
 
+[![npm version](https://img.shields.io/npm/v/spot-sdk-js)](https://www.npmjs.com/package/spot-sdk-js)
+
 The Node.js SDK of Spot, the robot of Boston Dynamics: an unofficial port of the official
 [Python SDK](https://github.com/boston-dynamics/spot-sdk).
 
