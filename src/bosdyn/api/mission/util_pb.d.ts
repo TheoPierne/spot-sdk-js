@@ -6,6 +6,7 @@
 
 import * as jspb from "google-protobuf";
 import * as google_protobuf_any_pb from "google-protobuf/google/protobuf/any_pb";
+import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 import * as bosdyn_api_alerts_pb from "../../../bosdyn/api/alerts_pb";
 
 export class KeyValue extends jspb.Message { 
@@ -144,6 +145,7 @@ export namespace VariableDeclaration {
     TYPE_MESSAGE = 5,
     TYPE_LIST = 6,
     TYPE_DICT = 7,
+    TYPE_TIMESTAMP = 8,
     }
 
 }
@@ -185,6 +187,11 @@ export class ConstantValue extends jspb.Message {
     getDictValue(): ConstantValue.DictValue | undefined;
     setDictValue(value?: ConstantValue.DictValue): ConstantValue;
 
+    hasTimestampValue(): boolean;
+    clearTimestampValue(): void;
+    getTimestampValue(): google_protobuf_timestamp_pb.Timestamp | undefined;
+    setTimestampValue(value?: google_protobuf_timestamp_pb.Timestamp): ConstantValue;
+
     getValueCase(): ConstantValue.ValueCase;
 
     serializeBinary(): Uint8Array;
@@ -206,6 +213,7 @@ export namespace ConstantValue {
         msgValue?: google_protobuf_any_pb.Any.AsObject,
         listValue?: ConstantValue.ListValue.AsObject,
         dictValue?: ConstantValue.DictValue.AsObject,
+        timestampValue?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     }
 
 
@@ -263,6 +271,7 @@ export namespace ConstantValue {
         MSG_VALUE = 5,
         LIST_VALUE = 6,
         DICT_VALUE = 7,
+        TIMESTAMP_VALUE = 8,
     }
 
 }

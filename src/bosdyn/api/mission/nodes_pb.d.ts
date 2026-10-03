@@ -278,6 +278,16 @@ export class Node extends jspb.Message {
     clearBosdynQueryStoredCaptures(): void;
     getBosdynQueryStoredCaptures(): BosdynQueryStoredCaptures | undefined;
     setBosdynQueryStoredCaptures(value?: BosdynQueryStoredCaptures): Node;
+
+    hasDataAcquisitionLiveData(): boolean;
+    clearDataAcquisitionLiveData(): void;
+    getDataAcquisitionLiveData(): DataAcquisitionLiveData | undefined;
+    setDataAcquisitionLiveData(value?: DataAcquisitionLiveData): Node;
+
+    hasBosdynRecordEventOnInterruption(): boolean;
+    clearBosdynRecordEventOnInterruption(): void;
+    getBosdynRecordEventOnInterruption(): BosdynRecordEventOnInterruption | undefined;
+    setBosdynRecordEventOnInterruption(value?: BosdynRecordEventOnInterruption): Node;
     clearParameterValuesList(): void;
     getParameterValuesList(): Array<bosdyn_api_mission_util_pb.KeyValue>;
     setParameterValuesList(value: Array<bosdyn_api_mission_util_pb.KeyValue>): Node;
@@ -356,6 +366,8 @@ export namespace Node {
         missionUploadChoreography?: MissionUploadChoreography.AsObject,
         createMissionText?: CreateMissionText.AsObject,
         bosdynQueryStoredCaptures?: BosdynQueryStoredCaptures.AsObject,
+        dataAcquisitionLiveData?: DataAcquisitionLiveData.AsObject,
+        bosdynRecordEventOnInterruption?: BosdynRecordEventOnInterruption.AsObject,
         parameterValuesList: Array<bosdyn_api_mission_util_pb.KeyValue.AsObject>,
         overridesList: Array<bosdyn_api_mission_util_pb.KeyValue.AsObject>,
         parametersList: Array<bosdyn_api_mission_util_pb.VariableDeclaration.AsObject>,
@@ -411,6 +423,8 @@ export namespace Node {
         MISSION_UPLOAD_CHOREOGRAPHY = 57,
         CREATE_MISSION_TEXT = 59,
         BOSDYN_QUERY_STORED_CAPTURES = 60,
+        DATA_ACQUISITION_LIVE_DATA = 64,
+        BOSDYN_RECORD_EVENT_ON_INTERRUPTION = 65,
     }
 
 }
@@ -629,6 +643,8 @@ export class SimpleParallel extends jspb.Message {
     setSecondary(value?: Node): SimpleParallel;
     getRunSecondaryNodeOnce(): boolean;
     setRunSecondaryNodeOnce(value: boolean): SimpleParallel;
+    getTickSecondaryNodeFirst(): boolean;
+    setTickSecondaryNodeFirst(value: boolean): SimpleParallel;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): SimpleParallel.AsObject;
@@ -645,6 +661,7 @@ export namespace SimpleParallel {
         primary?: Node.AsObject,
         secondary?: Node.AsObject,
         runSecondaryNodeOnce: boolean,
+        tickSecondaryNodeFirst: boolean,
     }
 }
 
@@ -1238,6 +1255,8 @@ export class ExecuteChoreography extends jspb.Message {
     setHost(value: string): ExecuteChoreography;
     getSequenceName(): string;
     setSequenceName(value: string): ExecuteChoreography;
+    getStartTimeInBlackboard(): string;
+    setStartTimeInBlackboard(value: string): ExecuteChoreography;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): ExecuteChoreography.AsObject;
@@ -1254,6 +1273,7 @@ export namespace ExecuteChoreography {
         serviceName: string,
         host: string,
         sequenceName: string,
+        startTimeInBlackboard: string,
     }
 }
 
@@ -1317,12 +1337,19 @@ export class Prompt extends jspb.Message {
     getCustomParams(): bosdyn_api_service_customization_pb.DictParam.Spec | undefined;
     setCustomParams(value?: bosdyn_api_service_customization_pb.DictParam.Spec): Prompt;
 
+    hasCustomParamsInBlackboard(): boolean;
+    clearCustomParamsInBlackboard(): void;
+    getCustomParamsInBlackboard(): string;
+    setCustomParamsInBlackboard(value: string): Prompt;
+
     hasChild(): boolean;
     clearChild(): void;
     getChild(): Node | undefined;
     setChild(value?: Node): Prompt;
     getForAutonomousProcessing(): boolean;
     setForAutonomousProcessing(value: boolean): Prompt;
+    getAutonomyKey(): string;
+    setAutonomyKey(value: string): Prompt;
 
     hasSeverity(): boolean;
     clearSeverity(): void;
@@ -1354,12 +1381,13 @@ export namespace Prompt {
         alwaysReprompt: boolean,
         text: string,
         source: string,
-        optionsList: Array<Prompt.Option.AsObject>,
         optionsList?: Prompt.OptionsList.AsObject,
         optionsListInBlackboard: string,
         customParams?: bosdyn_api_service_customization_pb.DictParam.Spec.AsObject,
+        customParamsInBlackboard: string,
         child?: Node.AsObject,
         forAutonomousProcessing: boolean,
+        autonomyKey: string,
         severity: bosdyn_api_alerts_pb.AlertData.SeverityLevel,
         severityInBlackboard: string,
         questionNameInBlackboard: string,
@@ -1417,6 +1445,7 @@ export namespace Prompt {
         OPTIONS_LIST = 9,
         OPTIONS_LIST_IN_BLACKBOARD = 11,
         CUSTOM_PARAMS = 10,
+        CUSTOM_PARAMS_IN_BLACKBOARD = 13,
     }
 
     export enum SeveritySpecCase {
@@ -1913,6 +1942,69 @@ export namespace DataAcquisition {
     COMPLETE_UNKNOWN = 0,
     COMPLETE_AFTER_SAVED = 1,
     COMPLETE_AFTER_ACQUIRED = 2,
+    COMPLETE_AFTER_REQUEST = 3,
+    }
+
+}
+
+export class DataAcquisitionLiveData extends jspb.Message { 
+    getServiceName(): string;
+    setServiceName(value: string): DataAcquisitionLiveData;
+    getHost(): string;
+    setHost(value: string): DataAcquisitionLiveData;
+    clearDataCapturesList(): void;
+    getDataCapturesList(): Array<DataAcquisitionLiveData.DataCaptureAndBlackboardName>;
+    setDataCapturesList(value: Array<DataAcquisitionLiveData.DataCaptureAndBlackboardName>): DataAcquisitionLiveData;
+    addDataCaptures(value?: DataAcquisitionLiveData.DataCaptureAndBlackboardName, index?: number): DataAcquisitionLiveData.DataCaptureAndBlackboardName;
+
+    hasChild(): boolean;
+    clearChild(): void;
+    getChild(): Node | undefined;
+    setChild(value?: Node): DataAcquisitionLiveData;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): DataAcquisitionLiveData.AsObject;
+    static toObject(includeInstance: boolean, msg: DataAcquisitionLiveData): DataAcquisitionLiveData.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: DataAcquisitionLiveData, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): DataAcquisitionLiveData;
+    static deserializeBinaryFromReader(message: DataAcquisitionLiveData, reader: jspb.BinaryReader): DataAcquisitionLiveData;
+}
+
+export namespace DataAcquisitionLiveData {
+    export type AsObject = {
+        serviceName: string,
+        host: string,
+        dataCapturesList: Array<DataAcquisitionLiveData.DataCaptureAndBlackboardName.AsObject>,
+        child?: Node.AsObject,
+    }
+
+
+    export class DataCaptureAndBlackboardName extends jspb.Message { 
+
+        hasDataCapture(): boolean;
+        clearDataCapture(): void;
+        getDataCapture(): bosdyn_api_data_acquisition_pb.DataCapture | undefined;
+        setDataCapture(value?: bosdyn_api_data_acquisition_pb.DataCapture): DataCaptureAndBlackboardName;
+        getBlackboardName(): string;
+        setBlackboardName(value: string): DataCaptureAndBlackboardName;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): DataCaptureAndBlackboardName.AsObject;
+        static toObject(includeInstance: boolean, msg: DataCaptureAndBlackboardName): DataCaptureAndBlackboardName.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: DataCaptureAndBlackboardName, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): DataCaptureAndBlackboardName;
+        static deserializeBinaryFromReader(message: DataCaptureAndBlackboardName, reader: jspb.BinaryReader): DataCaptureAndBlackboardName;
+    }
+
+    export namespace DataCaptureAndBlackboardName {
+        export type AsObject = {
+            dataCapture?: bosdyn_api_data_acquisition_pb.DataCapture.AsObject,
+            blackboardName: string,
+        }
     }
 
 }
@@ -2016,6 +2108,8 @@ export namespace FormatBlackboard {
 export class DateToBlackboard extends jspb.Message { 
     getKey(): string;
     setKey(value: string): DateToBlackboard;
+    getWriteAsTimestamp(): boolean;
+    setWriteAsTimestamp(value: boolean): DateToBlackboard;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): DateToBlackboard.AsObject;
@@ -2030,6 +2124,7 @@ export class DateToBlackboard extends jspb.Message {
 export namespace DateToBlackboard {
     export type AsObject = {
         key: string,
+        writeAsTimestamp: boolean,
     }
 }
 
@@ -2199,6 +2294,11 @@ export class DataAcquisitionOnInterruption extends jspb.Message {
     setKeysForLeaseUseErrorMessageList(value: Array<string>): DataAcquisitionOnInterruption;
     addKeysForLeaseUseErrorMessage(value: string, index?: number): string;
 
+    hasChildNodeFailureMetadata(): boolean;
+    clearChildNodeFailureMetadata(): void;
+    getChildNodeFailureMetadata(): bosdyn_api_data_acquisition_pb.Metadata | undefined;
+    setChildNodeFailureMetadata(value?: bosdyn_api_data_acquisition_pb.Metadata): DataAcquisitionOnInterruption;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): DataAcquisitionOnInterruption.AsObject;
     static toObject(includeInstance: boolean, msg: DataAcquisitionOnInterruption): DataAcquisitionOnInterruption.AsObject;
@@ -2223,6 +2323,107 @@ export namespace DataAcquisitionOnInterruption {
         childNodeExceptionMetadata?: bosdyn_api_data_acquisition_pb.Metadata.AsObject,
         defaultMetadata?: bosdyn_api_data_acquisition_pb.Metadata.AsObject,
         keysForLeaseUseErrorMessageList: Array<string>,
+        childNodeFailureMetadata?: bosdyn_api_data_acquisition_pb.Metadata.AsObject,
+    }
+}
+
+export class BosdynRecordEventOnInterruption extends jspb.Message { 
+    getServiceName(): string;
+    setServiceName(value: string): BosdynRecordEventOnInterruption;
+    getHost(): string;
+    setHost(value: string): BosdynRecordEventOnInterruption;
+
+    hasChild(): boolean;
+    clearChild(): void;
+    getChild(): Node | undefined;
+    setChild(value?: Node): BosdynRecordEventOnInterruption;
+
+    hasEvent(): boolean;
+    clearEvent(): void;
+    getEvent(): bosdyn_api_data_buffer_pb.Event | undefined;
+    setEvent(value?: bosdyn_api_data_buffer_pb.Event): BosdynRecordEventOnInterruption;
+
+    getPauseMissionParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearPauseMissionParametersMap(): void;
+
+    getRestartMissionParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearRestartMissionParametersMap(): void;
+
+    getLoadMissionParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearLoadMissionParametersMap(): void;
+
+    getStopMissionParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearStopMissionParametersMap(): void;
+
+    getLeaseUseErrorParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearLeaseUseErrorParametersMap(): void;
+
+    getPlayMissionTimeoutParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearPlayMissionTimeoutParametersMap(): void;
+
+    getChildNodeErrorParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearChildNodeErrorParametersMap(): void;
+
+    getChildNodeExceptionParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearChildNodeExceptionParametersMap(): void;
+
+    getDefaultParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearDefaultParametersMap(): void;
+
+    getExecutorSetupFailureParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearExecutorSetupFailureParametersMap(): void;
+
+    getSystemShutdownParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearSystemShutdownParametersMap(): void;
+    clearKeysForLeaseUseErrorMessageList(): void;
+    getKeysForLeaseUseErrorMessageList(): Array<string>;
+    setKeysForLeaseUseErrorMessageList(value: Array<string>): BosdynRecordEventOnInterruption;
+    addKeysForLeaseUseErrorMessage(value: string, index?: number): string;
+
+    getChildNodeFailureParametersMap(): jspb.Map<string, bosdyn_api_mission_util_pb.Value>;
+    clearChildNodeFailureParametersMap(): void;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): BosdynRecordEventOnInterruption.AsObject;
+    static toObject(includeInstance: boolean, msg: BosdynRecordEventOnInterruption): BosdynRecordEventOnInterruption.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: BosdynRecordEventOnInterruption, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): BosdynRecordEventOnInterruption;
+    static deserializeBinaryFromReader(message: BosdynRecordEventOnInterruption, reader: jspb.BinaryReader): BosdynRecordEventOnInterruption;
+}
+
+export namespace BosdynRecordEventOnInterruption {
+    export type AsObject = {
+        serviceName: string,
+        host: string,
+        child?: Node.AsObject,
+        event?: bosdyn_api_data_buffer_pb.Event.AsObject,
+
+        pauseMissionParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        restartMissionParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        loadMissionParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        stopMissionParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        leaseUseErrorParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        playMissionTimeoutParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        childNodeErrorParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        childNodeExceptionParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        defaultParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        executorSetupFailureParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+
+        systemShutdownParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
+        keysForLeaseUseErrorMessageList: Array<string>,
+
+        childNodeFailureParametersMap: Array<[string, bosdyn_api_mission_util_pb.Value.AsObject]>,
     }
 }
 

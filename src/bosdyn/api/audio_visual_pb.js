@@ -8760,9 +8760,12 @@ proto.bosdyn.api.AudioVisualSystemParams.toObject = function(includeInstance, ms
     enabled: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
     maxBrightness: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
     buzzerMaxVolume: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+    speakerMaxVolume: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
     normalColorAssociation: (f = msg.getNormalColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
     warningColorAssociation: (f = msg.getWarningColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
-    dangerColorAssociation: (f = msg.getDangerColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f)
+    dangerColorAssociation: (f = msg.getDangerColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
+    speakerDisableAgc: jspb.Message.getBooleanFieldWithDefault(msg, 8, false),
+    speakerDisableNr: jspb.Message.getBooleanFieldWithDefault(msg, 9, false)
   };
 
   if (includeInstance) {
@@ -8811,6 +8814,10 @@ proto.bosdyn.api.AudioVisualSystemParams.deserializeBinaryFromReader = function(
       var value = /** @type {number} */ (reader.readFloat());
       msg.setBuzzerMaxVolume(value);
       break;
+    case 4:
+      var value = /** @type {number} */ (reader.readFloat());
+      msg.setSpeakerMaxVolume(value);
+      break;
     case 5:
       var value = new proto.bosdyn.api.PresetColorAssociation;
       reader.readMessage(value,proto.bosdyn.api.PresetColorAssociation.deserializeBinaryFromReader);
@@ -8825,6 +8832,14 @@ proto.bosdyn.api.AudioVisualSystemParams.deserializeBinaryFromReader = function(
       var value = new proto.bosdyn.api.PresetColorAssociation;
       reader.readMessage(value,proto.bosdyn.api.PresetColorAssociation.deserializeBinaryFromReader);
       msg.setDangerColorAssociation(value);
+      break;
+    case 8:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setSpeakerDisableAgc(value);
+      break;
+    case 9:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setSpeakerDisableNr(value);
       break;
     default:
       reader.skipField();
@@ -8876,6 +8891,13 @@ proto.bosdyn.api.AudioVisualSystemParams.serializeBinaryToWriter = function(mess
       f
     );
   }
+  f = message.getSpeakerMaxVolume();
+  if (f !== 0.0) {
+    writer.writeFloat(
+      4,
+      f
+    );
+  }
   f = message.getNormalColorAssociation();
   if (f != null) {
     writer.writeMessage(
@@ -8898,6 +8920,20 @@ proto.bosdyn.api.AudioVisualSystemParams.serializeBinaryToWriter = function(mess
       7,
       f,
       proto.bosdyn.api.PresetColorAssociation.serializeBinaryToWriter
+    );
+  }
+  f = message.getSpeakerDisableAgc();
+  if (f) {
+    writer.writeBool(
+      8,
+      f
+    );
+  }
+  f = message.getSpeakerDisableNr();
+  if (f) {
+    writer.writeBool(
+      9,
+      f
     );
   }
 };
@@ -8954,6 +8990,24 @@ proto.bosdyn.api.AudioVisualSystemParams.prototype.getBuzzerMaxVolume = function
  */
 proto.bosdyn.api.AudioVisualSystemParams.prototype.setBuzzerMaxVolume = function(value) {
   return jspb.Message.setProto3FloatField(this, 3, value);
+};
+
+
+/**
+ * optional float speaker_max_volume = 4;
+ * @return {number}
+ */
+proto.bosdyn.api.AudioVisualSystemParams.prototype.getSpeakerMaxVolume = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 4, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.AudioVisualSystemParams} returns this
+ */
+proto.bosdyn.api.AudioVisualSystemParams.prototype.setSpeakerMaxVolume = function(value) {
+  return jspb.Message.setProto3FloatField(this, 4, value);
 };
 
 
@@ -9065,6 +9119,42 @@ proto.bosdyn.api.AudioVisualSystemParams.prototype.clearDangerColorAssociation =
  */
 proto.bosdyn.api.AudioVisualSystemParams.prototype.hasDangerColorAssociation = function() {
   return jspb.Message.getField(this, 7) != null;
+};
+
+
+/**
+ * optional bool speaker_disable_agc = 8;
+ * @return {boolean}
+ */
+proto.bosdyn.api.AudioVisualSystemParams.prototype.getSpeakerDisableAgc = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 8, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.AudioVisualSystemParams} returns this
+ */
+proto.bosdyn.api.AudioVisualSystemParams.prototype.setSpeakerDisableAgc = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 8, value);
+};
+
+
+/**
+ * optional bool speaker_disable_nr = 9;
+ * @return {boolean}
+ */
+proto.bosdyn.api.AudioVisualSystemParams.prototype.getSpeakerDisableNr = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 9, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.bosdyn.api.AudioVisualSystemParams} returns this
+ */
+proto.bosdyn.api.AudioVisualSystemParams.prototype.setSpeakerDisableNr = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 9, value);
 };
 
 
@@ -9457,9 +9547,12 @@ proto.bosdyn.api.SetSystemParamsRequest.toObject = function(includeInstance, msg
     enabled: (f = msg.getEnabled()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
     maxBrightness: (f = msg.getMaxBrightness()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
     buzzerMaxVolume: (f = msg.getBuzzerMaxVolume()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
+    speakerMaxVolume: (f = msg.getSpeakerMaxVolume()) && google_protobuf_wrappers_pb.FloatValue.toObject(includeInstance, f),
     normalColorAssociation: (f = msg.getNormalColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
     warningColorAssociation: (f = msg.getWarningColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
-    dangerColorAssociation: (f = msg.getDangerColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f)
+    dangerColorAssociation: (f = msg.getDangerColorAssociation()) && proto.bosdyn.api.PresetColorAssociation.toObject(includeInstance, f),
+    speakerDisableAgc: (f = msg.getSpeakerDisableAgc()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f),
+    speakerDisableNr: (f = msg.getSpeakerDisableNr()) && google_protobuf_wrappers_pb.BoolValue.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9516,6 +9609,11 @@ proto.bosdyn.api.SetSystemParamsRequest.deserializeBinaryFromReader = function(m
       reader.readMessage(value,google_protobuf_wrappers_pb.FloatValue.deserializeBinaryFromReader);
       msg.setBuzzerMaxVolume(value);
       break;
+    case 5:
+      var value = new google_protobuf_wrappers_pb.FloatValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.FloatValue.deserializeBinaryFromReader);
+      msg.setSpeakerMaxVolume(value);
+      break;
     case 6:
       var value = new proto.bosdyn.api.PresetColorAssociation;
       reader.readMessage(value,proto.bosdyn.api.PresetColorAssociation.deserializeBinaryFromReader);
@@ -9530,6 +9628,16 @@ proto.bosdyn.api.SetSystemParamsRequest.deserializeBinaryFromReader = function(m
       var value = new proto.bosdyn.api.PresetColorAssociation;
       reader.readMessage(value,proto.bosdyn.api.PresetColorAssociation.deserializeBinaryFromReader);
       msg.setDangerColorAssociation(value);
+      break;
+    case 9:
+      var value = new google_protobuf_wrappers_pb.BoolValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.BoolValue.deserializeBinaryFromReader);
+      msg.setSpeakerDisableAgc(value);
+      break;
+    case 10:
+      var value = new google_protobuf_wrappers_pb.BoolValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.BoolValue.deserializeBinaryFromReader);
+      msg.setSpeakerDisableNr(value);
       break;
     default:
       reader.skipField();
@@ -9592,6 +9700,14 @@ proto.bosdyn.api.SetSystemParamsRequest.serializeBinaryToWriter = function(messa
       google_protobuf_wrappers_pb.FloatValue.serializeBinaryToWriter
     );
   }
+  f = message.getSpeakerMaxVolume();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      google_protobuf_wrappers_pb.FloatValue.serializeBinaryToWriter
+    );
+  }
   f = message.getNormalColorAssociation();
   if (f != null) {
     writer.writeMessage(
@@ -9614,6 +9730,22 @@ proto.bosdyn.api.SetSystemParamsRequest.serializeBinaryToWriter = function(messa
       8,
       f,
       proto.bosdyn.api.PresetColorAssociation.serializeBinaryToWriter
+    );
+  }
+  f = message.getSpeakerDisableAgc();
+  if (f != null) {
+    writer.writeMessage(
+      9,
+      f,
+      google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
+    );
+  }
+  f = message.getSpeakerDisableNr();
+  if (f != null) {
+    writer.writeMessage(
+      10,
+      f,
+      google_protobuf_wrappers_pb.BoolValue.serializeBinaryToWriter
     );
   }
 };
@@ -9768,6 +9900,43 @@ proto.bosdyn.api.SetSystemParamsRequest.prototype.hasBuzzerMaxVolume = function(
 
 
 /**
+ * optional google.protobuf.FloatValue speaker_max_volume = 5;
+ * @return {?proto.google.protobuf.FloatValue}
+ */
+proto.bosdyn.api.SetSystemParamsRequest.prototype.getSpeakerMaxVolume = function() {
+  return /** @type{?proto.google.protobuf.FloatValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.FloatValue, 5));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.FloatValue|undefined} value
+ * @return {!proto.bosdyn.api.SetSystemParamsRequest} returns this
+*/
+proto.bosdyn.api.SetSystemParamsRequest.prototype.setSpeakerMaxVolume = function(value) {
+  return jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.SetSystemParamsRequest} returns this
+ */
+proto.bosdyn.api.SetSystemParamsRequest.prototype.clearSpeakerMaxVolume = function() {
+  return this.setSpeakerMaxVolume(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.SetSystemParamsRequest.prototype.hasSpeakerMaxVolume = function() {
+  return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
  * optional PresetColorAssociation normal_color_association = 6;
  * @return {?proto.bosdyn.api.PresetColorAssociation}
  */
@@ -9875,6 +10044,80 @@ proto.bosdyn.api.SetSystemParamsRequest.prototype.clearDangerColorAssociation = 
  */
 proto.bosdyn.api.SetSystemParamsRequest.prototype.hasDangerColorAssociation = function() {
   return jspb.Message.getField(this, 8) != null;
+};
+
+
+/**
+ * optional google.protobuf.BoolValue speaker_disable_agc = 9;
+ * @return {?proto.google.protobuf.BoolValue}
+ */
+proto.bosdyn.api.SetSystemParamsRequest.prototype.getSpeakerDisableAgc = function() {
+  return /** @type{?proto.google.protobuf.BoolValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.BoolValue, 9));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.bosdyn.api.SetSystemParamsRequest} returns this
+*/
+proto.bosdyn.api.SetSystemParamsRequest.prototype.setSpeakerDisableAgc = function(value) {
+  return jspb.Message.setWrapperField(this, 9, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.SetSystemParamsRequest} returns this
+ */
+proto.bosdyn.api.SetSystemParamsRequest.prototype.clearSpeakerDisableAgc = function() {
+  return this.setSpeakerDisableAgc(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.SetSystemParamsRequest.prototype.hasSpeakerDisableAgc = function() {
+  return jspb.Message.getField(this, 9) != null;
+};
+
+
+/**
+ * optional google.protobuf.BoolValue speaker_disable_nr = 10;
+ * @return {?proto.google.protobuf.BoolValue}
+ */
+proto.bosdyn.api.SetSystemParamsRequest.prototype.getSpeakerDisableNr = function() {
+  return /** @type{?proto.google.protobuf.BoolValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.BoolValue, 10));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.BoolValue|undefined} value
+ * @return {!proto.bosdyn.api.SetSystemParamsRequest} returns this
+*/
+proto.bosdyn.api.SetSystemParamsRequest.prototype.setSpeakerDisableNr = function(value) {
+  return jspb.Message.setWrapperField(this, 10, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.SetSystemParamsRequest} returns this
+ */
+proto.bosdyn.api.SetSystemParamsRequest.prototype.clearSpeakerDisableNr = function() {
+  return this.setSpeakerDisableNr(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.SetSystemParamsRequest.prototype.hasSpeakerDisableNr = function() {
+  return jspb.Message.getField(this, 10) != null;
 };
 
 

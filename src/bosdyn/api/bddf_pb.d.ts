@@ -68,9 +68,9 @@ export class DataDescriptor extends jspb.Message {
     getTimestamp(): google_protobuf_timestamp_pb.Timestamp | undefined;
     setTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): DataDescriptor;
     clearAdditionalIndexesList(): void;
-    getAdditionalIndexesList(): Array<number>;
-    setAdditionalIndexesList(value: Array<number>): DataDescriptor;
-    addAdditionalIndexes(value: number, index?: number): number;
+    getAdditionalIndexesList(): Array<string>;
+    setAdditionalIndexesList(value: Array<string>): DataDescriptor;
+    addAdditionalIndexes(value: string, index?: number): string;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): DataDescriptor.AsObject;
@@ -86,7 +86,7 @@ export namespace DataDescriptor {
     export type AsObject = {
         seriesIndex: number,
         timestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
-        additionalIndexesList: Array<number>,
+        additionalIndexesList: Array<string>,
     }
 }
 
@@ -165,8 +165,8 @@ export class SeriesDescriptor extends jspb.Message {
     clearSeriesIdentifier(): void;
     getSeriesIdentifier(): SeriesIdentifier | undefined;
     setSeriesIdentifier(value?: SeriesIdentifier): SeriesDescriptor;
-    getIdentifierHash(): number;
-    setIdentifierHash(value: number): SeriesDescriptor;
+    getIdentifierHash(): string;
+    setIdentifierHash(value: string): SeriesDescriptor;
 
     hasMessageType(): boolean;
     clearMessageType(): void;
@@ -208,7 +208,7 @@ export namespace SeriesDescriptor {
     export type AsObject = {
         seriesIndex: number,
         seriesIdentifier?: SeriesIdentifier.AsObject,
-        identifierHash: number,
+        identifierHash: string,
         messageType?: MessageTypeDescriptor.AsObject,
         podType?: PodTypeDescriptor.AsObject,
         structType?: StructTypeDescriptor.AsObject,
@@ -310,9 +310,9 @@ export class FileIndex extends jspb.Message {
     setSeriesBlockIndexOffsetsList(value: Array<number>): FileIndex;
     addSeriesBlockIndexOffsets(value: number, index?: number): number;
     clearSeriesIdentifierHashesList(): void;
-    getSeriesIdentifierHashesList(): Array<number>;
-    setSeriesIdentifierHashesList(value: Array<number>): FileIndex;
-    addSeriesIdentifierHashes(value: number, index?: number): number;
+    getSeriesIdentifierHashesList(): Array<string>;
+    setSeriesIdentifierHashesList(value: Array<string>): FileIndex;
+    addSeriesIdentifierHashes(value: string, index?: number): string;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): FileIndex.AsObject;
@@ -328,7 +328,7 @@ export namespace FileIndex {
     export type AsObject = {
         seriesIdentifiersList: Array<SeriesIdentifier.AsObject>,
         seriesBlockIndexOffsetsList: Array<number>,
-        seriesIdentifierHashesList: Array<number>,
+        seriesIdentifierHashesList: Array<string>,
     }
 }
 
@@ -372,9 +372,9 @@ export namespace SeriesBlockIndex {
         getFileOffset(): number;
         setFileOffset(value: number): BlockEntry;
         clearAdditionalIndexesList(): void;
-        getAdditionalIndexesList(): Array<number>;
-        setAdditionalIndexesList(value: Array<number>): BlockEntry;
-        addAdditionalIndexes(value: number, index?: number): number;
+        getAdditionalIndexesList(): Array<string>;
+        setAdditionalIndexesList(value: Array<string>): BlockEntry;
+        addAdditionalIndexes(value: string, index?: number): string;
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): BlockEntry.AsObject;
@@ -390,7 +390,7 @@ export namespace SeriesBlockIndex {
         export type AsObject = {
             timestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
             fileOffset: number,
-            additionalIndexesList: Array<number>,
+            additionalIndexesList: Array<string>,
         }
     }
 

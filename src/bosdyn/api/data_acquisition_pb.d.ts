@@ -250,6 +250,8 @@ export class AssociatedMetadata extends jspb.Message {
     clearMetadata(): void;
     getMetadata(): Metadata | undefined;
     setMetadata(value?: Metadata): AssociatedMetadata;
+    getIsAutowalkReportEntry(): boolean;
+    setIsAutowalkReportEntry(value: boolean): AssociatedMetadata;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): AssociatedMetadata.AsObject;
@@ -265,6 +267,7 @@ export namespace AssociatedMetadata {
     export type AsObject = {
         referenceId?: DataIdentifier.AsObject,
         metadata?: Metadata.AsObject,
+        isAutowalkReportEntry: boolean,
     }
 }
 
@@ -297,6 +300,26 @@ export namespace AssociatedAlertData {
     }
 }
 
+export class CaptureOrdering extends jspb.Message { 
+    getValue(): number;
+    setValue(value: number): CaptureOrdering;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): CaptureOrdering.AsObject;
+    static toObject(includeInstance: boolean, msg: CaptureOrdering): CaptureOrdering.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: CaptureOrdering, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): CaptureOrdering;
+    static deserializeBinaryFromReader(message: CaptureOrdering, reader: jspb.BinaryReader): CaptureOrdering;
+}
+
+export namespace CaptureOrdering {
+    export type AsObject = {
+        value: number,
+    }
+}
+
 export class ImageSourceCapture extends jspb.Message { 
     getImageService(): string;
     setImageService(value: string): ImageSourceCapture;
@@ -309,6 +332,11 @@ export class ImageSourceCapture extends jspb.Message {
     setImageSource(value: string): ImageSourceCapture;
     getPixelFormat(): bosdyn_api_image_pb.Image.PixelFormat;
     setPixelFormat(value: bosdyn_api_image_pb.Image.PixelFormat): ImageSourceCapture;
+
+    hasOrder(): boolean;
+    clearOrder(): void;
+    getOrder(): CaptureOrdering | undefined;
+    setOrder(value?: CaptureOrdering): ImageSourceCapture;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): ImageSourceCapture.AsObject;
@@ -326,6 +354,7 @@ export namespace ImageSourceCapture {
         imageRequest?: bosdyn_api_image_pb.ImageRequest.AsObject,
         imageSource: string,
         pixelFormat: bosdyn_api_image_pb.Image.PixelFormat,
+        order?: CaptureOrdering.AsObject,
     }
 }
 
@@ -337,6 +366,11 @@ export class DataCapture extends jspb.Message {
     clearCustomParams(): void;
     getCustomParams(): bosdyn_api_service_customization_pb.DictParam | undefined;
     setCustomParams(value?: bosdyn_api_service_customization_pb.DictParam): DataCapture;
+
+    hasOrder(): boolean;
+    clearOrder(): void;
+    getOrder(): CaptureOrdering | undefined;
+    setOrder(value?: CaptureOrdering): DataCapture;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): DataCapture.AsObject;
@@ -352,6 +386,7 @@ export namespace DataCapture {
     export type AsObject = {
         name: string,
         customParams?: bosdyn_api_service_customization_pb.DictParam.AsObject,
+        order?: CaptureOrdering.AsObject,
     }
 }
 
@@ -372,6 +407,11 @@ export class NetworkComputeCapture extends jspb.Message {
     getServerConfig(): bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration | undefined;
     setServerConfig(value?: bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration): NetworkComputeCapture;
 
+    hasOrder(): boolean;
+    clearOrder(): void;
+    getOrder(): CaptureOrdering | undefined;
+    setOrder(value?: CaptureOrdering): NetworkComputeCapture;
+
     getInputCase(): NetworkComputeCapture.InputCase;
 
     serializeBinary(): Uint8Array;
@@ -389,6 +429,7 @@ export namespace NetworkComputeCapture {
         inputData?: bosdyn_api_network_compute_bridge_pb.NetworkComputeInputData.AsObject,
         inputDataBridge?: bosdyn_api_network_compute_bridge_pb.NetworkComputeInputDataBridge.AsObject,
         serverConfig?: bosdyn_api_network_compute_bridge_pb.NetworkComputeServerConfiguration.AsObject,
+        order?: CaptureOrdering.AsObject,
     }
 
     export enum InputCase {

@@ -6,6 +6,7 @@
 
 import * as jspb from "google-protobuf";
 import * as google_protobuf_duration_pb from "google-protobuf/google/protobuf/duration_pb";
+import * as google_protobuf_wrappers_pb from "google-protobuf/google/protobuf/wrappers_pb";
 import * as bosdyn_api_mission_nodes_pb from "../../../bosdyn/api/mission/nodes_pb";
 import * as bosdyn_api_mission_util_pb from "../../../bosdyn/api/mission/util_pb";
 import * as bosdyn_api_data_acquisition_pb from "../../../bosdyn/api/data_acquisition_pb";
@@ -54,6 +55,11 @@ export class Walk extends jspb.Message {
     getChoreographyItems(): ChoreographyItems | undefined;
     setChoreographyItems(value?: ChoreographyItems): Walk;
 
+    hasInterrupts(): boolean;
+    clearInterrupts(): void;
+    getInterrupts(): WalkInterrupt | undefined;
+    setInterrupts(value?: WalkInterrupt): Walk;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): Walk.AsObject;
     static toObject(includeInstance: boolean, msg: Walk): Walk.AsObject;
@@ -74,6 +80,7 @@ export namespace Walk {
         docksList: Array<Dock.AsObject>,
         id: string,
         choreographyItems?: ChoreographyItems.AsObject,
+        interrupts?: WalkInterrupt.AsObject,
     }
 }
 
@@ -404,6 +411,8 @@ export class Target extends jspb.Message {
     setRelocalize(value?: Target.Relocalize): Target;
     getTargetStowBehavior(): Target.TargetStowBehavior;
     setTargetStowBehavior(value: Target.TargetStowBehavior): Target;
+    getSuccessWhenGoalAreaReached(): boolean;
+    setSuccessWhenGoalAreaReached(value: boolean): Target;
 
     getTargetCase(): Target.TargetCase;
 
@@ -423,6 +432,7 @@ export namespace Target {
         navigateRoute?: Target.NavigateRoute.AsObject,
         relocalize?: Target.Relocalize.AsObject,
         targetStowBehavior: Target.TargetStowBehavior,
+        successWhenGoalAreaReached: boolean,
     }
 
 
@@ -693,6 +703,11 @@ export namespace Action {
         getSequenceName(): string;
         setSequenceName(value: string): ExecuteChoreography;
 
+        hasPromptParams(): boolean;
+        clearPromptParams(): void;
+        getPromptParams(): Action.ExecuteChoreography.PromptParams | undefined;
+        setPromptParams(value?: Action.ExecuteChoreography.PromptParams): ExecuteChoreography;
+
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): ExecuteChoreography.AsObject;
         static toObject(includeInstance: boolean, msg: ExecuteChoreography): ExecuteChoreography.AsObject;
@@ -706,7 +721,36 @@ export namespace Action {
     export namespace ExecuteChoreography {
         export type AsObject = {
             sequenceName: string,
+            promptParams?: Action.ExecuteChoreography.PromptParams.AsObject,
         }
+
+
+        export class PromptParams extends jspb.Message { 
+            getPromptForStartTime(): boolean;
+            setPromptForStartTime(value: boolean): PromptParams;
+
+            hasPromptTimeout(): boolean;
+            clearPromptTimeout(): void;
+            getPromptTimeout(): google_protobuf_wrappers_pb.DoubleValue | undefined;
+            setPromptTimeout(value?: google_protobuf_wrappers_pb.DoubleValue): PromptParams;
+
+            serializeBinary(): Uint8Array;
+            toObject(includeInstance?: boolean): PromptParams.AsObject;
+            static toObject(includeInstance: boolean, msg: PromptParams): PromptParams.AsObject;
+            static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+            static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+            static serializeBinaryToWriter(message: PromptParams, writer: jspb.BinaryWriter): void;
+            static deserializeBinary(bytes: Uint8Array): PromptParams;
+            static deserializeBinaryFromReader(message: PromptParams, reader: jspb.BinaryReader): PromptParams;
+        }
+
+        export namespace PromptParams {
+            export type AsObject = {
+                promptForStartTime: boolean,
+                promptTimeout?: google_protobuf_wrappers_pb.DoubleValue.AsObject,
+            }
+        }
+
     }
 
 
@@ -1202,6 +1246,127 @@ export namespace FailureBehavior {
         PROCEED_IF_ABLE = 4,
         RETURN_TO_START_AND_TRY_AGAIN_LATER = 5,
         RETURN_TO_START_AND_TERMINATE = 6,
+    }
+
+}
+
+export class WalkInterrupt extends jspb.Message { 
+    clearSignalsList(): void;
+    getSignalsList(): Array<WalkInterrupt.DaqPluginSignal>;
+    setSignalsList(value: Array<WalkInterrupt.DaqPluginSignal>): WalkInterrupt;
+    addSignals(value?: WalkInterrupt.DaqPluginSignal, index?: number): WalkInterrupt.DaqPluginSignal;
+    clearConditionsAndBehaviorsList(): void;
+    getConditionsAndBehaviorsList(): Array<WalkInterrupt.ConditionAndBehavior>;
+    setConditionsAndBehaviorsList(value: Array<WalkInterrupt.ConditionAndBehavior>): WalkInterrupt;
+    addConditionsAndBehaviors(value?: WalkInterrupt.ConditionAndBehavior, index?: number): WalkInterrupt.ConditionAndBehavior;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): WalkInterrupt.AsObject;
+    static toObject(includeInstance: boolean, msg: WalkInterrupt): WalkInterrupt.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: WalkInterrupt, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): WalkInterrupt;
+    static deserializeBinaryFromReader(message: WalkInterrupt, reader: jspb.BinaryReader): WalkInterrupt;
+}
+
+export namespace WalkInterrupt {
+    export type AsObject = {
+        signalsList: Array<WalkInterrupt.DaqPluginSignal.AsObject>,
+        conditionsAndBehaviorsList: Array<WalkInterrupt.ConditionAndBehavior.AsObject>,
+    }
+
+
+    export class DaqPluginSignal extends jspb.Message { 
+
+        hasCapability(): boolean;
+        clearCapability(): void;
+        getCapability(): bosdyn_api_data_acquisition_pb.DataAcquisitionCapability | undefined;
+        setCapability(value?: bosdyn_api_data_acquisition_pb.DataAcquisitionCapability): DaqPluginSignal;
+
+        hasDataCapture(): boolean;
+        clearDataCapture(): void;
+        getDataCapture(): bosdyn_api_data_acquisition_pb.DataCapture | undefined;
+        setDataCapture(value?: bosdyn_api_data_acquisition_pb.DataCapture): DaqPluginSignal;
+        getBlackboardName(): string;
+        setBlackboardName(value: string): DaqPluginSignal;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): DaqPluginSignal.AsObject;
+        static toObject(includeInstance: boolean, msg: DaqPluginSignal): DaqPluginSignal.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: DaqPluginSignal, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): DaqPluginSignal;
+        static deserializeBinaryFromReader(message: DaqPluginSignal, reader: jspb.BinaryReader): DaqPluginSignal;
+    }
+
+    export namespace DaqPluginSignal {
+        export type AsObject = {
+            capability?: bosdyn_api_data_acquisition_pb.DataAcquisitionCapability.AsObject,
+            dataCapture?: bosdyn_api_data_acquisition_pb.DataCapture.AsObject,
+            blackboardName: string,
+        }
+    }
+
+    export class ConditionAndBehavior extends jspb.Message { 
+        getName(): string;
+        setName(value: string): ConditionAndBehavior;
+
+        hasConditionNode(): boolean;
+        clearConditionNode(): void;
+        getConditionNode(): bosdyn_api_mission_nodes_pb.Condition | undefined;
+        setConditionNode(value?: bosdyn_api_mission_nodes_pb.Condition): ConditionAndBehavior;
+
+        hasSafePowerOff(): boolean;
+        clearSafePowerOff(): void;
+        getSafePowerOff(): FailureBehavior.SafePowerOff | undefined;
+        setSafePowerOff(value?: FailureBehavior.SafePowerOff): ConditionAndBehavior;
+
+        hasReturnToStartAndTerminate(): boolean;
+        clearReturnToStartAndTerminate(): void;
+        getReturnToStartAndTerminate(): FailureBehavior.ReturnToStartAndTerminate | undefined;
+        setReturnToStartAndTerminate(value?: FailureBehavior.ReturnToStartAndTerminate): ConditionAndBehavior;
+
+        hasBehaviorNode(): boolean;
+        clearBehaviorNode(): void;
+        getBehaviorNode(): bosdyn_api_mission_nodes_pb.Node | undefined;
+        setBehaviorNode(value?: bosdyn_api_mission_nodes_pb.Node): ConditionAndBehavior;
+
+        getConditionCase(): ConditionAndBehavior.ConditionCase;
+        getBehaviorCase(): ConditionAndBehavior.BehaviorCase;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): ConditionAndBehavior.AsObject;
+        static toObject(includeInstance: boolean, msg: ConditionAndBehavior): ConditionAndBehavior.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: ConditionAndBehavior, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): ConditionAndBehavior;
+        static deserializeBinaryFromReader(message: ConditionAndBehavior, reader: jspb.BinaryReader): ConditionAndBehavior;
+    }
+
+    export namespace ConditionAndBehavior {
+        export type AsObject = {
+            name: string,
+            conditionNode?: bosdyn_api_mission_nodes_pb.Condition.AsObject,
+            safePowerOff?: FailureBehavior.SafePowerOff.AsObject,
+            returnToStartAndTerminate?: FailureBehavior.ReturnToStartAndTerminate.AsObject,
+            behaviorNode?: bosdyn_api_mission_nodes_pb.Node.AsObject,
+        }
+
+        export enum ConditionCase {
+            CONDITION_NOT_SET = 0,
+            CONDITION_NODE = 2,
+        }
+
+        export enum BehaviorCase {
+            BEHAVIOR_NOT_SET = 0,
+            SAFE_POWER_OFF = 3,
+            RETURN_TO_START_AND_TERMINATE = 4,
+            BEHAVIOR_NODE = 5,
+        }
+
     }
 
 }

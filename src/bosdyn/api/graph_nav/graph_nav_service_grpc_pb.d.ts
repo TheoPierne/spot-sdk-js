@@ -22,6 +22,7 @@ interface IGraphNavServiceService extends grpc.ServiceDefinition<grpc.UntypedSer
     uploadGraphStreaming: IGraphNavServiceService_IUploadGraphStreaming;
     uploadWaypointSnapshot: IGraphNavServiceService_IUploadWaypointSnapshot;
     uploadEdgeSnapshot: IGraphNavServiceService_IUploadEdgeSnapshot;
+    uploadSnapshots: IGraphNavServiceService_IUploadSnapshots;
     downloadWaypointSnapshot: IGraphNavServiceService_IDownloadWaypointSnapshot;
     downloadEdgeSnapshot: IGraphNavServiceService_IDownloadEdgeSnapshot;
     validateGraph: IGraphNavServiceService_IValidateGraph;
@@ -144,6 +145,15 @@ interface IGraphNavServiceService_IUploadEdgeSnapshot extends grpc.MethodDefinit
     responseSerialize: grpc.serialize<bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotResponse>;
     responseDeserialize: grpc.deserialize<bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotResponse>;
 }
+interface IGraphNavServiceService_IUploadSnapshots extends grpc.MethodDefinition<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest, bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse> {
+    path: "/bosdyn.api.graph_nav.GraphNavService/UploadSnapshots";
+    requestStream: true;
+    responseStream: false;
+    requestSerialize: grpc.serialize<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
+    requestDeserialize: grpc.deserialize<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
+    responseSerialize: grpc.serialize<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse>;
+    responseDeserialize: grpc.deserialize<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse>;
+}
 interface IGraphNavServiceService_IDownloadWaypointSnapshot extends grpc.MethodDefinition<bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotRequest, bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotResponse> {
     path: "/bosdyn.api.graph_nav.GraphNavService/DownloadWaypointSnapshot";
     requestStream: false;
@@ -188,6 +198,7 @@ export interface IGraphNavServiceServer extends grpc.UntypedServiceImplementatio
     uploadGraphStreaming: grpc.handleClientStreamingCall<bosdyn_api_graph_nav_graph_nav_pb.UploadGraphStreamingRequest, bosdyn_api_graph_nav_graph_nav_pb.UploadGraphResponse>;
     uploadWaypointSnapshot: grpc.handleClientStreamingCall<bosdyn_api_graph_nav_graph_nav_pb.UploadWaypointSnapshotRequest, bosdyn_api_graph_nav_graph_nav_pb.UploadWaypointSnapshotResponse>;
     uploadEdgeSnapshot: grpc.handleClientStreamingCall<bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotRequest, bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotResponse>;
+    uploadSnapshots: grpc.handleClientStreamingCall<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest, bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse>;
     downloadWaypointSnapshot: grpc.handleServerStreamingCall<bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotRequest, bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotResponse>;
     downloadEdgeSnapshot: grpc.handleServerStreamingCall<bosdyn_api_graph_nav_graph_nav_pb.DownloadEdgeSnapshotRequest, bosdyn_api_graph_nav_graph_nav_pb.DownloadEdgeSnapshotResponse>;
     validateGraph: grpc.handleUnaryCall<bosdyn_api_graph_nav_graph_nav_pb.ValidateGraphRequest, bosdyn_api_graph_nav_graph_nav_pb.ValidateGraphResponse>;
@@ -235,6 +246,10 @@ export interface IGraphNavServiceClient {
     uploadEdgeSnapshot(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotRequest>;
     uploadEdgeSnapshot(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotRequest>;
     uploadEdgeSnapshot(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotRequest>;
+    uploadSnapshots(callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
+    uploadSnapshots(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
+    uploadSnapshots(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
+    uploadSnapshots(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
     downloadWaypointSnapshot(request: bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotResponse>;
     downloadWaypointSnapshot(request: bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotResponse>;
     downloadEdgeSnapshot(request: bosdyn_api_graph_nav_graph_nav_pb.DownloadEdgeSnapshotRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<bosdyn_api_graph_nav_graph_nav_pb.DownloadEdgeSnapshotResponse>;
@@ -287,6 +302,10 @@ export class GraphNavServiceClient extends grpc.Client implements IGraphNavServi
     public uploadEdgeSnapshot(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotRequest>;
     public uploadEdgeSnapshot(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotRequest>;
     public uploadEdgeSnapshot(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadEdgeSnapshotRequest>;
+    public uploadSnapshots(callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
+    public uploadSnapshots(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
+    public uploadSnapshots(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
+    public uploadSnapshots(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse) => void): grpc.ClientWritableStream<bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest>;
     public downloadWaypointSnapshot(request: bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotResponse>;
     public downloadWaypointSnapshot(request: bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotRequest, metadata?: grpc.Metadata, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<bosdyn_api_graph_nav_graph_nav_pb.DownloadWaypointSnapshotResponse>;
     public downloadEdgeSnapshot(request: bosdyn_api_graph_nav_graph_nav_pb.DownloadEdgeSnapshotRequest, options?: Partial<grpc.CallOptions>): grpc.ClientReadableStream<bosdyn_api_graph_nav_graph_nav_pb.DownloadEdgeSnapshotResponse>;

@@ -55,6 +55,7 @@ export namespace PowerCommandRequest {
     REQUEST_ON_PAYLOAD_PORTS = 6,
     REQUEST_OFF_WIFI_RADIO = 7,
     REQUEST_ON_WIFI_RADIO = 8,
+    REQUEST_SOFT_REBOOT_ROBOT = 9,
     }
 
 }
@@ -396,6 +397,77 @@ export namespace ResetSafetyStopResponse {
     STATUS_UNKNOWN_STOP_TYPE = 4,
     }
 
+}
+
+export class GetFanInformationRequest extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.RequestHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.RequestHeader): GetFanInformationRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetFanInformationRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetFanInformationRequest): GetFanInformationRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetFanInformationRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetFanInformationRequest;
+    static deserializeBinaryFromReader(message: GetFanInformationRequest, reader: jspb.BinaryReader): GetFanInformationRequest;
+}
+
+export namespace GetFanInformationRequest {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.RequestHeader.AsObject,
+    }
+}
+
+export class FanInformation extends jspb.Message { 
+    getFrequency(): number;
+    setFrequency(value: number): FanInformation;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): FanInformation.AsObject;
+    static toObject(includeInstance: boolean, msg: FanInformation): FanInformation.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: FanInformation, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): FanInformation;
+    static deserializeBinaryFromReader(message: FanInformation, reader: jspb.BinaryReader): FanInformation;
+}
+
+export namespace FanInformation {
+    export type AsObject = {
+        frequency: number,
+    }
+}
+
+export class GetFanInformationResponse extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.ResponseHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.ResponseHeader): GetFanInformationResponse;
+
+    getFanInformationMap(): jspb.Map<string, FanInformation>;
+    clearFanInformationMap(): void;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetFanInformationResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: GetFanInformationResponse): GetFanInformationResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetFanInformationResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetFanInformationResponse;
+    static deserializeBinaryFromReader(message: GetFanInformationResponse, reader: jspb.BinaryReader): GetFanInformationResponse;
+}
+
+export namespace GetFanInformationResponse {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.ResponseHeader.AsObject,
+
+        fanInformationMap: Array<[string, FanInformation.AsObject]>,
+    }
 }
 
 export enum PowerCommandStatus {

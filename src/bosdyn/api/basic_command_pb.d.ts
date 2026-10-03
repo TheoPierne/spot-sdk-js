@@ -246,6 +246,8 @@ export namespace FreezeCommand {
 
 
     export class Request extends jspb.Message { 
+        getMode(): FreezeCommand.Request.Mode;
+        setMode(value: FreezeCommand.Request.Mode): Request;
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Request.AsObject;
@@ -259,7 +261,15 @@ export namespace FreezeCommand {
 
     export namespace Request {
         export type AsObject = {
+            mode: FreezeCommand.Request.Mode,
         }
+
+        export enum Mode {
+    MODE_UNKNOWN = 0,
+    MODE_DEFAULT = 1,
+    MODE_STIFF = 2,
+        }
+
     }
 
     export class Feedback extends jspb.Message { 
@@ -411,6 +421,11 @@ export namespace SE2TrajectoryCommand {
         getFinalGoalStatus(): SE2TrajectoryCommand.Feedback.FinalGoalStatus;
         setFinalGoalStatus(value: SE2TrajectoryCommand.Feedback.FinalGoalStatus): Feedback;
 
+        hasRequestInformation(): boolean;
+        clearRequestInformation(): void;
+        getRequestInformation(): SE2TrajectoryCommand.Request | undefined;
+        setRequestInformation(value?: SE2TrajectoryCommand.Request): Feedback;
+
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Feedback.AsObject;
         static toObject(includeInstance: boolean, msg: Feedback): Feedback.AsObject;
@@ -426,6 +441,7 @@ export namespace SE2TrajectoryCommand {
             status: SE2TrajectoryCommand.Feedback.Status,
             bodyMovementStatus: SE2TrajectoryCommand.Feedback.BodyMovementStatus,
             finalGoalStatus: SE2TrajectoryCommand.Feedback.FinalGoalStatus,
+            requestInformation?: SE2TrajectoryCommand.Request.AsObject,
         }
 
         export enum Status {
@@ -512,6 +528,11 @@ export namespace SE2VelocityCommand {
 
     export class Feedback extends jspb.Message { 
 
+        hasRequestInformation(): boolean;
+        clearRequestInformation(): void;
+        getRequestInformation(): SE2VelocityCommand.Request | undefined;
+        setRequestInformation(value?: SE2VelocityCommand.Request): Feedback;
+
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Feedback.AsObject;
         static toObject(includeInstance: boolean, msg: Feedback): Feedback.AsObject;
@@ -524,6 +545,7 @@ export namespace SE2VelocityCommand {
 
     export namespace Feedback {
         export type AsObject = {
+            requestInformation?: SE2VelocityCommand.Request.AsObject,
         }
     }
 

@@ -55,6 +55,28 @@ function deserialize_bosdyn_api_log_status_GetLogStatusResponse(buffer_arg) {
   return bosdyn_api_log_status_log_status_pb.GetLogStatusResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_bosdyn_api_log_status_StartConcurrentLogRequest(arg) {
+  if (!(arg instanceof bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.log_status.StartConcurrentLogRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_log_status_StartConcurrentLogRequest(buffer_arg) {
+  return bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_log_status_StartConcurrentLogResponse(arg) {
+  if (!(arg instanceof bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.log_status.StartConcurrentLogResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_log_status_StartConcurrentLogResponse(buffer_arg) {
+  return bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_bosdyn_api_log_status_StartExperimentLogRequest(arg) {
   if (!(arg instanceof bosdyn_api_log_status_log_status_pb.StartExperimentLogRequest)) {
     throw new Error('Expected argument of type bosdyn.api.log_status.StartExperimentLogRequest');
@@ -205,6 +227,21 @@ startExperimentLog: {
     requestDeserialize: deserialize_bosdyn_api_log_status_StartExperimentLogRequest,
     responseSerialize: serialize_bosdyn_api_log_status_StartExperimentLogResponse,
     responseDeserialize: deserialize_bosdyn_api_log_status_StartExperimentLogResponse,
+  },
+  // Given a duration T and an event E, starts an experiment log that will include any data
+// the robot associates with E, with a keepalive/watchdog timer of T. However, unlike an
+// experiment log it allows for concurrency, so E must be provided to constrain the data
+// included in the log.
+startConcurrentLog: {
+    path: '/bosdyn.api.log_status.LogStatusService/StartConcurrentLog',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest,
+    responseType: bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse,
+    requestSerialize: serialize_bosdyn_api_log_status_StartConcurrentLogRequest,
+    requestDeserialize: deserialize_bosdyn_api_log_status_StartConcurrentLogRequest,
+    responseSerialize: serialize_bosdyn_api_log_status_StartConcurrentLogResponse,
+    responseDeserialize: deserialize_bosdyn_api_log_status_StartConcurrentLogResponse,
   },
   // UpdateExperimentLog(id, T) will update the keepalive/watchdog timer of
 // the log with the provided id if the log is active. The updated duration

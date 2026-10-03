@@ -203,7 +203,7 @@ proto.bosdyn.api.MobilityCommand.serializeBinaryToWriter = function(message, wri
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.bosdyn.api.MobilityCommand.Request.oneofGroups_ = [[1,2,3,4,5,6,7]];
+proto.bosdyn.api.MobilityCommand.Request.oneofGroups_ = [[1,2,3,4,5,6,7,8]];
 
 /**
  * @enum {number}
@@ -216,7 +216,8 @@ proto.bosdyn.api.MobilityCommand.Request.CommandCase = {
   STAND_REQUEST: 4,
   STANCE_REQUEST: 5,
   STOP_REQUEST: 6,
-  FOLLOW_ARM_REQUEST: 7
+  FOLLOW_ARM_REQUEST: 7,
+  FREEZE_REQUEST: 8
 };
 
 /**
@@ -264,6 +265,7 @@ proto.bosdyn.api.MobilityCommand.Request.toObject = function(includeInstance, ms
     stanceRequest: (f = msg.getStanceRequest()) && bosdyn_api_basic_command_pb.StanceCommand.Request.toObject(includeInstance, f),
     stopRequest: (f = msg.getStopRequest()) && bosdyn_api_basic_command_pb.StopCommand.Request.toObject(includeInstance, f),
     followArmRequest: (f = msg.getFollowArmRequest()) && bosdyn_api_basic_command_pb.FollowArmCommand.Request.toObject(includeInstance, f),
+    freezeRequest: (f = msg.getFreezeRequest()) && bosdyn_api_basic_command_pb.FreezeCommand.Request.toObject(includeInstance, f),
     params: (f = msg.getParams()) && google_protobuf_any_pb.Any.toObject(includeInstance, f)
   };
 
@@ -335,6 +337,11 @@ proto.bosdyn.api.MobilityCommand.Request.deserializeBinaryFromReader = function(
       var value = new bosdyn_api_basic_command_pb.FollowArmCommand.Request;
       reader.readMessage(value,bosdyn_api_basic_command_pb.FollowArmCommand.Request.deserializeBinaryFromReader);
       msg.setFollowArmRequest(value);
+      break;
+    case 8:
+      var value = new bosdyn_api_basic_command_pb.FreezeCommand.Request;
+      reader.readMessage(value,bosdyn_api_basic_command_pb.FreezeCommand.Request.deserializeBinaryFromReader);
+      msg.setFreezeRequest(value);
       break;
     case 100:
       var value = new google_protobuf_any_pb.Any;
@@ -424,6 +431,14 @@ proto.bosdyn.api.MobilityCommand.Request.serializeBinaryToWriter = function(mess
       7,
       f,
       bosdyn_api_basic_command_pb.FollowArmCommand.Request.serializeBinaryToWriter
+    );
+  }
+  f = message.getFreezeRequest();
+  if (f != null) {
+    writer.writeMessage(
+      8,
+      f,
+      bosdyn_api_basic_command_pb.FreezeCommand.Request.serializeBinaryToWriter
     );
   }
   f = message.getParams();
@@ -697,6 +712,43 @@ proto.bosdyn.api.MobilityCommand.Request.prototype.hasFollowArmRequest = functio
 
 
 /**
+ * optional FreezeCommand.Request freeze_request = 8;
+ * @return {?proto.bosdyn.api.FreezeCommand.Request}
+ */
+proto.bosdyn.api.MobilityCommand.Request.prototype.getFreezeRequest = function() {
+  return /** @type{?proto.bosdyn.api.FreezeCommand.Request} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_basic_command_pb.FreezeCommand.Request, 8));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.FreezeCommand.Request|undefined} value
+ * @return {!proto.bosdyn.api.MobilityCommand.Request} returns this
+*/
+proto.bosdyn.api.MobilityCommand.Request.prototype.setFreezeRequest = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 8, proto.bosdyn.api.MobilityCommand.Request.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.MobilityCommand.Request} returns this
+ */
+proto.bosdyn.api.MobilityCommand.Request.prototype.clearFreezeRequest = function() {
+  return this.setFreezeRequest(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.MobilityCommand.Request.prototype.hasFreezeRequest = function() {
+  return jspb.Message.getField(this, 8) != null;
+};
+
+
+/**
  * optional google.protobuf.Any params = 100;
  * @return {?proto.google.protobuf.Any}
  */
@@ -742,7 +794,7 @@ proto.bosdyn.api.MobilityCommand.Request.prototype.hasParams = function() {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.bosdyn.api.MobilityCommand.Feedback.oneofGroups_ = [[1,2,3,4,5,6,7]];
+proto.bosdyn.api.MobilityCommand.Feedback.oneofGroups_ = [[1,2,3,4,5,6,7,8]];
 
 /**
  * @enum {number}
@@ -755,7 +807,8 @@ proto.bosdyn.api.MobilityCommand.Feedback.FeedbackCase = {
   STAND_FEEDBACK: 4,
   STANCE_FEEDBACK: 5,
   STOP_FEEDBACK: 6,
-  FOLLOW_ARM_FEEDBACK: 7
+  FOLLOW_ARM_FEEDBACK: 7,
+  FREEZE_FEEDBACK: 8
 };
 
 /**
@@ -803,6 +856,7 @@ proto.bosdyn.api.MobilityCommand.Feedback.toObject = function(includeInstance, m
     stanceFeedback: (f = msg.getStanceFeedback()) && bosdyn_api_basic_command_pb.StanceCommand.Feedback.toObject(includeInstance, f),
     stopFeedback: (f = msg.getStopFeedback()) && bosdyn_api_basic_command_pb.StopCommand.Feedback.toObject(includeInstance, f),
     followArmFeedback: (f = msg.getFollowArmFeedback()) && bosdyn_api_basic_command_pb.FollowArmCommand.Feedback.toObject(includeInstance, f),
+    freezeFeedback: (f = msg.getFreezeFeedback()) && bosdyn_api_basic_command_pb.FreezeCommand.Feedback.toObject(includeInstance, f),
     status: jspb.Message.getFieldWithDefault(msg, 100, 0)
   };
 
@@ -874,6 +928,11 @@ proto.bosdyn.api.MobilityCommand.Feedback.deserializeBinaryFromReader = function
       var value = new bosdyn_api_basic_command_pb.FollowArmCommand.Feedback;
       reader.readMessage(value,bosdyn_api_basic_command_pb.FollowArmCommand.Feedback.deserializeBinaryFromReader);
       msg.setFollowArmFeedback(value);
+      break;
+    case 8:
+      var value = new bosdyn_api_basic_command_pb.FreezeCommand.Feedback;
+      reader.readMessage(value,bosdyn_api_basic_command_pb.FreezeCommand.Feedback.deserializeBinaryFromReader);
+      msg.setFreezeFeedback(value);
       break;
     case 100:
       var value = /** @type {!proto.bosdyn.api.RobotCommandFeedbackStatus.Status} */ (reader.readEnum());
@@ -962,6 +1021,14 @@ proto.bosdyn.api.MobilityCommand.Feedback.serializeBinaryToWriter = function(mes
       7,
       f,
       bosdyn_api_basic_command_pb.FollowArmCommand.Feedback.serializeBinaryToWriter
+    );
+  }
+  f = message.getFreezeFeedback();
+  if (f != null) {
+    writer.writeMessage(
+      8,
+      f,
+      bosdyn_api_basic_command_pb.FreezeCommand.Feedback.serializeBinaryToWriter
     );
   }
   f = message.getStatus();
@@ -1230,6 +1297,43 @@ proto.bosdyn.api.MobilityCommand.Feedback.prototype.clearFollowArmFeedback = fun
  */
 proto.bosdyn.api.MobilityCommand.Feedback.prototype.hasFollowArmFeedback = function() {
   return jspb.Message.getField(this, 7) != null;
+};
+
+
+/**
+ * optional FreezeCommand.Feedback freeze_feedback = 8;
+ * @return {?proto.bosdyn.api.FreezeCommand.Feedback}
+ */
+proto.bosdyn.api.MobilityCommand.Feedback.prototype.getFreezeFeedback = function() {
+  return /** @type{?proto.bosdyn.api.FreezeCommand.Feedback} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_basic_command_pb.FreezeCommand.Feedback, 8));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.FreezeCommand.Feedback|undefined} value
+ * @return {!proto.bosdyn.api.MobilityCommand.Feedback} returns this
+*/
+proto.bosdyn.api.MobilityCommand.Feedback.prototype.setFreezeFeedback = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 8, proto.bosdyn.api.MobilityCommand.Feedback.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.MobilityCommand.Feedback} returns this
+ */
+proto.bosdyn.api.MobilityCommand.Feedback.prototype.clearFreezeFeedback = function() {
+  return this.setFreezeFeedback(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.MobilityCommand.Feedback.prototype.hasFreezeFeedback = function() {
+  return jspb.Message.getField(this, 8) != null;
 };
 
 

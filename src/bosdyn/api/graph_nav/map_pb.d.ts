@@ -97,6 +97,8 @@ export namespace Waypoint {
         addRegions(value?: RegionWithFrame, index?: number): RegionWithFrame;
         getLostDetectorStrictness(): bosdyn_api_graph_nav_lost_detection_pb.LostDetectorStrictness;
         setLostDetectorStrictness(value: bosdyn_api_graph_nav_lost_detection_pb.LostDetectorStrictness): Annotations;
+        getIrParam(): Waypoint.Annotations.IRParam;
+        setIrParam(value: Waypoint.Annotations.IRParam): Annotations;
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Annotations.AsObject;
@@ -120,6 +122,7 @@ export namespace Waypoint {
             gpsSettings?: Waypoint.Annotations.GPSSettings.AsObject,
             regionsList: Array<RegionWithFrame.AsObject>,
             lostDetectorStrictness: bosdyn_api_graph_nav_lost_detection_pb.LostDetectorStrictness,
+            irParam: Waypoint.Annotations.IRParam,
         }
 
 
@@ -283,6 +286,13 @@ export namespace Waypoint {
                 ecefTformWaypoint?: bosdyn_api_geometry_pb.SE3Pose.AsObject,
                 disableGpsLocalization: boolean,
             }
+        }
+
+
+        export enum IRParam {
+    IR_PARAM_UNKNOWN = 0,
+    IR_PARAM_ENABLE = 1,
+    IR_PARAM_DISABLE = 2,
         }
 
     }
@@ -518,6 +528,11 @@ export namespace Edge {
         getGroundClutterMode(): Edge.Annotations.GroundClutterAvoidanceMode;
         setGroundClutterMode(value: Edge.Annotations.GroundClutterAvoidanceMode): Annotations;
 
+        hasAudioVisualSettings(): boolean;
+        clearAudioVisualSettings(): void;
+        getAudioVisualSettings(): Edge.Annotations.AudioVisualSettings | undefined;
+        setAudioVisualSettings(value?: Edge.Annotations.AudioVisualSettings): Annotations;
+
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Annotations.AsObject;
         static toObject(includeInstance: boolean, msg: Annotations): Annotations.AsObject;
@@ -545,6 +560,7 @@ export namespace Edge {
 
             areaCallbacksMap: Array<[string, AreaCallbackRegion.AsObject]>,
             groundClutterMode: Edge.Annotations.GroundClutterAvoidanceMode,
+            audioVisualSettings?: Edge.Annotations.AudioVisualSettings.AsObject,
         }
 
 
@@ -595,6 +611,26 @@ export namespace Edge {
     DESCENT_PREFERENCE_NONE = 3,
             }
 
+        }
+
+        export class AudioVisualSettings extends jspb.Message { 
+            getBehaviorName(): string;
+            setBehaviorName(value: string): AudioVisualSettings;
+
+            serializeBinary(): Uint8Array;
+            toObject(includeInstance?: boolean): AudioVisualSettings.AsObject;
+            static toObject(includeInstance: boolean, msg: AudioVisualSettings): AudioVisualSettings.AsObject;
+            static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+            static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+            static serializeBinaryToWriter(message: AudioVisualSettings, writer: jspb.BinaryWriter): void;
+            static deserializeBinary(bytes: Uint8Array): AudioVisualSettings;
+            static deserializeBinaryFromReader(message: AudioVisualSettings, reader: jspb.BinaryReader): AudioVisualSettings;
+        }
+
+        export namespace AudioVisualSettings {
+            export type AsObject = {
+                behaviorName: string,
+            }
         }
 
 

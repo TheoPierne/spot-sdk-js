@@ -690,6 +690,7 @@ export namespace UploadAnimatedMoveResponse {
     STATUS_OK = 1,
     STATUS_ANIMATION_VALIDATION_FAILED = 2,
     STATUS_PING_RESPONSE = 3,
+    STATUS_REJECTED_DANCE_ACTIVE = 4,
     }
 
 }
@@ -791,8 +792,8 @@ export class StartRecordingStateRequest extends jspb.Message {
     clearContinueRecordingDuration(): void;
     getContinueRecordingDuration(): google_protobuf_duration_pb.Duration | undefined;
     setContinueRecordingDuration(value?: google_protobuf_duration_pb.Duration): StartRecordingStateRequest;
-    getRecordingSessionId(): number;
-    setRecordingSessionId(value: number): StartRecordingStateRequest;
+    getRecordingSessionId(): string;
+    setRecordingSessionId(value: string): StartRecordingStateRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): StartRecordingStateRequest.AsObject;
@@ -808,7 +809,7 @@ export namespace StartRecordingStateRequest {
     export type AsObject = {
         header?: bosdyn_api_header_pb.RequestHeader.AsObject,
         continueRecordingDuration?: google_protobuf_duration_pb.Duration.AsObject,
-        recordingSessionId: number,
+        recordingSessionId: string,
     }
 }
 
@@ -820,8 +821,8 @@ export class StartRecordingStateResponse extends jspb.Message {
     setHeader(value?: bosdyn_api_header_pb.ResponseHeader): StartRecordingStateResponse;
     getStatus(): StartRecordingStateResponse.Status;
     setStatus(value: StartRecordingStateResponse.Status): StartRecordingStateResponse;
-    getRecordingSessionId(): number;
-    setRecordingSessionId(value: number): StartRecordingStateResponse;
+    getRecordingSessionId(): string;
+    setRecordingSessionId(value: string): StartRecordingStateResponse;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): StartRecordingStateResponse.AsObject;
@@ -837,7 +838,7 @@ export namespace StartRecordingStateResponse {
     export type AsObject = {
         header?: bosdyn_api_header_pb.ResponseHeader.AsObject,
         status: StartRecordingStateResponse.Status,
-        recordingSessionId: number,
+        recordingSessionId: string,
     }
 
     export enum Status {
@@ -1757,6 +1758,18 @@ export namespace ChoreographySequence {
 }
 
 export class ChoreographyInfo extends jspb.Message { 
+    getDescription(): string;
+    setDescription(value: string): ChoreographyInfo;
+
+    hasStartPosition(): boolean;
+    clearStartPosition(): void;
+    getStartPosition(): bosdyn_api_geometry_pb.SE2Pose | undefined;
+    setStartPosition(value?: bosdyn_api_geometry_pb.SE2Pose): ChoreographyInfo;
+
+    hasColor(): boolean;
+    clearColor(): void;
+    getColor(): ChoreographerDisplayInfo.Color | undefined;
+    setColor(value?: ChoreographerDisplayInfo.Color): ChoreographyInfo;
     clearLabelsList(): void;
     getLabelsList(): Array<string>;
     setLabelsList(value: Array<string>): ChoreographyInfo;
@@ -1774,6 +1787,9 @@ export class ChoreographyInfo extends jspb.Message {
 
 export namespace ChoreographyInfo {
     export type AsObject = {
+        description: string,
+        startPosition?: bosdyn_api_geometry_pb.SE2Pose.AsObject,
+        color?: ChoreographerDisplayInfo.Color.AsObject,
         labelsList: Array<string>,
     }
 }
@@ -2381,6 +2397,11 @@ export class ChoreographyStatusResponse extends jspb.Message {
     getSequenceName(): string;
     setSequenceName(value: string): ChoreographyStatusResponse;
 
+    hasSequenceStartTime(): boolean;
+    clearSequenceStartTime(): void;
+    getSequenceStartTime(): google_protobuf_timestamp_pb.Timestamp | undefined;
+    setSequenceStartTime(value?: google_protobuf_timestamp_pb.Timestamp): ChoreographyStatusResponse;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): ChoreographyStatusResponse.AsObject;
     static toObject(includeInstance: boolean, msg: ChoreographyStatusResponse): ChoreographyStatusResponse.AsObject;
@@ -2402,6 +2423,7 @@ export namespace ChoreographyStatusResponse {
         sequenceSlicesPerMinute: number,
         validityTime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
         sequenceName: string,
+        sequenceStartTime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     }
 
     export enum Status {

@@ -331,8 +331,8 @@ export namespace SignalSchema {
 }
 
 export class SignalSchemaId extends jspb.Message { 
-    getSchemaId(): number;
-    setSchemaId(value: number): SignalSchemaId;
+    getSchemaId(): string;
+    setSchemaId(value: string): SignalSchemaId;
 
     hasSchema(): boolean;
     clearSchema(): void;
@@ -351,7 +351,7 @@ export class SignalSchemaId extends jspb.Message {
 
 export namespace SignalSchemaId {
     export type AsObject = {
-        schemaId: number,
+        schemaId: string,
         schema?: SignalSchema.AsObject,
     }
 }
@@ -366,8 +366,8 @@ export class SignalTick extends jspb.Message {
     setTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): SignalTick;
     getSource(): string;
     setSource(value: string): SignalTick;
-    getSchemaId(): number;
-    setSchemaId(value: number): SignalTick;
+    getSchemaId(): string;
+    setSchemaId(value: string): SignalTick;
     getEncoding(): SignalTick.Encoding;
     setEncoding(value: SignalTick.Encoding): SignalTick;
     getData(): Uint8Array | string;
@@ -390,7 +390,7 @@ export namespace SignalTick {
         sequenceId: number,
         timestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
         source: string,
-        schemaId: number,
+        schemaId: string,
         encoding: SignalTick.Encoding,
         data: Uint8Array | string,
     }
@@ -821,8 +821,8 @@ export class RegisterSignalSchemaResponse extends jspb.Message {
     clearHeader(): void;
     getHeader(): bosdyn_api_header_pb.ResponseHeader | undefined;
     setHeader(value?: bosdyn_api_header_pb.ResponseHeader): RegisterSignalSchemaResponse;
-    getSchemaId(): number;
-    setSchemaId(value: number): RegisterSignalSchemaResponse;
+    getSchemaId(): string;
+    setSchemaId(value: string): RegisterSignalSchemaResponse;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): RegisterSignalSchemaResponse.AsObject;
@@ -837,6 +837,6 @@ export class RegisterSignalSchemaResponse extends jspb.Message {
 export namespace RegisterSignalSchemaResponse {
     export type AsObject = {
         header?: bosdyn_api_header_pb.ResponseHeader.AsObject,
-        schemaId: number,
+        schemaId: string,
     }
 }

@@ -142,8 +142,8 @@ export class EstopCheckInRequest extends jspb.Message {
     clearEndpoint(): void;
     getEndpoint(): EstopEndpoint | undefined;
     setEndpoint(value?: EstopEndpoint): EstopCheckInRequest;
-    getChallenge(): number;
-    setChallenge(value: number): EstopCheckInRequest;
+    getChallenge(): string;
+    setChallenge(value: string): EstopCheckInRequest;
     getResponse(): string;
     setResponse(value: string): EstopCheckInRequest;
     getStopLevel(): EstopStopLevel;
@@ -163,7 +163,7 @@ export namespace EstopCheckInRequest {
     export type AsObject = {
         header?: bosdyn_api_header_pb.RequestHeader.AsObject,
         endpoint?: EstopEndpoint.AsObject,
-        challenge: number,
+        challenge: string,
         response: string,
         stopLevel: EstopStopLevel,
     }
@@ -180,8 +180,8 @@ export class EstopCheckInResponse extends jspb.Message {
     clearRequest(): void;
     getRequest(): EstopCheckInRequest | undefined;
     setRequest(value?: EstopCheckInRequest): EstopCheckInResponse;
-    getChallenge(): number;
-    setChallenge(value: number): EstopCheckInResponse;
+    getChallenge(): string;
+    setChallenge(value: string): EstopCheckInResponse;
     getStatus(): EstopCheckInResponse.Status;
     setStatus(value: EstopCheckInResponse.Status): EstopCheckInResponse;
 
@@ -199,7 +199,7 @@ export namespace EstopCheckInResponse {
     export type AsObject = {
         header?: bosdyn_api_header_pb.ResponseHeader.AsObject,
         request?: EstopCheckInRequest.AsObject,
-        challenge: number,
+        challenge: string,
         status: EstopCheckInResponse.Status,
     }
 

@@ -62,6 +62,11 @@ export namespace MobilityCommand {
         getFollowArmRequest(): bosdyn_api_basic_command_pb.FollowArmCommand.Request | undefined;
         setFollowArmRequest(value?: bosdyn_api_basic_command_pb.FollowArmCommand.Request): Request;
 
+        hasFreezeRequest(): boolean;
+        clearFreezeRequest(): void;
+        getFreezeRequest(): bosdyn_api_basic_command_pb.FreezeCommand.Request | undefined;
+        setFreezeRequest(value?: bosdyn_api_basic_command_pb.FreezeCommand.Request): Request;
+
         hasParams(): boolean;
         clearParams(): void;
         getParams(): google_protobuf_any_pb.Any | undefined;
@@ -88,6 +93,7 @@ export namespace MobilityCommand {
             stanceRequest?: bosdyn_api_basic_command_pb.StanceCommand.Request.AsObject,
             stopRequest?: bosdyn_api_basic_command_pb.StopCommand.Request.AsObject,
             followArmRequest?: bosdyn_api_basic_command_pb.FollowArmCommand.Request.AsObject,
+            freezeRequest?: bosdyn_api_basic_command_pb.FreezeCommand.Request.AsObject,
             params?: google_protobuf_any_pb.Any.AsObject,
         }
 
@@ -100,6 +106,7 @@ export namespace MobilityCommand {
             STANCE_REQUEST = 5,
             STOP_REQUEST = 6,
             FOLLOW_ARM_REQUEST = 7,
+            FREEZE_REQUEST = 8,
         }
 
     }
@@ -140,6 +147,11 @@ export namespace MobilityCommand {
         clearFollowArmFeedback(): void;
         getFollowArmFeedback(): bosdyn_api_basic_command_pb.FollowArmCommand.Feedback | undefined;
         setFollowArmFeedback(value?: bosdyn_api_basic_command_pb.FollowArmCommand.Feedback): Feedback;
+
+        hasFreezeFeedback(): boolean;
+        clearFreezeFeedback(): void;
+        getFreezeFeedback(): bosdyn_api_basic_command_pb.FreezeCommand.Feedback | undefined;
+        setFreezeFeedback(value?: bosdyn_api_basic_command_pb.FreezeCommand.Feedback): Feedback;
         getStatus(): bosdyn_api_basic_command_pb.RobotCommandFeedbackStatus.Status;
         setStatus(value: bosdyn_api_basic_command_pb.RobotCommandFeedbackStatus.Status): Feedback;
 
@@ -164,6 +176,7 @@ export namespace MobilityCommand {
             stanceFeedback?: bosdyn_api_basic_command_pb.StanceCommand.Feedback.AsObject,
             stopFeedback?: bosdyn_api_basic_command_pb.StopCommand.Feedback.AsObject,
             followArmFeedback?: bosdyn_api_basic_command_pb.FollowArmCommand.Feedback.AsObject,
+            freezeFeedback?: bosdyn_api_basic_command_pb.FreezeCommand.Feedback.AsObject,
             status: bosdyn_api_basic_command_pb.RobotCommandFeedbackStatus.Status,
         }
 
@@ -176,6 +189,7 @@ export namespace MobilityCommand {
             STANCE_FEEDBACK = 5,
             STOP_FEEDBACK = 6,
             FOLLOW_ARM_FEEDBACK = 7,
+            FREEZE_FEEDBACK = 8,
         }
 
     }

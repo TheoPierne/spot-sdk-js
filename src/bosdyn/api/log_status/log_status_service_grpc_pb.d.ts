@@ -13,6 +13,7 @@ interface ILogStatusServiceService extends grpc.ServiceDefinition<grpc.UntypedSe
     getActiveLogStatuses: ILogStatusServiceService_IGetActiveLogStatuses;
     startRetroLog: ILogStatusServiceService_IStartRetroLog;
     startExperimentLog: ILogStatusServiceService_IStartExperimentLog;
+    startConcurrentLog: ILogStatusServiceService_IStartConcurrentLog;
     updateExperimentLog: ILogStatusServiceService_IUpdateExperimentLog;
     terminateLog: ILogStatusServiceService_ITerminateLog;
 }
@@ -53,6 +54,15 @@ interface ILogStatusServiceService_IStartExperimentLog extends grpc.MethodDefini
     responseSerialize: grpc.serialize<bosdyn_api_log_status_log_status_pb.StartExperimentLogResponse>;
     responseDeserialize: grpc.deserialize<bosdyn_api_log_status_log_status_pb.StartExperimentLogResponse>;
 }
+interface ILogStatusServiceService_IStartConcurrentLog extends grpc.MethodDefinition<bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest, bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse> {
+    path: "/bosdyn.api.log_status.LogStatusService/StartConcurrentLog";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest>;
+    requestDeserialize: grpc.deserialize<bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest>;
+    responseSerialize: grpc.serialize<bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse>;
+    responseDeserialize: grpc.deserialize<bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse>;
+}
 interface ILogStatusServiceService_IUpdateExperimentLog extends grpc.MethodDefinition<bosdyn_api_log_status_log_status_pb.UpdateExperimentLogRequest, bosdyn_api_log_status_log_status_pb.UpdateExperimentLogResponse> {
     path: "/bosdyn.api.log_status.LogStatusService/UpdateExperimentLog";
     requestStream: false;
@@ -79,6 +89,7 @@ export interface ILogStatusServiceServer extends grpc.UntypedServiceImplementati
     getActiveLogStatuses: grpc.handleUnaryCall<bosdyn_api_log_status_log_status_pb.GetActiveLogStatusesRequest, bosdyn_api_log_status_log_status_pb.GetActiveLogStatusesResponse>;
     startRetroLog: grpc.handleUnaryCall<bosdyn_api_log_status_log_status_pb.StartRetroLogRequest, bosdyn_api_log_status_log_status_pb.StartRetroLogResponse>;
     startExperimentLog: grpc.handleUnaryCall<bosdyn_api_log_status_log_status_pb.StartExperimentLogRequest, bosdyn_api_log_status_log_status_pb.StartExperimentLogResponse>;
+    startConcurrentLog: grpc.handleUnaryCall<bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest, bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse>;
     updateExperimentLog: grpc.handleUnaryCall<bosdyn_api_log_status_log_status_pb.UpdateExperimentLogRequest, bosdyn_api_log_status_log_status_pb.UpdateExperimentLogResponse>;
     terminateLog: grpc.handleUnaryCall<bosdyn_api_log_status_log_status_pb.TerminateLogRequest, bosdyn_api_log_status_log_status_pb.TerminateLogResponse>;
 }
@@ -96,6 +107,9 @@ export interface ILogStatusServiceClient {
     startExperimentLog(request: bosdyn_api_log_status_log_status_pb.StartExperimentLogRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartExperimentLogResponse) => void): grpc.ClientUnaryCall;
     startExperimentLog(request: bosdyn_api_log_status_log_status_pb.StartExperimentLogRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartExperimentLogResponse) => void): grpc.ClientUnaryCall;
     startExperimentLog(request: bosdyn_api_log_status_log_status_pb.StartExperimentLogRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartExperimentLogResponse) => void): grpc.ClientUnaryCall;
+    startConcurrentLog(request: bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse) => void): grpc.ClientUnaryCall;
+    startConcurrentLog(request: bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse) => void): grpc.ClientUnaryCall;
+    startConcurrentLog(request: bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse) => void): grpc.ClientUnaryCall;
     updateExperimentLog(request: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogResponse) => void): grpc.ClientUnaryCall;
     updateExperimentLog(request: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogResponse) => void): grpc.ClientUnaryCall;
     updateExperimentLog(request: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogResponse) => void): grpc.ClientUnaryCall;
@@ -118,6 +132,9 @@ export class LogStatusServiceClient extends grpc.Client implements ILogStatusSer
     public startExperimentLog(request: bosdyn_api_log_status_log_status_pb.StartExperimentLogRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartExperimentLogResponse) => void): grpc.ClientUnaryCall;
     public startExperimentLog(request: bosdyn_api_log_status_log_status_pb.StartExperimentLogRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartExperimentLogResponse) => void): grpc.ClientUnaryCall;
     public startExperimentLog(request: bosdyn_api_log_status_log_status_pb.StartExperimentLogRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartExperimentLogResponse) => void): grpc.ClientUnaryCall;
+    public startConcurrentLog(request: bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse) => void): grpc.ClientUnaryCall;
+    public startConcurrentLog(request: bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse) => void): grpc.ClientUnaryCall;
+    public startConcurrentLog(request: bosdyn_api_log_status_log_status_pb.StartConcurrentLogRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.StartConcurrentLogResponse) => void): grpc.ClientUnaryCall;
     public updateExperimentLog(request: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogResponse) => void): grpc.ClientUnaryCall;
     public updateExperimentLog(request: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogResponse) => void): grpc.ClientUnaryCall;
     public updateExperimentLog(request: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_log_status_log_status_pb.UpdateExperimentLogResponse) => void): grpc.ClientUnaryCall;

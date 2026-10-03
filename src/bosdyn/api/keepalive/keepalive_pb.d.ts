@@ -62,6 +62,11 @@ export class ActionAfter extends jspb.Message {
     getControlledMotorsOff(): ActionAfter.ControlledMotorsOff | undefined;
     setControlledMotorsOff(value?: ActionAfter.ControlledMotorsOff): ActionAfter;
 
+    hasImmediateMotorsOff(): boolean;
+    clearImmediateMotorsOff(): void;
+    getImmediateMotorsOff(): ActionAfter.ImmediateMotorsOff | undefined;
+    setImmediateMotorsOff(value?: ActionAfter.ImmediateMotorsOff): ActionAfter;
+
     hasImmediateRobotOff(): boolean;
     clearImmediateRobotOff(): void;
     getImmediateRobotOff(): ActionAfter.ImmediateRobotOff | undefined;
@@ -71,6 +76,11 @@ export class ActionAfter extends jspb.Message {
     clearLeaseStale(): void;
     getLeaseStale(): ActionAfter.LeaseStale | undefined;
     setLeaseStale(value?: ActionAfter.LeaseStale): ActionAfter;
+
+    hasHaltRobot(): boolean;
+    clearHaltRobot(): void;
+    getHaltRobot(): ActionAfter.HaltRobot | undefined;
+    setHaltRobot(value?: ActionAfter.HaltRobot): ActionAfter;
 
     hasAfter(): boolean;
     clearAfter(): void;
@@ -94,8 +104,10 @@ export namespace ActionAfter {
         recordEvent?: ActionAfter.RecordEvent.AsObject,
         autoReturn?: ActionAfter.AutoReturn.AsObject,
         controlledMotorsOff?: ActionAfter.ControlledMotorsOff.AsObject,
+        immediateMotorsOff?: ActionAfter.ImmediateMotorsOff.AsObject,
         immediateRobotOff?: ActionAfter.ImmediateRobotOff.AsObject,
         leaseStale?: ActionAfter.LeaseStale.AsObject,
+        haltRobot?: ActionAfter.HaltRobot.AsObject,
         after?: google_protobuf_duration_pb.Duration.AsObject,
     }
 
@@ -167,6 +179,23 @@ export namespace ActionAfter {
         }
     }
 
+    export class ImmediateMotorsOff extends jspb.Message { 
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): ImmediateMotorsOff.AsObject;
+        static toObject(includeInstance: boolean, msg: ImmediateMotorsOff): ImmediateMotorsOff.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: ImmediateMotorsOff, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): ImmediateMotorsOff;
+        static deserializeBinaryFromReader(message: ImmediateMotorsOff, reader: jspb.BinaryReader): ImmediateMotorsOff;
+    }
+
+    export namespace ImmediateMotorsOff {
+        export type AsObject = {
+        }
+    }
+
     export class ImmediateRobotOff extends jspb.Message { 
 
         serializeBinary(): Uint8Array;
@@ -206,14 +235,33 @@ export namespace ActionAfter {
         }
     }
 
+    export class HaltRobot extends jspb.Message { 
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): HaltRobot.AsObject;
+        static toObject(includeInstance: boolean, msg: HaltRobot): HaltRobot.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: HaltRobot, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): HaltRobot;
+        static deserializeBinaryFromReader(message: HaltRobot, reader: jspb.BinaryReader): HaltRobot;
+    }
+
+    export namespace HaltRobot {
+        export type AsObject = {
+        }
+    }
+
 
     export enum ActionCase {
         ACTION_NOT_SET = 0,
         RECORD_EVENT = 2,
         AUTO_RETURN = 3,
         CONTROLLED_MOTORS_OFF = 4,
+        IMMEDIATE_MOTORS_OFF = 8,
         IMMEDIATE_ROBOT_OFF = 5,
         LEASE_STALE = 6,
+        HALT_ROBOT = 7,
     }
 
 }
@@ -230,9 +278,9 @@ export class ModifyPolicyRequest extends jspb.Message {
     getToAdd(): Policy | undefined;
     setToAdd(value?: Policy): ModifyPolicyRequest;
     clearPolicyIdsToRemoveList(): void;
-    getPolicyIdsToRemoveList(): Array<number>;
-    setPolicyIdsToRemoveList(value: Array<number>): ModifyPolicyRequest;
-    addPolicyIdsToRemove(value: number, index?: number): number;
+    getPolicyIdsToRemoveList(): Array<string>;
+    setPolicyIdsToRemoveList(value: Array<string>): ModifyPolicyRequest;
+    addPolicyIdsToRemove(value: string, index?: number): string;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): ModifyPolicyRequest.AsObject;
@@ -248,7 +296,7 @@ export namespace ModifyPolicyRequest {
     export type AsObject = {
         header?: bosdyn_api_header_pb.RequestHeader.AsObject,
         toAdd?: Policy.AsObject,
-        policyIdsToRemoveList: Array<number>,
+        policyIdsToRemoveList: Array<string>,
     }
 }
 
@@ -303,8 +351,8 @@ export class CheckInRequest extends jspb.Message {
     clearHeader(): void;
     getHeader(): bosdyn_api_header_pb.RequestHeader | undefined;
     setHeader(value?: bosdyn_api_header_pb.RequestHeader): CheckInRequest;
-    getPolicyId(): number;
-    setPolicyId(value: number): CheckInRequest;
+    getPolicyId(): string;
+    setPolicyId(value: string): CheckInRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): CheckInRequest.AsObject;
@@ -319,7 +367,7 @@ export class CheckInRequest extends jspb.Message {
 export namespace CheckInRequest {
     export type AsObject = {
         header?: bosdyn_api_header_pb.RequestHeader.AsObject,
-        policyId: number,
+        policyId: string,
     }
 }
 
@@ -386,8 +434,8 @@ export namespace GetStatusRequest {
 }
 
 export class LivePolicy extends jspb.Message { 
-    getPolicyId(): number;
-    setPolicyId(value: number): LivePolicy;
+    getPolicyId(): string;
+    setPolicyId(value: string): LivePolicy;
 
     hasPolicy(): boolean;
     clearPolicy(): void;
@@ -413,7 +461,7 @@ export class LivePolicy extends jspb.Message {
 
 export namespace LivePolicy {
     export type AsObject = {
-        policyId: number,
+        policyId: string,
         policy?: Policy.AsObject,
         lastCheckin?: google_protobuf_timestamp_pb.Timestamp.AsObject,
         clientName: string,
@@ -456,7 +504,9 @@ export namespace GetStatusResponse {
     POLICY_CONTROL_ACTION_UNKNOWN = 0,
     POLICY_CONTROL_ACTION_AUTO_RETURN = 1,
     POLICY_CONTROL_ACTION_MOTORS_OFF = 2,
+    POLICY_CONTROL_ACTION_IMMEDIATE_MOTORS_OFF = 5,
     POLICY_CONTROL_ACTION_ROBOT_OFF = 3,
+    POLICY_CONTROL_ACTION_HALT = 4,
     }
 
 }

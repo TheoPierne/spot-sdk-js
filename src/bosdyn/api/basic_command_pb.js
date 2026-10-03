@@ -54,6 +54,7 @@ goog.exportSymbol('proto.bosdyn.api.FollowArmCommand.Request', null, global);
 goog.exportSymbol('proto.bosdyn.api.FreezeCommand', null, global);
 goog.exportSymbol('proto.bosdyn.api.FreezeCommand.Feedback', null, global);
 goog.exportSymbol('proto.bosdyn.api.FreezeCommand.Request', null, global);
+goog.exportSymbol('proto.bosdyn.api.FreezeCommand.Request.Mode', null, global);
 goog.exportSymbol('proto.bosdyn.api.JointCommand', null, global);
 goog.exportSymbol('proto.bosdyn.api.JointCommand.ContactAdvice', null, global);
 goog.exportSymbol('proto.bosdyn.api.JointCommand.ContactAdvice.Advice', null, global);
@@ -2356,7 +2357,7 @@ proto.bosdyn.api.FreezeCommand.Request.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.FreezeCommand.Request.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    mode: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -2393,6 +2394,10 @@ proto.bosdyn.api.FreezeCommand.Request.deserializeBinaryFromReader = function(ms
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = /** @type {!proto.bosdyn.api.FreezeCommand.Request.Mode} */ (reader.readEnum());
+      msg.setMode(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2422,6 +2427,40 @@ proto.bosdyn.api.FreezeCommand.Request.prototype.serializeBinary = function() {
  */
 proto.bosdyn.api.FreezeCommand.Request.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getMode();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * @enum {number}
+ */
+proto.bosdyn.api.FreezeCommand.Request.Mode = {
+  MODE_UNKNOWN: 0,
+  MODE_DEFAULT: 1,
+  MODE_STIFF: 2
+};
+
+/**
+ * optional Mode mode = 1;
+ * @return {!proto.bosdyn.api.FreezeCommand.Request.Mode}
+ */
+proto.bosdyn.api.FreezeCommand.Request.prototype.getMode = function() {
+  return /** @type {!proto.bosdyn.api.FreezeCommand.Request.Mode} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.FreezeCommand.Request.Mode} value
+ * @return {!proto.bosdyn.api.FreezeCommand.Request} returns this
+ */
+proto.bosdyn.api.FreezeCommand.Request.prototype.setMode = function(value) {
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -3272,7 +3311,8 @@ proto.bosdyn.api.SE2TrajectoryCommand.Feedback.toObject = function(includeInstan
   var f, obj = {
     status: jspb.Message.getFieldWithDefault(msg, 1, 0),
     bodyMovementStatus: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    finalGoalStatus: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    finalGoalStatus: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    requestInformation: (f = msg.getRequestInformation()) && proto.bosdyn.api.SE2TrajectoryCommand.Request.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3320,6 +3360,11 @@ proto.bosdyn.api.SE2TrajectoryCommand.Feedback.deserializeBinaryFromReader = fun
     case 5:
       var value = /** @type {!proto.bosdyn.api.SE2TrajectoryCommand.Feedback.FinalGoalStatus} */ (reader.readEnum());
       msg.setFinalGoalStatus(value);
+      break;
+    case 6:
+      var value = new proto.bosdyn.api.SE2TrajectoryCommand.Request;
+      reader.readMessage(value,proto.bosdyn.api.SE2TrajectoryCommand.Request.deserializeBinaryFromReader);
+      msg.setRequestInformation(value);
       break;
     default:
       reader.skipField();
@@ -3369,6 +3414,14 @@ proto.bosdyn.api.SE2TrajectoryCommand.Feedback.serializeBinaryToWriter = functio
     writer.writeEnum(
       5,
       f
+    );
+  }
+  f = message.getRequestInformation();
+  if (f != null) {
+    writer.writeMessage(
+      6,
+      f,
+      proto.bosdyn.api.SE2TrajectoryCommand.Request.serializeBinaryToWriter
     );
   }
 };
@@ -3457,6 +3510,43 @@ proto.bosdyn.api.SE2TrajectoryCommand.Feedback.prototype.getFinalGoalStatus = fu
  */
 proto.bosdyn.api.SE2TrajectoryCommand.Feedback.prototype.setFinalGoalStatus = function(value) {
   return jspb.Message.setProto3EnumField(this, 5, value);
+};
+
+
+/**
+ * optional Request request_information = 6;
+ * @return {?proto.bosdyn.api.SE2TrajectoryCommand.Request}
+ */
+proto.bosdyn.api.SE2TrajectoryCommand.Feedback.prototype.getRequestInformation = function() {
+  return /** @type{?proto.bosdyn.api.SE2TrajectoryCommand.Request} */ (
+    jspb.Message.getWrapperField(this, proto.bosdyn.api.SE2TrajectoryCommand.Request, 6));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.SE2TrajectoryCommand.Request|undefined} value
+ * @return {!proto.bosdyn.api.SE2TrajectoryCommand.Feedback} returns this
+*/
+proto.bosdyn.api.SE2TrajectoryCommand.Feedback.prototype.setRequestInformation = function(value) {
+  return jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.SE2TrajectoryCommand.Feedback} returns this
+ */
+proto.bosdyn.api.SE2TrajectoryCommand.Feedback.prototype.clearRequestInformation = function() {
+  return this.setRequestInformation(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.SE2TrajectoryCommand.Feedback.prototype.hasRequestInformation = function() {
+  return jspb.Message.getField(this, 6) != null;
 };
 
 
@@ -3876,7 +3966,7 @@ proto.bosdyn.api.SE2VelocityCommand.Feedback.prototype.toObject = function(opt_i
  */
 proto.bosdyn.api.SE2VelocityCommand.Feedback.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    requestInformation: (f = msg.getRequestInformation()) && proto.bosdyn.api.SE2VelocityCommand.Request.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3913,6 +4003,11 @@ proto.bosdyn.api.SE2VelocityCommand.Feedback.deserializeBinaryFromReader = funct
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = new proto.bosdyn.api.SE2VelocityCommand.Request;
+      reader.readMessage(value,proto.bosdyn.api.SE2VelocityCommand.Request.deserializeBinaryFromReader);
+      msg.setRequestInformation(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3942,6 +4037,51 @@ proto.bosdyn.api.SE2VelocityCommand.Feedback.prototype.serializeBinary = functio
  */
 proto.bosdyn.api.SE2VelocityCommand.Feedback.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getRequestInformation();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      proto.bosdyn.api.SE2VelocityCommand.Request.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * optional Request request_information = 1;
+ * @return {?proto.bosdyn.api.SE2VelocityCommand.Request}
+ */
+proto.bosdyn.api.SE2VelocityCommand.Feedback.prototype.getRequestInformation = function() {
+  return /** @type{?proto.bosdyn.api.SE2VelocityCommand.Request} */ (
+    jspb.Message.getWrapperField(this, proto.bosdyn.api.SE2VelocityCommand.Request, 1));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.SE2VelocityCommand.Request|undefined} value
+ * @return {!proto.bosdyn.api.SE2VelocityCommand.Feedback} returns this
+*/
+proto.bosdyn.api.SE2VelocityCommand.Feedback.prototype.setRequestInformation = function(value) {
+  return jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.SE2VelocityCommand.Feedback} returns this
+ */
+proto.bosdyn.api.SE2VelocityCommand.Feedback.prototype.clearRequestInformation = function() {
+  return this.setRequestInformation(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.SE2VelocityCommand.Feedback.prototype.hasRequestInformation = function() {
+  return jspb.Message.getField(this, 1) != null;
 };
 
 

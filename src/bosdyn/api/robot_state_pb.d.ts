@@ -378,6 +378,8 @@ export class SystemFault extends jspb.Message {
     addAttributes(value: string, index?: number): string;
     getSeverity(): SystemFault.Severity;
     setSeverity(value: SystemFault.Severity): SystemFault;
+    getDtc(): string;
+    setDtc(value: string): SystemFault;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): SystemFault.AsObject;
@@ -400,6 +402,7 @@ export namespace SystemFault {
         errorMessage: string,
         attributesList: Array<string>,
         severity: SystemFault.Severity,
+        dtc: string,
     }
 
     export enum Severity {
@@ -491,6 +494,11 @@ export class BatteryState extends jspb.Message {
     getTemperaturesList(): Array<number>;
     setTemperaturesList(value: Array<number>): BatteryState;
     addTemperatures(value: number, index?: number): number;
+
+    hasCommunicationsLossPercent(): boolean;
+    clearCommunicationsLossPercent(): void;
+    getCommunicationsLossPercent(): google_protobuf_wrappers_pb.DoubleValue | undefined;
+    setCommunicationsLossPercent(value?: google_protobuf_wrappers_pb.DoubleValue): BatteryState;
     getStatus(): BatteryState.Status;
     setStatus(value: BatteryState.Status): BatteryState;
 
@@ -513,6 +521,7 @@ export namespace BatteryState {
         current?: google_protobuf_wrappers_pb.DoubleValue.AsObject,
         voltage?: google_protobuf_wrappers_pb.DoubleValue.AsObject,
         temperaturesList: Array<number>,
+        communicationsLossPercent?: google_protobuf_wrappers_pb.DoubleValue.AsObject,
         status: BatteryState.Status,
     }
 
@@ -719,6 +728,7 @@ export namespace BehaviorFault {
     CAUSE_FALL = 1,
     CAUSE_HARDWARE = 2,
     CAUSE_LEASE_TIMEOUT = 3,
+    CAUSE_COMMAND_FAILURE = 4,
     }
 
     export enum Status {

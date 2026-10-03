@@ -5957,7 +5957,8 @@ proto.bosdyn.api.spot.UploadAnimatedMoveResponse.Status = {
   STATUS_UNKNOWN: 0,
   STATUS_OK: 1,
   STATUS_ANIMATION_VALIDATION_FAILED: 2,
-  STATUS_PING_RESPONSE: 3
+  STATUS_PING_RESPONSE: 3,
+  STATUS_REJECTED_DANCE_ACTIVE: 4
 };
 
 /**
@@ -6673,7 +6674,7 @@ proto.bosdyn.api.spot.StartRecordingStateRequest.toObject = function(includeInst
   var f, obj = {
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.RequestHeader.toObject(includeInstance, f),
     continueRecordingDuration: (f = msg.getContinueRecordingDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
-    recordingSessionId: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    recordingSessionId: jspb.Message.getFieldWithDefault(msg, 3, "0")
   };
 
   if (includeInstance) {
@@ -6721,7 +6722,7 @@ proto.bosdyn.api.spot.StartRecordingStateRequest.deserializeBinaryFromReader = f
       msg.setContinueRecordingDuration(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readUint64());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setRecordingSessionId(value);
       break;
     default:
@@ -6770,8 +6771,8 @@ proto.bosdyn.api.spot.StartRecordingStateRequest.serializeBinaryToWriter = funct
     );
   }
   f = message.getRecordingSessionId();
-  if (f !== 0) {
-    writer.writeUint64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       3,
       f
     );
@@ -6855,19 +6856,19 @@ proto.bosdyn.api.spot.StartRecordingStateRequest.prototype.hasContinueRecordingD
 
 /**
  * optional uint64 recording_session_id = 3;
- * @return {number}
+ * @return {string}
  */
 proto.bosdyn.api.spot.StartRecordingStateRequest.prototype.getRecordingSessionId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.bosdyn.api.spot.StartRecordingStateRequest} returns this
  */
 proto.bosdyn.api.spot.StartRecordingStateRequest.prototype.setRecordingSessionId = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3StringIntField(this, 3, value);
 };
 
 
@@ -6905,7 +6906,7 @@ proto.bosdyn.api.spot.StartRecordingStateResponse.toObject = function(includeIns
   var f, obj = {
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
     status: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    recordingSessionId: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    recordingSessionId: jspb.Message.getFieldWithDefault(msg, 3, "0")
   };
 
   if (includeInstance) {
@@ -6952,7 +6953,7 @@ proto.bosdyn.api.spot.StartRecordingStateResponse.deserializeBinaryFromReader = 
       msg.setStatus(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readUint64());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setRecordingSessionId(value);
       break;
     default:
@@ -7000,8 +7001,8 @@ proto.bosdyn.api.spot.StartRecordingStateResponse.serializeBinaryToWriter = func
     );
   }
   f = message.getRecordingSessionId();
-  if (f !== 0) {
-    writer.writeUint64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       3,
       f
     );
@@ -7076,19 +7077,19 @@ proto.bosdyn.api.spot.StartRecordingStateResponse.prototype.setStatus = function
 
 /**
  * optional uint64 recording_session_id = 3;
- * @return {number}
+ * @return {string}
  */
 proto.bosdyn.api.spot.StartRecordingStateResponse.prototype.getRecordingSessionId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.bosdyn.api.spot.StartRecordingStateResponse} returns this
  */
 proto.bosdyn.api.spot.StartRecordingStateResponse.prototype.setRecordingSessionId = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3StringIntField(this, 3, value);
 };
 
 
@@ -13647,6 +13648,9 @@ proto.bosdyn.api.spot.ChoreographyInfo.prototype.toObject = function(opt_include
  */
 proto.bosdyn.api.spot.ChoreographyInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
+    description: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    startPosition: (f = msg.getStartPosition()) && bosdyn_api_geometry_pb.SE2Pose.toObject(includeInstance, f),
+    color: (f = msg.getColor()) && proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.toObject(includeInstance, f),
     labelsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
   };
 
@@ -13684,6 +13688,20 @@ proto.bosdyn.api.spot.ChoreographyInfo.deserializeBinaryFromReader = function(ms
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDescription(value);
+      break;
+    case 2:
+      var value = new bosdyn_api_geometry_pb.SE2Pose;
+      reader.readMessage(value,bosdyn_api_geometry_pb.SE2Pose.deserializeBinaryFromReader);
+      msg.setStartPosition(value);
+      break;
+    case 3:
+      var value = new proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color;
+      reader.readMessage(value,proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.deserializeBinaryFromReader);
+      msg.setColor(value);
+      break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.addLabels(value);
@@ -13717,6 +13735,29 @@ proto.bosdyn.api.spot.ChoreographyInfo.prototype.serializeBinary = function() {
  */
 proto.bosdyn.api.spot.ChoreographyInfo.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getDescription();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getStartPosition();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      bosdyn_api_geometry_pb.SE2Pose.serializeBinaryToWriter
+    );
+  }
+  f = message.getColor();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color.serializeBinaryToWriter
+    );
+  }
   f = message.getLabelsList();
   if (f.length > 0) {
     writer.writeRepeatedString(
@@ -13724,6 +13765,98 @@ proto.bosdyn.api.spot.ChoreographyInfo.serializeBinaryToWriter = function(messag
       f
     );
   }
+};
+
+
+/**
+ * optional string description = 1;
+ * @return {string}
+ */
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.getDescription = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.bosdyn.api.spot.ChoreographyInfo} returns this
+ */
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.setDescription = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional bosdyn.api.SE2Pose start_position = 2;
+ * @return {?proto.bosdyn.api.SE2Pose}
+ */
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.getStartPosition = function() {
+  return /** @type{?proto.bosdyn.api.SE2Pose} */ (
+    jspb.Message.getWrapperField(this, bosdyn_api_geometry_pb.SE2Pose, 2));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.SE2Pose|undefined} value
+ * @return {!proto.bosdyn.api.spot.ChoreographyInfo} returns this
+*/
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.setStartPosition = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.spot.ChoreographyInfo} returns this
+ */
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.clearStartPosition = function() {
+  return this.setStartPosition(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.hasStartPosition = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional ChoreographerDisplayInfo.Color color = 3;
+ * @return {?proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color}
+ */
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.getColor = function() {
+  return /** @type{?proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color} */ (
+    jspb.Message.getWrapperField(this, proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color, 3));
+};
+
+
+/**
+ * @param {?proto.bosdyn.api.spot.ChoreographerDisplayInfo.Color|undefined} value
+ * @return {!proto.bosdyn.api.spot.ChoreographyInfo} returns this
+*/
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.setColor = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.spot.ChoreographyInfo} returns this
+ */
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.clearColor = function() {
+  return this.setColor(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.spot.ChoreographyInfo.prototype.hasColor = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -17901,7 +18034,8 @@ proto.bosdyn.api.spot.ChoreographyStatusResponse.toObject = function(includeInst
     sequenceSlices: jspb.Message.getFieldWithDefault(msg, 6, 0),
     sequenceSlicesPerMinute: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
     validityTime: (f = msg.getValidityTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    sequenceName: jspb.Message.getFieldWithDefault(msg, 9, "")
+    sequenceName: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    sequenceStartTime: (f = msg.getSequenceStartTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -17976,6 +18110,11 @@ proto.bosdyn.api.spot.ChoreographyStatusResponse.deserializeBinaryFromReader = f
     case 9:
       var value = /** @type {string} */ (reader.readString());
       msg.setSequenceName(value);
+      break;
+    case 10:
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
+      msg.setSequenceStartTime(value);
       break;
     default:
       reader.skipField();
@@ -18070,6 +18209,14 @@ proto.bosdyn.api.spot.ChoreographyStatusResponse.serializeBinaryToWriter = funct
     writer.writeString(
       9,
       f
+    );
+  }
+  f = message.getSequenceStartTime();
+  if (f != null) {
+    writer.writeMessage(
+      10,
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
 };
@@ -18308,6 +18455,43 @@ proto.bosdyn.api.spot.ChoreographyStatusResponse.prototype.getSequenceName = fun
  */
 proto.bosdyn.api.spot.ChoreographyStatusResponse.prototype.setSequenceName = function(value) {
   return jspb.Message.setProto3StringField(this, 9, value);
+};
+
+
+/**
+ * optional google.protobuf.Timestamp sequence_start_time = 10;
+ * @return {?proto.google.protobuf.Timestamp}
+ */
+proto.bosdyn.api.spot.ChoreographyStatusResponse.prototype.getSequenceStartTime = function() {
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 10));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.bosdyn.api.spot.ChoreographyStatusResponse} returns this
+*/
+proto.bosdyn.api.spot.ChoreographyStatusResponse.prototype.setSequenceStartTime = function(value) {
+  return jspb.Message.setWrapperField(this, 10, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.spot.ChoreographyStatusResponse} returns this
+ */
+proto.bosdyn.api.spot.ChoreographyStatusResponse.prototype.clearSequenceStartTime = function() {
+  return this.setSequenceStartTime(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.spot.ChoreographyStatusResponse.prototype.hasSequenceStartTime = function() {
+  return jspb.Message.getField(this, 10) != null;
 };
 
 

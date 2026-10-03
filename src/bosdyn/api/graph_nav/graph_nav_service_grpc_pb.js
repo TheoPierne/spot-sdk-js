@@ -297,6 +297,28 @@ function deserialize_bosdyn_api_graph_nav_UploadGraphStreamingRequest(buffer_arg
   return bosdyn_api_graph_nav_graph_nav_pb.UploadGraphStreamingRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_bosdyn_api_graph_nav_UploadSnapshotsRequest(arg) {
+  if (!(arg instanceof bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.graph_nav.UploadSnapshotsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_graph_nav_UploadSnapshotsRequest(buffer_arg) {
+  return bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_graph_nav_UploadSnapshotsResponse(arg) {
+  if (!(arg instanceof bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.graph_nav.UploadSnapshotsResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_graph_nav_UploadSnapshotsResponse(buffer_arg) {
+  return bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_bosdyn_api_graph_nav_UploadWaypointSnapshotRequest(arg) {
   if (!(arg instanceof bosdyn_api_graph_nav_graph_nav_pb.UploadWaypointSnapshotRequest)) {
     throw new Error('Expected argument of type bosdyn.api.graph_nav.UploadWaypointSnapshotRequest');
@@ -510,6 +532,18 @@ uploadEdgeSnapshot: {
     requestDeserialize: deserialize_bosdyn_api_graph_nav_UploadEdgeSnapshotRequest,
     responseSerialize: serialize_bosdyn_api_graph_nav_UploadEdgeSnapshotResponse,
     responseDeserialize: deserialize_bosdyn_api_graph_nav_UploadEdgeSnapshotResponse,
+  },
+  // Uploads multiple waypoint+edge snapshots.
+uploadSnapshots: {
+    path: '/bosdyn.api.graph_nav.GraphNavService/UploadSnapshots',
+    requestStream: true,
+    responseStream: false,
+    requestType: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsRequest,
+    responseType: bosdyn_api_graph_nav_graph_nav_pb.UploadSnapshotsResponse,
+    requestSerialize: serialize_bosdyn_api_graph_nav_UploadSnapshotsRequest,
+    requestDeserialize: deserialize_bosdyn_api_graph_nav_UploadSnapshotsRequest,
+    responseSerialize: serialize_bosdyn_api_graph_nav_UploadSnapshotsResponse,
+    responseDeserialize: deserialize_bosdyn_api_graph_nav_UploadSnapshotsResponse,
   },
   // Download waypoint data from the server. If the snapshot exists in disk cache, it will be
 // loaded.

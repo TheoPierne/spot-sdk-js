@@ -653,6 +653,8 @@ export namespace ArmJointMoveCommand {
         clearTrajectory(): void;
         getTrajectory(): ArmJointTrajectory | undefined;
         setTrajectory(value?: ArmJointTrajectory): Request;
+        getTrackingMode(): TrackingMode;
+        setTrackingMode(value: TrackingMode): Request;
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Request.AsObject;
@@ -667,6 +669,7 @@ export namespace ArmJointMoveCommand {
     export namespace Request {
         export type AsObject = {
             trajectory?: ArmJointTrajectory.AsObject,
+            trackingMode: TrackingMode,
         }
     }
 
@@ -1241,4 +1244,10 @@ export namespace ArmImpedanceCommand {
 
     }
 
+}
+
+export enum TrackingMode {
+    TRACKING_MODE_UNKNOWN = 0,
+    TRACKING_MODE_DEFAULT = 1,
+    TRACKING_MODE_SLOW_PRECISE = 2,
 }

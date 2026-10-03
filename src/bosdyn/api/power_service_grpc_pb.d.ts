@@ -13,6 +13,7 @@ interface IPowerServiceService extends grpc.ServiceDefinition<grpc.UntypedServic
     powerCommandFeedback: IPowerServiceService_IPowerCommandFeedback;
     fanPowerCommand: IPowerServiceService_IFanPowerCommand;
     fanPowerCommandFeedback: IPowerServiceService_IFanPowerCommandFeedback;
+    getFanInformation: IPowerServiceService_IGetFanInformation;
     resetSafetyStop: IPowerServiceService_IResetSafetyStop;
 }
 
@@ -52,6 +53,15 @@ interface IPowerServiceService_IFanPowerCommandFeedback extends grpc.MethodDefin
     responseSerialize: grpc.serialize<bosdyn_api_power_pb.FanPowerCommandFeedbackResponse>;
     responseDeserialize: grpc.deserialize<bosdyn_api_power_pb.FanPowerCommandFeedbackResponse>;
 }
+interface IPowerServiceService_IGetFanInformation extends grpc.MethodDefinition<bosdyn_api_power_pb.GetFanInformationRequest, bosdyn_api_power_pb.GetFanInformationResponse> {
+    path: "/bosdyn.api.PowerService/GetFanInformation";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<bosdyn_api_power_pb.GetFanInformationRequest>;
+    requestDeserialize: grpc.deserialize<bosdyn_api_power_pb.GetFanInformationRequest>;
+    responseSerialize: grpc.serialize<bosdyn_api_power_pb.GetFanInformationResponse>;
+    responseDeserialize: grpc.deserialize<bosdyn_api_power_pb.GetFanInformationResponse>;
+}
 interface IPowerServiceService_IResetSafetyStop extends grpc.MethodDefinition<bosdyn_api_power_pb.ResetSafetyStopRequest, bosdyn_api_power_pb.ResetSafetyStopResponse> {
     path: "/bosdyn.api.PowerService/ResetSafetyStop";
     requestStream: false;
@@ -69,6 +79,7 @@ export interface IPowerServiceServer extends grpc.UntypedServiceImplementation {
     powerCommandFeedback: grpc.handleUnaryCall<bosdyn_api_power_pb.PowerCommandFeedbackRequest, bosdyn_api_power_pb.PowerCommandFeedbackResponse>;
     fanPowerCommand: grpc.handleUnaryCall<bosdyn_api_power_pb.FanPowerCommandRequest, bosdyn_api_power_pb.FanPowerCommandResponse>;
     fanPowerCommandFeedback: grpc.handleUnaryCall<bosdyn_api_power_pb.FanPowerCommandFeedbackRequest, bosdyn_api_power_pb.FanPowerCommandFeedbackResponse>;
+    getFanInformation: grpc.handleUnaryCall<bosdyn_api_power_pb.GetFanInformationRequest, bosdyn_api_power_pb.GetFanInformationResponse>;
     resetSafetyStop: grpc.handleUnaryCall<bosdyn_api_power_pb.ResetSafetyStopRequest, bosdyn_api_power_pb.ResetSafetyStopResponse>;
 }
 
@@ -85,6 +96,9 @@ export interface IPowerServiceClient {
     fanPowerCommandFeedback(request: bosdyn_api_power_pb.FanPowerCommandFeedbackRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.FanPowerCommandFeedbackResponse) => void): grpc.ClientUnaryCall;
     fanPowerCommandFeedback(request: bosdyn_api_power_pb.FanPowerCommandFeedbackRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.FanPowerCommandFeedbackResponse) => void): grpc.ClientUnaryCall;
     fanPowerCommandFeedback(request: bosdyn_api_power_pb.FanPowerCommandFeedbackRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.FanPowerCommandFeedbackResponse) => void): grpc.ClientUnaryCall;
+    getFanInformation(request: bosdyn_api_power_pb.GetFanInformationRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.GetFanInformationResponse) => void): grpc.ClientUnaryCall;
+    getFanInformation(request: bosdyn_api_power_pb.GetFanInformationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.GetFanInformationResponse) => void): grpc.ClientUnaryCall;
+    getFanInformation(request: bosdyn_api_power_pb.GetFanInformationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.GetFanInformationResponse) => void): grpc.ClientUnaryCall;
     resetSafetyStop(request: bosdyn_api_power_pb.ResetSafetyStopRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.ResetSafetyStopResponse) => void): grpc.ClientUnaryCall;
     resetSafetyStop(request: bosdyn_api_power_pb.ResetSafetyStopRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.ResetSafetyStopResponse) => void): grpc.ClientUnaryCall;
     resetSafetyStop(request: bosdyn_api_power_pb.ResetSafetyStopRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.ResetSafetyStopResponse) => void): grpc.ClientUnaryCall;
@@ -104,6 +118,9 @@ export class PowerServiceClient extends grpc.Client implements IPowerServiceClie
     public fanPowerCommandFeedback(request: bosdyn_api_power_pb.FanPowerCommandFeedbackRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.FanPowerCommandFeedbackResponse) => void): grpc.ClientUnaryCall;
     public fanPowerCommandFeedback(request: bosdyn_api_power_pb.FanPowerCommandFeedbackRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.FanPowerCommandFeedbackResponse) => void): grpc.ClientUnaryCall;
     public fanPowerCommandFeedback(request: bosdyn_api_power_pb.FanPowerCommandFeedbackRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.FanPowerCommandFeedbackResponse) => void): grpc.ClientUnaryCall;
+    public getFanInformation(request: bosdyn_api_power_pb.GetFanInformationRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.GetFanInformationResponse) => void): grpc.ClientUnaryCall;
+    public getFanInformation(request: bosdyn_api_power_pb.GetFanInformationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.GetFanInformationResponse) => void): grpc.ClientUnaryCall;
+    public getFanInformation(request: bosdyn_api_power_pb.GetFanInformationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.GetFanInformationResponse) => void): grpc.ClientUnaryCall;
     public resetSafetyStop(request: bosdyn_api_power_pb.ResetSafetyStopRequest, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.ResetSafetyStopResponse) => void): grpc.ClientUnaryCall;
     public resetSafetyStop(request: bosdyn_api_power_pb.ResetSafetyStopRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.ResetSafetyStopResponse) => void): grpc.ClientUnaryCall;
     public resetSafetyStop(request: bosdyn_api_power_pb.ResetSafetyStopRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: bosdyn_api_power_pb.ResetSafetyStopResponse) => void): grpc.ClientUnaryCall;

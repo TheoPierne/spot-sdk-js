@@ -151,6 +151,8 @@ export class SignalSpec extends jspb.Message {
     getAlertsList(): Array<AlertConditionSpec>;
     setAlertsList(value: Array<AlertConditionSpec>): SignalSpec;
     addAlerts(value?: AlertConditionSpec, index?: number): AlertConditionSpec;
+    getDataType(): SignalSpec.DataType;
+    setDataType(value: SignalSpec.DataType): SignalSpec;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): SignalSpec.AsObject;
@@ -167,7 +169,17 @@ export namespace SignalSpec {
         info?: SignalDisplayInfo.AsObject,
         sensor?: SensorOutputSpec.AsObject,
         alertsList: Array<AlertConditionSpec.AsObject>,
+        dataType: SignalSpec.DataType,
     }
+
+    export enum DataType {
+    DATA_TYPE_UNKNOWN = 0,
+    DATA_TYPE_DOUBLE = 1,
+    DATA_TYPE_INT = 2,
+    DATA_TYPE_STRING = 3,
+    DATA_TYPE_BOOL = 4,
+    }
+
 }
 
 export class SignalData extends jspb.Message { 

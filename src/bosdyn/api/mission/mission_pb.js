@@ -2612,6 +2612,7 @@ proto.bosdyn.api.mission.Question.toObject = function(includeInstance, msg) {
     bosdyn_api_mission_nodes_pb.Prompt.Option.toObject, includeInstance),
     customParams: (f = msg.getCustomParams()) && bosdyn_api_service_customization_pb.DictParam.Spec.toObject(includeInstance, f),
     forAutonomousProcessing: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+    autonomyKey: jspb.Message.getFieldWithDefault(msg, 8, ""),
     severity: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
@@ -2674,6 +2675,10 @@ proto.bosdyn.api.mission.Question.deserializeBinaryFromReader = function(msg, re
     case 5:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setForAutonomousProcessing(value);
+      break;
+    case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setAutonomyKey(value);
       break;
     case 6:
       var value = /** @type {!proto.bosdyn.api.AlertData.SeverityLevel} */ (reader.readEnum());
@@ -2749,6 +2754,13 @@ proto.bosdyn.api.mission.Question.serializeBinaryToWriter = function(message, wr
   if (f) {
     writer.writeBool(
       5,
+      f
+    );
+  }
+  f = message.getAutonomyKey();
+  if (f.length > 0) {
+    writer.writeString(
+      8,
       f
     );
   }
@@ -2906,6 +2918,24 @@ proto.bosdyn.api.mission.Question.prototype.getForAutonomousProcessing = functio
  */
 proto.bosdyn.api.mission.Question.prototype.setForAutonomousProcessing = function(value) {
   return jspb.Message.setProto3BooleanField(this, 5, value);
+};
+
+
+/**
+ * optional string autonomy_key = 8;
+ * @return {string}
+ */
+proto.bosdyn.api.mission.Question.prototype.getAutonomyKey = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.bosdyn.api.mission.Question} returns this
+ */
+proto.bosdyn.api.mission.Question.prototype.setAutonomyKey = function(value) {
+  return jspb.Message.setProto3StringField(this, 8, value);
 };
 
 

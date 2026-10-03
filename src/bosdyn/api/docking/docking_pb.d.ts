@@ -385,7 +385,6 @@ export namespace GetDockingStateResponse {
 
 export enum DockType {
     DOCK_TYPE_UNKNOWN = 0,
-    DOCK_TYPE_CONTACT_PROTOTYPE = 2,
     DOCK_TYPE_SPOT_DOCK = 3,
     DOCK_TYPE_SPOT_DOGHOUSE = 4,
 }

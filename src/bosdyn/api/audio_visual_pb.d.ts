@@ -1195,6 +1195,8 @@ export class AudioVisualSystemParams extends jspb.Message {
     setMaxBrightness(value: number): AudioVisualSystemParams;
     getBuzzerMaxVolume(): number;
     setBuzzerMaxVolume(value: number): AudioVisualSystemParams;
+    getSpeakerMaxVolume(): number;
+    setSpeakerMaxVolume(value: number): AudioVisualSystemParams;
 
     hasNormalColorAssociation(): boolean;
     clearNormalColorAssociation(): void;
@@ -1210,6 +1212,10 @@ export class AudioVisualSystemParams extends jspb.Message {
     clearDangerColorAssociation(): void;
     getDangerColorAssociation(): PresetColorAssociation | undefined;
     setDangerColorAssociation(value?: PresetColorAssociation): AudioVisualSystemParams;
+    getSpeakerDisableAgc(): boolean;
+    setSpeakerDisableAgc(value: boolean): AudioVisualSystemParams;
+    getSpeakerDisableNr(): boolean;
+    setSpeakerDisableNr(value: boolean): AudioVisualSystemParams;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): AudioVisualSystemParams.AsObject;
@@ -1226,9 +1232,12 @@ export namespace AudioVisualSystemParams {
         enabled: boolean,
         maxBrightness: number,
         buzzerMaxVolume: number,
+        speakerMaxVolume: number,
         normalColorAssociation?: PresetColorAssociation.AsObject,
         warningColorAssociation?: PresetColorAssociation.AsObject,
         dangerColorAssociation?: PresetColorAssociation.AsObject,
+        speakerDisableAgc: boolean,
+        speakerDisableNr: boolean,
     }
 }
 
@@ -1306,6 +1315,11 @@ export class SetSystemParamsRequest extends jspb.Message {
     getBuzzerMaxVolume(): google_protobuf_wrappers_pb.FloatValue | undefined;
     setBuzzerMaxVolume(value?: google_protobuf_wrappers_pb.FloatValue): SetSystemParamsRequest;
 
+    hasSpeakerMaxVolume(): boolean;
+    clearSpeakerMaxVolume(): void;
+    getSpeakerMaxVolume(): google_protobuf_wrappers_pb.FloatValue | undefined;
+    setSpeakerMaxVolume(value?: google_protobuf_wrappers_pb.FloatValue): SetSystemParamsRequest;
+
     hasNormalColorAssociation(): boolean;
     clearNormalColorAssociation(): void;
     getNormalColorAssociation(): PresetColorAssociation | undefined;
@@ -1320,6 +1334,16 @@ export class SetSystemParamsRequest extends jspb.Message {
     clearDangerColorAssociation(): void;
     getDangerColorAssociation(): PresetColorAssociation | undefined;
     setDangerColorAssociation(value?: PresetColorAssociation): SetSystemParamsRequest;
+
+    hasSpeakerDisableAgc(): boolean;
+    clearSpeakerDisableAgc(): void;
+    getSpeakerDisableAgc(): google_protobuf_wrappers_pb.BoolValue | undefined;
+    setSpeakerDisableAgc(value?: google_protobuf_wrappers_pb.BoolValue): SetSystemParamsRequest;
+
+    hasSpeakerDisableNr(): boolean;
+    clearSpeakerDisableNr(): void;
+    getSpeakerDisableNr(): google_protobuf_wrappers_pb.BoolValue | undefined;
+    setSpeakerDisableNr(value?: google_protobuf_wrappers_pb.BoolValue): SetSystemParamsRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): SetSystemParamsRequest.AsObject;
@@ -1337,9 +1361,12 @@ export namespace SetSystemParamsRequest {
         enabled?: google_protobuf_wrappers_pb.BoolValue.AsObject,
         maxBrightness?: google_protobuf_wrappers_pb.FloatValue.AsObject,
         buzzerMaxVolume?: google_protobuf_wrappers_pb.FloatValue.AsObject,
+        speakerMaxVolume?: google_protobuf_wrappers_pb.FloatValue.AsObject,
         normalColorAssociation?: PresetColorAssociation.AsObject,
         warningColorAssociation?: PresetColorAssociation.AsObject,
         dangerColorAssociation?: PresetColorAssociation.AsObject,
+        speakerDisableAgc?: google_protobuf_wrappers_pb.BoolValue.AsObject,
+        speakerDisableNr?: google_protobuf_wrappers_pb.BoolValue.AsObject,
     }
 }
 

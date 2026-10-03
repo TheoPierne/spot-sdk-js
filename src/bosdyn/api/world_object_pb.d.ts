@@ -12,6 +12,7 @@ import * as bosdyn_api_image_pb from "../../bosdyn/api/image_pb";
 import * as bosdyn_api_sparse_features_pb from "../../bosdyn/api/sparse_features_pb";
 import * as bosdyn_api_stairs_pb from "../../bosdyn/api/stairs_pb";
 import * as bosdyn_api_gps_registration_pb from "../../bosdyn/api/gps/registration_pb";
+import * as bosdyn_api_fiducial_purpose_pb from "../../bosdyn/api/fiducial_purpose_pb";
 import * as google_protobuf_duration_pb from "google-protobuf/google/protobuf/duration_pb";
 import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 import * as google_protobuf_any_pb from "google-protobuf/google/protobuf/any_pb";
@@ -447,6 +448,12 @@ export class AprilTagProperties extends jspb.Message {
     setDetectionCovariance(value?: bosdyn_api_geometry_pb.SE3Covariance): AprilTagProperties;
     getDetectionCovarianceReferenceFrame(): string;
     setDetectionCovarianceReferenceFrame(value: string): AprilTagProperties;
+    getPurpose(): bosdyn_api_fiducial_purpose_pb.FiducialPurpose;
+    setPurpose(value: bosdyn_api_fiducial_purpose_pb.FiducialPurpose): AprilTagProperties;
+    getHammingDistance(): number;
+    setHammingDistance(value: number): AprilTagProperties;
+    getNumObservations(): number;
+    setNumObservations(value: number): AprilTagProperties;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): AprilTagProperties.AsObject;
@@ -469,6 +476,9 @@ export namespace AprilTagProperties {
         frameNameCamera: string,
         detectionCovariance?: bosdyn_api_geometry_pb.SE3Covariance.AsObject,
         detectionCovarianceReferenceFrame: string,
+        purpose: bosdyn_api_fiducial_purpose_pb.FiducialPurpose,
+        hammingDistance: number,
+        numObservations: number,
     }
 
     export enum AprilTagPoseStatus {

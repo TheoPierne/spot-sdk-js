@@ -5,6 +5,7 @@
 /* eslint-disable */
 
 import * as jspb from "google-protobuf";
+import * as bosdyn_api_data_buffer_pb from "../../../bosdyn/api/data_buffer_pb";
 import * as bosdyn_api_header_pb from "../../../bosdyn/api/header_pb";
 import * as google_protobuf_duration_pb from "google-protobuf/google/protobuf/duration_pb";
 import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
@@ -16,6 +17,23 @@ export class LogStatus extends jspb.Message {
     setStatus(value: LogStatus.Status): LogStatus;
     getType(): LogStatus.Type;
     setType(value: LogStatus.Type): LogStatus;
+
+    hasStartTime(): boolean;
+    clearStartTime(): void;
+    getStartTime(): google_protobuf_timestamp_pb.Timestamp | undefined;
+    setStartTime(value?: google_protobuf_timestamp_pb.Timestamp): LogStatus;
+
+    hasEndTime(): boolean;
+    clearEndTime(): void;
+    getEndTime(): google_protobuf_timestamp_pb.Timestamp | undefined;
+    setEndTime(value?: google_protobuf_timestamp_pb.Timestamp): LogStatus;
+
+    hasRunTime(): boolean;
+    clearRunTime(): void;
+    getRunTime(): google_protobuf_duration_pb.Duration | undefined;
+    setRunTime(value?: google_protobuf_duration_pb.Duration): LogStatus;
+    getEventKey(): string;
+    setEventKey(value: string): LogStatus;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): LogStatus.AsObject;
@@ -32,6 +50,10 @@ export namespace LogStatus {
         id: string,
         status: LogStatus.Status,
         type: LogStatus.Type,
+        startTime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
+        endTime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
+        runTime?: google_protobuf_duration_pb.Duration.AsObject,
+        eventKey: string,
     }
 
     export enum Status {
@@ -39,6 +61,7 @@ export namespace LogStatus {
     STATUS_RECEIVED = 1,
     STATUS_IN_PROGRESS = 2,
     STATUS_SYNCING = 3,
+    STATUS_STOPPING = 4,
     STATUS_DONE = 100,
     STATUS_FAILED = 101,
     STATUS_TERMINATED = 102,
@@ -48,6 +71,9 @@ export namespace LogStatus {
     TYPE_UNKNOWN = 0,
     TYPE_EXPERIMENT = 1,
     TYPE_RETRO = 2,
+    TYPE_EVENT = 3,
+    TYPE_DATA = 4,
+    TYPE_CONCURRENT = 5,
     }
 
 }
@@ -177,6 +203,94 @@ export namespace GetActiveLogStatusesResponse {
 
 }
 
+export class StartConcurrentLogRequest extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.RequestHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.RequestHeader): StartConcurrentLogRequest;
+
+    hasKeepAlive(): boolean;
+    clearKeepAlive(): void;
+    getKeepAlive(): google_protobuf_duration_pb.Duration | undefined;
+    setKeepAlive(value?: google_protobuf_duration_pb.Duration): StartConcurrentLogRequest;
+
+    hasPastTextlogDuration(): boolean;
+    clearPastTextlogDuration(): void;
+    getPastTextlogDuration(): google_protobuf_duration_pb.Duration | undefined;
+    setPastTextlogDuration(value?: google_protobuf_duration_pb.Duration): StartConcurrentLogRequest;
+
+    hasEvent(): boolean;
+    clearEvent(): void;
+    getEvent(): bosdyn_api_data_buffer_pb.Event | undefined;
+    setEvent(value?: bosdyn_api_data_buffer_pb.Event): StartConcurrentLogRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): StartConcurrentLogRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: StartConcurrentLogRequest): StartConcurrentLogRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: StartConcurrentLogRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): StartConcurrentLogRequest;
+    static deserializeBinaryFromReader(message: StartConcurrentLogRequest, reader: jspb.BinaryReader): StartConcurrentLogRequest;
+}
+
+export namespace StartConcurrentLogRequest {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.RequestHeader.AsObject,
+        keepAlive?: google_protobuf_duration_pb.Duration.AsObject,
+        pastTextlogDuration?: google_protobuf_duration_pb.Duration.AsObject,
+        event?: bosdyn_api_data_buffer_pb.Event.AsObject,
+    }
+}
+
+export class StartConcurrentLogResponse extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.ResponseHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.ResponseHeader): StartConcurrentLogResponse;
+    getStatus(): StartConcurrentLogResponse.Status;
+    setStatus(value: StartConcurrentLogResponse.Status): StartConcurrentLogResponse;
+
+    hasLogStatus(): boolean;
+    clearLogStatus(): void;
+    getLogStatus(): LogStatus | undefined;
+    setLogStatus(value?: LogStatus): StartConcurrentLogResponse;
+
+    hasEndTime(): boolean;
+    clearEndTime(): void;
+    getEndTime(): google_protobuf_timestamp_pb.Timestamp | undefined;
+    setEndTime(value?: google_protobuf_timestamp_pb.Timestamp): StartConcurrentLogResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): StartConcurrentLogResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: StartConcurrentLogResponse): StartConcurrentLogResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: StartConcurrentLogResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): StartConcurrentLogResponse;
+    static deserializeBinaryFromReader(message: StartConcurrentLogResponse, reader: jspb.BinaryReader): StartConcurrentLogResponse;
+}
+
+export namespace StartConcurrentLogResponse {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.ResponseHeader.AsObject,
+        status: StartConcurrentLogResponse.Status,
+        logStatus?: LogStatus.AsObject,
+        endTime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
+    }
+
+    export enum Status {
+    STATUS_UNKNOWN = 0,
+    STATUS_OK = 1,
+    STATUS_EXPERIMENT_LOG_RUNNING = 2,
+    STATUS_CONCURRENCY_LIMIT_REACHED = 3,
+    STATUS_NO_DATA_FOR_EVENT = 4,
+    }
+
+}
+
 export class StartRetroLogRequest extends jspb.Message { 
 
     hasHeader(): boolean;
@@ -264,6 +378,11 @@ export class StartExperimentLogRequest extends jspb.Message {
     getKeepAlive(): google_protobuf_duration_pb.Duration | undefined;
     setKeepAlive(value?: google_protobuf_duration_pb.Duration): StartExperimentLogRequest;
 
+    hasPastTextlogDuration(): boolean;
+    clearPastTextlogDuration(): void;
+    getPastTextlogDuration(): google_protobuf_duration_pb.Duration | undefined;
+    setPastTextlogDuration(value?: google_protobuf_duration_pb.Duration): StartExperimentLogRequest;
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): StartExperimentLogRequest.AsObject;
     static toObject(includeInstance: boolean, msg: StartExperimentLogRequest): StartExperimentLogRequest.AsObject;
@@ -278,6 +397,7 @@ export namespace StartExperimentLogRequest {
     export type AsObject = {
         header?: bosdyn_api_header_pb.RequestHeader.AsObject,
         keepAlive?: google_protobuf_duration_pb.Duration.AsObject,
+        pastTextlogDuration?: google_protobuf_duration_pb.Duration.AsObject,
     }
 }
 

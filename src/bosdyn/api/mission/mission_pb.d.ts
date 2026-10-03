@@ -310,6 +310,8 @@ export class Question extends jspb.Message {
     setCustomParams(value?: bosdyn_api_service_customization_pb.DictParam.Spec): Question;
     getForAutonomousProcessing(): boolean;
     setForAutonomousProcessing(value: boolean): Question;
+    getAutonomyKey(): string;
+    setAutonomyKey(value: string): Question;
     getSeverity(): bosdyn_api_alerts_pb.AlertData.SeverityLevel;
     setSeverity(value: bosdyn_api_alerts_pb.AlertData.SeverityLevel): Question;
 
@@ -331,6 +333,7 @@ export namespace Question {
         optionsList: Array<bosdyn_api_mission_nodes_pb.Prompt.Option.AsObject>,
         customParams?: bosdyn_api_service_customization_pb.DictParam.Spec.AsObject,
         forAutonomousProcessing: boolean,
+        autonomyKey: string,
         severity: bosdyn_api_alerts_pb.AlertData.SeverityLevel,
     }
 }

@@ -25,6 +25,8 @@ var google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrapp
 goog.object.extend(proto, google_protobuf_wrappers_pb);
 var bosdyn_api_header_pb = require('../../../bosdyn/api/header_pb.js');
 goog.object.extend(proto, bosdyn_api_header_pb);
+var bosdyn_api_image_geometry_pb = require('../../../bosdyn/api/image_geometry_pb.js');
+goog.object.extend(proto, bosdyn_api_image_geometry_pb);
 goog.exportSymbol('proto.bosdyn.api.spot_cam.GetPtzFocusStateRequest', null, global);
 goog.exportSymbol('proto.bosdyn.api.spot_cam.GetPtzFocusStateResponse', null, global);
 goog.exportSymbol('proto.bosdyn.api.spot_cam.GetPtzPositionRequest', null, global);

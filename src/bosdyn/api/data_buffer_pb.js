@@ -2889,7 +2889,7 @@ proto.bosdyn.api.SignalSchemaId.prototype.toObject = function(opt_includeInstanc
  */
 proto.bosdyn.api.SignalSchemaId.toObject = function(includeInstance, msg) {
   var f, obj = {
-    schemaId: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    schemaId: jspb.Message.getFieldWithDefault(msg, 1, "0"),
     schema: (f = msg.getSchema()) && proto.bosdyn.api.SignalSchema.toObject(includeInstance, f)
   };
 
@@ -2928,7 +2928,7 @@ proto.bosdyn.api.SignalSchemaId.deserializeBinaryFromReader = function(msg, read
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readUint64());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setSchemaId(value);
       break;
     case 2:
@@ -2966,8 +2966,8 @@ proto.bosdyn.api.SignalSchemaId.prototype.serializeBinary = function() {
 proto.bosdyn.api.SignalSchemaId.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getSchemaId();
-  if (f !== 0) {
-    writer.writeUint64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       1,
       f
     );
@@ -2985,19 +2985,19 @@ proto.bosdyn.api.SignalSchemaId.serializeBinaryToWriter = function(message, writ
 
 /**
  * optional uint64 schema_id = 1;
- * @return {number}
+ * @return {string}
  */
 proto.bosdyn.api.SignalSchemaId.prototype.getSchemaId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.bosdyn.api.SignalSchemaId} returns this
  */
 proto.bosdyn.api.SignalSchemaId.prototype.setSchemaId = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3StringIntField(this, 1, value);
 };
 
 
@@ -3073,7 +3073,7 @@ proto.bosdyn.api.SignalTick.toObject = function(includeInstance, msg) {
     sequenceId: jspb.Message.getFieldWithDefault(msg, 1, 0),
     timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     source: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    schemaId: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    schemaId: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     encoding: jspb.Message.getFieldWithDefault(msg, 5, 0),
     data: msg.getData_asB64()
   };
@@ -3126,7 +3126,7 @@ proto.bosdyn.api.SignalTick.deserializeBinaryFromReader = function(msg, reader) 
       msg.setSource(value);
       break;
     case 4:
-      var value = /** @type {number} */ (reader.readUint64());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setSchemaId(value);
       break;
     case 5:
@@ -3189,8 +3189,8 @@ proto.bosdyn.api.SignalTick.serializeBinaryToWriter = function(message, writer) 
     );
   }
   f = message.getSchemaId();
-  if (f !== 0) {
-    writer.writeUint64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       4,
       f
     );
@@ -3295,19 +3295,19 @@ proto.bosdyn.api.SignalTick.prototype.setSource = function(value) {
 
 /**
  * optional uint64 schema_id = 4;
- * @return {number}
+ * @return {string}
  */
 proto.bosdyn.api.SignalTick.prototype.getSchemaId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.bosdyn.api.SignalTick} returns this
  */
 proto.bosdyn.api.SignalTick.prototype.setSchemaId = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3StringIntField(this, 4, value);
 };
 
 
@@ -6120,7 +6120,7 @@ proto.bosdyn.api.RegisterSignalSchemaResponse.prototype.toObject = function(opt_
 proto.bosdyn.api.RegisterSignalSchemaResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     header: (f = msg.getHeader()) && bosdyn_api_header_pb.ResponseHeader.toObject(includeInstance, f),
-    schemaId: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    schemaId: jspb.Message.getFieldWithDefault(msg, 2, "0")
   };
 
   if (includeInstance) {
@@ -6163,7 +6163,7 @@ proto.bosdyn.api.RegisterSignalSchemaResponse.deserializeBinaryFromReader = func
       msg.setHeader(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readUint64());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setSchemaId(value);
       break;
     default:
@@ -6204,8 +6204,8 @@ proto.bosdyn.api.RegisterSignalSchemaResponse.serializeBinaryToWriter = function
     );
   }
   f = message.getSchemaId();
-  if (f !== 0) {
-    writer.writeUint64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       2,
       f
     );
@@ -6252,19 +6252,19 @@ proto.bosdyn.api.RegisterSignalSchemaResponse.prototype.hasHeader = function() {
 
 /**
  * optional uint64 schema_id = 2;
- * @return {number}
+ * @return {string}
  */
 proto.bosdyn.api.RegisterSignalSchemaResponse.prototype.getSchemaId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.bosdyn.api.RegisterSignalSchemaResponse} returns this
  */
 proto.bosdyn.api.RegisterSignalSchemaResponse.prototype.setSchemaId = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3StringIntField(this, 2, value);
 };
 
 

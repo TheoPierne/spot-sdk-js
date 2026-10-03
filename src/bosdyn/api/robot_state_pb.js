@@ -3378,7 +3378,8 @@ proto.bosdyn.api.SystemFault.toObject = function(includeInstance, msg) {
     uuid: jspb.Message.getFieldWithDefault(msg, 9, ""),
     errorMessage: jspb.Message.getFieldWithDefault(msg, 5, ""),
     attributesList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
-    severity: jspb.Message.getFieldWithDefault(msg, 7, 0)
+    severity: jspb.Message.getFieldWithDefault(msg, 7, 0),
+    dtc: jspb.Message.getFieldWithDefault(msg, 15, "")
   };
 
   if (includeInstance) {
@@ -3452,6 +3453,10 @@ proto.bosdyn.api.SystemFault.deserializeBinaryFromReader = function(msg, reader)
     case 7:
       var value = /** @type {!proto.bosdyn.api.SystemFault.Severity} */ (reader.readEnum());
       msg.setSeverity(value);
+      break;
+    case 15:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDtc(value);
       break;
     default:
       reader.skipField();
@@ -3544,6 +3549,13 @@ proto.bosdyn.api.SystemFault.serializeBinaryToWriter = function(message, writer)
   if (f !== 0.0) {
     writer.writeEnum(
       7,
+      f
+    );
+  }
+  f = message.getDtc();
+  if (f.length > 0) {
+    writer.writeString(
+      15,
       f
     );
   }
@@ -3776,6 +3788,24 @@ proto.bosdyn.api.SystemFault.prototype.getSeverity = function() {
  */
 proto.bosdyn.api.SystemFault.prototype.setSeverity = function(value) {
   return jspb.Message.setProto3EnumField(this, 7, value);
+};
+
+
+/**
+ * optional string dtc = 15;
+ * @return {string}
+ */
+proto.bosdyn.api.SystemFault.prototype.getDtc = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 15, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.bosdyn.api.SystemFault} returns this
+ */
+proto.bosdyn.api.SystemFault.prototype.setDtc = function(value) {
+  return jspb.Message.setProto3StringField(this, 15, value);
 };
 
 
@@ -4114,6 +4144,7 @@ proto.bosdyn.api.BatteryState.toObject = function(includeInstance, msg) {
     current: (f = msg.getCurrent()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     voltage: (f = msg.getVoltage()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     temperaturesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 7)) == null ? undefined : f,
+    communicationsLossPercent: (f = msg.getCommunicationsLossPercent()) && google_protobuf_wrappers_pb.DoubleValue.toObject(includeInstance, f),
     status: jspb.Message.getFieldWithDefault(msg, 8, 0)
   };
 
@@ -4185,6 +4216,11 @@ proto.bosdyn.api.BatteryState.deserializeBinaryFromReader = function(msg, reader
       for (var i = 0; i < values.length; i++) {
         msg.addTemperatures(values[i]);
       }
+      break;
+    case 9:
+      var value = new google_protobuf_wrappers_pb.DoubleValue;
+      reader.readMessage(value,google_protobuf_wrappers_pb.DoubleValue.deserializeBinaryFromReader);
+      msg.setCommunicationsLossPercent(value);
       break;
     case 8:
       var value = /** @type {!proto.bosdyn.api.BatteryState.Status} */ (reader.readEnum());
@@ -4271,6 +4307,14 @@ proto.bosdyn.api.BatteryState.serializeBinaryToWriter = function(message, writer
     writer.writePackedDouble(
       7,
       f
+    );
+  }
+  f = message.getCommunicationsLossPercent();
+  if (f != null) {
+    writer.writeMessage(
+      9,
+      f,
+      google_protobuf_wrappers_pb.DoubleValue.serializeBinaryToWriter
     );
   }
   f = message.getStatus();
@@ -4531,6 +4575,43 @@ proto.bosdyn.api.BatteryState.prototype.addTemperatures = function(value, opt_in
  */
 proto.bosdyn.api.BatteryState.prototype.clearTemperaturesList = function() {
   return this.setTemperaturesList([]);
+};
+
+
+/**
+ * optional google.protobuf.DoubleValue communications_loss_percent = 9;
+ * @return {?proto.google.protobuf.DoubleValue}
+ */
+proto.bosdyn.api.BatteryState.prototype.getCommunicationsLossPercent = function() {
+  return /** @type{?proto.google.protobuf.DoubleValue} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_wrappers_pb.DoubleValue, 9));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.DoubleValue|undefined} value
+ * @return {!proto.bosdyn.api.BatteryState} returns this
+*/
+proto.bosdyn.api.BatteryState.prototype.setCommunicationsLossPercent = function(value) {
+  return jspb.Message.setWrapperField(this, 9, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.BatteryState} returns this
+ */
+proto.bosdyn.api.BatteryState.prototype.clearCommunicationsLossPercent = function() {
+  return this.setCommunicationsLossPercent(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.BatteryState.prototype.hasCommunicationsLossPercent = function() {
+  return jspb.Message.getField(this, 9) != null;
 };
 
 
@@ -5887,7 +5968,8 @@ proto.bosdyn.api.BehaviorFault.Cause = {
   CAUSE_UNKNOWN: 0,
   CAUSE_FALL: 1,
   CAUSE_HARDWARE: 2,
-  CAUSE_LEASE_TIMEOUT: 3
+  CAUSE_LEASE_TIMEOUT: 3,
+  CAUSE_COMMAND_FAILURE: 4
 };
 
 /**

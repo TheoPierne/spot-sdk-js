@@ -269,6 +269,8 @@ export namespace SetLocalizationResponse {
 }
 
 export class RouteGenParams extends jspb.Message { 
+    getBacktrackToStartWaypoint(): boolean;
+    setBacktrackToStartWaypoint(value: boolean): RouteGenParams;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): RouteGenParams.AsObject;
@@ -282,6 +284,7 @@ export class RouteGenParams extends jspb.Message {
 
 export namespace RouteGenParams {
     export type AsObject = {
+        backtrackToStartWaypoint: boolean,
     }
 }
 
@@ -1010,6 +1013,8 @@ export class NavigationFeedbackResponse extends jspb.Message {
 
     getActiveRegionInformationMap(): jspb.Map<string, NavigationFeedbackResponse.ActiveRegionInformation>;
     clearActiveRegionInformationMap(): void;
+    getGoalStatus(): NavigationFeedbackResponse.GoalStatus;
+    setGoalStatus(value: NavigationFeedbackResponse.GoalStatus): NavigationFeedbackResponse;
     getRouteFollowingStatus(): NavigationFeedbackResponse.RouteFollowingStatus;
     setRouteFollowingStatus(value: NavigationFeedbackResponse.RouteFollowingStatus): NavigationFeedbackResponse;
     getBlockageStatus(): NavigationFeedbackResponse.BlockageStatus;
@@ -1043,6 +1048,7 @@ export namespace NavigationFeedbackResponse {
         pathFollowingMode: bosdyn_api_graph_nav_map_pb.Edge.Annotations.PathFollowingMode,
 
         activeRegionInformationMap: Array<[string, NavigationFeedbackResponse.ActiveRegionInformation.AsObject]>,
+        goalStatus: NavigationFeedbackResponse.GoalStatus,
         routeFollowingStatus: NavigationFeedbackResponse.RouteFollowingStatus,
         blockageStatus: NavigationFeedbackResponse.BlockageStatus,
         stuckReason: NavigationFeedbackResponse.StuckReason,
@@ -1099,6 +1105,13 @@ export namespace NavigationFeedbackResponse {
     STATUS_NOT_LOCALIZED_TO_ROUTE = 13,
     STATUS_LEASE_ERROR = 14,
     STATUS_AREA_CALLBACK_ERROR = 15,
+    }
+
+    export enum GoalStatus {
+    GOAL_STATUS_UNKNOWN = 0,
+    GOAL_STATUS_NOT_REACHED = 1,
+    GOAL_STATUS_IN_GOAL_AREA = 2,
+    GOAL_STATUS_STANDING_AT_GOAL = 3,
     }
 
     export enum RouteFollowingStatus {
@@ -1901,6 +1914,121 @@ export namespace UploadEdgeSnapshotResponse {
         leaseUseResult?: bosdyn_api_lease_pb.LeaseUseResult.AsObject,
         mapStats?: bosdyn_api_graph_nav_map_pb.MapStats.AsObject,
     }
+}
+
+export class UploadSnapshotsRequest extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.RequestHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.RequestHeader): UploadSnapshotsRequest;
+
+    hasChunk(): boolean;
+    clearChunk(): void;
+    getChunk(): bosdyn_api_data_chunk_pb.DataChunk | undefined;
+    setChunk(value?: bosdyn_api_data_chunk_pb.DataChunk): UploadSnapshotsRequest;
+
+    hasLease(): boolean;
+    clearLease(): void;
+    getLease(): bosdyn_api_lease_pb.Lease | undefined;
+    setLease(value?: bosdyn_api_lease_pb.Lease): UploadSnapshotsRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UploadSnapshotsRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UploadSnapshotsRequest): UploadSnapshotsRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UploadSnapshotsRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UploadSnapshotsRequest;
+    static deserializeBinaryFromReader(message: UploadSnapshotsRequest, reader: jspb.BinaryReader): UploadSnapshotsRequest;
+}
+
+export namespace UploadSnapshotsRequest {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.RequestHeader.AsObject,
+        chunk?: bosdyn_api_data_chunk_pb.DataChunk.AsObject,
+        lease?: bosdyn_api_lease_pb.Lease.AsObject,
+    }
+
+
+    export class Snapshots extends jspb.Message { 
+        clearWaypointSnapshotsList(): void;
+        getWaypointSnapshotsList(): Array<bosdyn_api_graph_nav_map_pb.WaypointSnapshot>;
+        setWaypointSnapshotsList(value: Array<bosdyn_api_graph_nav_map_pb.WaypointSnapshot>): Snapshots;
+        addWaypointSnapshots(value?: bosdyn_api_graph_nav_map_pb.WaypointSnapshot, index?: number): bosdyn_api_graph_nav_map_pb.WaypointSnapshot;
+        clearEdgeSnapshotsList(): void;
+        getEdgeSnapshotsList(): Array<bosdyn_api_graph_nav_map_pb.EdgeSnapshot>;
+        setEdgeSnapshotsList(value: Array<bosdyn_api_graph_nav_map_pb.EdgeSnapshot>): Snapshots;
+        addEdgeSnapshots(value?: bosdyn_api_graph_nav_map_pb.EdgeSnapshot, index?: number): bosdyn_api_graph_nav_map_pb.EdgeSnapshot;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Snapshots.AsObject;
+        static toObject(includeInstance: boolean, msg: Snapshots): Snapshots.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Snapshots, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Snapshots;
+        static deserializeBinaryFromReader(message: Snapshots, reader: jspb.BinaryReader): Snapshots;
+    }
+
+    export namespace Snapshots {
+        export type AsObject = {
+            waypointSnapshotsList: Array<bosdyn_api_graph_nav_map_pb.WaypointSnapshot.AsObject>,
+            edgeSnapshotsList: Array<bosdyn_api_graph_nav_map_pb.EdgeSnapshot.AsObject>,
+        }
+    }
+
+}
+
+export class UploadSnapshotsResponse extends jspb.Message { 
+
+    hasHeader(): boolean;
+    clearHeader(): void;
+    getHeader(): bosdyn_api_header_pb.ResponseHeader | undefined;
+    setHeader(value?: bosdyn_api_header_pb.ResponseHeader): UploadSnapshotsResponse;
+
+    hasLeaseUseResult(): boolean;
+    clearLeaseUseResult(): void;
+    getLeaseUseResult(): bosdyn_api_lease_pb.LeaseUseResult | undefined;
+    setLeaseUseResult(value?: bosdyn_api_lease_pb.LeaseUseResult): UploadSnapshotsResponse;
+    getStatus(): UploadSnapshotsResponse.Status;
+    setStatus(value: UploadSnapshotsResponse.Status): UploadSnapshotsResponse;
+
+    hasSensorStatus(): boolean;
+    clearSensorStatus(): void;
+    getSensorStatus(): SensorCompatibilityStatus | undefined;
+    setSensorStatus(value?: SensorCompatibilityStatus): UploadSnapshotsResponse;
+
+    hasMapStats(): boolean;
+    clearMapStats(): void;
+    getMapStats(): bosdyn_api_graph_nav_map_pb.MapStats | undefined;
+    setMapStats(value?: bosdyn_api_graph_nav_map_pb.MapStats): UploadSnapshotsResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UploadSnapshotsResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: UploadSnapshotsResponse): UploadSnapshotsResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UploadSnapshotsResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UploadSnapshotsResponse;
+    static deserializeBinaryFromReader(message: UploadSnapshotsResponse, reader: jspb.BinaryReader): UploadSnapshotsResponse;
+}
+
+export namespace UploadSnapshotsResponse {
+    export type AsObject = {
+        header?: bosdyn_api_header_pb.ResponseHeader.AsObject,
+        leaseUseResult?: bosdyn_api_lease_pb.LeaseUseResult.AsObject,
+        status: UploadSnapshotsResponse.Status,
+        sensorStatus?: SensorCompatibilityStatus.AsObject,
+        mapStats?: bosdyn_api_graph_nav_map_pb.MapStats.AsObject,
+    }
+
+    export enum Status {
+    STATUS_UNKNOWN = 0,
+    STATUS_OK = 1,
+    STATUS_INCOMPATIBLE_SENSORS = 2,
+    }
+
 }
 
 export class DownloadWaypointSnapshotRequest extends jspb.Message { 

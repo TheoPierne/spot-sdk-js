@@ -35,6 +35,8 @@ var bosdyn_api_stairs_pb = require('../../bosdyn/api/stairs_pb.js');
 goog.object.extend(proto, bosdyn_api_stairs_pb);
 var bosdyn_api_gps_registration_pb = require('../../bosdyn/api/gps/registration_pb.js');
 goog.object.extend(proto, bosdyn_api_gps_registration_pb);
+var bosdyn_api_fiducial_purpose_pb = require('../../bosdyn/api/fiducial_purpose_pb.js');
+goog.object.extend(proto, bosdyn_api_fiducial_purpose_pb);
 var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
 goog.object.extend(proto, google_protobuf_duration_pb);
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
@@ -3566,7 +3568,10 @@ proto.bosdyn.api.AprilTagProperties.toObject = function(includeInstance, msg) {
     fiducialFilteredPoseStatus: jspb.Message.getFieldWithDefault(msg, 9, 0),
     frameNameCamera: jspb.Message.getFieldWithDefault(msg, 7, ""),
     detectionCovariance: (f = msg.getDetectionCovariance()) && bosdyn_api_geometry_pb.SE3Covariance.toObject(includeInstance, f),
-    detectionCovarianceReferenceFrame: jspb.Message.getFieldWithDefault(msg, 6, "")
+    detectionCovarianceReferenceFrame: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    purpose: jspb.Message.getFieldWithDefault(msg, 10, 0),
+    hammingDistance: jspb.Message.getFieldWithDefault(msg, 11, 0),
+    numObservations: jspb.Message.getFieldWithDefault(msg, 12, 0)
   };
 
   if (includeInstance) {
@@ -3640,6 +3645,18 @@ proto.bosdyn.api.AprilTagProperties.deserializeBinaryFromReader = function(msg, 
     case 6:
       var value = /** @type {string} */ (reader.readString());
       msg.setDetectionCovarianceReferenceFrame(value);
+      break;
+    case 10:
+      var value = /** @type {!proto.bosdyn.api.FiducialPurpose} */ (reader.readEnum());
+      msg.setPurpose(value);
+      break;
+    case 11:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setHammingDistance(value);
+      break;
+    case 12:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setNumObservations(value);
       break;
     default:
       reader.skipField();
@@ -3732,6 +3749,27 @@ proto.bosdyn.api.AprilTagProperties.serializeBinaryToWriter = function(message, 
   if (f.length > 0) {
     writer.writeString(
       6,
+      f
+    );
+  }
+  f = message.getPurpose();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      10,
+      f
+    );
+  }
+  f = message.getHammingDistance();
+  if (f !== 0) {
+    writer.writeInt32(
+      11,
+      f
+    );
+  }
+  f = message.getNumObservations();
+  if (f !== 0) {
+    writer.writeInt32(
+      12,
       f
     );
   }
@@ -3945,6 +3983,60 @@ proto.bosdyn.api.AprilTagProperties.prototype.getDetectionCovarianceReferenceFra
  */
 proto.bosdyn.api.AprilTagProperties.prototype.setDetectionCovarianceReferenceFrame = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional FiducialPurpose purpose = 10;
+ * @return {!proto.bosdyn.api.FiducialPurpose}
+ */
+proto.bosdyn.api.AprilTagProperties.prototype.getPurpose = function() {
+  return /** @type {!proto.bosdyn.api.FiducialPurpose} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/**
+ * @param {!proto.bosdyn.api.FiducialPurpose} value
+ * @return {!proto.bosdyn.api.AprilTagProperties} returns this
+ */
+proto.bosdyn.api.AprilTagProperties.prototype.setPurpose = function(value) {
+  return jspb.Message.setProto3EnumField(this, 10, value);
+};
+
+
+/**
+ * optional int32 hamming_distance = 11;
+ * @return {number}
+ */
+proto.bosdyn.api.AprilTagProperties.prototype.getHammingDistance = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.AprilTagProperties} returns this
+ */
+proto.bosdyn.api.AprilTagProperties.prototype.setHammingDistance = function(value) {
+  return jspb.Message.setProto3IntField(this, 11, value);
+};
+
+
+/**
+ * optional int32 num_observations = 12;
+ * @return {number}
+ */
+proto.bosdyn.api.AprilTagProperties.prototype.getNumObservations = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 12, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.bosdyn.api.AprilTagProperties} returns this
+ */
+proto.bosdyn.api.AprilTagProperties.prototype.setNumObservations = function(value) {
+  return jspb.Message.setProto3IntField(this, 12, value);
 };
 
 

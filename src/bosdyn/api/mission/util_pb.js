@@ -23,6 +23,8 @@ var global = (function() {
 
 var google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 goog.object.extend(proto, google_protobuf_any_pb);
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
+goog.object.extend(proto, google_protobuf_timestamp_pb);
 var bosdyn_api_alerts_pb = require('../../../bosdyn/api/alerts_pb.js');
 goog.object.extend(proto, bosdyn_api_alerts_pb);
 goog.exportSymbol('proto.bosdyn.api.mission.ConstantValue', null, global);
@@ -837,7 +839,8 @@ proto.bosdyn.api.mission.VariableDeclaration.Type = {
   TYPE_BOOL: 4,
   TYPE_MESSAGE: 5,
   TYPE_LIST: 6,
-  TYPE_DICT: 7
+  TYPE_DICT: 7,
+  TYPE_TIMESTAMP: 8
 };
 
 
@@ -1103,7 +1106,7 @@ proto.bosdyn.api.mission.VariableDeclaration.prototype.setType = function(value)
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.bosdyn.api.mission.ConstantValue.oneofGroups_ = [[1,2,3,4,5,6,7]];
+proto.bosdyn.api.mission.ConstantValue.oneofGroups_ = [[1,2,3,4,5,6,7,8]];
 
 /**
  * @enum {number}
@@ -1116,7 +1119,8 @@ proto.bosdyn.api.mission.ConstantValue.ValueCase = {
   BOOL_VALUE: 4,
   MSG_VALUE: 5,
   LIST_VALUE: 6,
-  DICT_VALUE: 7
+  DICT_VALUE: 7,
+  TIMESTAMP_VALUE: 8
 };
 
 /**
@@ -1163,7 +1167,8 @@ proto.bosdyn.api.mission.ConstantValue.toObject = function(includeInstance, msg)
     boolValue: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
     msgValue: (f = msg.getMsgValue()) && google_protobuf_any_pb.Any.toObject(includeInstance, f),
     listValue: (f = msg.getListValue()) && proto.bosdyn.api.mission.ConstantValue.ListValue.toObject(includeInstance, f),
-    dictValue: (f = msg.getDictValue()) && proto.bosdyn.api.mission.ConstantValue.DictValue.toObject(includeInstance, f)
+    dictValue: (f = msg.getDictValue()) && proto.bosdyn.api.mission.ConstantValue.DictValue.toObject(includeInstance, f),
+    timestampValue: (f = msg.getTimestampValue()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1230,6 +1235,11 @@ proto.bosdyn.api.mission.ConstantValue.deserializeBinaryFromReader = function(ms
       var value = new proto.bosdyn.api.mission.ConstantValue.DictValue;
       reader.readMessage(value,proto.bosdyn.api.mission.ConstantValue.DictValue.deserializeBinaryFromReader);
       msg.setDictValue(value);
+      break;
+    case 8:
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
+      msg.setTimestampValue(value);
       break;
     default:
       reader.skipField();
@@ -1310,6 +1320,14 @@ proto.bosdyn.api.mission.ConstantValue.serializeBinaryToWriter = function(messag
       7,
       f,
       proto.bosdyn.api.mission.ConstantValue.DictValue.serializeBinaryToWriter
+    );
+  }
+  f = message.getTimestampValue();
+  if (f != null) {
+    writer.writeMessage(
+      8,
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
 };
@@ -1860,6 +1878,43 @@ proto.bosdyn.api.mission.ConstantValue.prototype.clearDictValue = function() {
  */
 proto.bosdyn.api.mission.ConstantValue.prototype.hasDictValue = function() {
   return jspb.Message.getField(this, 7) != null;
+};
+
+
+/**
+ * optional google.protobuf.Timestamp timestamp_value = 8;
+ * @return {?proto.google.protobuf.Timestamp}
+ */
+proto.bosdyn.api.mission.ConstantValue.prototype.getTimestampValue = function() {
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 8));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.bosdyn.api.mission.ConstantValue} returns this
+*/
+proto.bosdyn.api.mission.ConstantValue.prototype.setTimestampValue = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 8, proto.bosdyn.api.mission.ConstantValue.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.bosdyn.api.mission.ConstantValue} returns this
+ */
+proto.bosdyn.api.mission.ConstantValue.prototype.clearTimestampValue = function() {
+  return this.setTimestampValue(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.bosdyn.api.mission.ConstantValue.prototype.hasTimestampValue = function() {
+  return jspb.Message.getField(this, 8) != null;
 };
 
 

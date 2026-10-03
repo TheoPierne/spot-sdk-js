@@ -711,7 +711,7 @@ proto.bosdyn.api.DataDescriptor.deserializeBinaryFromReader = function(msg, read
       msg.setTimestamp(value);
       break;
     case 3:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt64() : [reader.readInt64()]);
+      var values = /** @type {!Array<string>} */ (reader.isDelimited() ? reader.readPackedInt64String() : [reader.readInt64String()]);
       for (var i = 0; i < values.length; i++) {
         msg.addAdditionalIndexes(values[i]);
       }
@@ -762,7 +762,7 @@ proto.bosdyn.api.DataDescriptor.serializeBinaryToWriter = function(message, writ
   }
   f = message.getAdditionalIndexesList();
   if (f.length > 0) {
-    writer.writePackedInt64(
+    writer.writePackedInt64String(
       3,
       f
     );
@@ -827,15 +827,15 @@ proto.bosdyn.api.DataDescriptor.prototype.hasTimestamp = function() {
 
 /**
  * repeated int64 additional_indexes = 3;
- * @return {!Array<number>}
+ * @return {!Array<string>}
  */
 proto.bosdyn.api.DataDescriptor.prototype.getAdditionalIndexesList = function() {
-  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 3));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 3));
 };
 
 
 /**
- * @param {!Array<number>} value
+ * @param {!Array<string>} value
  * @return {!proto.bosdyn.api.DataDescriptor} returns this
  */
 proto.bosdyn.api.DataDescriptor.prototype.setAdditionalIndexesList = function(value) {
@@ -844,7 +844,7 @@ proto.bosdyn.api.DataDescriptor.prototype.setAdditionalIndexesList = function(va
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @param {number=} opt_index
  * @return {!proto.bosdyn.api.DataDescriptor} returns this
  */
@@ -1373,7 +1373,7 @@ proto.bosdyn.api.SeriesDescriptor.toObject = function(includeInstance, msg) {
   var f, obj = {
     seriesIndex: jspb.Message.getFieldWithDefault(msg, 1, 0),
     seriesIdentifier: (f = msg.getSeriesIdentifier()) && proto.bosdyn.api.SeriesIdentifier.toObject(includeInstance, f),
-    identifierHash: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    identifierHash: jspb.Message.getFieldWithDefault(msg, 3, "0"),
     messageType: (f = msg.getMessageType()) && proto.bosdyn.api.MessageTypeDescriptor.toObject(includeInstance, f),
     podType: (f = msg.getPodType()) && proto.bosdyn.api.PodTypeDescriptor.toObject(includeInstance, f),
     structType: (f = msg.getStructType()) && proto.bosdyn.api.StructTypeDescriptor.toObject(includeInstance, f),
@@ -1426,7 +1426,7 @@ proto.bosdyn.api.SeriesDescriptor.deserializeBinaryFromReader = function(msg, re
       msg.setSeriesIdentifier(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readUint64());
+      var value = /** @type {string} */ (reader.readUint64String());
       msg.setIdentifierHash(value);
       break;
     case 4:
@@ -1503,8 +1503,8 @@ proto.bosdyn.api.SeriesDescriptor.serializeBinaryToWriter = function(message, wr
     );
   }
   f = message.getIdentifierHash();
-  if (f !== 0) {
-    writer.writeUint64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeUint64String(
       3,
       f
     );
@@ -1611,19 +1611,19 @@ proto.bosdyn.api.SeriesDescriptor.prototype.hasSeriesIdentifier = function() {
 
 /**
  * optional uint64 identifier_hash = 3;
- * @return {number}
+ * @return {string}
  */
 proto.bosdyn.api.SeriesDescriptor.prototype.getIdentifierHash = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.bosdyn.api.SeriesDescriptor} returns this
  */
 proto.bosdyn.api.SeriesDescriptor.prototype.setIdentifierHash = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3StringIntField(this, 3, value);
 };
 
 
@@ -2417,7 +2417,7 @@ proto.bosdyn.api.FileIndex.deserializeBinaryFromReader = function(msg, reader) {
       }
       break;
     case 3:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedUint64() : [reader.readUint64()]);
+      var values = /** @type {!Array<string>} */ (reader.isDelimited() ? reader.readPackedUint64String() : [reader.readUint64String()]);
       for (var i = 0; i < values.length; i++) {
         msg.addSeriesIdentifierHashes(values[i]);
       }
@@ -2468,7 +2468,7 @@ proto.bosdyn.api.FileIndex.serializeBinaryToWriter = function(message, writer) {
   }
   f = message.getSeriesIdentifierHashesList();
   if (f.length > 0) {
-    writer.writePackedUint64(
+    writer.writePackedUint64String(
       3,
       f
     );
@@ -2553,15 +2553,15 @@ proto.bosdyn.api.FileIndex.prototype.clearSeriesBlockIndexOffsetsList = function
 
 /**
  * repeated uint64 series_identifier_hashes = 3;
- * @return {!Array<number>}
+ * @return {!Array<string>}
  */
 proto.bosdyn.api.FileIndex.prototype.getSeriesIdentifierHashesList = function() {
-  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 3));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 3));
 };
 
 
 /**
- * @param {!Array<number>} value
+ * @param {!Array<string>} value
  * @return {!proto.bosdyn.api.FileIndex} returns this
  */
 proto.bosdyn.api.FileIndex.prototype.setSeriesIdentifierHashesList = function(value) {
@@ -2570,7 +2570,7 @@ proto.bosdyn.api.FileIndex.prototype.setSeriesIdentifierHashesList = function(va
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @param {number=} opt_index
  * @return {!proto.bosdyn.api.FileIndex} returns this
  */
@@ -2834,7 +2834,7 @@ proto.bosdyn.api.SeriesBlockIndex.BlockEntry.deserializeBinaryFromReader = funct
       msg.setFileOffset(value);
       break;
     case 3:
-      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt64() : [reader.readInt64()]);
+      var values = /** @type {!Array<string>} */ (reader.isDelimited() ? reader.readPackedInt64String() : [reader.readInt64String()]);
       for (var i = 0; i < values.length; i++) {
         msg.addAdditionalIndexes(values[i]);
       }
@@ -2885,7 +2885,7 @@ proto.bosdyn.api.SeriesBlockIndex.BlockEntry.serializeBinaryToWriter = function(
   }
   f = message.getAdditionalIndexesList();
   if (f.length > 0) {
-    writer.writePackedInt64(
+    writer.writePackedInt64String(
       3,
       f
     );
@@ -2950,15 +2950,15 @@ proto.bosdyn.api.SeriesBlockIndex.BlockEntry.prototype.setFileOffset = function(
 
 /**
  * repeated int64 additional_indexes = 3;
- * @return {!Array<number>}
+ * @return {!Array<string>}
  */
 proto.bosdyn.api.SeriesBlockIndex.BlockEntry.prototype.getAdditionalIndexesList = function() {
-  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 3));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 3));
 };
 
 
 /**
- * @param {!Array<number>} value
+ * @param {!Array<string>} value
  * @return {!proto.bosdyn.api.SeriesBlockIndex.BlockEntry} returns this
  */
 proto.bosdyn.api.SeriesBlockIndex.BlockEntry.prototype.setAdditionalIndexesList = function(value) {
@@ -2967,7 +2967,7 @@ proto.bosdyn.api.SeriesBlockIndex.BlockEntry.prototype.setAdditionalIndexesList 
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @param {number=} opt_index
  * @return {!proto.bosdyn.api.SeriesBlockIndex.BlockEntry} returns this
  */

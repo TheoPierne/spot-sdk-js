@@ -55,6 +55,28 @@ function deserialize_bosdyn_api_FanPowerCommandResponse(buffer_arg) {
   return bosdyn_api_power_pb.FanPowerCommandResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_bosdyn_api_GetFanInformationRequest(arg) {
+  if (!(arg instanceof bosdyn_api_power_pb.GetFanInformationRequest)) {
+    throw new Error('Expected argument of type bosdyn.api.GetFanInformationRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_GetFanInformationRequest(buffer_arg) {
+  return bosdyn_api_power_pb.GetFanInformationRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bosdyn_api_GetFanInformationResponse(arg) {
+  if (!(arg instanceof bosdyn_api_power_pb.GetFanInformationResponse)) {
+    throw new Error('Expected argument of type bosdyn.api.GetFanInformationResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bosdyn_api_GetFanInformationResponse(buffer_arg) {
+  return bosdyn_api_power_pb.GetFanInformationResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_bosdyn_api_PowerCommandFeedbackRequest(arg) {
   if (!(arg instanceof bosdyn_api_power_pb.PowerCommandFeedbackRequest)) {
     throw new Error('Expected argument of type bosdyn.api.PowerCommandFeedbackRequest');
@@ -173,6 +195,18 @@ fanPowerCommandFeedback: {
     requestDeserialize: deserialize_bosdyn_api_FanPowerCommandFeedbackRequest,
     responseSerialize: serialize_bosdyn_api_FanPowerCommandFeedbackResponse,
     responseDeserialize: deserialize_bosdyn_api_FanPowerCommandFeedbackResponse,
+  },
+  // Get fan information.
+getFanInformation: {
+    path: '/bosdyn.api.PowerService/GetFanInformation',
+    requestStream: false,
+    responseStream: false,
+    requestType: bosdyn_api_power_pb.GetFanInformationRequest,
+    responseType: bosdyn_api_power_pb.GetFanInformationResponse,
+    requestSerialize: serialize_bosdyn_api_GetFanInformationRequest,
+    requestDeserialize: deserialize_bosdyn_api_GetFanInformationRequest,
+    responseSerialize: serialize_bosdyn_api_GetFanInformationResponse,
+    responseDeserialize: deserialize_bosdyn_api_GetFanInformationResponse,
   },
   // Reset the safety stop bit on SRSF-configured robots.
 resetSafetyStop: {
