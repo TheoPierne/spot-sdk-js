@@ -12,10 +12,10 @@ This example starts AutoReturn functionality manually with a force-acquired leas
 
 ## Setup Dependencies
 
-These examples need to be run with python3, and have the Spot SDK installed. See the requirements.txt file for a list of dependencies which can be installed with pip.
+The example uses the SDK of this repository: install its dependencies at the root of the repository with:
 
 ```
-$ npm install
+npm install
 ```
 
 ## Run the Example
@@ -23,5 +23,5 @@ $ npm install
 To run the example:
 
 ```
-node force_start_auto_return.py --username USERNAME --password PASSWORD ROBOT_IP
+node force_start_auto_return.js ROBOT_IP
 ```

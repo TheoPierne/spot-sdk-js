@@ -8,11 +8,13 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Robot Docking
 
-<!--## Setup Dependencies
-These examples need to be run with python3, and have the Spot SDK installed. See the requirements.txt file for a list of dependencies which can be installed with pip.
+## Setup Dependencies
+
+The example uses the SDK of this repository: install its dependencies at the root of the repository with:
+
 ```
-python3 -m pip install -r requirements.txt
-```-->
+npm install
+```
 
 ## Dock My Robot Example
 
@@ -34,7 +36,7 @@ When run, this script will
 - Power Off once engaged with the dock
 
 ```
-node dock_my_robot.js --username USER --password PASSWORD --dock-id DOCKID ROBOT_IP
+node dock_my_robot.js --dock-id DOCKID ROBOT_IP
 ```
 
 Try not to interrupt the robot while it's over the dock, loss of comms will make the robot sit on the dock in an incorrect way, possibly causing it to roll over or make it hard to recover autonomously.

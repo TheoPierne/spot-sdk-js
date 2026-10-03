@@ -12,7 +12,7 @@ This example program demonstrates how to retrieve information about the state of
 
 ## Setup Dependencies
 
-See the requirements.txt file for a list of python dependencies which can be installed with pip using the command:
+The example uses the SDK of this repository: install its dependencies at the root of the repository with:
 
 ```
 npm install
@@ -23,5 +23,5 @@ npm install
 To run the example:
 
 ```
-node get_mission_state.js --username USERNAME --password PASSWORD ROBOT_IP
+node get_mission_state.js ROBOT_IP
 ```

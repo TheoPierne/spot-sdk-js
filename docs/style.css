@@ -1,0 +1,58 @@
+/* The tables of the API reference can be wide: they scroll instead of overflowing the page. */
+.markdown-section table {
+  display: block;
+  overflow-x: auto;
+}
+
+/* The signatures of the API reference. */
+.markdown-section pre > code {
+  white-space: pre;
+}
+
+/* docsify-sidebar-collapse, written for Docsify 4, sets the margins of all the items of the sidebar to 0: the items of
+   the first level get back the inset of Docsify 5 (they touched the edge of the screen, and the chevrons of the
+   folders, 12px left of their items, were out of it). The items stay close together, for the long list of modules. */
+.sidebar-nav > ul > li {
+  margin-left: var(--_sidebar-inset, 20px);
+}
+
+/* The chevrons of the folders, in the color of the text of the sidebar (in the dark theme too). */
+.sidebar-nav ul:not(.app-sub-sidebar) > li:not(.file)::before {
+  border-color: currentColor;
+  opacity: 0.7;
+}
+
+/* The toggle of the dark theme (index.html), left of the GitHub corner: a half-filled circle. The selector beats the
+   button[type] rule of the core theme. */
+button.theme-toggle[type] {
+  position: fixed;
+  top: 18px;
+  right: 96px;
+  z-index: 100;
+  width: 24px;
+  min-width: 0;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  box-shadow: none;
+  background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+  color: var(--color-text, #34495e);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+button.theme-toggle[type]:hover,
+button.theme-toggle[type]:focus-visible {
+  opacity: 1;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

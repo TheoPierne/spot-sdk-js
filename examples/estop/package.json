@@ -11,7 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nodegui/nodegui": "^0.61.2",
+    "@nodegui/nodegui": "^0.74.2",
     "reblessed": "^0.2.1"
+  },
+  "allowScripts": {
+    "@nodegui/nodegui@0.74.2": true,
+    "@nodegui/qode@24.12.0-rc19": true
   }
 }

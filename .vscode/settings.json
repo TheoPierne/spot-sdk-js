@@ -1,0 +1,14 @@
+{
+  "editor.trimAutoWhitespace": false,
+  "files.associations": {
+    "tsconfig.json": "jsonc"
+  },
+  "files.insertFinalNewline": true,
+  "files.eol": "\n",
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "deno.enable": false,
+  "deno.lint": false,
+}

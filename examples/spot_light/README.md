@@ -20,8 +20,8 @@ hand to prevent the robot from "seeing" other bright lights in the front left ca
 
 ## Setup Dependencies
 
-See the requirements.txt file for a list of python dependencies which can be installed with pip
-using the command:
+The example needs OpenCV for Node.js (`@u4/opencv4nodejs`) and a PID controller (`node-pid-controller`), which are
+installed in this directory with:
 
 ```
 npm install
@@ -32,9 +32,15 @@ npm install
 To run the example:
 
 ```
-node spot_light.js --username USERNAME --password PASSWORD ROBOT_IP
+node spot_light.js ROBOT_IP
+```
+
+If Spot does not stand up, you can use a brighter light or adjust the brightness threshold. For example:
+
+```
+node spot_light.js ROBOT_IP --brightness_threshold 200
 ```
 
 ### E-Stop Endpoint Dependency
 
-The example depends on an external E-Stop endpoint application to configure E-Stop and cut off power to all motors in the robot, if necessary. In parallel with this example, please run the E-Stop SDK example as the E-Stop controller.
+The example depends on an external E-Stop endpoint application to configure E-Stop and cut off power to all motors in the robot, if necessary. In parallel with this example, please run the [E-Stop SDK example](../estop/README.md) as the E-Stop controller.
