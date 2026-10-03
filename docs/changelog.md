@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# 1.1.0 - Unreleased
+# 1.1.0 - 2026-10-03
 
 The protobuf messages use google-protobuf 4 (`^4.0.3`, it was `^3.21.4`).
 
