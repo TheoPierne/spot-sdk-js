@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>spot-sdk-js</title>
+    <meta name="description" content="The Node.js SDK of the Spot robot of Boston Dynamics: guides and API reference." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <!-- Docsify 5: the core theme, the Vue theme of Docsify 4, and the dark theme (see the toggle below). -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@5/dist/themes/core.min.css" />
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@5/dist/themes/addons/vue.min.css" />
+    <link
+      id="dark-theme"
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/docsify@5/dist/themes/addons/core-dark.min.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      // The dark theme follows the system, or the choice of the toggle, remembered by the browser.
+      (function () {
+        const KEY = 'spot-sdk-js-theme';
+        const sheet = document.getElementById('dark-theme');
+        const apply = choice => {
+          if (choice === 'dark') sheet.media = 'all';
+          else if (choice === 'light') sheet.media = 'not all';
+          else sheet.media = '(prefers-color-scheme: dark)';
+        };
+        try {
+          apply(localStorage.getItem(KEY));
+        } catch {
+          // No storage (private browsing): the theme of the system.
+        }
+        window.toggleDarkTheme = () => {
+          const dark = matchMedia(sheet.media).matches;
+          const choice = dark ? 'light' : 'dark';
+          apply(choice);
+          try {
+            localStorage.setItem(KEY, choice);
+          } catch {
+            // Not remembered.
+          }
+        };
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <button class="theme-toggle" type="button" onclick="toggleDarkTheme()" title="Dark or light theme">
+      <span class="visually-hidden">Toggle the dark theme</span>
+    </button>
+    <script>
+      window.$docsify = {
+        name: 'spot-sdk-js',
+        repo: 'https://github.com/TheoPierne/spot-sdk-js',
+        loadSidebar: true,
+        // One sidebar for every page (docsify looks for the _sidebar.md of the folder of the page first).
+        alias: { '/.*/_sidebar.md': '/_sidebar.md' },
+        subMaxLevel: 2,
+        maxLevel: 4,
+        auto2top: true,
+        // The API reference has texts like "a:b:c": no emoji.
+        noEmoji: true,
+        search: {
+          paths: 'auto',
+          depth: 3,
+          placeholder: 'Search',
+          noData: 'No results',
+        },
+        copyCode: {
+          buttonText: 'Copy',
+          successText: 'Copied',
+        },
+      };
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/docsify@5/dist/docsify.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify@5/dist/plugins/search.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@3"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-typescript.min.js"></script>
+  </body>
+</html>
